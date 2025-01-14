@@ -1,44 +1,32 @@
-
-
 <template>
   <div class="user" id="login">
     <div class="wrapC">
       <h1>
         로그인을 하고 나면
-        <br />좋은 일만 있을 거예요.
+        <br />
+        좋은 일만 있을 거예요.
       </h1>
 
       <div class="input-with-label">
-        <input
-          v-model="email"
-          v-bind:class="{error : error.email, complete:!error.email&&email.length!==0}"
-          @keyup.enter="Login"
-          id="email"
-          placeholder="이메일을 입력하세요."
-          type="text"
-        />
+        <input v-model="email" v-bind:class="{ error: error.email, complete: !error.email && email.length !== 0 }" @keyup.enter="onLogin" id="email" placeholder="이메일을 입력하세요." type="text" />
         <label for="email">이메일</label>
-        <div class="error-text" v-if="error.email">{{error.email}}</div>
+        <div class="error-text" v-if="error.email">{{ error.email }}</div>
       </div>
 
       <div class="input-with-label">
         <input
           v-model="password"
           type="password"
-          v-bind:class="{error : error.password, complete:!error.password&&password.length!==0}"
+          v-bind:class="{ error: error.password, complete: !error.password && password.length !== 0 }"
           id="password"
-          @keyup.enter="Login"
+          @keyup.enter="onLogin"
           placeholder="비밀번호를 입력하세요."
         />
         <label for="password">비밀번호</label>
-        <div class="error-text" v-if="error.password">{{error.password}}</div>
+        <div class="error-text" v-if="error.password">{{ error.password }}</div>
       </div>
-      <button
-        class="btn btn--back btn--login"
-        @click="onLogin"
-        :disabled="!isSubmit"
-        :class="{disabled : !isSubmit}"
-      >로그인</button>
+
+      <button class="btn btn--back btn--login" @click="onLogin" :disabled="!isSubmit" :class="{ disabled: !isSubmit }">로그인</button>
 
       <div class="sns-login">
         <div class="text">
@@ -49,6 +37,7 @@
         <kakaoLogin :component="component" />
         <GoogleLogin :component="component" />
       </div>
+
       <div class="add-option">
         <div class="text">
           <p>혹시</p>
@@ -67,87 +56,71 @@
 </template>
 
 <script>
-import "../../components/css/user.scss";
-import PV from "password-validator";
-import * as EmailValidator from "email-validator";
-import KakaoLogin from "../../components/user/snsLogin/Kakao.vue";
-import GoogleLogin from "../../components/user/snsLogin/Google.vue";
-import UserApi from "../../api/UserApi";
+import "../../components/css/user.scss"
+import PV from "password-validator"
+import * as EmailValidator from "email-validator"
+import KakaoLogin from "../../components/user/snsLogin/Kakao.vue"
+import GoogleLogin from "../../components/user/snsLogin/Google.vue"
+import UserApi from "../../api/UserApi"
 
 export default {
   components: {
     KakaoLogin,
-    GoogleLogin
+    GoogleLogin,
   },
   created() {
-    this.component = this;
+    this.component = this
 
-    this.passwordSchema
-      .is()
-      .min(8)
-      .is()
-      .max(100)
-      .has()
-      .digits()
-      .has()
-      .letters();
+    this.passwordSchema.is().min(8).is().max(100).has().digits().has().letters()
   },
   watch: {
-    password: function(v) {
-      this.checkForm();
+    password: function (v) {
+      this.checkForm()
     },
-    email: function(v) {
-      this.checkForm();
-    }
+    email: function (v) {
+      this.checkForm()
+    },
   },
   methods: {
     checkForm() {
-      if (this.email.length >= 0 && !EmailValidator.validate(this.email))
-        this.error.email = "이메일 형식이 아닙니다.";
-      else this.error.email = false;
+      if (this.email.length >= 0 && !EmailValidator.validate(this.email)) this.error.email = "이메일 형식이 아닙니다."
+      else this.error.email = false
 
-      if (
-        this.password.length >= 0 &&
-        !this.passwordSchema.validate(this.password)
-      )
-        this.error.password = "영문,숫자 포함 8 자리이상이어야 합니다.";
-      else this.error.password = false;
+      if (this.password.length >= 0 && !this.passwordSchema.validate(this.password)) this.error.password = "영문, 숫자 포함 8자리 이상이어야 합니다."
+      else this.error.password = false
 
-      let isSubmit = true;
-      Object.values(this.error).map(v => {
-        if (v) isSubmit = false;
-      });
-      this.isSubmit = isSubmit;
+      let isSubmit = true
+      Object.values(this.error).forEach((v) => {
+        if (v) isSubmit = false
+      })
+      this.isSubmit = isSubmit
     },
     onLogin() {
       if (this.isSubmit) {
-        let { email, password } = this;
+        let { email, password } = this
         let data = {
           email,
-          password
-        };
+          password,
+        }
 
-        //요청 후에는 버튼 비활성화
-        this.isSubmit = false;
+        // 요청 후에는 버튼 비활성화
+        this.isSubmit = false
 
         UserApi.requestLogin(
           data,
-          res => {
-            //통신을 통해 전달받은 값 콘솔에 출력
-            //console.log(res);
-
-            //요청이 끝나면 버튼 활성화
-            this.isSubmit = true;
-
-            this.$router.push("/main");
+          (res) => {
+            // 로그인 성공 후 FeedMain 페이지로 리다이렉트
+            this.isSubmit = true
+            this.$router.push({ name: "FeedMain" }) // FeedMain 페이지로 이동
           },
-          error => {
-            //요청이 끝나면 버튼 활성화
-            this.isSubmit = true;
+          (error) => {
+            // 로그인 실패 시 에러 메시지 처리
+            this.isSubmit = true
+            this.error.email = "로그인에 실패했습니다." // 실패 메시지 표시
           }
-        );
+        )
       }
-    }
+    },
   },
   data: () => {
     return {
@@ -156,13 +129,11 @@ export default {
       passwordSchema: new PV(),
       error: {
         email: false,
-        passowrd: false
+        password: false,
       },
       isSubmit: false,
-      component: this
-    };
-  }
-};
+      component: this,
+    }
+  },
+}
 </script>
-
-

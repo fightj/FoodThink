@@ -1,7 +1,9 @@
 <template>
   <div class="user join wrapC">
     <h1>가입하기</h1>
-    <div class="form-wrap">
+
+    <!-- 회원가입 폼 -->
+    <div v-if="!isSuccess" class="form-wrap">
       <div class="input-with-label">
         <input v-model="nickName" id="nickname" placeholder=" " type="text" @input="validateForm" />
         <label for="nickname" class="floating-label">닉네임</label>
@@ -27,16 +29,29 @@
       </div>
     </div>
 
-    <label>
-      <input v-model="isTerm" type="checkbox" id="term" @change="validateForm" />
-      <span>약관을 동의합니다.</span>
-    </label>
+    <!-- 약관 동의 및 가입 버튼 -->
+    <div v-if="!isSuccess">
+      <label>
+        <input v-model="isTerm" type="checkbox" id="term" @change="validateForm" />
+        <span>약관을 동의합니다.</span>
+      </label>
 
-    <span @click="termPopup = true">약관보기</span>
+      <span @click="termPopup = true">약관보기</span>
 
-    <button class="btn-bottom" :disabled="!isFormValid || isLoading" @click="submitForm">가입하기</button>
+      <button class="btn-bottom" :disabled="!isFormValid || isLoading" @click="submitForm">가입하기</button>
+    </div>
 
-    <p v-if="successMessage" class="success">{{ successMessage }}</p>
+    <!-- 회원가입 완료 후 -->
+    <div v-if="isSuccess" class="success-wrap">
+      <h2>회원가입이 완료되었습니다!</h2>
+      <p class="success">회원가입 인증 메일이 발송되었습니다. 이메일을 확인해 주세요.</p>
+      <div class="actions">
+        <button @click="resendEmail" :disabled="isResending" class="btn-bottom">메일 재발송</button>
+        <a href="https://mail.google.com" target="_blank" class="btn-bottom">메일함으로 이동</a>
+      </div>
+    </div>
+
+    <!-- 에러 메시지 -->
     <p v-if="generalError" class="error">{{ generalError }}</p>
   </div>
 </template>
@@ -61,6 +76,8 @@ export default {
     passwordType: "password",
     passwordConfirmType: "password",
     termPopup: false,
+    isSuccess: false, // 회원가입 성공 여부
+    isResending: false, // 메일 재발송 중 여부
   }),
   computed: {
     isFormValid() {
@@ -112,6 +129,7 @@ export default {
           nickName: this.nickName,
         })
         this.successMessage = "회원가입이 완료되었습니다!"
+        this.isSuccess = true // 회원가입 완료 상태로 변경
         this.resetForm()
       } catch (error) {
         this.generalError = error.response?.data?.errors || "회원가입 중 문제가 발생했습니다."
@@ -130,6 +148,18 @@ export default {
         password: "",
         nickName: "",
         passwordConfirm: "",
+      }
+    },
+    async resendEmail() {
+      this.isResending = true
+      try {
+        // 재발송 요청
+        await this.$axios.post("/api/resend-email", { email: this.email })
+        this.successMessage = "인증 메일이 재발송되었습니다."
+      } catch (error) {
+        this.generalError = "메일 재발송 중 오류가 발생했습니다."
+      } finally {
+        this.isResending = false
       }
     },
   },
@@ -180,5 +210,28 @@ export default {
 .success {
   color: green;
   font-size: 0.9em;
+}
+
+.success-wrap {
+  text-align: center;
+  padding: 20px;
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+.btn-bottom {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-bottom:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 </style>
