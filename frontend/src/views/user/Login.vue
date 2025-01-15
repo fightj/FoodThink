@@ -121,6 +121,7 @@ export default {
     },
     onLogin() {
       if (this.isSubmit) {
+        console.log("check");
         let { email, password } = this;
         let data = {
           email,
@@ -129,17 +130,18 @@ export default {
 
         //요청 후에는 버튼 비활성화
         this.isSubmit = false;
-
+        //여기까지지
         UserApi.requestLogin(
           data,
           res => {
             //통신을 통해 전달받은 값 콘솔에 출력
-            //console.log(res);
+            console.log(res);
+            console.log("check2");
 
             //요청이 끝나면 버튼 활성화
             this.isSubmit = true;
 
-            this.$router.push("/main");
+            this.$router.push("/feed/main");
           },
           error => {
             //요청이 끝나면 버튼 활성화
@@ -156,7 +158,7 @@ export default {
       passwordSchema: new PV(),
       error: {
         email: false,
-        passowrd: false
+        password: false
       },
       isSubmit: false,
       component: this

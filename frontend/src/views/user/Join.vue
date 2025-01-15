@@ -1,252 +1,74 @@
+
+<!--
+    가입하기는 기본적인 폼만 제공됩니다
+    기능명세에 따라 개발을 진행하세요.
+    Sub PJT I에서는 UX, 디자인 등을 포함하여 백엔드를 제외하여 개발합니다.
+ -->
 <template>
   <div class="user join wrapC">
     <h1>가입하기</h1>
-    <!-- 회원가입 폼 -->
-    <div v-if="!isSuccess" class="form-wrap">
-    <div class="input-with-label">
-      <input v-model="nickName" id="nickname" placeholder=" " type="text" @input="validateForm" />
-      <label for="nickname" class="floating-label">닉네임</label>
-      <p v-if="errors.nickName" class="error">{{ errors.nickName }}</p>
+    <div class="form-wrap">
+      <div class="input-with-label">
+        <input v-model="nickName" id="nickname" placeholder="닉네임을 입력하세요." type="text" />
+        <label for="nickname">닉네임</label>
       </div>
 
       <div class="input-with-label">
-        <input v-model="email" id="email" placeholder=" " type="email" autocomplete="off" autocapitalize="none" @input="validateForm" />
-        <label for="email" class="floating-label">이메일</label>
-        <p v-if="errors.email" class="error">{{ errors.email }}</p>
+        <input v-model="email" id="email" placeholder="이메일을 입력하세요." type="text" />
+        <label for="email">이메일</label>
       </div>
 
       <div class="input-with-label">
-        <input v-model="password" id="password" :type="passwordType" placeholder=" " @input="validateForm" />
-        <label for="password" class="floating-label">비밀번호</label>
-        <p v-if="errors.password" class="error">{{ errors.password }}</p>
+        <input v-model="password" id="password" :type="passwordType" placeholder="비밀번호를 입력하세요." />
+        <label for="password">비밀번호</label>
       </div>
 
       <div class="input-with-label">
-        <input v-model="passwordConfirm" :type="passwordConfirmType" id="password-confirm" placeholder=" " @input="validateForm" />
-        <label for="password-confirm" class="floating-label">비밀번호 확인</label>
-        <p v-if="errors.passwordConfirm" class="error">{{ errors.passwordConfirm }}</p>
+        <input
+          v-model="passwordConfirm"
+          :type="passwordConfirmType"
+          id="password-confirm"
+          placeholder="비밀번호를 다시한번 입력하세요."
+        />
+        <label for="password-confirm">비밀번호 확인</label>
       </div>
     </div>
 
+    <label>
+      <input v-model="isTerm" type="checkbox" id="term" />
+      <span>약관을 동의합니다.</span>
+    </label>
 
-    <!-- 약관 동의 및 가입 버튼 -->
-    <div v-if="!isSuccess">
-      <label>
-        <input v-model="isTerm" type="checkbox" id="term" @change="validateForm" />
-        <span>약관을 동의합니다.</span>
-      </label>
+    <span @click="termPopup=true">약관보기</span>
 
-      <span @click="termPopup = true">약관보기</span>
-      <button class="btn-bottom" :disabled="!isFormValid || isLoading" @click="submitForm">가입하기</button>
-    </div>
-
-    <!-- 회원가입 완료 후 -->
-    <div v-if="isSuccess" class="success-wrap">
-      <h2>회원가입이 완료되었습니다!</h2>
-      <p class="success">회원가입 인증 메일이 발송되었습니다. 이메일을 확인해 주세요.</p>
-      <div class="actions">
-        <button @click="resendEmail" :disabled="isResending" class="btn-bottom">메일 재발송</button>
-        <a href="https://mail.google.com" target="_blank" class="btn-bottom">메일함으로 이동</a>
-      </div>
-    </div>
-
-
-
-
-    <!-- 에러 메시지 -->
-    <p v-if="generalError" class="error">{{ generalError }}</p>
+    <button class="btn-bottom">가입하기</button>
   </div>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    email: "",
-    password: "",
-    passwordConfirm: "",
-    nickName: "",
-    isTerm: false,
-    isLoading: false,
-    errors: {
+  data: () => {
+    return {
       email: "",
       password: "",
-      nickName: "",
       passwordConfirm: "",
-    },
-    successMessage: "",
-    generalError: "",
-    passwordType: "password",
-    passwordConfirmType: "password",
-    termPopup: false,
-    isSuccess: false, // 회원가입 성공 여부
-    isResending: false, // 메일 재발송 중 여부
-  }),
-  computed: {
-    isFormValid() {
-      return (
-        this.nickName &&
-        this.email &&
-        this.password &&
-        this.passwordConfirm &&
-        this.isTerm &&
-        Object.values(this.errors).every((error) => !error)
-      );
-    },
-  },
-  methods: {
-    validateForm() {
-      // Reset errors
-      this.errors = {
-        email: "",
-        password: "",
-        nickName: "",
-        passwordConfirm: "",
-      };
-
-      // 이메일 유효성 검사
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(this.email)) {
-        this.errors.email = "유효한 이메일 주소를 입력하세요.";
-      }
-
-      // 비밀번호 유효성 검사
-      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*\W).{8,15}$/;
-      if (!passwordRegex.test(this.password)) {
-        this.errors.password =
-          "비밀번호는 8-15자, 문자, 숫자, 특수문자가 포함되어야 합니다.";
-      }
-
-      // 비밀번호 확인 검사
-      if (this.password !== this.passwordConfirm) {
-        this.errors.passwordConfirm = "비밀번호가 일치하지 않습니다.";
-      }
-
-      // 닉네임 유효성 검사
-      if (this.nickName.length < 3) {
-        this.errors.nickName = "닉네임은 최소 3자 이상이어야 합니다.";
-      }
-    },
-    async submitForm() {
-      this.isLoading = true;
-      this.successMessage = "";
-      this.generalError = "";
-
-      try {
-        const response = await this.$axios.post("/api/signup/", {
-          email: this.email,
-          password1: this.password,
-          password2: this.passwordConfirm,
-          nickName: this.nickName,
-        });
-        this.successMessage = "회원가입이 완료되었습니다!";
-        this.isSuccess = true; // 회원가입 완료 상태로 변경
-        this.resetForm();
-      } catch (error) {
-        console.error("Signup Error:", error.response?.data || error); // 디버깅 메시지 추가
-        this.generalError =
-          error.response?.data?.errors || "회원가입 중 문제가 발생했습니다.";
-      } finally {
-        this.isLoading = false; // 로딩 상태 초기화
-      }
-    },
-    async resendEmail() {
-      this.isResending = true;
-      try {
-        // 재발송 요청
-        await this.$axios.post("/api/resend-email", { email: this.email });
-        this.successMessage = "인증 메일이 재발송되었습니다.";
-      } catch (error) {
-        console.error("Resend Email Error:", error.response?.data || error); // 디버깅 메시지 추가
-        this.generalError = "메일 재발송 중 오류가 발생했습니다.";
-      } finally {
-        this.isResending = false;
-      }
-    },
-    resetForm() {
-      this.email = ""; // 이메일 초기화
-      this.password = ""; // 비밀번호 초기화
-      this.passwordConfirm = ""; // 비밀번호 확인 초기화
-      this.nickName = ""; // 닉네임 초기화
-      this.isTerm = false; // 약관 동의 상태 초기화
-      this.errors = {
-        // 에러 메시지 초기화
-        email: "",
-        password: "",
-        nickName: "",
-        passwordConfirm: "",
-      };
-    },
-  },
+      nickName: "",
+      isTerm: false,
+      isLoading: false,
+      error: {
+        email: false,
+        password: false,
+        nickName: false,
+        passwordConfirm: false,
+        term: false
+      },
+      isSubmit: false,
+      passwordType: "password",
+      passwordConfirmType: "password",
+      termPopup: false
+    };
+  }
 };
 </script>
 
 
-<style>
-.input-with-label {
-  position: relative;
-  margin-bottom: 1rem;
-}
-
-.input-with-label input {
-  width: 100%;
-  padding: 10px 5px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  outline: none;
-}
-
-.input-with-label input:focus {
-  border-color: #007bff;
-}
-
-.input-with-label input:focus + .floating-label,
-.input-with-label input:not(:placeholder-shown) + .floating-label {
-  transform: translateY(-20px);
-  font-size: 12px;
-  color: #007bff;
-}
-
-.floating-label {
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  transition: all 0.2s ease;
-  font-size: 16px;
-  color: #aaa;
-  pointer-events: none;
-}
-
-.error {
-  color: red;
-  font-size: 0.9em;
-}
-
-.success {
-  color: green;
-  font-size: 0.9em;
-}
-
-.success-wrap {
-  text-align: center;
-  padding: 20px;
-}
-
-.actions {
-  margin-top: 20px;
-}
-
-.btn-bottom {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-bottom:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-</style>
