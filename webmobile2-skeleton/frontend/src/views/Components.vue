@@ -23,6 +23,7 @@
           label="비밀번호"
           password="true"
         />
+        <!-- good -->
 
         <!-- textarea -->
         <TextareaComponent
