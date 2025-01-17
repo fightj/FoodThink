@@ -13,4 +13,13 @@
 ![로그인페이지](/uploads/a2bc2c2aed0418b794df4c2f86831643/로그인페이지.png)
 
 ## (우리팀 활동) 카테고리 및 챗봇 페이지 커스터마이징
-- 제출일 : 
+
+### 제출일 : 01.17. (금)
+
+### 요리 서비스 카테고리 페이지 Figma
+
+![category](/uploads/dd92e2c764905f8a02a34fc62b7a48aa/category.png)
+
+### 요리 서비스 챗봇 페이지 Figma
+
+![chat_bot](/uploads/b1b1d472a86ff53c35e43b2a37d65394/chat_bot.png)
