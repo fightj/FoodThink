@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name="user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class userEntity {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class userEntity {
     private String refreshToken;
 
     @Builder
-    public userEntity(String socialId, String socialType, String email) {
+    public UserEntity(String socialId, String socialType, String email) {
         this.socialId = socialId;
         this.socialType = socialType;
         this.email = email;
