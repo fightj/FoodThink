@@ -1,74 +1,36 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.feature-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+.icon-square {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+.text-shadow-1 {
+  text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
+}
+.text-shadow-2 {
+  text-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+}
+.text-shadow-3 {
+  text-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.card-cover {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+.feature-icon-small {
+  width: 3rem;
+  height: 3rem;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-/* ----------------------------------------------------------------------------- */
-/* .bd-placeholder-img {
+.bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
   -webkit-user-select: none;
@@ -143,4 +105,24 @@ button:focus-visible {
 
 .bd-mode-toggle .dropdown-menu .active .bi {
   display: block !important;
-} */
+}
+/* 부모 요소를 정사각형으로 조정 */
+.feed-card {
+  aspect-ratio: 1 / 1; /* 정사각형 비율 유지 */
+  background-size: cover; /* 이미지가 영역을 꽉 채움 */
+  background-position: center; /* 이미지 가운데 정렬 */
+  border-radius: 8px; /* 카드의 모서리 둥글게 */
+  transition: transform 0.3s ease; /* 호버 효과 추가 */
+}
+
+/* 호버 시 확대 효과 */
+.feed-card:hover {
+  transform: scale(1.05);
+}
+
+/* 반응형: 모바일에서도 적절히 표시 */
+@media (max-width: 576px) {
+  .feed-card {
+    aspect-ratio: 1 / 1; /* 모바일에서도 정사각형 유지 */
+  }
+}
