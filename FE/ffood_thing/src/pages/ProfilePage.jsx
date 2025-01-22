@@ -4,18 +4,25 @@ import ProfileTabs from "../components/ProfilePage/ProfileTabs";
 import RecipeList from "../components/ProfilePage/RecipeList";
 import BookmarkList from "../components/ProfilePage/BookmarkList";
 import FeedList from "../components/ProfilePage/FeedList";
+import "../styles/ProfilePage.css"; // ✅ 스타일 파일 import
 
 const ProfilePage = () => {
-  console.log("✅ ProfilePage 렌더링됨!"); // ✅ 렌더링 확인용 콘솔 추가
   const [activeTab, setActiveTab] = useState("recipes");
 
   return (
-    <div>
+    <div className="profile-container">
+      {/* ✅ 프로필 헤더 */}
       <ProfileHeader />
+
+      {/* ✅ 프로필 탭 */}
       <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      {activeTab === "recipes" && <RecipeList />}
-      {activeTab === "bookmarks" && <BookmarkList />}
-      {activeTab === "feed" && <FeedList />}
+
+      {/* ✅ 탭에 따라 다른 컴포넌트 표시 */}
+      <div className="tab-content">
+        {activeTab === "recipes" && <RecipeList />}
+        {activeTab === "bookmarks" && <BookmarkList />}
+        {activeTab === "feed" && <FeedList />}
+      </div>
     </div>
   );
 };

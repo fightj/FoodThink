@@ -1,7 +1,15 @@
 import React from "react";
+import "../../styles/ProfilePage.css";
 
 const FeedList = () => {
-  return <h3 style={{ textAlign: "center", padding: "20px" }}>피드 내용</h3>;
+  return (
+    <div className="recipe-container">
+      <img src="/images/bookmark1.jpg" alt="피드 이미지 1" className="recipe-image" />
+      <img src="/images/bookmark1.jpg" alt="피드 이미지 2" className="recipe-image" />
+      <img src="/images/bookmark1.jpg" alt="피드 이미지 2" className="recipe-image" />
+
+    </div>
+  );
 };
 
 export default FeedList;
