@@ -31,20 +31,20 @@ public class UserEntity {
     @Column(name="refresh_token")
     private String refreshToken;
 
-    @Builder
-    public UserEntity(String socialId, String socialType, String email) {
-        this.socialId = socialId;
-        this.socialType = socialType;
-        this.email = email;
-    }
-
-    public void updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    public void updateProfile(String nickname, String image) {
-        this.nickname = nickname;
-        this.image = image;
-    }
+//    @Builder
+//    public UserEntity(String socialId, String socialType, String email) {
+//        this.socialId = socialId;
+//        this.socialType = socialType;
+//        this.email = email;
+//    }
+//
+//    public void updateRefreshToken(String refreshToken) {
+//        this.refreshToken = refreshToken;
+//    }
+//
+//    public void updateProfile(String nickname, String image) {
+//        this.nickname = nickname;
+//        this.image = image;
+//    }
 
 }
