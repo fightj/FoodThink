@@ -181,6 +181,7 @@ function HomeCarousel() {
 
         {/* Repeat the Featurettes */}
         <hr className="featurette-divider" />
+        
         {/* The rest of the content remains the same */}
       </div>
     </>
