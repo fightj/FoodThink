@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useParams } from "react-router-dom"
-import RecipeComponent from "../components/RecipeComponent"
+import RecipeComponent from "../../components/recipe/RecipeComponent"
 
 const RecipeDetailPage = () => {
   const { id } = useParams()

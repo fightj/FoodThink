@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import "../styles/RecipesMainPage.css" // styles 폴더에서 가져옴
+import "../../styles/recipe/RecipesMainPage.css" // styles 폴더에서 가져옴
 
 const RecipesMainPage = () => {
   const navigate = useNavigate()
