@@ -1,7 +1,7 @@
 // data.js
-import unsplashPhoto1 from "../assets/images/unsplash-photo-1.jpg"
-import unsplashPhoto2 from "../assets/images/unsplash-photo-2.jpg"
-import unsplashPhoto3 from "../assets/images/unsplash-photo-3.jpg"
+import unsplashPhoto1 from "../../assets/images/unsplash-photo-1.jpg"
+import unsplashPhoto2 from "../../assets/images/unsplash-photo-2.jpg"
+import unsplashPhoto3 from "../../assets/images/unsplash-photo-3.jpg"
 
 const feed_posts = [
   {

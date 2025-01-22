@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react"
-import BackTab from "./BackTab"
-import imageIcon from "../assets/image.svg" // SVG 파일 경로
+import BackTab from "../../components/base/BackTab"
+import imageIcon from "../../assets/image.svg" // SVG 파일 경로
 import { Form } from "react-bootstrap" // react-bootstrap에서 Form 가져오기
 
 function FeedWrite() {

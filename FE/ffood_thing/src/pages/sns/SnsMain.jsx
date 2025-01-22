@@ -1,8 +1,8 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import SearchBar from "./SearchBar"
+import SearchBar from "../../components/base/SearchBar"
 import feed_posts from "./feed_data"
-import "./SnsMain.css" // 여기에 필요한 스타일 추가
+import "../../styles/sns/SnsMain.css" // 여기에 필요한 스타일 추가
 
 function SnsMain() {
   return (

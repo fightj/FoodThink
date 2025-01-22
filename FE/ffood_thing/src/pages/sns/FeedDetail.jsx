@@ -1,7 +1,7 @@
 import React from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import feed_posts from "./feed_data"
-import BackTab from "./BackTab"
+import BackTab from "../../components/base/BackTab"
 
 function FeedDetail() {
   const { id } = useParams()

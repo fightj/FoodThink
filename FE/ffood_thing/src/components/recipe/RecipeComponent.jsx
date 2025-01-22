@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import HTMLFlipBook from "react-pageflip"
-import "../styles/RecipeComponent.css" // styles 폴더의 RecipeComponent.css 파일 불러오기
+import "../../styles/recipe/RecipeComponent.css" // styles 폴더의 RecipeComponent.css 파일 불러오기
 
 // 페이지 커버
 const PageCover = React.forwardRef((props, ref) => {

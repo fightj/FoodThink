@@ -2,7 +2,7 @@ import React from "react"
 import "bootstrap/dist/css/bootstrap.min.css" // Bootstrap CSS 추가
 import "bootstrap/dist/js/bootstrap.bundle.min.js" // Bootstrap JS 추가
 import { Link } from "react-router-dom"
-
+import "../../styles/home/HomeCarousel.css"
 function HomeCarousel() {
   return (
     <>
@@ -81,7 +81,7 @@ function HomeCarousel() {
               className="bd-placeholder-img rounded-circle"
               width="220"
               height="220"
-              src="../src/assets/images/todaysMenu.png" // Make sure the image path is correct
+              src="../../../public/images/todaysMenu.png" // Make sure the image path is correct
               alt="Today's Menu"
             />
             <h2 className="fw-normal">추천</h2>
@@ -92,7 +92,7 @@ function HomeCarousel() {
               className="bd-placeholder-img rounded-circle"
               width="220"
               height="220"
-              src="../src/assets/images/recipe.webp" // Make sure the image path is correct
+              src="../../../public/images/recipe.webp" // Make sure the image path is correct
               alt="Today's Menu"
             />
 
@@ -111,7 +111,7 @@ function HomeCarousel() {
                 className="bd-placeholder-img rounded-circle"
                 width="220"
                 height="220"
-                src="../src/assets/images/sns1.jpg" // Make sure the image path is correct
+                src="../../../public/images/sns1.jpg" // Make sure the image path is correct
                 alt="Today's Menu"
               />
             </Link>
