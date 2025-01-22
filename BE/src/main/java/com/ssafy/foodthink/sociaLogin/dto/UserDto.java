@@ -1,15 +1,13 @@
 package com.ssafy.foodthink.sociaLogin.dto;
 
 import com.ssafy.foodthink.sociaLogin.entity.UserEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 //@Builder
+@Setter
 public class UserDto {
 
     private int userId;
