@@ -12,7 +12,7 @@
 	<artifactId>foodthink</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>foodthink</name>
-	<description>SSAFY 12기 공통 프로젝트 E107(팀 쿡)</description>
+	<description>SSAFY 12기 공통 프로젝트 E107(해조)</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -59,6 +59,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<!-- Jsoup for HTML Parsing -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.15.4</version>
 		</dependency>
 	</dependencies>
 
