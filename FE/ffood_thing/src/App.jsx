@@ -10,7 +10,7 @@ import { Link } from "react-router-dom"
 import FeedDetail from "./pages/sns/FeedDetail" // 피드 상세보기
 import FeedWrite from "./pages/sns/FeedWrite" // 피드 작성성
 import "bootstrap-icons/font/bootstrap-icons.css"
-
+import ProfilePage from "./pages/ProfilePage"
 const App = () => {
   return (
     <div>
@@ -22,6 +22,7 @@ const App = () => {
           <Route path="/feed/write" element={<FeedWrite />} />
           <Route path="/recipes" element={<RecipesMainPage />} />
           <Route path="/recipes/:id" element={<RecipeDetailPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
         <NavbarBottom />
       </Router>
