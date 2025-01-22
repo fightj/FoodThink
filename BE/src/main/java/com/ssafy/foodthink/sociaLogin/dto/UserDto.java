@@ -10,11 +10,10 @@ import lombok.*;
 @Setter
 public class UserDto {
 
-    private int userId;
-    private String socialId;
-    private String socialType;
+    private String role;
     private String email;
     private String nickname;
-    private String image;
+    private String socialId;
+    private String socialType;
 
 }
