@@ -1,22 +1,18 @@
-package com.ssafy.foodthink.sociaLogin.oauth2;
+package com.ssafy.foodthink.user.oauth2;
 
-import com.ssafy.foodthink.sociaLogin.dto.CustomOAuth2User;
-import com.ssafy.foodthink.sociaLogin.entity.UserEntity;
-import com.ssafy.foodthink.sociaLogin.jwt.JWTUtil;
-import com.ssafy.foodthink.sociaLogin.repository.UserRepository;
+import com.ssafy.foodthink.user.dto.CustomOAuth2User;
+import com.ssafy.foodthink.user.entity.UserEntity;
+import com.ssafy.foodthink.user.jwt.JWTUtil;
+import com.ssafy.foodthink.user.repository.UserRepository;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 
 @Component
 @Slf4j

@@ -1,7 +1,7 @@
-package com.ssafy.foodthink.sociaLogin.controller;
+package com.ssafy.foodthink.user.controller;
 
-import com.ssafy.foodthink.sociaLogin.jwt.JWTUtil;
-import com.ssafy.foodthink.sociaLogin.service.CustomOAuth2UserService;
+import com.ssafy.foodthink.user.jwt.JWTUtil;
+import com.ssafy.foodthink.user.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

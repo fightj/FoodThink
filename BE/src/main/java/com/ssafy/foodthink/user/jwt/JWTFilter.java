@@ -1,10 +1,9 @@
-package com.ssafy.foodthink.sociaLogin.jwt;
+package com.ssafy.foodthink.user.jwt;
 
-import com.ssafy.foodthink.sociaLogin.dto.CustomOAuth2User;
-import com.ssafy.foodthink.sociaLogin.dto.UserDto;
+import com.ssafy.foodthink.user.dto.CustomOAuth2User;
+import com.ssafy.foodthink.user.dto.UserDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

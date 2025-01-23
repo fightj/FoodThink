@@ -1,9 +1,9 @@
 package com.ssafy.foodthink.global.config;
 
-import com.ssafy.foodthink.sociaLogin.jwt.JWTFilter;
-import com.ssafy.foodthink.sociaLogin.jwt.JWTUtil;
-import com.ssafy.foodthink.sociaLogin.oauth2.CustomSuccessHandler;
-import com.ssafy.foodthink.sociaLogin.service.CustomOAuth2UserService;
+import com.ssafy.foodthink.user.jwt.JWTFilter;
+import com.ssafy.foodthink.user.jwt.JWTUtil;
+import com.ssafy.foodthink.user.oauth2.CustomSuccessHandler;
+import com.ssafy.foodthink.user.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

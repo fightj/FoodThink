@@ -1,4 +1,4 @@
-package com.ssafy.foodthink.sociaLogin.jwt;
+package com.ssafy.foodthink.user.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

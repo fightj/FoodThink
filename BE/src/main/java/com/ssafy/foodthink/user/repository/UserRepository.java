@@ -1,6 +1,6 @@
-package com.ssafy.foodthink.sociaLogin.repository;
+package com.ssafy.foodthink.user.repository;
 
-import com.ssafy.foodthink.sociaLogin.entity.UserEntity;
+import com.ssafy.foodthink.user.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

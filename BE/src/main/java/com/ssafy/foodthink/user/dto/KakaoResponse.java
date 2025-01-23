@@ -1,4 +1,4 @@
-package com.ssafy.foodthink.sociaLogin.dto;
+package com.ssafy.foodthink.user.dto;
 
 import java.util.Map;
 

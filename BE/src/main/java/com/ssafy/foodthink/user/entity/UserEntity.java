@@ -1,4 +1,4 @@
-package com.ssafy.foodthink.sociaLogin.entity;
+package com.ssafy.foodthink.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

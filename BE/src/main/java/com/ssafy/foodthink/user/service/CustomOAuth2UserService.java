@@ -1,10 +1,10 @@
-package com.ssafy.foodthink.sociaLogin.service;
+package com.ssafy.foodthink.user.service;
 
-import com.ssafy.foodthink.sociaLogin.dto.CustomOAuth2User;
-import com.ssafy.foodthink.sociaLogin.dto.KakaoResponse;
-import com.ssafy.foodthink.sociaLogin.dto.UserDto;
-import com.ssafy.foodthink.sociaLogin.entity.UserEntity;
-import com.ssafy.foodthink.sociaLogin.repository.UserRepository;
+import com.ssafy.foodthink.user.dto.CustomOAuth2User;
+import com.ssafy.foodthink.user.dto.KakaoResponse;
+import com.ssafy.foodthink.user.dto.UserDto;
+import com.ssafy.foodthink.user.entity.UserEntity;
+import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
