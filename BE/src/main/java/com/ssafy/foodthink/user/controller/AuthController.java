@@ -1,6 +1,8 @@
 package com.ssafy.foodthink.user.controller;
 
+import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
+import com.ssafy.foodthink.user.repository.UserRepository;
 import com.ssafy.foodthink.user.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,13 +25,22 @@ public class AuthController {
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/login/kakao")
     public ResponseEntity<?> kakaoLogin(OAuth2AuthenticationToken authenticationToken) {
         OAuth2User oauth2User = authenticationToken.getPrincipal();
         String email = oauth2User.getAttribute("email");
         String role = oauth2User.getAuthorities().iterator().next().getAuthority();
 
-        String accessToken = jwtUtil.createAccessToken(email, role, 60*60*60L);
+        // 이메일로 사용자 조회
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
+
+        Long userId = user.getId();
+
+        String accessToken = jwtUtil.createAccessToken(userId, role, 60*60*60L);
 
         return ResponseEntity.ok().body(accessToken);
     }

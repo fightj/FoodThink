@@ -14,5 +14,6 @@ public class UserDto {
     private String nickname;
     private String socialId;
     private String socialType;
+    private String image;
 
 }

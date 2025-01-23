@@ -40,9 +40,9 @@ public class JWTUtil {
         }
     }
 
-    public String createAccessToken(String email, String role, Long expiredMs) {
+    public String createAccessToken(Long userId, String role, Long expiredMs) {
         return Jwts.builder()
-                .claim("email", email)
+                .claim("userId", userId)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
@@ -62,4 +62,11 @@ public class JWTUtil {
     private Claims getClaims(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
     }
+
+    // Access Token으로 user_id 추출
+    public Long getUserId(String token) {
+        return getClaims(token).get("userId", Long.class);
+    }
+
+
 }
