@@ -1,6 +1,8 @@
+import React from "react"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import RecipeComponent from "../../components/recipe/RecipeComponent"
+import HandPoseComponent from "../../components/handmotion/HandPoseComponent" // HandPoseComponent 임포트
 
 const RecipeDetailPage = () => {
   const { id } = useParams()
@@ -46,6 +48,14 @@ const RecipeDetailPage = () => {
             <button className="close-button" onClick={() => setShowModal(false)}>
               X
             </button>
+            <HandPoseComponent
+              onNextPage={() => {
+                /* 다음 페이지로 이동하는 로직 구현 */
+              }}
+              onPrevPage={() => {
+                /* 이전 페이지로 이동하는 로직 구현 */
+              }}
+            />
             <RecipeComponent pages={recipe.steps} />
           </div>
         </div>
