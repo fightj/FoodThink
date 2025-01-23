@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 public class CrawlingRecipeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer recipeId;           //자동생성 기본키
+    private Long recipeId;
+    //자동생성 기본키
 
     private String recipeTitle;         //레시피 제목
     private String cateType;            //종류별 분류
