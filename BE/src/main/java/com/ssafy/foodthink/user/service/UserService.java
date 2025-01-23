@@ -7,6 +7,8 @@ import com.ssafy.foodthink.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -24,15 +26,15 @@ public class UserService {
         return convertToDto(userEntity);
     }
 
-    public UserInfoDto updateUserInfo(Long userId, String nickname, String image) {
+    public UserInfoDto updateUserNickname(Long userId, String nickname) {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
 
         if (nickname != null && !nickname.isEmpty()) {
+            if (isNicknameDuplicate(nickname, userId)) {
+                throw new RuntimeException("이미 사용 중인 닉네임입니다.");
+            }
             userEntity.setNickname(nickname);
-        }
-        if (image != null && !image.isEmpty()) {
-            userEntity.setImage(image);
         }
 
         userRepository.save(userEntity);
@@ -53,6 +55,11 @@ public class UserService {
                 .nickname(userEntity.getNickname())
                 .image(userEntity.getImage())
                 .build();
+    }
+
+    private boolean isNicknameDuplicate(String nickname, Long userId) {
+        Optional<UserEntity> existingUser = userRepository.findByNickname(nickname);
+        return existingUser.isPresent() && !existingUser.get().getId().equals(userId);
     }
 }
 

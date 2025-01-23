@@ -31,14 +31,14 @@ public class UserController {
         return ResponseEntity.ok(userInfoDto);
     }
 
-    // 사용자 정보 수정(nickname, image)
-    @PutMapping("/update")
-    public ResponseEntity<UserInfoDto> updateUserInfo(@RequestHeader("Authorization") String token,
+    // 사용자 정보 수정(nickname)
+    @PutMapping("/update/nickname")
+    public ResponseEntity<UserInfoDto> updateUserNickname(@RequestHeader("Authorization") String token,
                                                       @RequestBody UserInfoDto updatedInfo) {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
 
-        UserInfoDto updatedUser = userService.updateUserInfo(userId, updatedInfo.getNickname(), updatedInfo.getImage());
+        UserInfoDto updatedUser = userService.updateUserNickname(userId, updatedInfo.getNickname());
         return ResponseEntity.ok(updatedUser);
     }
 
