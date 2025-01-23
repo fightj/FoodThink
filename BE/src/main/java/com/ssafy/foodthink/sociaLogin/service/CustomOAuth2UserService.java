@@ -28,39 +28,39 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Transactional
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {  // OAuth2 인증 과정에서 사용자 정보를 로드 및 처리
         OAuth2User oAuth2User = super.loadUser(userRequest);
         log.info("[Slf4j]oAuth2User: {}", oAuth2User);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        if (!registrationId.equals("kakao")) {
-            throw new OAuth2AuthenticationException("Unsupported OAuth2 provider");
+        if (!registrationId.equals("kakao")) { // kakao 로그인만
+            throw new OAuth2AuthenticationException("이외의 provider인 경우 !!!!");
         }
 
+        // Kakao에서 제공한 사용자 정보를 파싱
         KakaoResponse kakaoResponse = new KakaoResponse(oAuth2User.getAttributes());
 
         String socialId = kakaoResponse.getProviderId();
         String email = kakaoResponse.getEmail();
         String nickname = kakaoResponse.getNickname();
 
+        // 이메일로 기존 사용자 조회
         Optional<UserEntity> existingUser = userRepository.findByEmail(email);
 
         UserEntity userEntity;
-        if (existingUser.isEmpty()) {
+        if (existingUser.isEmpty()) { // 신규사용자인 경우
             userEntity = UserEntity.createUser(socialId, email, nickname);
             userRepository.save(userEntity);
-        } else {
+        } else { // 기존 사용자인 경우
             userEntity = existingUser.get();
-            userEntity.setSocialId(socialId);
-            userEntity.setNickname(nickname);
-            userRepository.save(userEntity);
         }
 
+        // 기존 사용자의 경우 데이터베이스에 저장된 정보를 그대로 사용, 새로운 사용자만 정보가 저장
         UserDto userDTO = new UserDto();
-        userDTO.setEmail(email);
-        userDTO.setNickname(nickname);
+        userDTO.setEmail(userEntity.getEmail());
+        userDTO.setNickname(userEntity.getNickname());
         userDTO.setRole(userEntity.getRole());
-        userDTO.setSocialId(socialId);
+        userDTO.setSocialId(userEntity.getSocialId());
         userDTO.setSocialType("KAKAO");
 
         return new CustomOAuth2User(userDTO);

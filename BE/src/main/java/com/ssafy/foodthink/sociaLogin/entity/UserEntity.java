@@ -43,27 +43,9 @@ public class UserEntity {
         userEntity.setNickname(nickname);
         userEntity.setImage(null);
         userEntity.setRole("ROLE_USER");
+        userEntity.setRefreshToken(null);
         return userEntity;
     }
 }
-
-//    @Column(name="refresh_token")
-//    private String refreshToken;
-
-//    @Builder
-//    public UserEntity(String socialId, String socialType, String email) {
-//        this.socialId = socialId;
-//        this.socialType = socialType;
-//        this.email = email;
-//    }
-//
-//    public void updateRefreshToken(String refreshToken) {
-//        this.refreshToken = refreshToken;
-//    }
-//
-//    public void updateProfile(String nickname, String image) {
-//        this.nickname = nickname;
-//        this.image = image;
-//    }
 
 

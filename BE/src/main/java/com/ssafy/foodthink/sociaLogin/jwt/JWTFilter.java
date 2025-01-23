@@ -26,8 +26,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = extractToken(request);
+        String token = extractToken(request); // request에서 토큰을 추출
 
+        // 유효한 토큰이 존재하는 경우
         if (token != null && jwtUtil.validateToken(token)) {
             String email = jwtUtil.getEmail(token);
             String role = jwtUtil.getRole(token);
@@ -47,13 +48,10 @@ public class JWTFilter extends OncePerRequestFilter {
     }
 
     private String extractToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("Authorization")) {
-                    return cookie.getValue();
-                }
-            }
+
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
         return null;
     }

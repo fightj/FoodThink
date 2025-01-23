@@ -1,7 +1,9 @@
 package com.ssafy.foodthink.sociaLogin.oauth2;
 
 import com.ssafy.foodthink.sociaLogin.dto.CustomOAuth2User;
+import com.ssafy.foodthink.sociaLogin.entity.UserEntity;
 import com.ssafy.foodthink.sociaLogin.jwt.JWTUtil;
+import com.ssafy.foodthink.sociaLogin.repository.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,43 +22,46 @@ import java.util.Iterator;
 @Slf4j
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    // JWTUtil을 의존성 주입받아 JWT 토큰 생성에 사용
     private final JWTUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public CustomSuccessHandler(JWTUtil util) {
+    public CustomSuccessHandler(JWTUtil util, UserRepository userRepository) {
         this.jwtUtil = util;
+        this.userRepository = userRepository;
     }
 
+
+    // 인증 성공 시 호출
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
         String email = customOAuth2User.getEmail();
-        String socialId = customOAuth2User.getSocialId();
+        String role = customOAuth2User.getAuthorities().iterator().next().getAuthority();
 
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+        log.info("=== 로그인 성공 ===");
+        log.info("사용자 이메일: {}", customOAuth2User.getEmail());
 
         String accessToken = jwtUtil.createAccessToken(email, role, 60*60*60L);
         String refreshToken = jwtUtil.createRefreshToken(email, 60*60*60*24*7L); // 7일
 
+        // 생성된 refresh_token을 DB에 저장
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+
         log.info("[Slf4j]accessToken: " + accessToken);
         log.info("[Slf4j]refreshToken: " + refreshToken);
 
-        response.addCookie(createCookie("Authorization", accessToken));
-        response.addCookie(createCookie("Refresh", refreshToken));
-        response.sendRedirect("http://localhost:8080/"); // 프론트 측 특정 url
+        // HTTP 응답의 본문(body)에 JSON 형태로 포함되어 클라이언트에게 전송
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"accessToken\":\"" + accessToken + "\"}");
+
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60*60*60);
-        //cookie.setSecure(true); // HTTPS에서만 전송되도록 설정
-        cookie.setPath("/"); // 모든 경로에서 사용 가능하도록 설정
-        cookie.setHttpOnly(true); // JavaScript에서 접근할 수 없도록 설정
-
-        return cookie;
-    }
 }

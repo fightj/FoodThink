@@ -1,68 +1,45 @@
 package com.ssafy.foodthink.sociaLogin.controller;
 
-import com.ssafy.foodthink.sociaLogin.dto.CustomOAuth2User;
-import com.ssafy.foodthink.sociaLogin.dto.UserDto;
 import com.ssafy.foodthink.sociaLogin.jwt.JWTUtil;
-import jakarta.servlet.http.Cookie;
+import com.ssafy.foodthink.sociaLogin.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 
-@Controller
-@RequiredArgsConstructor
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
 
-    private final JWTUtil jwtUtil;
+    @Autowired
+    private JWTUtil jwtUtil;
 
-    @GetMapping("/")
-    @ResponseBody
-    public String mainAPI() {
-        return "메인 페이지입니다.";
-    }
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
-    @GetMapping("/my")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> myAPI(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-        Map<String, Object> response = new HashMap<>();
-        if (customOAuth2User != null) {
-            UserDto userDTO = new UserDto();
-            userDTO.setEmail(customOAuth2User.getEmail());
-            userDTO.setNickname(customOAuth2User.getName());
-            userDTO.setRole(customOAuth2User.getAuthorities().iterator().next().getAuthority());
-            userDTO.setSocialId(customOAuth2User.getSocialId());
-            userDTO.setSocialType("KAKAO");
+    @GetMapping("/login/kakao")
+    public ResponseEntity<?> kakaoLogin(OAuth2AuthenticationToken authenticationToken) {
+        OAuth2User oauth2User = authenticationToken.getPrincipal();
+        String email = oauth2User.getAttribute("email");
+        String role = oauth2User.getAuthorities().iterator().next().getAuthority();
 
-            response.put("user", userDTO);
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("error", "사용자 정보를 찾을 수 없습니다.");
-            return ResponseEntity.badRequest().body(response);
-        }
+        String accessToken = jwtUtil.createAccessToken(email, role, 60*60*60L);
+
+        return ResponseEntity.ok().body(accessToken);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
-        // 쿠키에서 JWT 토큰 제거
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("Authorization") || cookie.getName().equals("Refresh")) {
-                    cookie.setValue("");
-                    cookie.setPath("/");
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
-                }
-            }
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            SecurityContextHolder.clearContext();
         }
-        return ResponseEntity.ok("로그아웃 되었습니다.");
+        return ResponseEntity.ok().body("Logged out successfully");
     }
 }

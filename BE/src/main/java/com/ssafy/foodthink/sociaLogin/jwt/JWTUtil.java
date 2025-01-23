@@ -30,6 +30,7 @@ public class JWTUtil {
         return getClaims(token).get("role", String.class);
     }
 
+    // 토큰의 유효성 검사
     public boolean validateToken(String token) {
         try {
             Claims claims = getClaims(token);
