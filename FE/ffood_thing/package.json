@@ -12,6 +12,7 @@
   "dependencies": {
     "@mediapipe/camera_utils": "^0.3.1675466862",
     "@mediapipe/hands": "^0.4.1675469240",
+    "@mediapipe/holistic": "^0.5.1675471629",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "prop-types": "^15.8.1",
