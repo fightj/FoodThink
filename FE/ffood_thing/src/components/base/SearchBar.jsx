@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import "../../styles/base/SearchBar.css"
-
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 function SearchBar({ onSearch }) {
   const [query, setQuery] = useState("")
 
@@ -16,6 +17,17 @@ function SearchBar({ onSearch }) {
 
   return (
     <div className="top-bar">
+      {/* <InputGroup className="mb-3">
+        <Form.Control
+          placeholder="Recipient's username"
+          aria-label="Recipient's username"
+          aria-describedby="basic-addon2"
+        />
+        
+        <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
+        <i className="bi bi-search search-icon" onClick={handleSearch}></i>
+
+      </InputGroup> */}
       <div className="search-bar">
         <div className="search-input-wrapper">
           <input type="text" className="search-input" placeholder="Search..." value={query} onChange={handleInputChange} />

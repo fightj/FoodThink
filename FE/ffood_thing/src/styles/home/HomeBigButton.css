@@ -1,6 +1,6 @@
 /* 컨테이너 스타일 */
 .container {
-  max-width: 95%; /* 원하는 크기로 조정 가능 */
+  max-width: 100%; /* 원하는 크기로 조정 가능 */
   margin: 0 auto; /* 가운데 정렬 */
 }
 
@@ -49,13 +49,13 @@
 /* 각 카드의 위치와 크기 설정 */
 .card-1 {
   grid-area: card1;
-  height: 200px;
+  height: 300px;
   background-image: url("/images/메인페이지1.jpg");
 }
 
 .card-2 {
   grid-area: card2;
-  height: 300px;
+  height: 450px;
   background-image: url("/images/메인페이지2.jpg");
 }
 

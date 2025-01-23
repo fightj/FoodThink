@@ -4,17 +4,14 @@ import { useNavigate } from "react-router-dom"
 
 function NavbarBottom() {
   const [visible, setVisible] = useState(true)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [prevScrollPos, setPrevScrollPos] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY
-
-      // 스크롤 방향 확인
       const isScrollingDown = currentScrollPos > prevScrollPos
 
-      // 스크롤이 맨 위거나 스크롤 업일 때 네브바 보이기
       if (currentScrollPos < 10 || !isScrollingDown) {
         setVisible(true)
       } else {
@@ -31,71 +28,145 @@ function NavbarBottom() {
     }
   }, [prevScrollPos])
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen)
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen)
   }
 
   const navigate = useNavigate()
 
   return (
-    <nav className={`bottom-navbar ${visible ? "bottom-navbar-visible" : "bottom-navbar-hidden"}`}>
-      <div className="container-fluid">
-        <div className="navbar-section">
-          <ul className="navbar-nav">
+    <>
+      {isSidebarOpen && (
+        <div
+        className="d-flex flex-column flex-shrink-0 bg-body-tertiary rounded-3"
+        style={{ 
+          width: '4.5rem', 
+          height: 'calc(100vh - 300px)', // 상단과 하단에서 100px를 줄임
+          position: 'fixed', 
+          top: '150px', // 상단에서 약간 떨어뜨림 
+          bottom: '150px', // 하단에서 약간 떨어뜨림
+          left: 0, 
+          zIndex: 1000,
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)' // 그림자 효과
+        }}
+      >
+          <a 
+            href="/" 
+            className="d-block p-3 link-body-emphasis text-decoration-none" 
+            title="Icon-only"
+          >
+            <i className="bi bi-bootstrap"></i>
+            <span className="visually-hidden">Icon-only</span>
+          </a>
+          <ul className="nav nav-pills nav-flush flex-column mb-auto text-center">
             <li className="nav-item">
-              <i className="bi bi-card-list" onClick={toggleDropdown}></i>
-              {isDropdownOpen && (
-                <div
-                  className="dropdown-menu show"
-                  style={{
-                    position: "absolute",
-                    bottom: "100%",
-                    left: "10px",
-                    zIndex: 1000,
-                  }}
-                >
-                  <a className="dropdown-item" href="#">
-                    오늘의 메뉴
-                  </a>
-                  <a className="dropdown-item" href="#">
-                    레시피
-                  </a>
-                  <a className="dropdown-item" href="#">
-                    뭐넣지?
-                  </a>
-                </div>
-              )}
+              <a 
+                href="#" 
+                className="nav-link  py-3 border-bottom rounded-0" 
+                title="Home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/');
+                }}
+              >
+                <i className="bi bi-house"></i>
+              </a>
             </li>
-          </ul>
-        </div>
-
-        <div className="navbar-section">
-          <ul className="navbar-nav">
-            <li className="nav-item" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
-              <i className="bi bi-house-fill"></i>
-            </li>
-          </ul>
-        </div>
-
-        <div className="navbar-section">
-          <ul className="navbar-nav">
-            <li className="nav-item" onClick={() => navigate("/sns")} style={{ cursor: "pointer" }}>
-              <i className="bi bi-chat-left-heart-fill"></i>
-            </li>
-          </ul>
-        </div>
-
-        <div className="navbar-section">
-          <ul className="navbar-nav">
             <li className="nav-item">
-              <button className="btn btn-outline-light" type="button">
-                Sign In
-              </button>
+              <a 
+                href="#" 
+                className="nav-link  py-3 border-bottom rounded-0" 
+                title="Home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/');
+                }}
+              >
+                <i className="bi bi-house"></i>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a 
+                href="#" 
+                className="nav-link  py-3 border-bottom rounded-0" 
+                title="Home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/');
+                }}
+              >
+                <i className="bi bi-house"></i>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a 
+                href="#" 
+                className="nav-link  py-3 border-bottom rounded-0" 
+                title="Home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/');
+                }}
+              >
+                <i className="bi bi-house"></i>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a 
+                href="#" 
+                className="nav-link  py-3 border-bottom rounded-0" 
+                title="Home"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/');
+                }}
+              >
+                <i className="bi bi-house"></i>
+              </a>
             </li>
           </ul>
+          
         </div>
-      </div>
-    </nav>
+      )}
+
+      <nav className={`bottom-navbar ${visible ? "bottom-navbar-visible" : "bottom-navbar-hidden"}`}>
+        <div className="container-fluid">
+          <div className="navbar-section">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <i className="bi bi-card-list" onClick={toggleSidebar}></i>
+              </li>
+            </ul>
+          </div>
+          
+          <div className="navbar-section">
+            <ul className="navbar-nav">
+              <li className="nav-item" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+                <i className="bi bi-house-fill"></i>
+              </li>
+            </ul>
+          </div>
+          
+          <div className="navbar-section">
+            <ul className="navbar-nav">
+              <li className="nav-item" onClick={() => navigate("/sns")} style={{ cursor: "pointer" }}>
+                <i className="bi bi-chat-left-heart-fill"></i>
+              </li>
+            </ul>
+          </div>
+          
+          <div className="navbar-section">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <button className="btn btn-outline-light" type="button">
+                  Sign In
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </>
   )
 }
 

@@ -12,7 +12,7 @@ function Home() {
       <HomeTopBtn />
       <SearchBar />
       <HomeBigButton />
-      <HomeCarousel />
+      {/* <HomeCarousel /> */}
     </div>
   )
 }
