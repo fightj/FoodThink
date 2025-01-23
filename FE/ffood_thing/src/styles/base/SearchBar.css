@@ -2,46 +2,46 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
   gap: 10px; /* input과 버튼 사이의 간격 */
   width: 100%; /* 부모 요소의 너비에 맞추기 위해 100%로 설정 */
-  max-width: 500px; /* 최대 너비를 설정하여 너무 커지지 않게 함 */
+  max-width: 800px; /* 최대 너비를 설정하여 너무 커지지 않게 함 */
   margin-left: auto; /* 자동으로 왼쪽 여백 설정 */
   margin-right: auto; /* 자동으로 오른쪽 여백 설정 */
   margin-bottom: 20px;
 }
 
+.search-input-wrapper {
+  position: relative; /* 아이콘을 위치시키기 위해 relative 추가 */
+  width: 100%;
+}
+
 .search-input {
   width: 100%; /* 부모 요소에 맞게 크기 조정 */
-  max-width: 200px; /* 최대 너비 설정 */
-  padding: 8px;
+  max-width: 500px; /* 최대 너비 설정 */
+  padding: 8px 40px 8px 15px; /* 오른쪽에 여백을 두어 아이콘과 겹치지 않도록 */
   font-size: 14px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 30px; /* 둥글게 만들기 */
 }
 
-.search-button {
-  padding: 8px 16px;
-  font-size: 14px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
+.search-icon {
+  position: absolute;
+  right: 15px; /* 아이콘을 오른쪽 끝에 배치 */
+  top: 50%;
+  transform: translateY(-50%); /* 아이콘을 세로로 중앙 정렬 */
+  font-size: 18px;
+  color: #007bff;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.search-button:hover {
-  background-color: #0056b3; /* 버튼 호버 시 색상 변경 */
+.search-icon:hover {
+  color: #0056b3; /* 아이콘 호버 시 색상 변경 */
 }
 
 /* 미디어 쿼리 - 화면이 좁아지면 검색창 크기 조정 */
 @media (max-width: 768px) {
   .search-input {
-    max-width: 150px; /* 작은 화면에서는 입력창 너비 줄이기 */
-  }
-
-  .search-button {
-    padding: 8px 12px; /* 버튼 크기 줄이기 */
+    max-width: 200px; /* 작은 화면에서는 입력창 너비 줄이기 */
   }
 }

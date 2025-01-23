@@ -1,32 +1,82 @@
+/* 컨테이너 스타일 */
+.container {
+  max-width: 95%; /* 원하는 크기로 조정 가능 */
+  margin: 0 auto; /* 가운데 정렬 */
+}
+
+/* Grid 레이아웃 */
+.custom-grid {
+  display: grid;
+  grid-template-areas:
+    "card1 card2"
+    "card3 card2"
+    "card3 card4";
+  grid-gap: 20px;
+}
+
+/* 기본 카드 스타일 */
 .card {
-    position: relative;
-    width: 100%; /* 부모 컨테이너의 너비를 기준으로 */
-    padding-top: 100%; /* 높이를 너비와 동일하게 설정 */
-    background-size: cover; /* 이미지가 정사각형에 꽉 차도록 */
-    background-position: center; /* 이미지 중앙 정렬 */
-    border-radius: 60px; /* 카드 모서리를 둥글게 */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 
-                0px 1px 3px rgba(0, 0, 0, 0.06); /* 그림자 추가 */
-    transition: transform 0.2s, box-shadow 0.2s; /* 호버 애니메이션 */
-  }
-  
-  .card:hover {
-    transform: translateY(-5px); /* 살짝 위로 이동 */
-    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2), 
-                0px 4px 6px rgba(0, 0, 0, 0.1); /* 호버 시 그림자 강화 */
-  }
-  
-  .card .content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    color: white;
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
-  }
-  
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2), 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 카드 내용 스타일 */
+.card .content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* 텍스트를 하단 정렬 */
+  padding: 20px;
+  color: white;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.3); /* 카드 배경 위 텍스트 가독성 향상 */
+  border-radius: inherit; /* 카드 테두리 반영 */
+}
+
+/* 각 카드의 위치와 크기 설정 */
+.card-1 {
+  grid-area: card1;
+  height: 200px;
+  background-image: url("/images/메인페이지1.jpg");
+}
+
+.card-2 {
+  grid-area: card2;
+  height: 300px;
+  background-image: url("/images/메인페이지2.jpg");
+}
+
+.card-3 {
+  grid-area: card3;
+  height: 400px;
+  background-image: url("/images/메인페이지3.jpg");
+}
+
+.card-4 {
+  grid-area: card4;
+  height: 250px;
+  background-image: url("/images/메인페이지4.jpg");
+}
+.card-div {
+  background-color: rgb(255, 255, 255); /* 초록색 배경 */
+  width: 100%; /* 수평 공간 전체를 차지 */
+  padding: 20px 0; /* 상하 패딩을 늘려서 높이를 증가 */
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
+  border-radius: 50px 50px 0 0; /* 아래 두 꼭지점만 둥글게 설정 */
+  height: auto; /* 높이를 패딩에 따라 유동적으로 설정 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* 그림자 */
+}

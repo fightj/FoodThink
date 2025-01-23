@@ -1,0 +1,36 @@
+.home-top-btn {
+  background-color: chocolate; /* 배경색 */
+  height: 60px; /* 상단 영역 높이 */
+  position: relative; /* 버튼 위치를 위해 필요 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.button-container {
+  position: absolute;
+  top: 10px;
+  right: 20px; /* 오른쪽 여백 */
+  display: flex;
+  gap: 10px; /* 버튼 간격 */
+}
+
+.square-btn {
+  width: 40px; /* 정사각형 버튼 크기 */
+  height: 40px;
+  background-color: #ffffff; /* 버튼 배경색 */
+  border: none;
+  border-radius: 10px; /* 버튼 모서리 살짝 둥글게 */
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* 그림자 */
+  transition: transform 0.2s ease; /* 클릭 시 애니메이션 */
+}
+
+.square-btn:hover {
+  transform: scale(1.1); /* 마우스 호버 시 버튼 크기 증가 */
+}
+
+.square-btn:active {
+  transform: scale(0.95); /* 클릭 시 버튼 살짝 축소 */
+}

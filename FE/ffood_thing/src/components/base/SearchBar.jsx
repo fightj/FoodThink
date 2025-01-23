@@ -15,11 +15,13 @@ function SearchBar({ onSearch }) {
   }
 
   return (
-    <div className="search-bar">
-      <input type="text" className="form-control" placeholder="Search..." value={query} onChange={handleInputChange} />
-      <button className="btn btn-primary" onClick={handleSearch}>
-        Search
-      </button>
+    <div className="top-bar">
+      <div className="search-bar">
+        <div className="search-input-wrapper">
+          <input type="text" className="search-input" placeholder="Search..." value={query} onChange={handleInputChange} />
+          <i className="bi bi-search search-icon" onClick={handleSearch}></i>
+        </div>
+      </div>
     </div>
   )
 }
