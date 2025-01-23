@@ -59,9 +59,11 @@ public class JWTUtil {
                 .compact();
     }
 
+    // JWT를 파싱하고 검증하여 토큰에 포함된 claims를 추출
     private Claims getClaims(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
     }
+
 
     // Access Token으로 user_id 추출
     public Long getUserId(String token) {
