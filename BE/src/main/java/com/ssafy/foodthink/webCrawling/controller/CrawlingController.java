@@ -12,6 +12,8 @@ public class CrawlingController {
     @Autowired
     private CrawlingService crawlingService;
 
+    // API 정리 및 다시 하기 -> 크롤링 시작임
+    
     @GetMapping("/crawl")
     public String crawlRecipes() {
         crawlingService.crawlRecipes();
