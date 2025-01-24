@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react"
-import BackTab from "../../components/base/BackTab"
 import imageIcon from "../../assets/image.svg" // SVG 파일 경로
 import { Form } from "react-bootstrap" // react-bootstrap에서 Form 가져오기
 
@@ -32,102 +31,103 @@ function FeedWrite() {
   }
 
   return (
-    <div>
-      <BackTab />
-      <div style={{ width: "80%", margin: "0 auto" }}>
-        <form onSubmit={handleSubmit}>
-          {/* 미리보기와 체크박스 */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "10px",
-              marginTop: "20px",
-            }}
-          >
-            {selectedImages.map((image) => (
-              <div
-                key={image.id}
-                style={{
-                  position: "relative",
-                  width: "calc(33.33% - 10px)", // 3개씩 배치
-                }}
-              >
+    <div className="base-div">
+      <div className="card-div">
+        <div style={{ width: "80%", margin: "0 auto" }}>
+          <form onSubmit={handleSubmit}>
+            {/* 미리보기와 체크박스 */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "10px",
+                marginTop: "20px",
+              }}
+            >
+              {selectedImages.map((image) => (
                 <div
+                  key={image.id}
                   style={{
-                    width: "100%",
-                    paddingBottom: "100%", // 정사각형 유지
                     position: "relative",
-                    overflow: "hidden",
-                    borderRadius: "8px",
+                    width: "calc(33.33% - 10px)", // 3개씩 배치
                   }}
                 >
-                  <img
-                    src={image.id}
-                    alt="미리보기"
+                  <div
+                    style={{
+                      width: "100%",
+                      paddingBottom: "100%", // 정사각형 유지
+                      position: "relative",
+                      overflow: "hidden",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <img
+                      src={image.id}
+                      alt="미리보기"
+                      style={{
+                        position: "absolute",
+                        top: "0",
+                        left: "0",
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                  <input
+                    type="checkbox"
                     style={{
                       position: "absolute",
-                      top: "0",
-                      left: "0",
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
+                      top: "10px",
+                      right: "10px",
+                      width: "20px",
+                      height: "20px",
                     }}
+                    onChange={() => handleCheck(image.id)}
                   />
                 </div>
-                <input
-                  type="checkbox"
-                  style={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "10px",
-                    width: "20px",
-                    height: "20px",
-                  }}
-                  onChange={() => handleCheck(image.id)}
-                />
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* 파일 선택 */}
-          <div
-            style={{
-              border: "2px dashed #ccc",
-              padding: "20px",
-              borderRadius: "8px",
-              textAlign: "center",
-              cursor: "pointer",
-              marginTop: "20px", // 미리보기 아래로 이동
-            }}
-            onClick={() => fileInputRef.current.click()}
-          >
-            <img src={imageIcon} alt="이미지 아이콘" style={{ width: "2rem", height: "2rem", marginBottom: "10px" }} />
-            <p>이미지 선택</p>
-            <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
-          </div>
+            {/* 파일 선택 */}
+            <div
+              style={{
+                border: "2px dashed #ccc",
+                padding: "20px",
+                borderRadius: "8px",
+                textAlign: "center",
+                cursor: "pointer",
+                marginTop: "20px", // 미리보기 아래로 이동
+              }}
+              onClick={() => fileInputRef.current.click()}
+            >
+              <img src={imageIcon} alt="이미지 아이콘" style={{ width: "2rem", height: "2rem", marginBottom: "10px" }} />
+              <p>이미지 선택</p>
+              <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
+            </div>
 
-          {/* 추가 정보 입력 */}
-          <hr className="featurette-divider" />
+            {/* 추가 정보 입력 */}
+            <hr className="featurette-divider" />
 
-          <Form.Control size="lg" type="text" placeholder="음식명" />
-          <br />
-          <Form.Control type="text" placeholder="문구 추가..." />
+            <Form.Control size="lg" type="text" placeholder="음식명" />
+            <br />
+            <Form.Control type="text" placeholder="문구 추가..." />
 
-          {/* 게시물 작성 버튼 */}
-          <div
-            className="submit-button"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "20px", // 상단 여백 추가
-            }}
-          >
-            <button type="submit" className="btn btn-primary">
-              공유 하기
-            </button>
-          </div>
-        </form>
+            {/* 게시물 작성 버튼 */}
+            <div
+              className="submit-button"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px", // 상단 여백 추가
+              }}
+            >
+              <button type="submit" className="btn btn-primary">
+                공유 하기
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   )
