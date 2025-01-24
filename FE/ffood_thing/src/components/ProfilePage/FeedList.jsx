@@ -1,14 +1,16 @@
-import React from "react"
-import "../../styles/profile/ProfilePage.css"
+import React from "react";
 
-const FeedList = () => {
+const FeedList = ({ feeds }) => {
+  // 최신순 정렬
+  const sortedFeeds = [...feeds].sort((a, b) => new Date(b.date) - new Date(a.date));
+
   return (
-    <div className="recipe-container">
-      <img src="/images/bookmark1.jpg" alt="피드 이미지 1" className="recipe-image" />
-      <img src="/images/bookmark1.jpg" alt="피드 이미지 2" className="recipe-image" />
-      <img src="/images/bookmark1.jpg" alt="피드 이미지 2" className="recipe-image" />
+    <div className="gallery-container">
+      {sortedFeeds.map((feed) => (
+        <img key={feed.id} src={feed.image} alt={`Feed ${feed.id}`} className="gallery-image" />
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default FeedList
+export default FeedList;

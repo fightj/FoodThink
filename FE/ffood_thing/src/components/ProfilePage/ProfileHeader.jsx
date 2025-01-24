@@ -1,26 +1,21 @@
-import React from "react"
-import "../../styles/profile/ProfilePage.css" // ✅ 스타일 import
+import React from "react";
+import "../../styles/profile/ProfilePage.css";
 
-const ProfileHeader = () => {
-  const profileImage = "/images/profile.jpg" // ✅ Vite 방식 적용
-
+const ProfileHeader = ({ profileImage, nickname, subscribers, posts }) => {
   return (
     <div className="profile-header">
       <img src={profileImage} alt="프로필" className="profile-avatar" />
       <h2 className="profile-username">
-        럭키가이 광전사 <span className="edit-icon">✏️</span>
+        {nickname}
+        {/* <span className="edit-icon">✏️</span> */}
       </h2>
       <div className="profile-info">
-        <span>
-          구독자수: <strong>20</strong>
-        </span>
-        <span>
-          게시물: <strong>15</strong>
-        </span>
+        <span>구독자수: <strong>{subscribers}</strong></span> 
+        <span>게시물: <strong>{posts}</strong></span>
       </div>
-      <button className="profile-button">취향</button>
+      <button className="profile-button">음식선호도</button>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileHeader
+export default ProfileHeader;
