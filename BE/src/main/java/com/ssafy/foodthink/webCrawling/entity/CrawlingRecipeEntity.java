@@ -27,7 +27,6 @@ public class CrawlingRecipeEntity {
     private LocalDateTime writeTime;    //작성시간
     private Integer hits;               //조회수
     private String recipeUrl;           //레시피 URL
-    private String crawlingId;          //크롤링ID
-    private String image;               //이미지 URL
+    private String image;               //대표이미지 URL
 
 }

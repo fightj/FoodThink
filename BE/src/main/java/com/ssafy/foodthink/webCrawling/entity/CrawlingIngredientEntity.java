@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity
+//@Entity
 @Getter
 @Setter
 public class CrawlingIngredientEntity {
@@ -16,7 +16,7 @@ public class CrawlingIngredientEntity {
     //자동생성 기본키
     
     private String ingreName;   //재료명
-    private Integer amount;     //수량
+    private String amount;     //수량
     private String unit;        //단위
 
     @ManyToOne
