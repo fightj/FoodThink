@@ -1,11 +1,13 @@
 package com.ssafy.foodthink.user.service;
 
+import com.ssafy.foodthink.global.S3Service;
 import com.ssafy.foodthink.global.exception.AleadyExistsException;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -13,10 +15,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, S3Service s3Service) {
         this.userRepository = userRepository;
+        this.s3Service = s3Service;
     }
 
     public UserInfoDto getUserById(Long userId) {
@@ -37,6 +41,20 @@ public class UserService {
             userEntity.setNickname(nickname);
         }
 
+        userRepository.save(userEntity);
+
+        return convertToDto(userEntity);
+    }
+
+    public UserInfoDto updateUserImage(Long userId, MultipartFile image){
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+
+        if(image != null && !image.isEmpty()){
+            String imageUrl = s3Service.uploadFile(image);
+            userEntity.setImage(imageUrl);
+        }
         userRepository.save(userEntity);
 
         return convertToDto(userEntity);

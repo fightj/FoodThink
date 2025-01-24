@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/users")
@@ -22,7 +23,7 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
     
-    // 사용자 정보 조회
+    // 회원 정보 조회
     @GetMapping("/read")
     public ResponseEntity<UserInfoDto> getCurrentUser(@RequestHeader("Authorization") String token) {
         String accessToken = token.replace("Bearer ", "");
@@ -31,7 +32,7 @@ public class UserController {
         return ResponseEntity.ok(userInfoDto);
     }
 
-    // 사용자 정보 수정(nickname)
+    // 회원 닉네임 수정
     @PutMapping("/update/nickname")
     public ResponseEntity<UserInfoDto> updateUserNickname(@RequestHeader("Authorization") String token,
                                                       @RequestBody UserInfoDto updatedInfo) {
@@ -42,7 +43,21 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    // 사용자 탈퇴
+    // 회원 프로필 사진 수정
+    @PutMapping("/update/image")
+    public ResponseEntity<UserInfoDto> updateUserImage(@RequestHeader("Authorization") String token, @RequestPart("image") MultipartFile image) {
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        UserInfoDto updatedUser = userService.updateUserImage(userId, image);
+
+        return ResponseEntity.ok(updatedUser);
+    }
+
+
+
+
+    // 회원 탈퇴
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token) {
         String accessToken = token.replace("Bearer ", "");

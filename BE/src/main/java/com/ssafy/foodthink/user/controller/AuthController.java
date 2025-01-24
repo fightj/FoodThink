@@ -51,6 +51,6 @@ public class AuthController {
         if (auth != null) {
             SecurityContextHolder.clearContext();
         }
-        return ResponseEntity.ok().body("Logged out successfully");
+        return ResponseEntity.ok().body("사용자가 성공적으로 로그아웃되었습니다.");
     }
 }
