@@ -1,5 +1,5 @@
-import React from "react";
-import "../../styles/ProfilePage.css";
+import React from "react"
+import "../../styles/profile/ProfilePage.css"
 
 const BookmarkList = () => {
   const bookmarks = [
@@ -7,7 +7,7 @@ const BookmarkList = () => {
     { id: 2, title: "치즈 떡볶이 🌶️🧀", image: "/images/bookmark2.jpg" },
     { id: 3, title: "홈메이드 수제버거 🍔", image: "/images/bookmark3.jpg" },
     { id: 4, title: "초콜릿 브라우니 🍫", image: "/images/bookmark4.jpg" },
-  ];
+  ]
 
   return (
     <div className="recipe-container">
@@ -20,7 +20,7 @@ const BookmarkList = () => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default BookmarkList;
+export default BookmarkList

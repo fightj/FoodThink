@@ -1,7 +1,7 @@
 import React from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import feed_posts from "./feed_data"
-import BackTab from "../../components/base/BackTab"
+import SearchBar from "../../components/base/SearchBar"
 
 function FeedDetail() {
   const { id } = useParams()
@@ -14,44 +14,44 @@ function FeedDetail() {
   }
 
   return (
-    <div>
-      {/* 상단 바 */}
-      <BackTab title="탐색 탭" />
-
-      <div style={{ width: "80%", margin: "0 auto" }}>
-        {/* 여기에 내용 추가 */}
-        {/* 사용자 정보 */}
-        <div style={styles.userInfo}>
-          <div style={styles.profileContainer}>
-            <div style={styles.profileImage}></div>
-            <span style={styles.username}>{post.username || "SSAFY_KIM"}</span>
+    <div className="base-div">
+      <SearchBar />
+      <div className="card-div">
+        <div style={{ width: "80%", margin: "0 auto" }}>
+          {/* 여기에 내용 추가 */}
+          {/* 사용자 정보 */}
+          <div style={styles.userInfo}>
+            <div style={styles.profileContainer}>
+              <div style={styles.profileImage}></div>
+              <span style={styles.username}>{post.username || "SSAFY_KIM"}</span>
+            </div>
+            <button style={styles.editButton}>✎</button> {/*현재 로그인한 유저라면 이 버튼을 활성화해서 수정하기로 이동. */}
           </div>
-          <button style={styles.editButton}>✎</button> {/*현재 로그인한 유저라면 이 버튼을 활성화해서 수정하기로 이동. */}
-        </div>
 
-        {/* 이미지 섹션 */}
-        <div style={styles.imageContainer}>
-          <img src={post.image} alt={post.title} style={styles.image} />
-          <span style={styles.imageIndicator}>1/4</span>
-        </div>
+          {/* 이미지 섹션 */}
+          <div style={styles.imageContainer}>
+            <img src={post.image} alt={post.title} style={styles.image} />
+            <span style={styles.imageIndicator}>1/4</span>
+          </div>
 
-        {/* 내용 섹션 */}
-        <div style={styles.content}>
-          <span style={styles.likesComments}>
-            ♥ {post.likes || "1,256"} · 💬 {post.comments?.length || "5"}
-          </span>
-          <p style={styles.description}>
-            <strong>{post.username || "SSAFY_KIM"}</strong> {post.content}
-          </p>
+          {/* 내용 섹션 */}
+          <div style={styles.content}>
+            <span style={styles.likesComments}>
+              ♥ {post.likes || "1,256"} · 💬 {post.comments?.length || "5"}
+            </span>
+            <p style={styles.description}>
+              <strong>{post.username || "SSAFY_KIM"}</strong> {post.content}
+            </p>
 
-          {/* 댓글 섹션 */}
-          <div style={styles.commentSection}>
-            {post.comments?.map((comment, index) => (
-              <div key={index} style={styles.comment}>
-                <span style={styles.commentAuthor}>{comment.author}</span>
-                <span style={styles.commentText}>{comment.text}</span>
-              </div>
-            ))}
+            {/* 댓글 섹션 */}
+            <div style={styles.commentSection}>
+              {post.comments?.map((comment, index) => (
+                <div key={index} style={styles.comment}>
+                  <span style={styles.commentAuthor}>{comment.author}</span>
+                  <span style={styles.commentText}>{comment.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
