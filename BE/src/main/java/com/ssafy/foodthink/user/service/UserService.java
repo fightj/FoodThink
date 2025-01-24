@@ -1,6 +1,6 @@
 package com.ssafy.foodthink.user.service;
 
-import com.ssafy.foodthink.user.dto.UserDto;
+import com.ssafy.foodthink.global.exception.AleadyExistsException;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
@@ -32,7 +32,7 @@ public class UserService {
 
         if (nickname != null && !nickname.isEmpty()) {
             if (isNicknameDuplicate(nickname, userId)) {
-                throw new RuntimeException("이미 사용 중인 닉네임입니다.");
+                throw new AleadyExistsException("이미 사용 중인 닉네임입니다.");
             }
             userEntity.setNickname(nickname);
         }
