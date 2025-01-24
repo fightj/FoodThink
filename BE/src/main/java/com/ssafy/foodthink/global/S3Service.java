@@ -25,13 +25,16 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
+    // MultipartFile을 받아 S3에 업로드하고, 업로드된 파일의 URL을 반환
     public String uploadFile(MultipartFile file) {
         String fileName = generateFileName(file);
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(fileName)
-                    .acl("public-read")
+                    .acl("public-read") // 파일을 공개적으로 읽을 수 있도록 설정
+                    .contentType(file.getContentType()) // 업로드하는 파일의 실제 MIME 타입을 설정
+                    .contentDisposition("inline") // 브라우저에서 파일을 직접 표시
                     .build();
 
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
@@ -42,6 +45,7 @@ public class S3Service {
         }
     }
 
+    // 파일 이름 생성
     private String generateFileName(MultipartFile file) {
         return UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
     }
