@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../../styles/recipe/RecipesMainPage.css" // styles 폴더에서 가져옴
 
+
+
 const RecipesMainPage = () => {
   const navigate = useNavigate()
   const [recipes, setRecipes] = useState([])
@@ -54,21 +56,25 @@ const RecipesMainPage = () => {
   }
 
   return (
-    <div className="recipes-main-page">
-      <h1>Recipes</h1>
-      <div className="recipe-grid">
-        {recipes.map((recipe) => (
-          <div key={recipe.id} className="recipe-card">
-            <img src={recipe.image} alt={recipe.title} className="recipe-image" />
-            <div className="recipe-info">
-              <h2>{recipe.title}</h2>
-              <p>By: {recipe.author}</p>
-              <button className="detail-button" onClick={() => handleDetailClick(recipe.id)}>
-                View Details
-              </button>
-            </div>
+    <div className="base-div">
+      <div className="card-div">
+        <div className="recipes-main-page">
+          <h1>Recipes</h1>
+          <div className="recipe-grid">
+            {recipes.map((recipe) => (
+              <div key={recipe.id} className="recipe-card">
+                <img src={recipe.image} alt={recipe.title} className="recipe-image" />
+                <div className="recipe-info">
+                  <h2>{recipe.title}</h2>
+                  <p>By: {recipe.author}</p>
+                  <button className="detail-button" onClick={() => handleDetailClick(recipe.id)}>
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </div>
   )

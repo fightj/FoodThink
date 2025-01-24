@@ -1,0 +1,6 @@
+.base-div {
+  background-color: #fdb13f; /* 배경색 설정 */
+  min-height: 10vh; /* 최소 높이를 화면 전체로 설정 */
+  padding-top: 30px; /* 상단 여백 지정 (100px로 예시) */
+  box-sizing: border-box; /* 패딩 포함 높이 계산 */
+}
