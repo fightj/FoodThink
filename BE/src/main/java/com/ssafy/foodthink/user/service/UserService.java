@@ -119,6 +119,15 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    // 회원 관심사 삭제
+    @Transactional
+    public void deleteUserInterest(Long interestId) {
+        UserInterestEntity interest = userInterestRepository.findById(interestId)
+                .orElseThrow(() -> new RuntimeException("관심사를 찾을 수 없습니다."));
+
+        userInterestRepository.delete(interest);
+    }
+
     private UserInterestDto convertToInterestDto(UserInterestEntity entity) {
         return UserInterestDto.builder()
                 .ingredient(entity.getIngredient())

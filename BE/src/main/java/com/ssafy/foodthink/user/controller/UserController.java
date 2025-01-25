@@ -86,5 +86,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newInterests);
     }
 
+    // 회원 관심사 삭제
+    @DeleteMapping("/delete/interest")
+    public ResponseEntity<String> deleteUserInterest(@RequestParam Long interestId) {
+        userService.deleteUserInterest(interestId);
+        return ResponseEntity.ok("관심사가 성공적으로 삭제되었습니다.");
+    }
+
 
 }
