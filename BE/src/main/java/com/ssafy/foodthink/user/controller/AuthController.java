@@ -38,7 +38,7 @@ public class AuthController {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
 
-        Long userId = user.getId();
+        Long userId = user.getUserId();
 
         String accessToken = jwtUtil.createAccessToken(userId, role, 60*60*60L);
 
