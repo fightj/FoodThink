@@ -1,14 +1,20 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const BookmarkList = ({ bookmarks }) => {
   return (
     <div className="recipe-container">
       <div className="recipe-grid">
         {bookmarks.map((bookmark) => (
-          <div key={bookmark.id} className="recipe-card">
+          <Link 
+            to={`/recipes/${bookmark.id}`} 
+            key={bookmark.id} 
+            className="recipe-card"
+            style={{ textDecoration: "none", color: "inherit" }} // 링크 스타일 유지
+          >
             <img src={bookmark.image} alt={bookmark.title} className="recipe-image" />
             <p className="recipe-title">{bookmark.title}</p>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
