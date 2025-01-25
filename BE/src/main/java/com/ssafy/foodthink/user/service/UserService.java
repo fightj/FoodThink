@@ -88,13 +88,33 @@ public class UserService {
         return existingUser.isPresent() && !existingUser.get().getUserId().equals(userId);
     }
 
-    // 관심사 조회
+    // 회원 관심사 조회
     public List<UserInterestDto> readUserInterest(Long userId) {
         UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
 
         List<UserInterestEntity> interests = userInterestRepository.findByUserId(user);
         return interests.stream()
+                .map(this::convertToInterestDto)
+                .collect(Collectors.toList());
+    }
+
+    // 회원 관심사 여러개 추가
+    @Transactional
+    public List<UserInterestDto> createUserInterests(Long userId, List<UserInterestDto> dtos) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+        List<UserInterestEntity> interests = dtos.stream()
+                .map(dto -> UserInterestEntity.createInterest(
+                        dto.getIngredient(),
+                        dto.getIsLiked(),
+                        user
+                ))
+                .collect(Collectors.toList());
+
+        List<UserInterestEntity> savedInterests = userInterestRepository.saveAll(interests);
+        return savedInterests.stream()
                 .map(this::convertToInterestDto)
                 .collect(Collectors.toList());
     }

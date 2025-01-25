@@ -77,7 +77,14 @@ public class UserController {
         return ResponseEntity.ok(interests);
     }
 
-
+    // 회원 관심사 여러개 추가
+    @PostMapping("/create/interest")
+    public ResponseEntity<List<UserInterestDto>> createUserInterests(@RequestHeader("Authorization") String token, @RequestBody List<UserInterestDto> interestDtos) {
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+        List<UserInterestDto> newInterests = userService.createUserInterests(userId, interestDtos);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newInterests);
+    }
 
 
 }
