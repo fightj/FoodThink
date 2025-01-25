@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-//@Entity
+@Entity
 @Getter
 @Setter
 public class CrawlingProcessImageEntity {
@@ -12,9 +12,10 @@ public class CrawlingProcessImageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imageId;     //기본키
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "process_id")
-    private CrawlingProcessEntity processEntity;    //과정ID 외래키
+    private CrawlingProcessEntity crawlingProcess;    //과정ID 외래키
 
     private String imageUrl;    //사진URL
+
 }
