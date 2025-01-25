@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom"; // URL에서 ID 가져오기
-import ProfileHeader from "../../components/ProfilePage/ProfileHeader";
-import ProfileTabs from "../../components/ProfilePage/ProfileTabs";
-import RecipeList from "../../components/ProfilePage/RecipeList";
-import BookmarkList from "../../components/ProfilePage/BookmarkList";
-import FeedList from "../../components/ProfilePage/FeedList";
+import ProfileHeader from "../../components/Profile/ProfileHeader";
+import ProfileTabs from "../../components/Profile/ProfileTabs";
+import RecipeList from "../../components/Profile/RecipeList";
+import BookmarkList from "../../components/Profile/BookmarkList";
+import FeedList from "../../components/Profile/FeedList";
+import Preference from "../../components/Profile/Preference";
 import profileData from "../../data/ProfileData"; // 더미 데이터 불러오기
 import "../../styles/profile/ProfilePage.css";
 
@@ -12,8 +13,18 @@ const ProfilePage = () => {
   const { id } = useParams(); // URL에서 userId 가져오기
   const user = profileData.find(user => user.id === id); // ID에 맞는 사용자 찾기
   const [activeTab, setActiveTab] = useState("recipes");
+  const [showPreference, setShowPreference] = useState(false); // 음식선호도 모달 상태 추가
 
-  // ✅ 존재하지 않는 ID일 경우 예외 처리
+  // 음식 선호도 상태를 ProfilePage에서 관리 (더미 데이터에서 불러옴)
+  const [preferences, setPreferences] = useState(user ? user.preferences : []);
+
+  // 음식 선호도 변경 함수 (더미 데이터 수정 효과, 근데 새로고침하면 초기화됨)
+  const handlePreferenceChange = (newPreferences) => {
+    setPreferences(newPreferences); // UI 업데이트
+    user.preferences = newPreferences; // 더미 데이터 변경 (실제 저장은 안 됨;;)
+  };
+
+  // 존재하지 않는 ID일 경우 예외 처리
   if (!user) {
     return <div className="profile-container">해당 사용자를 찾을 수 없습니다.</div>;
   }
@@ -26,8 +37,10 @@ const ProfilePage = () => {
         profileImage={user.profileImage}
         subscribers={user.subscribers} 
         posts={user.posts}
-        preferences={user.preferences} 
+        preferences={preferences} 
+        onOpenPreference={() => setShowPreference(true)} // 음식선호도 버튼 클릭 이벤트 전달
       />
+      
       <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <div className="tab-content">
@@ -35,6 +48,21 @@ const ProfilePage = () => {
         {activeTab === "bookmarks" && <BookmarkList bookmarks={user.bookmarks} />}
         {activeTab === "feed" && <FeedList feeds={user.feeds} />}
       </div>
+
+      {/* 음식선호도 설정 모달 + 배경 블러 처리 */}
+      {showPreference && (
+        <>
+          {/* 어두운 배경 */}
+          <div className="modal-backdrop" onClick={() => setShowPreference(false)}></div>
+
+          {/* 음식 선호도 모달 */}
+          <Preference 
+            preferences={preferences} 
+            onClose={() => setShowPreference(false)}
+            onSave={handlePreferenceChange}
+          />
+        </>
+      )}
     </div>
   );
 };
