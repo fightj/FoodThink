@@ -2,6 +2,7 @@ package com.ssafy.foodthink.user.controller;
 
 import com.ssafy.foodthink.user.dto.UserDto;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
+import com.ssafy.foodthink.user.dto.UserInterestDto;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
 import com.ssafy.foodthink.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -25,10 +28,10 @@ public class UserController {
     
     // 회원 정보 조회
     @GetMapping("/read")
-    public ResponseEntity<UserInfoDto> getCurrentUser(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserInfoDto> readCurrentUser(@RequestHeader("Authorization") String token) {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
-        UserInfoDto userInfoDto = userService.getUserById(userId);
+        UserInfoDto userInfoDto = userService.getUserByUserId(userId);
         return ResponseEntity.ok(userInfoDto);
     }
 
@@ -54,9 +57,6 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-
-
-
     // 회원 탈퇴
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token) {
@@ -67,4 +67,17 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body("사용자가 성공적으로 탈퇴되었습니다.");
     }
+
+    // 회원 관심사 조회
+    @GetMapping("/read/interest")
+    public ResponseEntity<List<UserInterestDto>> readUserInterest(@RequestHeader("Authorization") String token) {
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+        List<UserInterestDto> interests = userService.readUserInterest(userId);
+        return ResponseEntity.ok(interests);
+    }
+
+
+
+
 }

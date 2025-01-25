@@ -3,35 +3,43 @@ package com.ssafy.foodthink.user.service;
 import com.ssafy.foodthink.global.S3Service;
 import com.ssafy.foodthink.global.exception.AleadyExistsException;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
+import com.ssafy.foodthink.user.dto.UserInterestDto;
 import com.ssafy.foodthink.user.entity.UserEntity;
+import com.ssafy.foodthink.user.entity.UserInterestEntity;
+import com.ssafy.foodthink.user.repository.UserInterestRepository;
 import com.ssafy.foodthink.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserInterestRepository userInterestRepository;
     private final S3Service s3Service;
 
     @Autowired
-    public UserService(UserRepository userRepository, S3Service s3Service) {
+    public UserService(UserRepository userRepository, UserInterestRepository userInterestRepository, S3Service s3Service) {
         this.userRepository = userRepository;
+        this.userInterestRepository = userInterestRepository;
         this.s3Service = s3Service;
     }
 
-    public UserInfoDto getUserById(Long userId) {
-        UserEntity userEntity = userRepository.findById(userId)
+    public UserInfoDto getUserByUserId(Long userId) {
+        UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
 
         return convertToDto(userEntity);
     }
 
     public UserInfoDto updateUserNickname(Long userId, String nickname) {
-        UserEntity userEntity = userRepository.findById(userId)
+        UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
 
         if (nickname != null && !nickname.isEmpty()) {
@@ -47,7 +55,7 @@ public class UserService {
     }
 
     public UserInfoDto updateUserImage(Long userId, MultipartFile image){
-        UserEntity userEntity = userRepository.findById(userId)
+        UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
 
 
@@ -61,7 +69,7 @@ public class UserService {
     }
 
     public void deleteUser(Long userId) {
-        UserEntity userEntity = userRepository.findById(userId)
+        UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         userRepository.delete(userEntity);
@@ -77,7 +85,25 @@ public class UserService {
 
     private boolean isNicknameDuplicate(String nickname, Long userId) {
         Optional<UserEntity> existingUser = userRepository.findByNickname(nickname);
-        return existingUser.isPresent() && !existingUser.get().getId().equals(userId);
+        return existingUser.isPresent() && !existingUser.get().getUserId().equals(userId);
+    }
+
+    // 관심사 조회
+    public List<UserInterestDto> readUserInterest(Long userId) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+        List<UserInterestEntity> interests = userInterestRepository.findByUserId(user);
+        return interests.stream()
+                .map(this::convertToInterestDto)
+                .collect(Collectors.toList());
+    }
+
+    private UserInterestDto convertToInterestDto(UserInterestEntity entity) {
+        return UserInterestDto.builder()
+                .ingredient(entity.getIngredient())
+                .isLiked(entity.getIsLiked())
+                .build();
     }
 }
 
