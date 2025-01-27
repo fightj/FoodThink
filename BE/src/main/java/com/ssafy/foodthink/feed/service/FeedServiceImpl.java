@@ -5,11 +5,14 @@ import com.ssafy.foodthink.feed.dto.FeedRequestDto;
 import com.ssafy.foodthink.feed.dto.FeedResponseDto;
 import com.ssafy.foodthink.feed.entity.FeedEntity;
 import com.ssafy.foodthink.feed.entity.FeedImageEntity;
+import com.ssafy.foodthink.feed.entity.FeedLikeEntity;
 import com.ssafy.foodthink.feed.repository.FeedImageRepository;
+import com.ssafy.foodthink.feed.repository.FeedLikeRepository;
 import com.ssafy.foodthink.feed.repository.FeedRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -26,14 +29,16 @@ public class FeedServiceImpl implements FeedService{
     private final CrawlingRecipeRepository crawlingRecipeRepository;
     private final S3Service s3Service;
     private final FeedImageRepository feedImageRepository;
+    private final FeedLikeRepository feedLikeRepository;
 
-    public FeedServiceImpl(FeedRepository feedRepository, UsersRepository usersRepository, UserRecipeRepository userRecipeRepository, CrawlingRecipeRepository crawlingRecipeRepository, S3Service s3Service, FeedImageRepository feedImageRepository) {
+    public FeedServiceImpl(FeedRepository feedRepository, UsersRepository usersRepository, UserRecipeRepository userRecipeRepository, CrawlingRecipeRepository crawlingRecipeRepository, S3Service s3Service, FeedImageRepository feedImageRepository, FeedLikeRepository feedLikeRepository) {
         this.feedRepository = feedRepository;
         this.usersRepository = usersRepository;
         this.userRecipeRepository = userRecipeRepository;
         this.crawlingRecipeRepository = crawlingRecipeRepository;
         this.s3Service = s3Service;
         this.feedImageRepository = feedImageRepository;
+        this.feedLikeRepository = feedLikeRepository;
     }
 
     @Override
@@ -103,12 +108,48 @@ public class FeedServiceImpl implements FeedService{
     public List<FeedResponseDto> readFeedsByUserId(Long userId) {
         List<FeedResponseDto> feedResponseDtos = new ArrayList<>();
 
-        List<FeedEntity> feedEntities = feedRepository.findAllByUsersEntity_userId(userId);
+        List<FeedEntity> feedEntities = feedRepository.findAllByUsersEntity_userIdOrderByWriteTime(userId);
 
         for (FeedEntity feedEntity : feedEntities) {
             List<String> imageUrls = readImageUrlsByFeedId(feedEntity.getId());
 
             feedResponseDtos.add(createFeedResponseDtoByBuilder(feedEntity, imageUrls));
+        }
+
+        return feedResponseDtos;
+    }
+
+    @Override
+    public void createFeedLikeByFeedId(Long feedId, Long userId) {
+        FeedLikeEntity feedLikeEntity;
+
+        FeedEntity feedEntity = feedRepository.findById(feedId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 피드를 찾을 수 없습니다. ID: " + feedId));
+        UsersEntity usersEntity = usersRepository.findUsersByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. ID: " + userId));
+
+        feedLikeEntity = FeedLikeEntity.builder()
+                .feedEntity(feedEntity)
+                .usersEntity(usersEntity)
+                .build();
+
+        feedLikeRepository.save(feedLikeEntity);
+    }
+
+    @Override
+    public List<FeedResponseDto> readFeedsByUserIdAndLogIn(Long searchUserId, Long logInUserId) {
+        List<FeedResponseDto> feedResponseDtos = new ArrayList<>();
+
+        List<FeedEntity> feedEntities = feedRepository.findAllByUsersEntity_userIdOrderByWriteTime(searchUserId);
+
+        for (FeedEntity feedEntity : feedEntities) {
+            List<String> imageUrls = readImageUrlsByFeedId(feedEntity.getId());
+
+            FeedResponseDto feedResponseDto = createFeedResponseDtoByBuilder(feedEntity, imageUrls);
+            if(logInUserId != null) {
+                feedResponseDto.setLike(feedLikeRepository.existsByFeedEntity_IdAndUsersEntity_userId(feedResponseDto.getId(), logInUserId));
+            }
+            feedResponseDtos.add(feedResponseDto);
         }
 
         return feedResponseDtos;
@@ -138,4 +179,6 @@ public class FeedServiceImpl implements FeedService{
                 .images(imageUrls)
                 .build();
     }
+
+
 }

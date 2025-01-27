@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FeedRepository extends JpaRepository<FeedEntity, Long> {
-    List<FeedEntity> findAllByUsersEntity_userId(Long id);
+    List<FeedEntity> findAllByUsersEntity_userIdOrderByWriteTime(Long id);
 }
 
