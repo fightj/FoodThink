@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,10 +90,14 @@ public class CrawlingService {
         put("기타", "34");
     }};
 
-    //크롤링 시작 메서드
+    //TEST : 크롤링 시작 시간 기록
+    Instant startTime = Instant.now();
+
+    //크롤링 메서드
     //  크롤링의 전체 프로세스 시작
     //  카테고리별로 데이터를 가져와서 각 페이지를 반복 처리
     public void crawlRecipes() {
+
         //종류별 카테고리 반복 처리
         for (Map.Entry<String, List<String>> cateTypeEntry : newCateTypeMap.entrySet()) {
             String cateType = cateTypeEntry.getKey();               //종류별 카테고리명 (Map의 key값)
@@ -116,6 +122,7 @@ public class CrawlingService {
                 }
             }
         }
+
     }
 
     //크롤링할 URL 생성 메서드
@@ -158,6 +165,16 @@ public class CrawlingService {
 
     //DTO를 Entity로 변환 후 데이터베이스에 저장
     private void saveRecipe(CrawlingRecipeDto dto) {
+
+        //TEST
+        long recipeCount = crawlingRecipeRepository.count();
+        if(recipeCount >= 1000) {
+            Instant endTime = Instant.now();
+            Duration elapsedTime = Duration.between(startTime, endTime);
+            System.out.println("crawling time : " + elapsedTime.toMillis() + "ms");
+            throw new IllegalStateException("stop");
+        }
+
         //데이터 중복 확인 : existsByRecipeUrl()로 URL이 이미 저장되어 있는지 확인
         if (!crawlingRecipeRepository.existsByRecipeUrl(dto.getRecipeUrl())) {
             CrawlingRecipeEntity entity = new CrawlingRecipeEntity();
@@ -172,12 +189,6 @@ public class CrawlingService {
 
             //우선 저장으로 레시피 ID 생성 후 나머지 정보 처리
             processDetailPage(entity);
-
-            //TEST
-            long recipeCount = crawlingRecipeRepository.count();
-            if(recipeCount >= 100) {
-                throw new IllegalStateException("stop");
-            }
         }
     }
 
@@ -205,6 +216,7 @@ public class CrawlingService {
     //레시피 상세 페이지에서 재료, 과정, 과정 이미지 크롤링
     @Transactional
     private void processDetailPage(CrawlingRecipeEntity recipeEntity) {
+
         String baseUrl = "https://www.10000recipe.com"; //기본 URL 설정
 
         try {
@@ -290,6 +302,7 @@ public class CrawlingService {
         } catch(IOException e) {
             e.printStackTrace();
         }
+
     }
 
 

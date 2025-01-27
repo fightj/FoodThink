@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.webCrawling.dto;
 
+import jakarta.persistence.Lob;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -17,5 +17,7 @@ public class CrawlingProcessEntity {
     private CrawlingRecipeEntity crawlingRecipe;    //레시피ID 외래키
 
     private Integer processOrder;      //과정순서
+
+    @Lob    //TEXT로 필드 처리
     private String processExplain;     //과정설명
 }
