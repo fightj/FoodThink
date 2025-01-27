@@ -1,9 +1,6 @@
 package com.ssafy.foodthink.webCrawling.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,5 +32,11 @@ public class CrawlingRecipeEntity {
     private Integer hits = 0;               //조회수 : 기본값 0으로 설정
     private String recipeUrl;           //레시피 URL
     private String image;               //대표이미지 URL
+
+    //작성시간을 현재로 설정
+    @PrePersist
+    protected void onCreate() {
+        this.writeTime = LocalDateTime.now();
+    }
 
 }

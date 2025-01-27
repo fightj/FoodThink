@@ -261,9 +261,13 @@ public class CrawlingService {
 //                System.out.println("save processEntity with ID : " + processEntity.getProcessId());
 
                 //각 과정 별 이미지 크롤링 및 저장
-                String imageUrl = process.select(".media-right img").attr("src");
-                System.out.println("Extracted image url : " + imageUrl);
-                System.out.println("HTML : " + process.html());
+//                String imageUrl = process.select(".media-right img").attr("src");
+//                System.out.println("Extracted image url : " + imageUrl);
+//                System.out.println("HTML : " + process.html());
+                String imageUrl = detailDoc.select("#stepimg"
+                                        + processEntity.getProcessOrder()
+                                        + " img").attr("src");
+//                System.out.print("HTML: " + process.html());
 
                 if (!imageUrl.isEmpty()) {
                     if (!imageUrl.startsWith("http")) {
@@ -275,7 +279,7 @@ public class CrawlingService {
                     imageEntity.setCrawlingProcess(processEntity);
 
                     crawlingProcessImageRepository.save(imageEntity);
-                    System.out.println("Saved process image: " + imageEntity.getImageUrl());
+//                    System.out.println("Saved process image: " + imageEntity.getImageUrl());
                 }
 
 
