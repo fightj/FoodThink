@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.webCrawling.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,5 +26,5 @@ public class CrawlingRecipeDto {
     
     private List<CrawlingIngredientDto> ingredients; // 재료 목록
     private List<CrawlingProcessDto> processes;      // 과정 목록
-    
+
 }

@@ -1,6 +1,7 @@
 package com.ssafy.foodthink.webCrawling.dto;
 
 import jakarta.persistence.Lob;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class CrawlingProcessDto {
 
     private Integer processOrder;             // 과정 순서
