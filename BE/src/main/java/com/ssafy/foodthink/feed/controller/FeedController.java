@@ -28,8 +28,14 @@ public class FeedController {
     }
 
     //피드 id로 조회
-    @GetMapping("/read/{id}")
+    @GetMapping("/read/id/{id}")
     public ResponseEntity<?> readFeedById(@PathVariable Long id){
         return ResponseEntity.ok(feedService.readFeedById(id));
+    }
+
+    //피드 유저별 조회(최신순)
+    @GetMapping("/read/user/{userId}")
+    public ResponseEntity<?> readFeedsByUserId(@PathVariable Long userId){
+        return ResponseEntity.ok(feedService.readFeedsByUserId(userId));
     }
 }

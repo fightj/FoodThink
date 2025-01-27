@@ -94,13 +94,39 @@ public class FeedServiceImpl implements FeedService{
         FeedEntity feedEntity = feedRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드를 찾을 수 없습니다. ID: " + id));
 
+        List<String> imageUrls = readImageUrlsByFeedId(feedEntity.getId());
+
+        return createFeedResponseDtoByBuilder(feedEntity, imageUrls);
+    }
+
+    @Override
+    public List<FeedResponseDto> readFeedsByUserId(Long userId) {
+        List<FeedResponseDto> feedResponseDtos = new ArrayList<>();
+
+        List<FeedEntity> feedEntities = feedRepository.findAllByUsersEntity_userId(userId);
+
+        for (FeedEntity feedEntity : feedEntities) {
+            List<String> imageUrls = readImageUrlsByFeedId(feedEntity.getId());
+
+            feedResponseDtos.add(createFeedResponseDtoByBuilder(feedEntity, imageUrls));
+        }
+
+        return feedResponseDtos;
+    }
+
+    @Override
+    public List<String> readImageUrlsByFeedId(Long id) {
         List<FeedImageEntity> feedImageEntities = feedImageRepository.findByFeedEntity_Id(id);
         List<String> imageUrls = new ArrayList<>();
         for (FeedImageEntity feedImageEntity : feedImageEntities) {
             imageUrls.add(feedImageEntity.getImageUrl());
         }
+        return imageUrls;
+    }
 
-        FeedResponseDto feedResponseDtos = FeedResponseDto.builder()
+    @Override
+    public FeedResponseDto createFeedResponseDtoByBuilder(FeedEntity feedEntity, List<String> imageUrls) {
+        return FeedResponseDto.builder()
                 .id(feedEntity.getId())
                 .foodName(feedEntity.getFoodName())
                 .content(feedEntity.getContent())
@@ -111,7 +137,5 @@ public class FeedServiceImpl implements FeedService{
                 .crawlingRecipeId(feedEntity.getCrawlingRecipe() != null ? feedEntity.getCrawlingRecipe().getRecipeId() : null)
                 .images(imageUrls)
                 .build();
-
-        return feedResponseDtos;
     }
 }
