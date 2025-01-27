@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -88,6 +89,29 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public FeedResponseDto readFeedById(Long id) {
-        return null;
+        FeedResponseDto feedResponseDto;
+
+        FeedEntity feedEntity = feedRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 피드를 찾을 수 없습니다. ID: " + id));
+
+        List<FeedImageEntity> feedImageEntities = feedImageRepository.findByFeedEntity_Id(id);
+        List<String> imageUrls = new ArrayList<>();
+        for (FeedImageEntity feedImageEntity : feedImageEntities) {
+            imageUrls.add(feedImageEntity.getImageUrl());
+        }
+
+        FeedResponseDto feedResponseDtos = FeedResponseDto.builder()
+                .id(feedEntity.getId())
+                .foodName(feedEntity.getFoodName())
+                .content(feedEntity.getContent())
+                .writeTime(feedEntity.getWriteTime())
+                .userId(feedEntity.getUsersEntity().getUserId())
+                .username(feedEntity.getUsersEntity().getUsername())
+                .userRecipeId(feedEntity.getUserRecipe() != null ? feedEntity.getUserRecipe().getRecipeId() : null)
+                .crawlingRecipeId(feedEntity.getCrawlingRecipe() != null ? feedEntity.getCrawlingRecipe().getRecipeId() : null)
+                .images(imageUrls)
+                .build();
+
+        return feedResponseDtos;
     }
 }

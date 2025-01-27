@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,5 +21,6 @@ public class FeedResponseDto {
     private String username;
     private Long userRecipeId;
     private Long crawlingRecipeId;
+    private List<String> images;
 
 }

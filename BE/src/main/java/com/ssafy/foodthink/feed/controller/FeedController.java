@@ -26,4 +26,10 @@ public class FeedController {
         feedService.createFeed(feedRequestDto, images);
         return ResponseEntity.ok("피드 성공적으로 저장되었습니다.");
     }
+
+    //피드 id로 조회
+    @GetMapping("/read/{id}")
+    public ResponseEntity<?> readFeedById(@PathVariable Long id){
+        return ResponseEntity.ok(feedService.readFeedById(id));
+    }
 }

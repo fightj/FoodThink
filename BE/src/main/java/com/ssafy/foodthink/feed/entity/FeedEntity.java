@@ -4,8 +4,10 @@ import com.ssafy.foodthink.another.CrawlingRecipe;
 import com.ssafy.foodthink.another.UserRecipe;
 import com.ssafy.foodthink.another.UsersEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -14,6 +16,8 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Data
 @Table(name="Feed")
+@NoArgsConstructor    //jpa사용하는 경우 기본 생성자 필요
+@AllArgsConstructor   //builer와 noargsconstructor 같이 사용하려면 allargsconstructor도 사용해야함
 @Entity
 @Builder
 public class FeedEntity {
