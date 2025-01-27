@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Table(name = "crawling_recipe_entity")
 public class CrawlingRecipeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

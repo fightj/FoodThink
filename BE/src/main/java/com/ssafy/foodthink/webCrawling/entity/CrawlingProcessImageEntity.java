@@ -7,6 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name = "crawling_process_image_entity")
 public class CrawlingProcessImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

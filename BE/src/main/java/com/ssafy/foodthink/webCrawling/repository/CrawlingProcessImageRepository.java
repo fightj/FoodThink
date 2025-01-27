@@ -11,8 +11,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CrawlingProcessImageRepository extends JpaRepository<CrawlingProcessImageEntity, Long> {
-//
-//    //이미지URL과 과정 순서로 과정 이미지 정보의 중복 검사
-//    boolean existsByImageUrlAndProcessOrder(String imageUrl, Integer order);
 
 }
