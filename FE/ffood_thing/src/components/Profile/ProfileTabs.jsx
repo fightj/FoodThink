@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/ProfilePage.css";
+import "../../styles/profile/ProfilePage.css";
 
 const ProfileTabs = ({ activeTab, setActiveTab }) => {
   return (
@@ -7,12 +7,12 @@ const ProfileTabs = ({ activeTab, setActiveTab }) => {
       <button 
         onClick={() => setActiveTab("recipes")} 
         className={activeTab === "recipes" ? "active-tab" : "tab"}>
-        내 레시피
+        레시피
       </button>
       <button 
         onClick={() => setActiveTab("bookmarks")} 
         className={activeTab === "bookmarks" ? "active-tab" : "tab"}>
-        북마크 레시피
+        북마크
       </button>
       <button 
         onClick={() => setActiveTab("feed")} 
