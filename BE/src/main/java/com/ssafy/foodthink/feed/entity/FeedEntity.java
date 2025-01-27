@@ -7,9 +7,11 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+@EntityListeners(AuditingEntityListener.class)
 @Data
 @Table(name="Feed")
 @Entity
@@ -28,7 +30,7 @@ public class FeedEntity {
 
     @Column(name = "write_time")
     @CreatedDate
-    private LocalDateTime writeTime = LocalDateTime.now();
+    private LocalDateTime writeTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

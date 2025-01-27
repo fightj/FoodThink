@@ -2,13 +2,13 @@ package com.ssafy.foodthink.feed.dto;
 
 import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
-public class FeedDto {
+public class FeedRequestDto {
     private String foodName;
     private String content;
     private Long userId;
