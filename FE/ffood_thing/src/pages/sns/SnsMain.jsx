@@ -7,7 +7,7 @@ import PageSlide from "../../components/base/PageSlide"
 
 function SnsMain() {
   return (
-    // <PageSlide>
+    <PageSlide>
     <div className="base-div">
       <SearchBar />
       <div className="card-div">
@@ -37,7 +37,7 @@ function SnsMain() {
         </div>
       </div>
     </div>
-    // </PageSlide>
+    </PageSlide>
   )
 }
 
