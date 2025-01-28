@@ -1,0 +1,233 @@
+.back-button {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+    color: #000;
+    border-radius: 8px;
+  }
+  
+  .icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+  }
+  
+  .user-info-feed {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+  }
+  
+  .profile-container-feed {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* 이미지와 텍스트 간의 간격을 키움 */
+  }
+  
+  .profile-image {
+    width: 65px;  /* 이미지 크기 확대 */
+    height: 65px; /* 이미지 크기 확대 */
+    border-radius: 50%; /* 둥근 프로필 이미지 */
+    overflow: hidden; /* 이미지가 넘치지 않도록 */
+  }
+  .profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지 비율을 유지하면서 크기 조정 */
+  }
+  
+  .username {
+    font-size: 28px; /* 사용자 이름 크기 확대 */
+    font-weight: bold; /* 굵게 */
+  }
+  .image-container {
+    position: relative;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .image {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .image-indicator {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+  }
+  
+  .content {
+    background-color: #fff;
+    padding: 20px;
+  }
+  
+  .likes-comments {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #888;
+  }
+  
+  .likes-comments img {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  
+  .likes-comments span {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .description {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  
+  .comments-section {
+    margin-top: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+  }
+  
+  .comment {
+    margin: 10px 0;
+  }
+  
+  .comment-author {
+    font-weight: bold;
+  }
+  
+  .comment-text {
+    margin-left: 10px;
+  }
+  
+  .carousel-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .carousel {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 1 / 1; /* 정사각형 비율 유지 */
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  
+  .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지 비율 유지하면서 잘 맞추기 */
+  }
+  .prev-button,
+  .next-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  .prev-button {
+    left: 10px;
+  }
+  
+  .next-button {
+    right: 10px;
+  }
+  
+  .indicator-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .indicator-dot {
+    width: 10px;
+    height: 10px;
+    background-color: lightgray;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  
+  .indicator-dot.active {
+    background-color: rgb(255, 204, 0);
+  }
+  
+  .image-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+  
+  .comment-time {
+    display: block;
+    font-size: 12px;
+    color: gray;
+  }
+  
+  .comment-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .comment-button img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  
+  
+  /* 슬라이드 효과 */
+  .comment-slide.show {
+    transform: translateY(0);
+    transition: transform 0.8s ease-out;
+  }
+  
+  
+  .comments-section {
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .comment {
+    margin-bottom: 15px;
+  }
+  

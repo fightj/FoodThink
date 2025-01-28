@@ -16,14 +16,14 @@ const HomeBigButton = () => {
       backgroundImage: "/images/메인페이지2.jpg",
       title: "오늘 뭐 먹지?",
       location: "오늘 먹을 음식을 추천받아보세요.",
-      link: "/today-recipe", // 링크 경로 추가
+      link: "/today-recommend", // 링크 경로 추가
     },
     {
       id: 3,
       backgroundImage: "/images/메인페이지3.jpg",
       title: "AI 음식 추천",
       location: "내 맞춤 음식 추천을 받아보세요.",
-      link: "/ai-recipe", // 링크 경로 추가
+      link: "/ai-recommend", // 링크 경로 추가
     },
     {
       id: 4,

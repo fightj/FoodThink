@@ -1,39 +1,50 @@
-import React, { useState, useRef } from "react"
-import imageIcon from "../../assets/image.svg" // SVG 파일 경로
-import { Form } from "react-bootstrap" // react-bootstrap에서 Form 가져오기
+import React, { useState, useRef } from "react";
+import imageIcon from "../../assets/image.svg"; // SVG 파일 경로
+import { Form } from "react-bootstrap"; // react-bootstrap에서 Form 가져오기
+import { useNavigate } from "react-router-dom"; // useNavigate import
 
 function FeedWrite() {
-  const [selectedImages, setSelectedImages] = useState([]) // 사용자가 선택한 이미지
-  const [checkedImages, setCheckedImages] = useState([]) // 체크박스로 선택된 이미지
-  const fileInputRef = useRef() // 파일 입력 요소 접근용 ref
+  const [selectedImages, setSelectedImages] = useState([]); // 사용자가 선택한 이미지
+  const [checkedImages, setCheckedImages] = useState([]); // 체크박스로 선택된 이미지
+  const fileInputRef = useRef(); // 파일 입력 요소 접근용 ref
+  const navigate = useNavigate(); // navigate 훅 사용
 
   // 이미지 선택
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files) // 선택된 파일
+    const files = Array.from(e.target.files); // 선택된 파일
     const previews = files.map((file) => ({
       id: URL.createObjectURL(file), // 미리보기 URL 생성
       file, // 실제 파일 저장
-    }))
-    setSelectedImages((prev) => [...prev, ...previews]) // 기존 이미지에 추가
-  }
+    }));
+    setSelectedImages((prev) => [...prev, ...previews]); // 기존 이미지에 추가
+  };
 
   // 체크박스로 이미지 선택
   const handleCheck = (id) => {
-    setCheckedImages((prev) => (prev.includes(id) ? prev.filter((imgId) => imgId !== id) : [...prev, id]))
-  }
+    setCheckedImages((prev) =>
+      prev.includes(id) ? prev.filter((imgId) => imgId !== id) : [...prev, id]
+    );
+  };
 
   // 업로드 버튼 클릭
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const imagesToUpload = selectedImages.filter((img) => checkedImages.includes(img.id))
-    console.log("업로드할 이미지:", imagesToUpload)
+    e.preventDefault();
+    const imagesToUpload = selectedImages.filter((img) =>
+      checkedImages.includes(img.id)
+    );
+    console.log("업로드할 이미지:", imagesToUpload);
     // 업로드 로직 추가
-  }
+  };
 
   return (
     <div className="base-div">
       <div className="card-div">
         <div style={{ width: "80%", margin: "0 auto" }}>
+          {/* 이전 버튼 클릭 시, 이전 페이지로 이동 */}
+          <button onClick={() => navigate(-1)} className="back-button">
+            <img src="/images/previous_button.png" alt="Previous" className="icon" />
+            이전
+          </button>
           <form onSubmit={handleSubmit}>
             {/* 미리보기와 체크박스 */}
             <div
@@ -101,9 +112,22 @@ function FeedWrite() {
               }}
               onClick={() => fileInputRef.current.click()}
             >
-              <img src={imageIcon} alt="이미지 아이콘" style={{ width: "2rem", height: "2rem", marginBottom: "10px" }} />
+              <img
+                src={imageIcon}
+                alt="이미지 아이콘"
+                style={{ width: "2rem", height: "2rem", marginBottom: "10px" }}
+              />
               <p>이미지 선택</p>
-              <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
+              <input
+                type="file"
+                ref={fileInputRef}
+                id="imageUpload"
+                name="imageUpload"
+                accept="image/*"
+                multiple
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+              />
             </div>
 
             {/* 추가 정보 입력 */}
@@ -130,7 +154,7 @@ function FeedWrite() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default FeedWrite
+export default FeedWrite;
