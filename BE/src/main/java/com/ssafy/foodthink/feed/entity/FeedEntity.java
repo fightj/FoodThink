@@ -12,6 +12,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
 @Data
@@ -48,4 +50,7 @@ public class FeedEntity {
     @JoinColumn(name = "crawling_recipe_id", nullable = true, referencedColumnName = "recipe_id")
     private CrawlingRecipe crawlingRecipe;
 
+    //cascade 설정을 위해 좋아요 엔티티와의 관계 설정
+    @OneToMany(mappedBy = "feedEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedLikeEntity> likes = new ArrayList<>();
 }

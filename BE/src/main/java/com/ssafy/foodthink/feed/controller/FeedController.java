@@ -39,6 +39,18 @@ public class FeedController {
         return ResponseEntity.ok(feedService.readFeedsByUserId(userId));
     }
 
+    //테스트:  로그인 유무 +  피드 유저별 전체 상세 조회
+    @GetMapping("/read/user/{searchUserId}/{loginUserId}")
+    public ResponseEntity<?> readFeedsByUserIdAndLogIn(@PathVariable Long searchUserId, @PathVariable Long loginUserId) {
+        return ResponseEntity.ok(feedService.readFeedsByUserIdAndLogIn(searchUserId, loginUserId));
+    }
+
+    @DeleteMapping("/delete/{feedId}")
+    public ResponseEntity<?> deleteFeedByFeedId(@PathVariable Long feedId){
+        feedService.deleteFeedByFeedId(feedId);
+        return ResponseEntity.noContent().build();
+    }
+
     //피드 좋아요 추가 기능
     @PostMapping("/like/create/{feedId}/{userId}")
     public ResponseEntity<?> createFeedLikeByFeedId(@PathVariable Long feedId, @PathVariable Long userId){
@@ -46,9 +58,9 @@ public class FeedController {
         return ResponseEntity.ok("피드 성공적으로 저장되었습니다.");
     }
 
-    //테스트:  로그인 유무 +  피드 유저별 전체 상세 조회
-    @GetMapping("/read/user/{searchUserId}/{loginUserId}")
-    public ResponseEntity<?> readFeedsByUserIdAndLogIn(@PathVariable Long searchUserId, @PathVariable Long loginUserId){
-        return ResponseEntity.ok(feedService.readFeedsByUserIdAndLogIn(searchUserId, loginUserId));
+    @DeleteMapping("/like/delete/{feedId}/{userId}")
+    public ResponseEntity<Void> deleteFeedLike(@PathVariable Long feedId, @PathVariable Long userId){
+        feedService.deleteFeedLikeByFeedId(feedId, userId);
+        return ResponseEntity.noContent().build();  //성공시 204 응답(요청 성공나타내지만, 추가 정보가 필요하지 않을때 사용)
     }
 }

@@ -121,19 +121,31 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public void createFeedLikeByFeedId(Long feedId, Long userId) {
-        FeedLikeEntity feedLikeEntity;
+        //중복 여부 확인
+        boolean exists = feedLikeRepository.existsByFeedEntity_IdAndUsersEntity_userId(feedId, userId);
+        if(exists) {
+            throw  new IllegalArgumentException(" 이미 좋아요를 누른 상태입니다.");
+        }
 
+        //엔티티 조회
         FeedEntity feedEntity = feedRepository.findById(feedId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드를 찾을 수 없습니다. ID: " + feedId));
         UsersEntity usersEntity = usersRepository.findUsersByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. ID: " + userId));
 
-        feedLikeEntity = FeedLikeEntity.builder()
+        //좋아요 저장
+        FeedLikeEntity feedLikeEntity = FeedLikeEntity.builder()
                 .feedEntity(feedEntity)
                 .usersEntity(usersEntity)
                 .build();
 
         feedLikeRepository.save(feedLikeEntity);
+    }
+
+    @Override
+    public void deleteFeedLikeByFeedId(Long feedId, Long userId) {
+        FeedLikeEntity feedLikeEntity = feedLikeRepository.findByFeedEntity_IdAndUsersEntity_userId(feedId, userId);
+        feedLikeRepository.delete(feedLikeEntity);
     }
 
     @Override
@@ -153,6 +165,13 @@ public class FeedServiceImpl implements FeedService{
         }
 
         return feedResponseDtos;
+    }
+
+    @Override
+    public void deleteFeedByFeedId(Long feedId) {
+        FeedEntity feedEntity = feedRepository.findById(feedId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 피드가 존재하지 않습니다."));
+        feedRepository.delete(feedEntity);
     }
 
     @Override
