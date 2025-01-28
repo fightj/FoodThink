@@ -8,6 +8,7 @@ import com.ssafy.foodthink.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@PreAuthorize("hasRole('USER')") // 접근 권한 적용
 public class UserController {
 
     private final UserService userService;
@@ -31,14 +33,13 @@ public class UserController {
     public ResponseEntity<UserInfoDto> readCurrentUser(@RequestHeader("Authorization") String token) {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
-        UserInfoDto userInfoDto = userService.getUserByUserId(userId);
+        UserInfoDto userInfoDto = userService.readUserByUserId(userId);
         return ResponseEntity.ok(userInfoDto);
     }
 
     // 회원 닉네임 수정
     @PutMapping("/update/nickname")
-    public ResponseEntity<UserInfoDto> updateUserNickname(@RequestHeader("Authorization") String token,
-                                                      @RequestBody UserInfoDto updatedInfo) {
+    public ResponseEntity<UserInfoDto> updateUserNickname(@RequestHeader("Authorization") String token, @RequestBody UserInfoDto updatedInfo) {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
 

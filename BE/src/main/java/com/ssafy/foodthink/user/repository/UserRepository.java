@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email); // 이메일로 기존 사용자인지 확인하기
     Optional<UserEntity> findByUserId(Long userid); // userId로 사용자 찾기
-    Optional<UserEntity> findByNickname(String nickname);
+    Optional<UserEntity> findByNickname(String nickname); // 닉네임 중복 확인하기
 }

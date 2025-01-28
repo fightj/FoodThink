@@ -30,7 +30,7 @@ public class UserInterestEntity {
     @OnDelete(action = OnDeleteAction.CASCADE) // 부모 엔티티가 삭제될 때 연관된 자식 엔티티도 함께 삭제
     private UserEntity userId;
 
-    //==생성 메서드==//
+    // 생성 메서드
     public static UserInterestEntity createInterest(String ingredient, Boolean isLiked, UserEntity userId) {
         UserInterestEntity userInterestEntity = new UserInterestEntity();
         userInterestEntity.setIngredient(ingredient);

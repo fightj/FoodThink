@@ -14,7 +14,7 @@ import java.util.Map;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AleadyExistsException.class)
-    public ResponseEntity<Map<String, Object>> handleExistsException(AleadyExistsException ex) {
+    public ResponseEntity<Map<String, Object>> handleAlreadyExistsException(AleadyExistsException ex) {
         Map<String, Object> response = new HashMap<>();
         response.put("available", false);
         response.put("message", ex.getMessage());

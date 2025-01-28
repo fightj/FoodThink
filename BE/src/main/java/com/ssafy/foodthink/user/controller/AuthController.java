@@ -47,9 +47,9 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); // 현재 인증된 사용자의 정보를 가져옴
         if (auth != null) {
-            SecurityContextHolder.clearContext();
+            SecurityContextHolder.clearContext();// 사용자의 인증 정보를 제거
         }
         return ResponseEntity.ok().body("사용자가 성공적으로 로그아웃되었습니다.");
     }

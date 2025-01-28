@@ -31,13 +31,15 @@ public class UserService {
         this.s3Service = s3Service;
     }
 
-    public UserInfoDto getUserByUserId(Long userId) {
+    // userid로 회원 찾기
+    public UserInfoDto readUserByUserId(Long userId) {
         UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
 
         return convertToDto(userEntity);
     }
 
+    // 회원 닉네임 수정
     public UserInfoDto updateUserNickname(Long userId, String nickname) {
         UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
@@ -54,6 +56,7 @@ public class UserService {
         return convertToDto(userEntity);
     }
 
+    // 회원 프로필 사진 수정
     public UserInfoDto updateUserImage(Long userId, MultipartFile image){
         UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
@@ -68,6 +71,7 @@ public class UserService {
         return convertToDto(userEntity);
     }
 
+    // 회원 탈퇴
     public void deleteUser(Long userId) {
         UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -83,6 +87,7 @@ public class UserService {
                 .build();
     }
 
+    // 닉네임 중복 확인
     private boolean isNicknameDuplicate(String nickname, Long userId) {
         Optional<UserEntity> existingUser = userRepository.findByNickname(nickname);
         return existingUser.isPresent() && !existingUser.get().getUserId().equals(userId);
@@ -101,11 +106,11 @@ public class UserService {
 
     // 회원 관심사 여러개 추가
     @Transactional
-    public List<UserInterestDto> createUserInterests(Long userId, List<UserInterestDto> dtos) {
+    public List<UserInterestDto> createUserInterests(Long userId, List<UserInterestDto> interestDtoList) {
         UserEntity user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
 
-        List<UserInterestEntity> interests = dtos.stream()
+        List<UserInterestEntity> interests = interestDtoList.stream()
                 .map(dto -> UserInterestEntity.createInterest(
                         dto.getIngredient(),
                         dto.getIsLiked(),
@@ -128,10 +133,10 @@ public class UserService {
         userInterestRepository.delete(interest);
     }
 
-    private UserInterestDto convertToInterestDto(UserInterestEntity entity) {
+    private UserInterestDto convertToInterestDto(UserInterestEntity interestEntity) {
         return UserInterestDto.builder()
-                .ingredient(entity.getIngredient())
-                .isLiked(entity.getIsLiked())
+                .ingredient(interestEntity.getIngredient())
+                .isLiked(interestEntity.getIsLiked())
                 .build();
     }
 }
