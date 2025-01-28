@@ -1,8 +1,9 @@
 .page {
-  position: absolute;
+  position: relative; /* absolute에서 relative로 변경 */
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* 페이지 요소들이 세로로 쌓이게 함 */
+  justify-content: flex-start;
   align-items: center;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh; /* 최소 높이를 100vh로 설정하여 스크롤 가능하도록 */
 }
