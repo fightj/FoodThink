@@ -1,6 +1,6 @@
 package com.ssafy.foodthink.recipes.service;
 
-import com.ssafy.foodthink.recipes.dto.AllRecipeListDto;
+import com.ssafy.foodthink.recipes.dto.AllRecipeListResponseDto;
 import com.ssafy.foodthink.recipes.entity.UserRecipeEntity;
 import com.ssafy.foodthink.recipes.repository.CrawlingRecipesRepository;
 import com.ssafy.foodthink.recipes.repository.UserRecipesRepository;
@@ -22,14 +22,16 @@ public class RecipeService {
     private final UserRecipesRepository userRecipesRepository;
     private final CrawlingRecipesRepository crawlingRecipesRepository;
 
+    ///  //////////////////////////////////
+    
     //모든 레시피 조회 : 나만의레시피 + 크롤링레시피
-    public Page<AllRecipeListDto> findAllRecipes(String sortType, Pageable pageable) {
+    public Page<AllRecipeListResponseDto> findAllRecipes(String sortType, Pageable pageable) {
         //각 테이블에서 데이터 조회
         Page<UserRecipeEntity> userRecipes = fetchUserRecipes(sortType, pageable);
         Page<CrawlingRecipeEntity> crawlingRecipes = fetchCrawlingRecipes(sortType, pageable);
 
         //DTO 변환
-        List<AllRecipeListDto> combinedDto = Stream.concat(
+        List<AllRecipeListResponseDto> combinedDto = Stream.concat(
                 userRecipes.getContent().stream().map(this::convertUserRecipesListToDto),
                 crawlingRecipes.getContent().stream().map(this::convertCrawlingRecipesListToDto)
         ).collect(Collectors.toList());
@@ -60,15 +62,27 @@ public class RecipeService {
     }
 
     //entity -> dto
-    private AllRecipeListDto convertUserRecipesListToDto(UserRecipeEntity entity) {
-        return new AllRecipeListDto(entity.getRecipeId(), entity.getRecipeTitle(),
+    private AllRecipeListResponseDto convertUserRecipesListToDto(UserRecipeEntity entity) {
+        return new AllRecipeListResponseDto(entity.getRecipeId(), entity.getRecipeTitle(),
                 entity.getHits(), entity.getRecipeUrl(), entity.getImage());
     }
 
     //entity -> dto
-    private AllRecipeListDto convertCrawlingRecipesListToDto(CrawlingRecipeEntity entity) {
-        return new AllRecipeListDto(entity.getRecipeId(), entity.getRecipeTitle(),
+    private AllRecipeListResponseDto convertCrawlingRecipesListToDto(CrawlingRecipeEntity entity) {
+        return new AllRecipeListResponseDto(entity.getRecipeId(), entity.getRecipeTitle(),
                 entity.getHits(), entity.getRecipeUrl(), entity.getImage());
     }
+
+    ///  //////////////////////////////////
+    
+    //레시피 상세 보기 기능 구현 예정
+
+    ///  //////////////////////////////////
+
+    ///  //////////////////////////////////
+
+    ///  //////////////////////////////////
+
+    ///  //////////////////////////////////
 
 }
