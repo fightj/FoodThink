@@ -12,6 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RecipeDetailRequestDto {
+public class RecipeIdRequestDto {
     private Long recipeId;
 }

@@ -214,7 +214,7 @@ public class CrawlingService {
 
         //TEST
         long recipeCount = crawlingRecipeRepository.count();
-        if(recipeCount >= 1000) {
+        if(recipeCount >= 50000) {
             Instant endTime = Instant.now();
             Duration elapsedTime = Duration.between(startTime, endTime);
             System.out.println("crawling time : " + elapsedTime.toMillis() + "ms");
