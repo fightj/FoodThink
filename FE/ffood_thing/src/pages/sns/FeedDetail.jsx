@@ -1,167 +1,140 @@
-import React from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import feed_posts from "./feed_data"
-import SearchBar from "../../components/base/SearchBar"
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Feed, FeedImages, Users, FeedLike, FeedComment } from "./feed_data";
+import FeedCommentSection from "../../components/sns/FeedCommentSection";
+import SearchBar from "../../components/base/SearchBar";
+import "../../styles/sns/FeedDetail.css";
+import { motion, AnimatePresence } from "framer-motion";
 
 function FeedDetail() {
-  const { id } = useParams()
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showComments, setShowComments] = useState(false);
 
-  const post = feed_posts.find((item) => item.id === parseInt(id))
-
-  if (!post) {
-    return <div>Post not found</div>
+  // 현재 피드 데이터
+  const currentFeed = Feed.find((item) => item.feed_id === parseInt(id));
+  if (!currentFeed) {
+    return <div>Post not found</div>;
   }
+
+  // 피드 이미지, 작성자, 좋아요 수, 댓글
+  const images = FeedImages.filter((image) => image.feed_id === currentFeed.feed_id);
+  const author = Users.find((user) => user.user_id === currentFeed.user_id);
+  const likesCount = FeedLike.filter((like) => like.feed_id === currentFeed.feed_id).length;
+  const comments = FeedComment.filter((comment) => comment.feed_id === currentFeed.feed_id);
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+
+  const toggleComments = () => {
+    setShowComments(!showComments);
+  };
 
   return (
     <div className="base-div">
       <SearchBar />
       <div className="card-div">
         <div style={{ width: "80%", margin: "0 auto" }}>
-          {/* 여기에 내용 추가 */}
-          {/* 사용자 정보 */}
-          <div style={styles.userInfo}>
-            <div style={styles.profileContainer}>
-              <div style={styles.profileImage}></div>
-              <span style={styles.username}>{post.username || "SSAFY_KIM"}</span>
+          <button onClick={() => navigate(-1)} className="back-button">
+            <img src="/images/previous_button.png" alt="Previous" className="icon" />
+            탐색 탭
+          </button>
+
+          <div className="user-info-feed">
+            <div className="profile-container-feed">
+              <div className="profile-image">
+                <img
+                  src={author?.image || "/images/default_profile.png"}
+                  alt={author?.nickname || "User"}
+                  className="profile-image"
+                />
+              </div>
+              <span className="username">{author?.nickname || "Unknown User"}</span>
             </div>
-            <button style={styles.editButton}>✎</button> {/*현재 로그인한 유저라면 이 버튼을 활성화해서 수정하기로 이동. */}
+            <button className="edit-button">✎</button>
           </div>
 
-          {/* 이미지 섹션 */}
-          <div style={styles.imageContainer}>
-            <img src={post.image} alt={post.title} style={styles.image} />
-            <span style={styles.imageIndicator}>1/4</span>
-          </div>
-
-          {/* 내용 섹션 */}
-          <div style={styles.content}>
-            <span style={styles.likesComments}>
-              ♥ {post.likes || "1,256"} · 💬 {post.comments?.length || "5"}
-            </span>
-            <p style={styles.description}>
-              <strong>{post.username || "SSAFY_KIM"}</strong> {post.content}
-            </p>
-
-            {/* 댓글 섹션 */}
-            <div style={styles.commentSection}>
-              {post.comments?.map((comment, index) => (
-                <div key={index} style={styles.comment}>
-                  <span style={styles.commentAuthor}>{comment.author}</span>
-                  <span style={styles.commentText}>{comment.text}</span>
+          {/* 이미지 Carousel */}
+          {images.length > 0 && (
+            <div className="carousel-container">
+              <div className="carousel">
+                {images.length > 1 && (
+                  <>
+                    <button className="prev-button" onClick={handlePrev}>❮</button>
+                    <button className="next-button" onClick={handleNext}>❯</button>
+                  </>
+                )}
+                <img
+                  src={images[currentIndex]?.image_url}
+                  alt={`Slide ${currentIndex + 1}`}
+                  className="carousel-image"
+                />
+                {/* 이미지 번호 표시 */}
+                <span className="image-counter">
+                  {currentIndex + 1} / {images.length}
+                </span>
+              </div>
+              {images.length > 1 && (
+                <div className="indicator-container">
+                  {images.map((_, index) => (
+                    <span
+                      key={index}
+                      className={`indicator-dot ${currentIndex === index ? "active" : ""}`}
+                    />
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
+          )}
+
+          <div className="content">
+            <span className="likes-comments">
+              <img src="/images/feed_like_do.png" alt="Like Icon" />
+              <span>{likesCount}</span>
+
+              {/* 댓글 아이콘 버튼 */}
+              <button className="comment-button" onClick={toggleComments}>
+                <img src="/images/feed_comment.png" alt="Comment Icon" />
+              </button>
+              <span>{comments.length}</span>
+            </span>
+            <p>
+              <strong>#{currentFeed.food_name}</strong>
+            </p>
+            <hr />
+            <p className="description">
+              <strong>{author?.nickname || "Unknown User"}</strong> {currentFeed.content}
+            </p>
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+  {showComments && (
+    <motion.div
+      initial={{ y: "100%", opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: "100%", opacity: 0 }}
+      transition={{
+        y: { type: "spring", stiffness: 300, damping: 30, duration: 1 },
+        opacity: { duration: 1 },
+      }}
+      className="comment-slide"
+    >
+      <FeedCommentSection feedId={currentFeed.feed_id} onClose={toggleComments} />
+    </motion.div>
+  )}
+</AnimatePresence>
+
+
     </div>
-  )
+  );
 }
 
-const styles = {
-  container: {
-    backgroundColor: "#fbeae9", // 연한 핑크색 배경
-    padding: "10px",
-    fontFamily: "'Arial', sans-serif",
-  },
-  navBar: {
-    display: "flex",
-    alignItems: "center",
-    padding: "10px",
-    backgroundColor: "#fff",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    marginBottom: "10px",
-  },
-  backButton: {
-    fontSize: "1.5rem",
-    border: "none",
-    background: "none",
-    cursor: "pointer",
-    marginRight: "10px",
-  },
-  navTitle: {
-    fontSize: "1.2rem",
-    fontWeight: "bold",
-  },
-  userInfo: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px 20px",
-  },
-  profileContainer: {
-    display: "flex",
-    alignItems: "center",
-  },
-  profileImage: {
-    width: "40px",
-    height: "40px",
-    borderRadius: "50%",
-    backgroundColor: "#ccc",
-    marginRight: "10px",
-  },
-  username: {
-    fontSize: "1rem",
-    fontWeight: "bold",
-  },
-  editButton: {
-    fontSize: "1.2rem",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-  },
-  imageContainer: {
-    position: "relative",
-    textAlign: "center",
-    marginBottom: "20px",
-  },
-  image: {
-    width: "100%",
-    maxHeight: "500px",
-    objectFit: "cover",
-    borderRadius: "8px",
-  },
-  imageIndicator: {
-    position: "absolute",
-    bottom: "10px",
-    right: "10px",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    color: "#fff",
-    padding: "5px 10px",
-    borderRadius: "10px",
-    fontSize: "0.8rem",
-  },
-  content: {
-    backgroundColor: "#fff",
-    borderRadius: "8px",
-    padding: "20px",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-  },
-  likesComments: {
-    fontSize: "0.9rem",
-    marginBottom: "10px",
-    color: "#888",
-  },
-  description: {
-    fontSize: "1rem",
-    marginBottom: "20px",
-  },
-  commentSection: {
-    borderTop: "1px solid #ddd",
-    paddingTop: "10px",
-  },
-  comment: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "5px 0",
-  },
-  commentAuthor: {
-    fontWeight: "bold",
-  },
-  commentText: {
-    marginLeft: "10px",
-  },
-}
-
-export default FeedDetail
+export default FeedDetail;

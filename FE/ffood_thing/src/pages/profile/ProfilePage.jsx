@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom"; // URL에서 ID 가져오기
+import React, { useState, useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import ProfileHeader from "../../components/Profile/ProfileHeader";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import RecipeList from "../../components/Profile/RecipeList";
 import BookmarkList from "../../components/Profile/BookmarkList";
 import FeedList from "../../components/Profile/FeedList";
-import Preference from "../../components/Profile/Preference";
 import profileData from "../../data/ProfileData"; // 더미 데이터 불러오기
 import "../../styles/profile/ProfilePage.css";
 
 const ProfilePage = () => {
   const { id } = useParams(); // URL에서 userId 가져오기
+  const location = useLocation(); // 현재 URL을 가져오는 hook
   const user = profileData.find(user => user.id === id); // ID에 맞는 사용자 찾기
   const [activeTab, setActiveTab] = useState("recipes");
   const [showPreference, setShowPreference] = useState(false); // 음식선호도 모달 상태 추가
@@ -28,6 +28,15 @@ const ProfilePage = () => {
   if (!user) {
     return <div className="profile-container">해당 사용자를 찾을 수 없습니다.</div>;
   }
+
+  // URL의 쿼리 파라미터로 activeTab을 설정
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const tab = queryParams.get("tab");
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [location.search]);
 
   return (
     <div className="profile-container">
@@ -52,10 +61,7 @@ const ProfilePage = () => {
       {/* 음식선호도 설정 모달 + 배경 블러 처리 */}
       {showPreference && (
         <>
-          {/* 어두운 배경 */}
           <div className="modal-backdrop" onClick={() => setShowPreference(false)}></div>
-
-          {/* 음식 선호도 모달 */}
           <Preference 
             preferences={preferences} 
             onClose={() => setShowPreference(false)}
