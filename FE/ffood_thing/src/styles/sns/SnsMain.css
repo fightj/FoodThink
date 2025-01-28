@@ -126,13 +126,45 @@
     aspect-ratio: 1 / 1; /* 모바일에서도 정사각형 유지 */
   }
 }
-.card-div {
-  background-color: rgb(255, 255, 255); /* 초록색 배경 */
-  width: 100%; /* 수평 공간 전체를 차지 */
-  padding: 20px 0; /* 상하 패딩을 늘려서 높이를 증가 */
-  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
-  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  border-radius: 50px 50px 0 0; /* 아래 두 꼭지점만 둥글게 설정 */
-  height: auto; /* 높이를 패딩에 따라 유동적으로 설정 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* 그림자 */
+.image-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10; /* 이미지 위에 표시되도록 */
+}
+
+.image-icon img {
+  width: 30px;  /* 아이콘 크기 줄이기 */
+  height: 30px; /* 아이콘 크기 줄이기 */
+}
+
+/* .card {
+  position: relative;
+} */
+
+.user-info {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  /* background-color: rgba(0, 0, 0, 0.5); 배경색 추가로 가독성 향상 */
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info span {
+  font-weight: bold;
+  color: white;
+}
+.search-result-title {
+  text-align: center; /* 텍스트 중앙 정렬 */
+  flex-grow: 1; /* 나머지 공간을 차지하게 하여 제목을 중앙에 위치시킴 */
 }

@@ -21,6 +21,7 @@ import FeedUpdatePage from "./pages/sns/FeedUpdatePage";
 import LoginPage from "./pages/login/LoginPage";
 import AiRecommendPage from "./pages/recommend/AiRecommendPage";
 import TodayRecommendPage from "./pages/recommend/TodayRecommendPage";
+import SnsSearchResultPage from "./pages/sns/SnsSearchResultPage" // 검색 결과 페이지 임포트
 
 // 공통 컴포넌트
 import NavbarBottom from "./components/base/Navbar-bottom";
@@ -42,6 +43,7 @@ const AnimatedRoutes = () => {
         <Route path="/feed/:id" element={<PageSlide><FeedDetail /></PageSlide>} />
         <Route path="/feed/write" element={<PageSlide><FeedWrite /></PageSlide>} />
         <Route path="/feed/:id/update" element={<PageSlide><FeedUpdatePage /></PageSlide>} />
+        <Route path="/search-results" element={<PageSlide><SnsSearchResultPage /></PageSlide>} />
 
         <Route path="/recipes" element={<PageSlide><RecipesMainPage /></PageSlide>} />
         <Route path="/recipes/:id" element={<PageSlide><RecipeDetailPage /></PageSlide>} />
