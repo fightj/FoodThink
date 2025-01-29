@@ -49,7 +49,7 @@ function AiRecommendPage() {
                             {options[0].text}
                         </button>
                     </div>
-                )}
+                )} 
 
                 {/* AI 캐릭터 (중앙) */}
                 <img src="/images/ai.jpg" alt="AI 캐릭터" className="ai-image" />
