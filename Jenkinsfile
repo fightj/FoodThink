@@ -14,15 +14,13 @@ pipeline {
                     // 백엔드 빌드 & 푸시
                     sh '''
                     cd BE
-                    docker build -t my-backend:latest .  # Docker 빌드
+                    docker build -t my-backend:latest .
                     docker tag my-backend:latest my-docker-repo/my-backend:latest
                     docker push my-docker-repo/my-backend:latest
 
-                    # application.properties 파일 생성
                     echo 'spring.datasource.url=${DB_URL}' > application.properties
                     echo 'spring.datasource.password=${DB_PWD}' >> application.properties
 
-                    # 생성된 application.properties를 Dockerfile에 설정된 위치로 복사
                     docker build --build-arg APP_PROPERTIES_PATH=./application.properties -t my-backend:latest .
                     '''
                 }
