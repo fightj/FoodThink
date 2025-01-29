@@ -11,3 +11,9 @@ COPY target/foodthink-0.0.1-SNAPSHOT.jar /app/app.jar
 # Docker 컨테이너가 시작되면 java -jar /spring-boot/app.jar 명령어가 실행
 # Spring boot 애플리케이션을 실행시킨다.
 ENTRYPOINT ["java", "-jar", "/spring-boot/app.jar"]
+
+# BE의 Dockerfile 예시
+# application.properties 파일을 Docker 컨테이너로 복사
+
+# (기존 Dockerfile에 추가)
+COPY application.properties /path/to/application.properties
