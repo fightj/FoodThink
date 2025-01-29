@@ -6,7 +6,7 @@ pipeline {
         DB_PASSWORD = credentials('DB_PWD')  // DB Password (Jenkins Credentials에 저장된 DB_PASSWORD 참조)
     }
 
-    stages {}
+    stages {
 
         stage('Build & Push Backend') {
             steps {
