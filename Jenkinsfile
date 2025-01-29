@@ -20,7 +20,7 @@ pipeline {
 
                     # application.properties 파일 생성
                     echo 'spring.datasource.url=${DB_URL}' > application.properties
-                    echo 'spring.datasource.password=${DB_PASSWORD}' >> application.properties
+                    echo 'spring.datasource.password=${DB_PWD}' >> application.properties
 
                     # 생성된 application.properties를 Dockerfile에 설정된 위치로 복사
                     docker build --build-arg APP_PROPERTIES_PATH=./application.properties -t my-backend:latest .
