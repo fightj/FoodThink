@@ -6,12 +6,7 @@ pipeline {
         DB_PASSWORD = credentials('DB_PWD')  // DB Password (Jenkins Credentials에 저장된 DB_PASSWORD 참조)
     }
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                // Git에서 소스 코드 체크아웃
-            }
-        }
+    stages {}
 
         stage('Build & Push Backend') {
             steps {
