@@ -5,7 +5,7 @@ FROM node:16 AS build
 WORKDIR /app
 
 # 프로젝트 코드 복사
-COPY ./fe/ffood_thing /app
+COPY ./FE/ffood_thing /app
 
 # 의존성 설치
 RUN npm install
