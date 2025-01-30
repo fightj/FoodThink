@@ -7,8 +7,11 @@ pipeline {
     }
 
     environment {
+
         DB_URL = credentials('DB_URL')  // DB URL (Jenkins Credentials에 저장된 DB_URL 참조)
         DB_PASSWORD = credentials('DB_PWD')  // DB Password (Jenkins Credentials에 저장된 DB_PASSWORD 참조)
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'  // JAVA_HOME 환경변수 설정
+        MAVEN_HOME = '/opt/apache-maven-3.9.8'             // MAVEN_HOME 환경변수 설정
     }
 
     stages {
