@@ -61,6 +61,16 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh '''
                         cd FE/ffood_thing  # Frontend 디렉토리로 이동
+
+                        # Frontend 프로젝트 의존성 설치
+                        npm install
+
+                        # 빌드 (dist 폴더 생성 확인)
+                        npm run build
+
+                        # dist 폴더 생성 확인 (디버깅용)
+                        ls -la dist
+
                         docker login -u $DOCKER_USER -p $DOCKER_PASS  # Docker Hub 로그인
 
                         # 로그인 성공 후 확인
