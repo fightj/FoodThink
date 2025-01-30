@@ -1,13 +1,7 @@
 pipeline {
     agent any
 
-    stage('npm') {
 
-        nodejs(nodeJSInstallationName: 'node') { // 위의 설정에서 지정한 node 이름
-            sh 'npm install && npm run build'
-        }
-
-    }
 
     environment {
         DB_URL = credentials('DB_URL')
@@ -61,6 +55,12 @@ pipeline {
                     }
                 }
             }
+        }
+
+        stage('npm') {
+                nodejs(nodeJSInstallationName: 'node') { // 위의 설정에서 지정한 node 이름
+                    sh 'npm install && npm run build'
+                }
         }
 
         stage('Build & Push Frontend') {
