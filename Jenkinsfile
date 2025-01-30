@@ -25,7 +25,6 @@ pipeline {
                     // Docker 로그인 상태 확인
                     sh '''
                     docker info | grep "Username" || echo "Not logged in"
-                    docker whoami || echo "Docker login failed"
                     '''
                 }
             }
@@ -46,7 +45,6 @@ pipeline {
 
                         # 로그인 성공 후 확인
                         docker info | grep "Username"
-                        docker whoami
 
                         # Docker 빌드 및 푸시
                         docker build -t ${DOCKER_IMAGE_NAME}/my-backend:latest .
@@ -67,7 +65,6 @@ pipeline {
 
                         # 로그인 성공 후 확인
                         docker info | grep "Username"
-                        docker whoami
 
                         # Frontend Docker 이미지 빌드 및 푸시
                         docker build -t ${DOCKER_IMAGE_NAME}/my-frontend:latest .
