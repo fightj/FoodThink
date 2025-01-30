@@ -2,12 +2,11 @@ pipeline {
     agent any
 
     tools {
-            maven 'Maven 3.9.8'  // 젠킨스에 설정한 Maven 이름
-            jdk 'JDK 17'         // 젠킨스에 설정한 JDK 이름
+        maven 'Maven 3.9.8'  // 젠킨스에 설정한 Maven 이름
+        jdk 'JDK 17'         // 젠킨스에 설정한 JDK 이름
     }
 
     environment {
-
         DB_URL = credentials('DB_URL')  // DB URL (Jenkins Credentials에 저장된 DB_URL 참조)
         DB_PASSWORD = credentials('DB_PWD')  // DB Password (Jenkins Credentials에 저장된 DB_PASSWORD 참조)
         JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'  // JAVA_HOME 환경변수 설정
@@ -16,6 +15,14 @@ pipeline {
     }
 
     stages {
+
+            stage('Check Maven') {
+                steps {
+                    script {
+                        sh 'echo $MAVEN_HOME'
+                    }
+                }
+            }
 
         stage('Build & Push Backend') {
             steps {
