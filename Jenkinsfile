@@ -20,7 +20,6 @@ pipeline {
         stage('Build & Push Backend') {
             steps {
                 script {
-                    // 백엔드 애플리케이션의 Maven 빌드
                     sh '''
                     cd BE
                     mvn clean install
@@ -39,7 +38,6 @@ pipeline {
         stage('Build & Push Frontend') {
             steps {
                 script {
-                    // 프론트엔드 빌드 & 푸시
                     sh '''
                     cd FE/ffood_thing
                     docker build -t my-frontend:latest .
@@ -53,7 +51,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Docker 컨테이너 실행 (백엔드와 프론트엔드)
                     sh '''
                     docker stop my-backend-container || true
                     docker rm my-backend-container || true
