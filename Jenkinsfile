@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DB_URL = credentials('DB_URL')  // DB URL (Jenkins Credentials에 저장된 DB_URL 참조)
-        DB_PASSWORD = credentials('DB_PWD')  // DB Password (Jenkins Credentials에 저장된 DB_PASSWORD 참조)
+        DB_URL = credentials('DB_URL')
+        DB_PASSWORD = credentials('DB_PWD')
     }
 
     stages {
