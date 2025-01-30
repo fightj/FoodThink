@@ -20,6 +20,7 @@ pipeline {
                 steps {
                     script {
                         sh 'echo $MAVEN_HOME'
+                        sh 'mvn -v'  // Maven 버전 확인
                     }
                 }
             }
