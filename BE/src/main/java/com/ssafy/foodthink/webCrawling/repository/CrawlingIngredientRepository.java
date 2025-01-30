@@ -14,4 +14,5 @@ public interface CrawlingIngredientRepository extends JpaRepository<CrawlingIngr
     //재료명과 recipeUrl로 재료 정보의 중복 검사
     boolean existsByIngreNameAndCrawlingRecipe_RecipeUrl(String ingreName, String recipeUrl);
 
+    void deleteByCrawlingRecipe_RecipeId(Long recipeId);
 }

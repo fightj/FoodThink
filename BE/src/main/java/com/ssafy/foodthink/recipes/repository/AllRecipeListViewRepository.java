@@ -15,7 +15,7 @@ public interface AllRecipeListViewRepository extends JpaRepository<AllRecipeList
     Page<AllRecipeListViewEntity> findAllByLatest(Pageable pageable);
 
     //모든 레시피 조회순 조회
-    @Query("SELECT r FROM AllRecipeListViewEntity r ORDER BY r.hits")
+    @Query("SELECT r FROM AllRecipeListViewEntity r ORDER BY r.hits desc")
     Page<AllRecipeListViewEntity> findAllByHits(Pageable pageable);
 
     //모든 레시피 난이도순 조회

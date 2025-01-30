@@ -5,7 +5,6 @@ package com.ssafy.foodthink.webCrawling.service;
     카테고리 맵핑
  */
 
-import com.ssafy.foodthink.webCrawling.dto.CrawlingRecipeDto;
 import com.ssafy.foodthink.webCrawling.entity.CrawlingIngredientEntity;
 import com.ssafy.foodthink.webCrawling.entity.CrawlingProcessEntity;
 import com.ssafy.foodthink.webCrawling.entity.CrawlingProcessImageEntity;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,19 +36,205 @@ public class CrawlingService {
 
     @Autowired
     private CrawlingRecipeRepository crawlingRecipeRepository;
-
     @Autowired
     private CrawlingIngredientRepository crawlingIngredientRepository;
-
     @Autowired
     private CrawlingProcessRepository crawlingProcessRepository;
-    
     @Autowired
     private CrawlingProcessImageRepository crawlingProcessImageRepository;
 
 
     //크롤링할 웹 사이트의 앞부분 URL
     private final String baseUrl = "https://www.10000recipe.com/recipe/list.html?";
+
+    //TEST : 크롤링 시작 시간 기록
+    Instant startTime = Instant.now();
+
+    public void crawlRecipes() {
+        // 종류별 카테고리 반복 처리
+        for (Map.Entry<String, List<String>> cateTypeEntry : newCateTypeMap.entrySet()) {
+            String cateType = cateTypeEntry.getKey();               // 종류별 카테고리명 (Map의 key값)
+            List<String> cat4Values = cateTypeEntry.getValue();     // 해당 카테고리의 세부 분류 ID 목록 (Map의 value값)
+
+            for (String cat4Value : cat4Values) {
+                // 재료별 카테고리 반복 처리
+                for (Map.Entry<String, String> cat3Entry : cat3Map.entrySet()) {
+                    String cateMainIngre = cat3Entry.getKey();      // 재료명
+                    String cat3Value = cat3Entry.getValue();        // 재료별ID
+
+                    int page = 1;
+                    boolean hasMorePages = true;
+
+                    // 페이지 단위로 크롤링 반복
+                    // 페이지가 없을 때, hasMorePages = false로 반복 종료
+                    while (hasMorePages) {
+                        String url = baseUrl + "cat3=" + cat3Value + "&cat4=" + cat4Value + "&order=accuracy&page=" + page;
+                        hasMorePages = processPage(cateType, cateMainIngre, url);   // 페이지 처리 메서드 호출
+                        page++;
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean processPage(String cateType, String cateMainIngre, String url) {
+        try {
+            Document doc = Jsoup.connect(url).get();    // Jsoup으로 URL에 접속해 HTML 문서 가져오기
+            Elements recipes = doc.select(".common_sp_list_ul .common_sp_list_li");     // CSS 선택자로 필요한 HTML의 레시피 요소 선택
+
+            if (recipes.isEmpty()) return false; // 종료 조건: 더 이상 데이터가 없음
+
+            // 각 레시피 데이터를 직접 추출 후 저장
+            for (Element recipe : recipes) {
+                CrawlingRecipeEntity entity = new CrawlingRecipeEntity();
+                entity.setRecipeTitle(recipe.select(".common_sp_caption_tit").text());  // 제목
+                entity.setRecipeUrl(recipe.select("a").attr("href"));                  // URL
+                entity.setImage(recipe.select(".common_sp_thumb img").attr("src"));    // 이미지URL
+                entity.setCateType(cateType);                                           // 종류별 분류
+                entity.setCateMainIngre(cateMainIngre);                                 // 재료별 분류
+
+                //TEST용 메서드
+                saveRecipe(entity);
+
+                // 데이터 중복 확인 : existsByRecipeUrl()로 URL이 이미 저장되어 있는지 확인
+                if (!crawlingRecipeRepository.existsByRecipeUrl(entity.getRecipeUrl())) {
+                    // 레시피 정보 먼저 저장
+                    crawlingRecipeRepository.saveAndFlush(entity);
+                    // 우선 저장으로 레시피 ID 생성 후 나머지 정보 처리
+                    processDetailPage(entity);
+                }
+
+            }
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void saveRecipe(CrawlingRecipeEntity entity) {
+        //TEST
+        long recipeCount = crawlingRecipeRepository.count();
+        if(recipeCount >= 100) {
+            Instant endTime = Instant.now();
+            Duration elapsedTime = Duration.between(startTime, endTime);
+            System.out.println("crawling time : " + elapsedTime.toMillis() + "ms");
+            throw new IllegalStateException("stop");
+        }
+    }
+
+    //레시피 상세 페이지에서 재료, 과정, 과정 이미지 크롤링
+    @Transactional
+    private void processDetailPage(CrawlingRecipeEntity recipeEntity) {
+
+        String baseUrl = "https://www.10000recipe.com"; //기본 URL 설정
+
+        try {
+            //상대 URL이 있을 때, 절대 경로로 변경
+            String recipeUrl = recipeEntity.getRecipeUrl();
+            if(!recipeUrl.startsWith("https://") && !recipeUrl.startsWith("http://")) {
+                recipeUrl = new URL(new URL(baseUrl), recipeUrl).toString();
+            }
+
+            Document detailDoc = Jsoup.connect(recipeUrl).get();
+
+            //0. 추가 정보 크롤링 : 인분, 소요시간, 난이도
+            String serving = detailDoc.select(".view2_summary_info1").text();
+            recipeEntity.setServing(serving);
+
+            String requiredTime = detailDoc.select(".view2_summary_info2").text();
+            recipeEntity.setRequiredTime(requiredTime);
+
+            String level = detailDoc.select(".view2_summary_info3").text();
+            recipeEntity.setLevel(newLevel(level));     //새로운 레벨 단계로 변경 비교하기
+
+            // 난이도, 인분, 조리시간이 없으면 저장하지 않음 : 데이터 필터링
+            if (recipeEntity.getLevel() == 0 || recipeEntity.getServing().isEmpty() || recipeEntity.getRequiredTime().isEmpty()
+                    || recipeEntity.getLevel() == null || recipeEntity.getServing() == null || recipeEntity.getRequiredTime() == null) {
+                System.out.println("필터링된 레시피 (저장 안 함): " + recipeEntity.getRecipeUrl());
+                crawlingRecipeRepository.delete(recipeEntity);    //DB에서 즉시 삭제
+                return;
+            }
+
+            crawlingRecipeRepository.saveAndFlush(recipeEntity);  //CrawlingRecipeEntity 업데이트
+
+            //1. 재료 정보 크롤링
+            Elements ingredients = detailDoc.select("ul.case1 li");
+//            System.out.println("Found ingredients : " + ingredients.size());
+
+            for(Element ingredient : ingredients) {
+                CrawlingIngredientEntity ingredientEntity = new CrawlingIngredientEntity();
+                ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
+                ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
+                ingredientEntity.setCrawlingRecipe(recipeEntity);
+
+                // 재료 이름이나 양이 비어있거나 null인 경우 해당 재료를 삭제
+//                if (ingredientEntity.getIngreName() == null || ingredientEntity.getIngreName().isEmpty() ||
+//                        ingredientEntity.getAmount() == null || ingredientEntity.getAmount().isEmpty()) {
+//
+//                    // 해당 재료 삭제
+//                    System.out.println("잘못된 재료 데이터 (삭제): " + ingredientEntity.getIngreName() + ", " + ingredientEntity.getAmount());
+//
+//                    // 이 레시피의 모든 관련 데이터를 삭제
+//                    Long recipeId = recipeEntity.getRecipeId(); // 레시피의 ID를 가져옵니다.
+//
+//                    // CrawlingIngredientEntity, CrawlingProcessEntity, CrawlingProcessImageEntity에서 해당 레시피의 모든 데이터를 삭제
+//                    crawlingIngredientRepository.deleteByCrawlingRecipe_RecipeId(recipeId);
+//                    crawlingProcessRepository.deleteByCrawlingRecipe_RecipeId(recipeId);
+//                    crawlingProcessImageRepository.deleteByCrawlingProcess_CrawlingRecipe_RecipeId(recipeId);
+//
+//                    // 레시피 삭제도 원할 경우 (그 레시피가 모든 데이터에 영향을 미친다면)
+//                    crawlingRecipeRepository.delete(recipeEntity);
+//
+//                    continue;  // 삭제만 하고 넘어가기
+//                }
+
+                // 이미 존재하는지 확인하고 저장
+                if (!crawlingIngredientRepository.existsByIngreNameAndCrawlingRecipe_RecipeUrl(ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
+                    crawlingIngredientRepository.saveAndFlush(ingredientEntity);
+                }
+            }
+;
+            //2. 과정 정보 (요리 순서) 크롤링
+            Elements processes = detailDoc.select(".view_step_cont.media");
+
+            int order = 1;  //요리 순서는 1번부터
+
+            for(Element process : processes) {
+                CrawlingProcessEntity processEntity = new CrawlingProcessEntity();
+                processEntity.setProcessOrder(order++);
+                processEntity.setProcessExplain(process.select(".media-body").text());
+                processEntity.setCrawlingRecipe(recipeEntity);
+
+                //우선 저장
+                crawlingProcessRepository.saveAndFlush(processEntity);
+//                System.out.println("save processEntity with ID : " + processEntity.getProcessId());
+
+                //각 과정 별 이미지 크롤링 및 저장
+                String imageUrl = detailDoc.select("#stepimg"
+                                        + processEntity.getProcessOrder()
+                                        + " img").attr("src");
+
+                if (!imageUrl.isEmpty()) {
+                    if (!imageUrl.startsWith("http")) {
+                        imageUrl = new URL(new URL(baseUrl), imageUrl).toString();
+                    }
+
+                    CrawlingProcessImageEntity imageEntity = new CrawlingProcessImageEntity();
+                    imageEntity.setImageUrl(imageUrl);
+                    imageEntity.setCrawlingProcess(processEntity);
+
+                    crawlingProcessImageRepository.saveAndFlush(imageEntity);
+                }
+
+            }
+
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     // 종류별 카테고리 재정의
     // 반찬 국/탕 찌개 디저트 면/만투 밥/죽/떡 김치/젓갈/장류 양념/소스쨈 양식 샐러드 차/음료/술 기타
@@ -91,158 +275,6 @@ public class CrawlingService {
         put("기타", "34");
     }};
 
-    //TEST : 크롤링 시작 시간 기록
-    Instant startTime = Instant.now();
-
-//    //ExecutorService 선언
-//    private ExecutorService executorService;
-//
-//    //ExecutorService 초기화 : 자바의 멀티스레딩 관리 API
-//    public void initializeExecutorService() {
-//        executorService = Executors.newFixedThreadPool(10); //10개의 스레드 풀 고정 설정
-//    }
-//
-//    //크롤링 종료 시, ExecutorService 종료
-//    public void shutdownExecutorService() {
-//        if(executorService != null && !executorService.isShutdown()) {
-//            executorService.shutdown();     //스레드 풀 종료
-//        }
-//    }
-
-    //크롤링 메서드
-    //  크롤링의 전체 프로세스 시작
-    //  카테고리별로 데이터를 가져와서 각 페이지를 반복 처리
-    //      -> 멀디스레드로 변경
-    public void crawlRecipes() {
-        
-//        initializeExecutorService();    //ExecutorService 초기화
-//        List<Callable<Boolean>> tasks = new ArrayList<>();
-
-        //종류별 카테고리 반복 처리
-        for (Map.Entry<String, List<String>> cateTypeEntry : newCateTypeMap.entrySet()) {
-            String cateType = cateTypeEntry.getKey();               //종류별 카테고리명 (Map의 key값)
-            List<String> cat4Values = cateTypeEntry.getValue();     //해당 카테고리의 세부 분류 ID 목록 (Map의 value값)
-
-            for (String cat4Value : cat4Values) {
-                //재료별 카테고리 반복 처리
-                for (Map.Entry<String, String> cat3Entry : cat3Map.entrySet()) {
-                    String cateMainIngre = cat3Entry.getKey();      //재료명
-                    String cat3Value = cat3Entry.getValue();        //재료별ID
-
-                    int page = 1;
-                    boolean hasMorePages = true;
-
-                    //페이지 단위로 크롤링 반복
-                    //페이지가 없을 때, hashMorePages = false로 반복 종료
-                    while (hasMorePages) {
-                        String url = generateUrl(cat3Value, cat4Value, page);       //URL 생성 메서드 호출 (아래)
-                        
-                        //-> 병렬 처리로 변경
-                        hasMorePages = processPage(cateType, cateMainIngre, url);   //페이지 처리 메서드 호출 (아래)
-//                        tasks.add(() -> processPage(cateType, cateMainIngre, url));     //병렬로 페이지를 처리할 작업 추가
-
-                        page++;
-                    }
-                }
-            }
-        }
-
-        //-> 모든 작업을 병렬로 실행
-//        try {
-//            //ExecutorSerivce를 이용해 Callable 작업을 병렬로 실행하고, 결과를 기다린다.
-//            List<Future<Boolean>> futures = executorService.invokeAll(tasks);
-//            for(Future<Boolean> future : futures) {
-//                try {
-//                    //각 작업의 결과를 체크 : 성공/실패 여부만 확인
-//                    if(!future.get()) {
-//                        System.out.println("Error occurred during crawling.");
-//                    }
-//                } catch(ExecutionException e) {
-//                    //작업 중 예외가 발생했을 때
-//                    System.out.println("Exeception during task execution : " + e.getCause().getMessage());
-//                }
-//
-//            }
-//        } catch(InterruptedException e) {
-//            e.printStackTrace();
-//        } finally {
-//            shutdownExecutorService();  //작업이 끝난 후, ExecutorService 종료
-//        }
-
-    }
-
-    //크롤링할 URL 생성 메서드
-    private String generateUrl(String cat3Value, String cat4Value, int page) {
-        return baseUrl + "cat3=" + cat3Value + "&cat4=" + cat4Value + "&order=accuracy&page=" + page;
-    }
-
-    //페이지 처리 메서드 : URL을 통해 데이터를 가져오고 HTML을 파싱해 각 레시피 데이터를 추출 및 저장
-    private boolean processPage(String cateType, String cateMainIngre, String url) {
-        try {
-            Document doc = Jsoup.connect(url).get();    //Jsoup으로 URL에 접속해 HTML 문서 가져오기
-            Elements recipes = doc.select(".common_sp_list_ul .common_sp_list_li");     //CSS 선택자로 필요한 HTML릐 레시피 요소 선택
-
-            if (recipes.isEmpty()) return false; // 종료 조건: 더 이상 데이터가 없음
-
-            //각 레시피 데이터를 extraRecipeDate 메서드로 추출
-            //saveRecipe로 저장
-            for (Element recipe : recipes) {
-                CrawlingRecipeDto dto = extractRecipeData(recipe, cateType, cateMainIngre);
-                saveRecipe(dto);
-            }
-
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    //레시피 데이터를 DTO로 추출 : HTML 요소에서 레시피 데이터를 추출하고 DTO 객체로 변환
-    private CrawlingRecipeDto extractRecipeData(Element recipe, String cateType, String cateMainIngre) {
-        CrawlingRecipeDto dto = new CrawlingRecipeDto();
-        dto.setRecipeTitle(recipe.select(".common_sp_caption_tit").text());               //제목
-        dto.setRecipeUrl(recipe.select("a").attr("href"));                      //URL
-        dto.setImage(recipe.select(".common_sp_thumb img").attr("src"));        //이미지URL
-        dto.setCateType(cateType);                                                                //종류별 분류
-        dto.setCateMainIngre(cateMainIngre);                                                      //재료별 분류
-        return dto;
-    }
-
-    //DTO를 Entity로 변환 후 데이터베이스에 저장
-    private void saveRecipe(CrawlingRecipeDto dto) {
-
-        //TEST
-        long recipeCount = crawlingRecipeRepository.count();
-        if(recipeCount >= 50000) {
-            Instant endTime = Instant.now();
-            Duration elapsedTime = Duration.between(startTime, endTime);
-            System.out.println("crawling time : " + elapsedTime.toMillis() + "ms");
-            throw new IllegalStateException("stop");
-        }
-
-        //데이터 중복 확인 : existsByRecipeUrl()로 URL이 이미 저장되어 있는지 확인
-        if (!crawlingRecipeRepository.existsByRecipeUrl(dto.getRecipeUrl())) {
-            CrawlingRecipeEntity entity = new CrawlingRecipeEntity();
-            entity.setRecipeTitle(dto.getRecipeTitle());
-            entity.setRecipeUrl(dto.getRecipeUrl());
-            entity.setImage(dto.getImage());
-            entity.setCateType(dto.getCateType());
-            entity.setCateMainIngre(dto.getCateMainIngre());
-
-            //레시피 정보를 먼저 저장
-            crawlingRecipeRepository.save(entity);
-
-            //우선 저장으로 레시피 ID 생성 후 나머지 정보 처리
-            processDetailPage(entity);
-        }
-    }
-
-    /*
-        [1차] 레시피 목록 페이지에서 동적 크롤링
-        [2차] 각 레시피의 상세 페이지까지 동적 크롤링
-     */
-
     //난이도 매핑 재구성
     private int newLevel(String level) {
         switch (level) {
@@ -258,212 +290,5 @@ public class CrawlingService {
                 return 0;
         }
     }
-
-    //레시피 상세 페이지에서 재료, 과정, 과정 이미지 크롤링
-    @Transactional
-    private void processDetailPage(CrawlingRecipeEntity recipeEntity) {
-
-        String baseUrl = "https://www.10000recipe.com"; //기본 URL 설정
-
-        try {
-            //상대 URL이 있을 때, 절대 경로로 변경
-            String recipeUrl = recipeEntity.getRecipeUrl();
-            if(!recipeUrl.startsWith("https://") && !recipeUrl.startsWith("http://")) {
-                recipeUrl = new URL(new URL(baseUrl), recipeUrl).toString();
-            }
-
-            Document detailDoc = Jsoup.connect(recipeUrl).get();
-//            Document detailDoc = Jsoup.connect(recipeEntity.getRecipeUrl()).get();
-
-            //0. 추가 정보 크롤링 : 인분, 소요시간, 난이도
-            String serving = detailDoc.select(".view2_summary_info1").text();
-            recipeEntity.setServing(serving);
-
-            String requiredTime = detailDoc.select(".view2_summary_info2").text();
-            recipeEntity.setRequiredTime(requiredTime);
-
-            String level = detailDoc.select(".view2_summary_info3").text();
-            recipeEntity.setLevel(newLevel(level));     //새로운 레벨 단계로 변경 비교하기
-
-            crawlingRecipeRepository.save(recipeEntity);  //CrawlingRecipeEntity 업데이트
-
-            //1. 재료 정보 크롤링
-            Elements ingredients = detailDoc.select("ul.case1 li");
-//            System.out.println("Found ingredients : " + ingredients.size());
-
-            for(Element ingredient : ingredients) {
-                CrawlingIngredientEntity ingredientEntity = new CrawlingIngredientEntity();
-                ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
-                ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
-                ingredientEntity.setCrawlingRecipe(recipeEntity);
-
-                // 이미 존재하는지 확인하고 저장
-                if (!crawlingIngredientRepository.existsByIngreNameAndCrawlingRecipe_RecipeUrl(ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
-                    crawlingIngredientRepository.save(ingredientEntity);
-                }
-            }
-;
-            //2. 과정 정보 (요리 순서) 크롤링
-            Elements processes = detailDoc.select(".view_step_cont.media");
-
-            int order = 1;  //요리 순서는 1번부터
-
-            for(Element process : processes) {
-                CrawlingProcessEntity processEntity = new CrawlingProcessEntity();
-                processEntity.setProcessOrder(order++);
-                processEntity.setProcessExplain(process.select(".media-body").text());
-                processEntity.setCrawlingRecipe(recipeEntity);
-
-                //우선 저장
-                crawlingProcessRepository.save(processEntity);
-//                System.out.println("save processEntity with ID : " + processEntity.getProcessId());
-
-                //각 과정 별 이미지 크롤링 및 저장
-//                String imageUrl = process.select(".media-right img").attr("src");
-//                System.out.println("Extracted image url : " + imageUrl);
-//                System.out.println("HTML : " + process.html());
-                String imageUrl = detailDoc.select("#stepimg"
-                                        + processEntity.getProcessOrder()
-                                        + " img").attr("src");
-//                System.out.print("HTML: " + process.html());
-
-                if (!imageUrl.isEmpty()) {
-                    if (!imageUrl.startsWith("http")) {
-                        imageUrl = new URL(new URL(baseUrl), imageUrl).toString();
-                    }
-
-                    CrawlingProcessImageEntity imageEntity = new CrawlingProcessImageEntity();
-                    imageEntity.setImageUrl(imageUrl);
-                    imageEntity.setCrawlingProcess(processEntity);
-
-                    crawlingProcessImageRepository.save(imageEntity);
-//                    System.out.println("Saved process image: " + imageEntity.getImageUrl());
-                }
-
-
-                //요리 과정 저장
-//                crawlingProcessRepository.save(processEntity);
-            }
-
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-//    @Transactional
-//    private void processDetailPage(CrawlingRecipeEntity recipeEntity) {
-//        String baseUrl = "https://www.10000recipe.com"; //기본 URL 설정
-//        int retryCount = 3;  // 재시도 횟수 설정
-//
-//        try {
-//            String recipeUrl = recipeEntity.getRecipeUrl();
-//            if (!recipeUrl.startsWith("https://") && !recipeUrl.startsWith("http://")) {
-//                recipeUrl = new URL(new URL(baseUrl), recipeUrl).toString();
-//            }
-//
-//            // 재시도 로직 추가
-//            boolean success = false;
-//            int attempts = 0;
-//            Document detailDoc = null;
-//            while (attempts < retryCount && !success) {
-//                try {
-//                    detailDoc = Jsoup.connect(recipeUrl).get();
-//                    success = true; // 성공 시 루프 종료
-//                } catch (IOException e) {
-//                    attempts++;
-//                    System.out.println("Attempt " + attempts + " failed to fetch recipe page: " + recipeUrl);
-//                    if (attempts >= retryCount) {
-//                        System.err.println("Max retries reached for URL: " + recipeUrl);
-//                        return;  // 재시도 실패 시 함수 종료
-//                    }
-//                    try {
-//                        Thread.sleep(2000); // 재시도 전 대기
-//                    } catch (InterruptedException ie) {
-//                        Thread.currentThread().interrupt();
-//                    }
-//                }
-//            }
-//
-//            if (detailDoc == null) {
-//                System.err.println("Failed to fetch recipe page after retries: " + recipeUrl);
-//                return;
-//            }
-//
-//            // 0. 추가 정보 크롤링 : 인분, 소요시간, 난이도
-//            try {
-//                String serving = detailDoc.select(".view2_summary_info1").text();
-//                recipeEntity.setServing(serving);
-//
-//                String requiredTime = detailDoc.select(".view2_summary_info2").text();
-//                recipeEntity.setRequiredTime(requiredTime);
-//
-//                String level = detailDoc.select(".view2_summary_info3").text();
-//                recipeEntity.setLevel(newLevel(level)); // 새로운 레벨 단계로 변경 비교하기
-//
-//                crawlingRecipeRepository.save(recipeEntity); // CrawlingRecipeEntity 업데이트
-//            } catch (Exception e) {
-//                System.err.println("Error while processing additional info for recipe: " + recipeEntity.getRecipeUrl());
-//                e.printStackTrace();
-//            }
-//
-//            // 1. 재료 정보 크롤링
-//            Elements ingredients = detailDoc.select("ul.case1 li");
-//            for (Element ingredient : ingredients) {
-//                try {
-//                    CrawlingIngredientEntity ingredientEntity = new CrawlingIngredientEntity();
-//                    ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
-//                    ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
-//                    ingredientEntity.setCrawlingRecipe(recipeEntity);
-//
-//                    // 이미 존재하는지 확인하고 저장
-//                    if (!crawlingIngredientRepository.existsByIngreNameAndCrawlingRecipe_RecipeUrl(ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
-//                        crawlingIngredientRepository.save(ingredientEntity);
-//                    }
-//                } catch (Exception e) {
-//                    System.err.println("Error processing ingredient in recipe: " + recipeEntity.getRecipeUrl());
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            // 2. 과정 정보 (요리 순서) 크롤링
-//            Elements processes = detailDoc.select(".view_step_cont.media");
-//            int order = 1; // 요리 순서는 1번부터
-//            for (Element process : processes) {
-//                try {
-//                    CrawlingProcessEntity processEntity = new CrawlingProcessEntity();
-//                    processEntity.setProcessOrder(order++);
-//                    processEntity.setProcessExplain(process.select(".media-body").text());
-//                    processEntity.setCrawlingRecipe(recipeEntity);
-//
-//                    crawlingProcessRepository.save(processEntity);
-//
-//                    // 각 과정 별 이미지 크롤링 및 저장
-//                    String imageUrl = detailDoc.select("#stepimg" + processEntity.getProcessOrder() + " img").attr("src");
-//
-//                    if (!imageUrl.isEmpty()) {
-//                        if (!imageUrl.startsWith("http")) {
-//                            imageUrl = new URL(new URL(baseUrl), imageUrl).toString();
-//                        }
-//
-//                        CrawlingProcessImageEntity imageEntity = new CrawlingProcessImageEntity();
-//                        imageEntity.setImageUrl(imageUrl);
-//                        imageEntity.setCrawlingProcess(processEntity);
-//
-//                        crawlingProcessImageRepository.save(imageEntity);
-//                    }
-//
-//                } catch (Exception e) {
-//                    System.err.println("Error processing process step in recipe: " + recipeEntity.getRecipeUrl());
-//                    e.printStackTrace();
-//                }
-//            }
-//        } catch (IOException e) {
-//            System.err.println("General error while processing recipe page: " + recipeEntity.getRecipeUrl());
-//            e.printStackTrace();
-//        }
-//    }
-
-
 
 }

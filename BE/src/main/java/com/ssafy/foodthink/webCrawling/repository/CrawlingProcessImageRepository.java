@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CrawlingProcessImageRepository extends JpaRepository<CrawlingProcessImageEntity, Long> {
 
+    void deleteByCrawlingProcess_CrawlingRecipe_RecipeId(Long recipeId);
 }

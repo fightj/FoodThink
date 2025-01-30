@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /*
        크롤링한 데이터를 DTO에서 Entity로 변환
@@ -30,7 +33,7 @@ public class CrawlingRecipeEntity {
     private Integer level;              //난이도   -> 새로 구성
     private String requiredTime;        //소요시간
     private LocalDateTime writeTime;    //작성시간
-    private Integer hits = 0;               //조회수 : 기본값 0으로 설정
+    private Integer hits;               //조회수 : 기본값 0으로 설정
     private String recipeUrl;           //레시피 URL
     private String image;               //대표이미지 URL
 
@@ -38,6 +41,15 @@ public class CrawlingRecipeEntity {
     @PrePersist
     protected void onCreate() {
         this.writeTime = LocalDateTime.now();
+
+        //hits에 1~300 사이의 랜덤 숫자 값 설정
+        Random random = new Random();
+        this.hits = random.nextInt(300) + 1;
     }
+
+    @OneToMany(mappedBy = "crawlingRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CrawlingIngredientEntity> ingredients = new ArrayList<>();
+    @OneToMany(mappedBy = "crawlingRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CrawlingProcessEntity> processes = new ArrayList<>();
 
 }
