@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        DB_URL = credentials('DB_URL')  # 데이터베이스 URL
-        DB_PASSWORD = credentials('DB_PWD')  # 데이터베이스 비밀번호
-        DOCKER_IMAGE_NAME = 'yyb113/foodthink'  # Docker 이미지 이름
-        DOCKER_CREDENTIALS_ID = credentials('docker-hub')  # Docker Hub 자격 증명
+        DB_URL = credentials('DB_URL')
+        DB_PASSWORD = credentials('DB_PWD')
+        DOCKER_IMAGE_NAME = 'yyb113/foodthink'
+        DOCKER_CREDENTIALS_ID = credentials('docker-hub')
     }
 
     stages {
@@ -13,9 +13,7 @@ pipeline {
         stage('Check Maven') {
             steps {
                 script {
-                    # Maven 경로 확인
                     sh 'echo $MAVEN_HOME'
-                    # Maven 버전 확인
                     sh 'mvn -v'
                 }
             }
@@ -25,14 +23,13 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    cd BE  # Backend 디렉토리로 이동
-                    mvn clean install  # Maven 빌드
-                    echo "spring.datasource.url=${DB_URL}" > application.properties  # DB URL 설정
-                    echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties  # DB 비밀번호 설정
+                    cd BE
+                    mvn clean install
+                    echo "spring.datasource.url=${DB_URL}" > application.properties
+                    echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
 
-                    # Docker 이미지 빌드 및 푸시
-                    docker build -t ${DOCKER_IMAGE_NAME}/my-backend:latest .  # Backend Docker 이미지 빌드
-                    docker push ${DOCKER_IMAGE_NAME}/my-backend:latest  # Docker Hub에 푸시
+                    docker build -t ${DOCKER_IMAGE_NAME}/my-backend:latest .
+                    docker push ${DOCKER_IMAGE_NAME}/my-backend:latest
                     '''
                 }
             }
