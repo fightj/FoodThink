@@ -12,7 +12,7 @@ pipeline {
                 steps {
                     script {
                         sh 'echo $MAVEN_HOME'
-                        sh 'mvn -v'  // Maven 버전 확인
+                        sh 'mvn -v'
                     }
                 }
             }
@@ -26,7 +26,7 @@ pipeline {
                     echo "spring.datasource.url=${DB_URL}" > application.properties
                     echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
 
-                    // Docker 빌드 및 푸시
+                    # Docker 빌드 및 푸시
                     docker build -t my-backend:latest .
                     docker tag my-backend:latest my-docker-repo/my-backend:latest
                     docker push my-docker-repo/my-backend:latest
