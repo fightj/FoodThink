@@ -19,6 +19,18 @@ pipeline {
             }
         }
 
+        stage('Check Docker Login in Jenkins') {
+            steps {
+                script {
+                    // Docker 로그인 상태 확인
+                    sh '''
+                    docker info | grep "Username" || echo "Not logged in"
+                    docker whoami || echo "Docker login failed"
+                    '''
+                }
+            }
+        }
+
         stage('Build & Push Backend') {
             steps {
                 script {
@@ -31,6 +43,10 @@ pipeline {
 
                         # Docker 로그인
                         docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+                        # 로그인 성공 후 확인
+                        docker info | grep "Username"
+                        docker whoami
 
                         # Docker 빌드 및 푸시
                         docker build -t ${DOCKER_IMAGE_NAME}/my-backend:latest .
@@ -48,6 +64,10 @@ pipeline {
                         sh '''
                         cd FE/ffood_thing  # Frontend 디렉토리로 이동
                         docker login -u $DOCKER_USER -p $DOCKER_PASS  # Docker Hub 로그인
+
+                        # 로그인 성공 후 확인
+                        docker info | grep "Username"
+                        docker whoami
 
                         # Frontend Docker 이미지 빌드 및 푸시
                         docker build -t ${DOCKER_IMAGE_NAME}/my-frontend:latest .
