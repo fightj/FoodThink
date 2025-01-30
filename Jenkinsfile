@@ -5,7 +5,7 @@ pipeline {
         DB_URL = credentials('DB_URL')
         DB_PASSWORD = credentials('DB_PWD')
         DOCKER_IMAGE_NAME = 'yyb113/foodthink'
-        DOCKER_CREDENTIALS_ID = credentials('docker-hub')
+        DOCKER_CREDENTIALS_ID = 'docker-hub'
     }
 
     stages {
@@ -22,15 +22,21 @@ pipeline {
         stage('Build & Push Backend') {
             steps {
                 script {
-                    sh '''
-                    cd BE
-                    mvn clean install
-                    echo "spring.datasource.url=${DB_URL}" > application.properties
-                    echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                        cd BE
+                        mvn clean install
+                        echo "spring.datasource.url=${DB_URL}" > application.properties
+                        echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
 
-                    docker build -t ${DOCKER_IMAGE_NAME}/my-backend:latest .
-                    docker push ${DOCKER_IMAGE_NAME}/my-backend:latest
-                    '''
+                        # Docker 로그인
+                        docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+                        # Docker 빌드 및 푸시
+                        docker build -t ${DOCKER_IMAGE_NAME}/my-backend:latest .
+                        docker push ${DOCKER_IMAGE_NAME}/my-backend:latest
+                        '''
+                    }
                 }
             }
         }
@@ -38,11 +44,16 @@ pipeline {
         stage('Build & Push Frontend') {
             steps {
                 script {
-                    sh '''
-                    cd FE/ffood_thing  # Frontend 디렉토리로 이동
-                    docker build -t ${DOCKER_IMAGE_NAME}/my-frontend:latest .  # Frontend Docker 이미지 빌드
-                    docker push ${DOCKER_IMAGE_NAME}/my-frontend:latest  # Docker Hub에 푸시
-                    '''
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                        cd FE/ffood_thing  # Frontend 디렉토리로 이동
+                        docker login -u $DOCKER_USER -p $DOCKER_PASS  # Docker Hub 로그인
+
+                        # Frontend Docker 이미지 빌드 및 푸시
+                        docker build -t ${DOCKER_IMAGE_NAME}/my-frontend:latest .
+                        docker push ${DOCKER_IMAGE_NAME}/my-frontend:latest  # Docker Hub에 푸시
+                        '''
+                    }
                 }
             }
         }
