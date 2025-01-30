@@ -41,7 +41,7 @@ pipeline {
                         echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
 
                         # Docker 로그인
-                        docker login -u $DOCKER_USER -p $DOCKER_PASS
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
 
                         # 로그인 성공 후 확인
                         docker info | grep "Username"
