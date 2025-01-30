@@ -4,7 +4,7 @@ pipeline {
     environment {
         DB_URL = credentials('DB_URL')
         DB_PASSWORD = credentials('DB_PWD')
-        DOCKER_IMAGE_NAME = 'yyb113/foodthink'
+        DOCKER_IMAGE_NAME = 'yyb113'
         DOCKER_CREDENTIALS_ID = 'docker-hub'
     }
 
