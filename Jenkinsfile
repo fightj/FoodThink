@@ -1,8 +1,6 @@
 pipeline {
     agent any
 
-
-
     environment {
         DB_URL = credentials('DB_URL')
         DB_PASSWORD = credentials('DB_PWD')
@@ -11,23 +9,11 @@ pipeline {
     }
 
     stages {
-
         stage('Check Maven') {
             steps {
                 script {
                     sh 'echo $MAVEN_HOME'
                     sh 'mvn -v'
-                }
-            }
-        }
-
-        stage('Check Docker Login in Jenkins') {
-            steps {
-                script {
-                    // Docker 로그인 상태 확인
-                    sh '''
-                    docker info | grep "Username" || echo "Not logged in"
-                    '''
                 }
             }
         }
@@ -57,37 +43,24 @@ pipeline {
             }
         }
 
-        stage('npm') {
-                nodejs(nodeJSInstallationName: 'node') { // 위의 설정에서 지정한 node 이름
-                    sh 'npm install && npm run build'
-                }
-        }
-
         stage('Build & Push Frontend') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh '''
-                        cd FE/ffood_thing  # Frontend 디렉토리로 이동
+                        nodejs('node') {  // NodeJS 환경을 사용
+                            sh '''
+                            cd FE/ffood_thing  # Frontend 디렉토리로 이동
+                            npm install
+                            npm run build
 
-                        # Frontend 프로젝트 의존성 설치
-                        npm install
+                            # Docker 로그인
+                            docker login -u $DOCKER_USER -p $DOCKER_PASS
 
-                        # 빌드 (dist 폴더 생성 확인)
-                        npm run build
-
-                        # dist 폴더 생성 확인 (디버깅용)
-                        ls -la dist
-
-                        docker login -u $DOCKER_USER -p $DOCKER_PASS  # Docker Hub 로그인
-
-                        # 로그인 성공 후 확인
-                        docker info | grep "Username"
-
-                        # Frontend Docker 이미지 빌드 및 푸시
-                        docker build -t ${DOCKER_IMAGE_NAME}/my-frontend:latest .
-                        docker push ${DOCKER_IMAGE_NAME}/my-frontend:latest  # Docker Hub에 푸시
-                        '''
+                            # Frontend Docker 이미지 빌드 및 푸시
+                            docker build -t ${DOCKER_IMAGE_NAME}/my-frontend:latest .
+                            docker push ${DOCKER_IMAGE_NAME}/my-frontend:latest
+                            '''
+                        }
                     }
                 }
             }
