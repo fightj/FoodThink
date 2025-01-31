@@ -20,7 +20,7 @@ import RecipeUpdatePage from "./pages/recipe/RecipeUpdatePage";
 import FeedUpdatePage from "./pages/sns/FeedUpdatePage";
 import LoginPage from "./pages/login/LoginPage";
 import AiRecommendPage from "./pages/recommend/AiRecommendPage";
-import TodayRecommendPage from "./pages/recommend/TodayRecommendPage";
+// import TodayRecommendPage from "./pages/recommend/TodayRecommendPage";
 import SnsSearchResultPage from "./pages/sns/SnsSearchResultPage" // 검색 결과 페이지 임포트
 
 // 공통 컴포넌트
@@ -53,7 +53,7 @@ const AnimatedRoutes = () => {
         <Route path="/profile/:id" element={<PageSlide><ProfilePage /></PageSlide>} />
 
         <Route path="/ai-recommend" element={<PageSlide><AiRecommendPage /></PageSlide>} />
-        <Route path="/today-recommend" element={<PageSlide><TodayRecommendPage /></PageSlide>} />
+        {/* <Route path="/today-recommend" element={<PageSlide><TodayRecommendPage /></PageSlide>} /> */}
 
       </Routes>
     </AnimatePresence>
