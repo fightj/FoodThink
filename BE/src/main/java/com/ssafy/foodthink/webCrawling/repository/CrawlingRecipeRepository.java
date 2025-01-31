@@ -1,6 +1,6 @@
 package com.ssafy.foodthink.webCrawling.repository;
 
-import com.ssafy.foodthink.webCrawling.entity.CrawlingRecipeEntity;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface CrawlingRecipeRepository extends JpaRepository<CrawlingRecipeEntity, Long> {
+public interface CrawlingRecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
     //recipeUrl을 기준으로 데이터 중복 확인
     boolean existsByRecipeUrl(String recipeUrl);
