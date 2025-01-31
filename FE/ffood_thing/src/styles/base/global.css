@@ -5,7 +5,9 @@
   box-sizing: border-box; /* 패딩 포함 높이 계산 */
 }
 .card-div {
-  background-color: rgb(255, 255, 255); 
+  background: linear-gradient(to bottom, #ffffff, #a1a1a1);
+
+  background-color: rgb(255, 255, 255);
   width: 100%; /* 수평 공간 전체를 차지 */
   padding: 20px 0; /* 상하 패딩을 늘려서 높이를 증가 */
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
@@ -15,3 +17,13 @@
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
 }
 
+@font-face {
+  font-family: "MyCustomFont";
+  src: url("/fonts/MyCustomFont.ttf") format("truetype"), url("/fonts/MyCustomFont-rounded.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "MyCustomFont", sans-serif;
+}
