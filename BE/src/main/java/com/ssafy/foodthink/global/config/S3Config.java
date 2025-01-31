@@ -34,9 +34,4 @@ public class S3Config {
                 .region(Region.of(region))
                 .build();
     }
-
-    @PostConstruct
-    public void logProperties() {
-        System.out.println("accessKey" + accessKey);
-    }
 }
