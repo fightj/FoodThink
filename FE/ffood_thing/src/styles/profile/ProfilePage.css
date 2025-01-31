@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f3e5ab;
+    /* background-color: #f3e5ab; */
     width: min(90%, 1200px); /* 최대 1200px, 최소 90% */
     margin: auto; /* 중앙 정렬 */
 }
@@ -16,8 +16,9 @@
     padding: 20px;
     background: linear-gradient(to right, #8360c3, #2ebf91);
     color: #fff;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
+    border-radius: 20px;
+    /* border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px; */
     width: 100%;
 }
 
@@ -52,6 +53,7 @@
     cursor: pointer;
     color: #333;
     transition: background 0.3s ease;
+    border-radius: 10px;
 }
 
 /* 활성화된 탭 */
@@ -63,6 +65,7 @@
     color: #fff;
     font-size: 16px;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 /* 탭 콘텐츠 컨테이너 */
