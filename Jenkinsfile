@@ -37,7 +37,9 @@ pipeline {
                         echo "spring.datasource.url=${DB_URL}" > application.properties
                         echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
                         echo "spring.jwt.secret=${SPRING_JWT_SECRET}" >> application.properties  # SPRING_JWT_SECRET 추가
-                        
+
+                        # application.properties 내용 확인
+                        cat application.properties  # 파일 내용 출력
                         
 
                         # Docker 로그인
