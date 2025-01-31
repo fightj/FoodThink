@@ -1,17 +1,17 @@
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 
 const PageSlide = ({ children }) => {
   return (
     <motion.div
-      initial={{ x: "100%", opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: "-100%", opacity: 0 }}
+      initial={{ y: "100%", opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: "-100%", opacity: 0 }}
       transition={{
-        x: { type: "spring", stiffness: 300, damping: 30, duration: 0.8 },
-        opacity: { duration: 0.5 }
+        y: { type: "spring", stiffness: 300, damping: 30, duration: 0.8 },
+        opacity: { duration: 0.5 },
       }}
       style={{
-        position: "relative", // fixed 대신 relative
+        position: "relative",
         width: "100%",
         minHeight: "100vh",
         overflowX: "hidden",
@@ -21,8 +21,7 @@ const PageSlide = ({ children }) => {
     >
       {children}
     </motion.div>
-  );
-};
+  )
+}
 
-
-export default PageSlide;
+export default PageSlide
