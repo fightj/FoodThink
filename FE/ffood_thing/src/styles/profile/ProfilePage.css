@@ -228,48 +228,110 @@
 }
 
 /* 음식 선호도 모달 */
-  .preference-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    width: 300px;
-    text-align: center;
-    z-index: 1000;
+.preference-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 60%;
+  text-align: center;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* 체크리스트 스타일 */
-.preference-list {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 10px 0;
+/* 선호 음식 & 기피 재료 컨테이너 */
+.preference-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch; /* 컨테이너 높이를 자동으로 맞춤 */
+  width: 100%;
+  position: relative;
+  padding: 20px 0;
+  min-height: 300px; /* 최소 높이 지정 (구분선 유지) */
 }
 
-.preference-item {
-    margin: 5px 0;
-    font-size: 16px;
+/* 선호 음식 & 기피 재료 개별 컨테이너 */
+.preference-section,
+.avoidance-section {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.preference-actions {
-    margin-top: 10px;
+/* 선호 음식 영역을 기피 재료보다 더 크게 설정 */
+.preference-section {
+  flex: 2; /* 2배 크기 */
+}
+
+.avoidance-section {
+  flex: 1; /* 1배 크기 */
+}
+
+/* 세로 구분선 */
+.divider {
+  width: 2px;
+  background-color: #ccc;
+  height: auto;
+  min-height: 100%; /* 부모 요소 높이에 맞게 자동 조정 */
+  align-self: stretch; /* 부모 높이만큼 늘어나도록 설정 */
+}
+
+/* 리스트 스타일 */
+.preference-list,
+.avoidance-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* 버튼 스타일 */
+.preference-btn,
+.avoidance-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* 선호 음식 버튼 선택 시 색 변경 */
+.preference-btn.selected {
+  background-color: #4caf50; /* 초록색 */
+  color: white;
+}
+
+/* 기피 재료 버튼 선택 시 색 변경 */
+.avoidance-btn.selected {
+  background-color: #ff4d4d; /* 빨간색 */
+  color: white;
 }
 
 /* 저장 버튼 */
 .save-btn {
-    background: #2ebf91;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .save-btn:hover {
-    background: #26a17b;
+  background-color: #0056b3;
 }

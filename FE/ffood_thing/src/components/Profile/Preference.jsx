@@ -1,17 +1,37 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../../styles/profile/ProfilePage.css";
+import profileData from "../../data/ProfileData"; // 더미 데이터 가져오기
 
-const PREFERENCE_ITEMS = ["고수", "파인애플 피자", "올리브", "치즈", "가지", "샐러리", "생강", "해산물"];
+const PREFERENCE_ITEMS = [
+  "고수", "올리브", "블루치즈", "홍어", "낫또", "마라 소스", "순대 내장", "새우젓",
+  "양고기", "대창", "고추냉이", "돼지껍데기", "굴", "청국장", "산낙지", "번데기",
+  "강황(카레 맛 강한 음식)", "메주", "미더덕", "우니(성게알)", "라즈베리",
+  "피망", "비트", "두리안", "건포도", "코코넛", "해파리 냉채", "샐러리", "가지", "명란젓"
+];
 
-const Preference = ({ preferences, onClose, onSave }) => {
-  const [selectedItems, setSelectedItems] = useState(preferences);
-  const modalRef = useRef(null); // 모달 외부 클릭 감지를 위한 ref
+const AVOID_ITEMS = [
+  "난류(가금류)", "우유", "메밀", "땅콩", "대두", "밀",
+  "고등어", "게", "돼지고기", "복숭아", "토마토", "새우"
+];
+
+const Preference = ({ onClose }) => {
+  // 로그인 기능이 없으므로 첫 번째 유저(`id: "1"`)를 기본값으로 사용
+  const user = profileData[0]; // profileData 배열에서 첫 번째 유저 가져오기
+
+  // Local Storage에서 기존 저장된 데이터 불러오기
+  const storedPreferences = JSON.parse(localStorage.getItem("selectedPreferences")) || user.preferences;
+  const storedAvoidances = JSON.parse(localStorage.getItem("selectedAvoidances")) || user.avoidances;
+
+  // 유저의 선호/기피 음식 상태 관리
+  const [selectedPreferences, setSelectedPreferences] = useState(storedPreferences);
+  const [selectedAvoidances, setSelectedAvoidances] = useState(storedAvoidances);
+  const modalRef = useRef(null);
 
   // 모달 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onClose(); // 바깥 클릭 시 닫기
+        onClose();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -20,39 +40,70 @@ const Preference = ({ preferences, onClose, onSave }) => {
     };
   }, [onClose]);
 
-  // 체크박스 선택 및 해제 핸들러
-  const handleToggle = (item) => {
-    setSelectedItems((prev) =>
-      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-    );
+  // 버튼 클릭 시 선택/해제 (선호/기피 구분)
+  const handleToggle = (item, isAvoidance = false) => {
+    if (isAvoidance) {
+      setSelectedAvoidances((prev) =>
+        prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+      );
+    } else {
+      setSelectedPreferences((prev) =>
+        prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+      );
+    }
   };
 
-  // 저장 버튼 클릭 시 변경된 선호도 ProfilePage로 전달
+  // 저장 버튼 클릭 시 Local Storage에 저장 (임시 저장 유지)
   const handleSave = () => {
-    onSave(selectedItems); // 변경 사항을 ProfilePage에 전달
-    onClose(); // 저장 후 창 닫기
+    localStorage.setItem("selectedPreferences", JSON.stringify(selectedPreferences));
+    localStorage.setItem("selectedAvoidances", JSON.stringify(selectedAvoidances));
+
+    console.log("저장됨:", { selectedPreferences, selectedAvoidances });
+    onClose();
   };
 
   return (
     <>
-      {/* 어두운 배경 */}
       <div className="modal-backdrop" onClick={onClose}></div>
 
-      {/* 음식 선호도 모달 */}
       <div className="preference-container" ref={modalRef}>
-        <h3>음식 선호도 설정</h3>
-        <div className="preference-list">
-          {PREFERENCE_ITEMS.map((item) => (
-            <label key={item} className="preference-item">
-              <input 
-                type="checkbox" 
-                checked={selectedItems.includes(item)} 
-                onChange={() => handleToggle(item)} 
-              />
-              {item}
-            </label>
-          ))}
+        <div className="preference-wrapper">
+          {/* 선호 음식 섹션 */}
+          <div className="preference-section">
+            <h4>선호 음식</h4>
+            <div className="preference-list">
+              {PREFERENCE_ITEMS.map((item) => (
+                <button
+                  key={item}
+                  className={`preference-btn ${selectedPreferences.includes(item) ? "selected" : ""}`}
+                  onClick={() => handleToggle(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 세로 구분선 */}
+          <div className="divider"></div>
+
+          {/* 기피 재료 섹션 */}
+          <div className="avoidance-section">
+            <h4>기피 재료</h4>
+            <div className="avoidance-list">
+              {AVOID_ITEMS.map((item) => (
+                <button
+                  key={item}
+                  className={`avoidance-btn ${selectedAvoidances.includes(item) ? "selected" : ""}`}
+                  onClick={() => handleToggle(item, true)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
+
         <button className="save-btn" onClick={handleSave}>저장</button>
       </div>
     </>
