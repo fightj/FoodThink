@@ -74,9 +74,13 @@ pipeline {
                     docker rm my-backend-container || true  # 기존 Backend 컨테이너 제거
                     docker run -d --name my-backend-container -p 8080:8080 ${DOCKER_IMAGE_NAME}/my-backend:latest  # 새로운 Backend 컨테이너 실행
 
+                    # 백엔드 컨테이너 로그 확인
+                    docker logs my-backend-container
+                    
                     docker stop my-frontend-container || true  # 기존 Frontend 컨테이너 종료
                     docker rm my-frontend-container || true  # 기존 Frontend 컨테이너 제거
                     docker run -d --name my-frontend-container -p 80:80 ${DOCKER_IMAGE_NAME}/my-frontend:latest  # 새로운 Frontend 컨테이너 실행
+                    
                     '''
                 }
             }
