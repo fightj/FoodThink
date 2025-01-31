@@ -5,25 +5,8 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background: #f8f9fa;
+    /* background: #f8f9fa; */
     position: relative;
-}
-
-/* 왼쪽 상단 홈으로 돌아가기 버튼 */
-.back-home {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 24px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: #333;
-    font-weight: bold;
-}
-
-.back-home:hover {
-    color: #ff6b6b;
 }
 
 /* 말풍선 (질문) */

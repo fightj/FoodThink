@@ -1,16 +1,18 @@
 /* 컨테이너 스타일 */
 .container {
-  max-width: 100%; /* 원하는 크기로 조정 가능 */
-  margin: 0 auto; /* 가운데 정렬 */
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 /* Grid 레이아웃 */
 .custom-grid {
   display: grid;
+  grid-template-columns: 1fr 1fr; /* 두 개의 열 */
+  grid-template-rows: auto; /* 행 높이를 자동으로 조정 */
   grid-template-areas:
     "card1 card2"
-    "card3 card2"
-    "card3 card4";
+    "card1 card3"
+    "card4 card3"; /* 모든 카드 위치 고정 */
   grid-gap: 20px;
 }
 
@@ -22,6 +24,8 @@
   border-radius: 20px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  margin-bottom: 20px; /* 카드 사이에 간격 추가 */
 }
 
 .card:hover {
@@ -38,59 +42,38 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* 텍스트를 하단 정렬 */
+  justify-content: flex-end;
   padding: 20px;
   color: white;
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
-  background: rgba(0, 0, 0, 0.3); /* 카드 배경 위 텍스트 가독성 향상 */
-  border-radius: inherit; /* 카드 테두리 반영 */
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: inherit;
 }
 
 /* 각 카드의 위치와 크기 설정 */
 .card-1 {
   grid-area: card1;
   height: 300px;
-  background-image: url("/images/메인페이지1.jpg");
 }
 
 .card-2 {
   grid-area: card2;
-  height: 450px;
-  background-image: url("/images/메인페이지2.jpg");
+  height: 400px;
 }
 
 .card-3 {
   grid-area: card3;
-  height: 400px;
-  background-image: url("/images/메인페이지3.jpg");
+  height: 450px;
 }
 
 .card-4 {
   grid-area: card4;
-  height: 250px;
-  background-image: url("/images/메인페이지4.jpg");
+  height: 350px;
+  align-self: end; /* 카드 4번을 하단에 배치 */
 }
 
-/* 둥근 꼭지점 버튼 스타일 */
-.rounded-button {
-  background-color: #ffffff; /* 버튼 배경색 */
-  border: none; /* 테두리 제거 */
-  color: rgb(0, 0, 0); /* 텍스트 색상 */
-  padding: 12px 24px; /* 버튼 안쪽 여백 */
-  text-align: center; /* 텍스트 중앙 정렬 */
-  text-decoration: none; /* 링크 스타일 제거 */
-  display: inline-block; /* 인라인 블록으로 설정 */
-  font-size: 20px; /* 폰트 크기 */
-  border-radius: 25px; /* 둥근 꼭지점 설정 */
-  width: 150px; /* 버튼의 고정 너비 설정 */
-  transition: background-color 0.3s, transform 0.2s ease; /* 호버 시 부드러운 효과 */
-}
-
-.rounded-button:hover {
-  background-color: #ffffff; /* 호버 시 배경색 변경 */
-  transform: translateY(-2px); /* 호버 시 살짝 위로 올라오는 효과 */
-}
-
-.rounded-button:active {
-  transform: translateY(0); /* 클릭 시 버튼 원위치 */
+/* Link 스타일 */
+.card-link {
+  display: block;
+  text-decoration: none;
 }
