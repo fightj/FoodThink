@@ -6,13 +6,13 @@ pipeline {
     environment {
         DB_URL = credentials('DB_URL')
         DB_PASSWORD = credentials('DB_PWD')
-        SPRING_JWT_SECRET = credentials('spring-jwt-secret')
-        KAKAO_CLIENT_ID = credentials('kakao-client-id')
-        KAKAO_CLIENT_SECRET = credentials('kakao-client-secret')
-        KAKAO_REDIRECT_URL = credentials('kakao-redirect-url')
-        S3_BUCKET = credentials('s3-bucket')
-        AWS_CREDENTIALS_ACCESS_KEY = credentials('aws-credentials-access-key')
-        AWS_CREDENTIALS_SECRET_KEY = credentials('aws-credentials-secret-key')
+        SPRING_JWT_SECRET = credentials('SPRING_JWT_SECRET')
+        KAKAO_CLIENT_ID = credentials('KAKAO_CLIENT_ID')
+        KAKAO_CLIENT_SECRET = credentials('KAKAO_CLIENT_SECRET')
+        KAKAO_REDIRECT_URL = credentials('kKAKAO_REDIRECT_URL')
+        S3_BUCKET = credentials('S3_BUCKET')
+        AWS_CREDENTIALS_ACCESS_KEY = credentials('AWS_CREDENTIALS_ACCESS_KEY')
+        AWS_CREDENTIALS_SECRET_KEY = credentials('AWS_CREDENTIALS_SECRET_KEY')
         DOCKER_IMAGE_NAME = 'yyb113'
         DOCKER_CREDENTIALS_ID = 'docker-hub'
     }
