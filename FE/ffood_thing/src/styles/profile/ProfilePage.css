@@ -230,30 +230,26 @@
 /* 음식 선호도 모달 */
 .preference-container {
   position: fixed;
-  top: 50%;
+  bottom: 22%; /* 기존보다 더 위로 올림 */
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   background: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  width: 60%;
+  width: 70%;
   text-align: center;
   z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 /* 선호 음식 & 기피 재료 컨테이너 */
 .preference-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: stretch; /* 컨테이너 높이를 자동으로 맞춤 */
+  align-items: flex-start;
   width: 100%;
   position: relative;
   padding: 20px 0;
-  min-height: 300px; /* 최소 높이 지정 (구분선 유지) */
 }
 
 /* 선호 음식 & 기피 재료 개별 컨테이너 */
@@ -262,9 +258,6 @@
   flex: 1;
   text-align: center;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 /* 선호 음식 영역을 기피 재료보다 더 크게 설정 */
@@ -280,9 +273,8 @@
 .divider {
   width: 2px;
   background-color: #ccc;
-  height: auto;
-  min-height: 100%; /* 부모 요소 높이에 맞게 자동 조정 */
-  align-self: stretch; /* 부모 높이만큼 늘어나도록 설정 */
+  height: 100%;
+  position: relative;
 }
 
 /* 리스트 스타일 */
@@ -334,4 +326,61 @@
 
 .save-btn:hover {
   background-color: #0056b3;
+}
+
+
+/* Profile 버튼 기본 스타일 */
+.profile-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #FF7F00; /* 주황색 */
+  border: 2px solid #FF7F00;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(255, 127, 0, 0.3);
+}
+
+/* 호버 시 더 진한 주황색 */
+.profile-button:hover {
+  background-color: #E66A00;
+  border-color: #E66A00;
+  box-shadow: 0 6px 8px rgba(230, 106, 0, 0.4);
+}
+
+/* 클릭 시 (활성화 효과) */
+.profile-button:active {
+  background-color: #CC5C00;
+  border-color: #CC5C00;
+  transform: scale(0.97);
+  box-shadow: 0 3px 5px rgba(204, 92, 0, 0.5);
+}
+
+/* 비활성화된 버튼 */
+.profile-button:disabled {
+  background-color: #FFA64D;
+  border-color: #FFA64D;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+/* 아이콘 있는 경우 */
+.profile-button i {
+  margin-right: 8px;
+}
+
+/* 반응형 (모바일에서 크기 조정) */
+@media (max-width: 768px) {
+  .profile-button {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
 }

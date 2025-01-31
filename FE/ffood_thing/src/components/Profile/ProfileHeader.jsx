@@ -15,7 +15,7 @@ const ProfileHeader = ({ profileImage, nickname, subscribers, posts, onOpenPrefe
       </div>
 
       {/* ProfilePage에서 관리하는 상태를 사용하도록 변경 */}
-      <button className="profile-button" onClick={onOpenPreference}>음식선호도</button>
+      <button className="profile-button" onClick={onOpenPreference}>선호/기피</button>
     </div>
   );
 };
