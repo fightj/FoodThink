@@ -1,19 +1,14 @@
-# Docker 이미지 생성할 때 기본으로 사용할 베이스 이미지를 설정하는 명령어
+# Docker 이미지의 베이스 이미지를 설정
 FROM openjdk:17-jdk
 
-# Docker 컨테이너 내에서 작업 디렉토리를 /~~로 설정
-#이후의 모든 명령어는 해당 디렉토리에서 실행됨
+# 작업 디렉토리 설정
 WORKDIR /spring-boot
 
-#호스트 시스템의 build/libs/ 경로에 있는 *SNAPSHOT.jar 파일을 Docker 컨테이너의 /spring-boot/ 디렉토리에 app.jar 파일로 복사
-COPY target/foodthink-0.0.1-SNAPSHOT.jar /app/app.jar
+# 호스트 시스템의 target 디렉토리에 있는 JAR 파일을 컨테이너의 /spring-boot/ 디렉토리로 복사
+COPY target/foodthink-0.0.1-SNAPSHOT.jar /spring-boot/app.jar
 
-# Docker 컨테이너가 시작되면 java -jar /spring-boot/app.jar 명령어가 실행
-# Spring boot 애플리케이션을 실행시킨다.
+# application.properties 파일을 컨테이너로 복사
+COPY application.properties /spring-boot/application.properties
+
+# Spring Boot 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "/spring-boot/app.jar"]
-
-# BE의 Dockerfile 예시
-# application.properties 파일을 Docker 컨테이너로 복사
-
-# (기존 Dockerfile에 추가)
-COPY application.properties /path/to/application.properties
