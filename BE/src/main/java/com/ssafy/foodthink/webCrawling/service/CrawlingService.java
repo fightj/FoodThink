@@ -42,16 +42,16 @@ public class CrawlingService {
     private final String baseUrl = "https://www.10000recipe.com/recipe/list.html?";
 
     //카테고리별 조합의 데이터 개수 제한
-    private final int MAX_RECIPES_COMBO = 200;
+    private final int MAX_RECIPES_COMBO = 5;
     //cat3 + cat4 조합별 크롤링된 레시피 개수 저장용
     private final Map<String, Integer> recipeCountMap = new HashMap<>();
 
     //배치 스케줄러
-    @Scheduled(fixedRate = 3600000)
-    public void crawlRecipesPeriodically() {
-        System.out.println("배치 크롤링 작업 시작");
-        crawlRecipes();
-    }
+//    @Scheduled(fixedRate = 3600000)
+//    public void crawlRecipesPeriodically() {
+//        System.out.println("배치 크롤링 작업 시작");
+//        crawlRecipes();
+//    }
 
     //만개의레시피 웹 사이트 크롤링
     //종류별 카테고리(cat4)와 재료별 카테고리(cat3)를 하나씩 선택하여 해당 조합의 목록별로 데이터를 크롤링한다.
@@ -85,6 +85,10 @@ public class CrawlingService {
                 }
             }
         }
+
+        System.out.println("크롤링 완료");
+        deleteRecipesWithoutIngredients();
+        System.out.println("재료 정보가 담기지 않은 레시피 전체 삭제 완료");
     }
 
     //Jsoup를 활용하여 HTML 및 CSS 선택자로 크롤링 정보 추출
@@ -159,7 +163,7 @@ public class CrawlingService {
             // 난이도, 인분, 조리시간이 없으면 저장하지 않음 : 데이터 필터링
             if (recipeEntity.getLevel() == 0 || recipeEntity.getServing().isEmpty() || recipeEntity.getRequiredTime().isEmpty()
                     || recipeEntity.getLevel() == null || recipeEntity.getServing() == null || recipeEntity.getRequiredTime() == null) {
-                System.out.println("필터링된 레시피 (저장 안 함): " + recipeEntity.getRecipeUrl());
+                System.out.println("난이도,인분,조리시간 없는 데이터 필터링: " + recipeEntity.getRecipeUrl());
                 crawlingRecipeRepository.delete(recipeEntity);    //DB에서 즉시 삭제
                 return;
             }
@@ -194,6 +198,7 @@ public class CrawlingService {
                 //잘못된 재료가 있을 때, 해당 레시피 삭제 (cascade)
                 if(hasInvalidIngredient) {
                     deleteRecipeWithCascade(recipeEntity.getRecipeId());
+                    System.out.println("잘못된 재료가 있을 때 해당 레시피 정보 삭제");
                     return;
                 }
 
@@ -248,8 +253,8 @@ public class CrawlingService {
         }
 
     }
-
-    //Ingredient 테이블 삭제 기능 : 데이터 정제
+    
+    //ingredient 테이블의 빈 값 또는 NULL 값의 재료 데이터 삭제 : 데이터 정제
     @Transactional
     private void deleteRecipeWithCascade(Long recipeId) {
         if(recipeId == null) {
@@ -262,7 +267,7 @@ public class CrawlingService {
         RecipeEntity recipeEntity = optionalRecipe.get();
 
         // 2. 과정 이미지 삭제
-        crawlingProcessImageRepository.deleteByProcessEntity_RecipeEntity( recipeEntity);
+        crawlingProcessImageRepository.deleteByProcessEntity_RecipeEntity(recipeEntity);
         // 3. 과정 삭제
         crawlingProcessRepository.deleteByRecipeEntity(recipeEntity);
         // 4. 재료 삭제
@@ -270,6 +275,25 @@ public class CrawlingService {
         // 5. 최종적으로 레시피 삭제
         crawlingRecipeRepository.delete(recipeEntity);
 
+    }
+
+    //ingredient 테이블에 존재하지 않는 recipe_id를 찾아서 관련된 모든 데이터 삭제 : 데이터 정제
+    //크롤링이 끝난 후 자동 처리
+    @Transactional
+    public void deleteRecipesWithoutIngredients() {
+        // ingredient 테이블에 없는 recipe_id 목록 가져오기
+        List<Long> invalidRecipeIds = crawlingRecipeRepository.findRecipeIdsWithoutIngredients();
+
+        if (!invalidRecipeIds.isEmpty()) {
+            // process_image 테이블 삭제
+            crawlingProcessImageRepository.deleteByProcessEntity_RecipeEntity_RecipeIdIn(invalidRecipeIds);
+            // process 테이블 삭제
+            crawlingProcessRepository.deleteByRecipeEntity_RecipeIdIn(invalidRecipeIds);
+            // ingredient 테이블 삭제 (혹시라도 남아 있는 게 있으면)
+            crawlingIngredientRepository.deleteByRecipeEntity_RecipeIdIn(invalidRecipeIds);
+            // recipe 테이블 삭제
+            crawlingRecipeRepository.deleteByRecipeIdIn(invalidRecipeIds);
+        }
     }
 
     // 종류별 카테고리 재정의
