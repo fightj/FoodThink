@@ -3,6 +3,7 @@ package com.ssafy.foodthink.global;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
+@PropertySource("classpath:config/application.properties")
 public class S3Service {
 
     private final S3Client s3Client;
