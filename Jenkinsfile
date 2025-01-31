@@ -37,6 +37,9 @@ pipeline {
                         echo "spring.datasource.url=${DB_URL}" > application.properties
                         echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
                         echo "spring.jwt.secret=${SPRING_JWT_SECRET}" >> application.properties  # SPRING_JWT_SECRET 추가
+                        echo "spring.jwt.secret=${AWS_CREDENTIALS_ACCESS_KEY}" >> application.properties
+                       
+                        
 
                         # Docker 로그인
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
