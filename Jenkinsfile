@@ -38,6 +38,7 @@ pipeline {
                         echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
                         echo "spring.jwt.secret=${SPRING_JWT_SECRET}" >> application.properties  # SPRING_JWT_SECRET 추가
                         echo "cloud.aws.credentials.access-key=${AWS_CREDENTIALS_ACCESS_KEY}"  >> application.properties
+                        echo "cloud.aws.credentials.secret-key=${AWS_CREDENTIALS_SECRET_KEY}"  >> application.properties
 
                         # application.properties 내용 확인
                         cat application.properties  # 파일 내용 출력
