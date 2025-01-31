@@ -14,6 +14,46 @@ const RecipeSwipeComponent = () => {
   })
   const [swipeMessage, setSwipeMessage] = useState("")
   const [handDetected, setHandDetected] = useState(false)
+  const [timer, setTimer] = useState(0) // 타이머 상태 추가
+  const [isTimerRunning, setIsTimerRunning] = useState(false) // 타이머 실행 여부 상태 추가
+
+  useEffect(() => {
+    let timerInterval = null
+    if (isTimerRunning) {
+      timerInterval = setInterval(() => {
+        setTimer((prevTimer) => {
+          const newTimer = prevTimer + 1
+          console.log("타이머:", newTimer)
+          return newTimer
+        })
+      }, 1000)
+    } else {
+      clearInterval(timerInterval)
+    }
+    return () => clearInterval(timerInterval)
+  }, [isTimerRunning])
+
+  // 손 위치 변화에 따른 타이머 제어 함수
+  const handleTimerGesture = (handLandmarks) => {
+    if (handLandmarks) {
+      const palmY = handLandmarks[0].y // 손바닥의 Y 좌표를 가져옴
+
+      // 손을 위로 올리면 타이머 시작
+      if (palmY < 0.3) {
+        if (!isTimerRunning) {
+          console.log("손을 위로 올림 - 타이머 시작")
+          setIsTimerRunning(true)
+        }
+      }
+      // 손을 아래로 내리면 타이머 일시 정지
+      else if (palmY > 0.7) {
+        if (isTimerRunning) {
+          console.log("손을 아래로 내림 - 타이머 일시 정지")
+          setIsTimerRunning(false)
+        }
+      }
+    }
+  }
 
   useEffect(() => {
     const holistic = new Holistic({
@@ -92,6 +132,9 @@ const RecipeSwipeComponent = () => {
 
       // 손 랜드마크 시각화
       drawLandmarks(ctx, handLandmarks, "cyan")
+
+      // 타이머 제어 함수 호출
+      handleTimerGesture(handLandmarks)
     }
 
     function drawLandmarks(ctx, landmarks, color = "white") {
@@ -108,7 +151,7 @@ const RecipeSwipeComponent = () => {
     return () => {
       camera.stop()
     }
-  }, [])
+  }, [isTimerRunning]) // 타이머 상태를 의존성 배열에 추가
 
   return (
     <div style={{ position: "relative", width: "640px", height: "480px" }}>
@@ -152,6 +195,21 @@ const RecipeSwipeComponent = () => {
           {swipeMessage}
         </div>
       )}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          backgroundColor: "rgba(0,0,0,0.7)",
+          padding: "10px",
+          borderRadius: "10px",
+          color: "white",
+          fontSize: "1.2rem",
+        }}
+      >
+        타이머: {Math.floor(timer / 60)}분 {timer % 60}초
+      </div>
     </div>
   )
 }
