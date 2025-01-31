@@ -1,4 +1,4 @@
-package com.ssafy.foodthink.webCrawling.entity;
+package com.ssafy.foodthink.recipes.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

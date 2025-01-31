@@ -1,9 +1,9 @@
 package com.ssafy.foodthink.webCrawling.service;
 
-import com.ssafy.foodthink.webCrawling.entity.IngredientEntity;
-import com.ssafy.foodthink.webCrawling.entity.ProcessEntity;
-import com.ssafy.foodthink.webCrawling.entity.ProcessImageEntity;
-import com.ssafy.foodthink.webCrawling.entity.RecipeEntity;
+import com.ssafy.foodthink.recipes.entity.IngredientEntity;
+import com.ssafy.foodthink.recipes.entity.ProcessEntity;
+import com.ssafy.foodthink.recipes.entity.ProcessImageEntity;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.webCrawling.repository.CrawlingIngredientRepository;
 import com.ssafy.foodthink.webCrawling.repository.CrawlingProcessImageRepository;
 import com.ssafy.foodthink.webCrawling.repository.CrawlingProcessRepository;
@@ -169,31 +169,12 @@ public class CrawlingService {
                 IngredientEntity ingredientEntity = new IngredientEntity();
                 ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
                 ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
-                ingredientEntity.setCrawlingRecipe(recipeEntity);
+                ingredientEntity.setRecipeEntity(recipeEntity);
 
                 // 재료 이름이나 양이 비어있거나 null인 경우 해당 재료를 삭제
-//                if (ingredientEntity.getIngreName() == null || ingredientEntity.getIngreName().isEmpty() ||
-//                        ingredientEntity.getAmount() == null || ingredientEntity.getAmount().isEmpty()) {
-//
-//                    // 해당 재료 삭제
-//                    System.out.println("잘못된 재료 데이터 (삭제): " + ingredientEntity.getIngreName() + ", " + ingredientEntity.getAmount());
-//
-//                    // 이 레시피의 모든 관련 데이터를 삭제
-//                    Long recipeId = recipeEntity.getRecipeId(); // 레시피의 ID를 가져옵니다.
-//
-//                    // CrawlingIngredientEntity, CrawlingProcessEntity, CrawlingProcessImageEntity에서 해당 레시피의 모든 데이터를 삭제
-//                    crawlingIngredientRepository.deleteByCrawlingRecipe_RecipeId(recipeId);
-//                    crawlingProcessRepository.deleteByCrawlingRecipe_RecipeId(recipeId);
-//                    crawlingProcessImageRepository.deleteByCrawlingProcess_CrawlingRecipe_RecipeId(recipeId);
-//
-//                    // 레시피 삭제도 원할 경우 (그 레시피가 모든 데이터에 영향을 미친다면)
-//                    crawlingRecipeRepository.delete(recipeEntity);
-//
-//                    continue;  // 삭제만 하고 넘어가기
-//                }
 
                 // 이미 존재하는지 확인하고 저장
-                if (!crawlingIngredientRepository.existsByIngreNameAndCrawlingRecipe_RecipeUrl(ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
+                if (!crawlingIngredientRepository.existsByIngreNameAndRecipeEntity_RecipeUrl(ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
                     crawlingIngredientRepository.saveAndFlush(ingredientEntity);
                 }
             }
@@ -207,7 +188,7 @@ public class CrawlingService {
                 ProcessEntity processEntity = new ProcessEntity();
                 processEntity.setProcessOrder(order++);
                 processEntity.setProcessExplain(process.select(".media-body").text());
-                processEntity.setCrawlingRecipe(recipeEntity);
+                processEntity.setRecipeEntity(recipeEntity);
 
                 //우선 저장
                 crawlingProcessRepository.saveAndFlush(processEntity);
@@ -225,7 +206,7 @@ public class CrawlingService {
 
                     ProcessImageEntity imageEntity = new ProcessImageEntity();
                     imageEntity.setImageUrl(imageUrl);
-                    imageEntity.setCrawlingProcess(processEntity);
+                    imageEntity.setProcessEntity(processEntity);
 
                     crawlingProcessImageRepository.saveAndFlush(imageEntity);
                 }

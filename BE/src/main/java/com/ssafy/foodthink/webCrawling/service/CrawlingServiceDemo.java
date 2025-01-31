@@ -1,6 +1,9 @@
 package com.ssafy.foodthink.webCrawling.service;
 
-import com.ssafy.foodthink.webCrawling.entity.*;
+import com.ssafy.foodthink.recipes.entity.IngredientEntity;
+import com.ssafy.foodthink.recipes.entity.ProcessEntity;
+import com.ssafy.foodthink.recipes.entity.ProcessImageEntity;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.webCrawling.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
@@ -119,12 +122,12 @@ public class CrawlingServiceDemo {
                 IngredientEntity ingredientEntity = new IngredientEntity();
                 ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
                 ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
-                ingredientEntity.setCrawlingRecipe(entity);
+                ingredientEntity.setRecipeEntity(entity);
 
                 System.out.println("Ingredient Name: " + ingredientEntity.getIngreName());
                 System.out.println("Ingredient Amount: " + ingredientEntity.getAmount());
 
-                if (!crawlingIngredientRepository.existsByIngreNameAndCrawlingRecipe_RecipeUrl(ingredientEntity.getIngreName(), entity.getRecipeUrl())) {
+                if (!crawlingIngredientRepository.existsByIngreNameAndRecipeEntity_RecipeUrl(ingredientEntity.getIngreName(), entity.getRecipeUrl())) {
                     crawlingIngredientRepository.save(ingredientEntity);
                     crawlingIngredientRepository.flush();
                 }
@@ -140,7 +143,7 @@ public class CrawlingServiceDemo {
                 ProcessEntity processEntity = new ProcessEntity();
                 processEntity.setProcessOrder(order++);
                 processEntity.setProcessExplain(process.select(".media-body").text());
-                processEntity.setCrawlingRecipe(entity);
+                processEntity.setRecipeEntity(entity);
 
                 System.out.println("Process Order: " + processEntity.getProcessOrder());
                 System.out.println("Process Explain: " + processEntity.getProcessExplain());
@@ -154,7 +157,7 @@ public class CrawlingServiceDemo {
                 if (!imageUrl.isEmpty()) {
                     ProcessImageEntity imageEntity = new ProcessImageEntity();
                     imageEntity.setImageUrl(imageUrl);
-                    imageEntity.setCrawlingProcess(processEntity);
+                    imageEntity.setProcessEntity(processEntity);
 
                     System.out.println("Process Image URL: " + imageEntity.getImageUrl());
 

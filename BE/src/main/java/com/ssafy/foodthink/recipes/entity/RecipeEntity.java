@@ -1,4 +1,4 @@
-package com.ssafy.foodthink.webCrawling.entity;
+package com.ssafy.foodthink.recipes.entity;
 
 import com.ssafy.foodthink.user.entity.UserEntity;
 import jakarta.persistence.*;
@@ -27,7 +27,7 @@ public class RecipeEntity {
     private Integer level;              //난이도   -> 새로 구성
     private String requiredTime;        //소요시간
     private LocalDateTime writeTime;    //작성시간
-    private Integer hits;               //조회수 : 기본값 0으로 설정
+    private Integer hits;               //조회수
     private String recipeUrl;           //레시피 URL
     private String image;               //대표이미지 URL
     private Boolean isPublic;           //공개여부
@@ -44,11 +44,15 @@ public class RecipeEntity {
         //hits에 1~300 사이의 랜덤 숫자 값 설정
         Random random = new Random();
         this.hits = random.nextInt(300) + 1;
+
+        if(this.isPublic == null) {
+            this.isPublic = true;
+        }
     }
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<IngredientEntity> ingredients = new ArrayList<>();
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProcessEntity> processes = new ArrayList<>();
+//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<IngredientEntity> ingredients = new ArrayList<>();
+//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ProcessEntity> processes = new ArrayList<>();
 
 }

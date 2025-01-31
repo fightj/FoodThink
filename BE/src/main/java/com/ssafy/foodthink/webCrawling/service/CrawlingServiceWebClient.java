@@ -1,6 +1,9 @@
 package com.ssafy.foodthink.webCrawling.service;
 
-import com.ssafy.foodthink.webCrawling.entity.*;
+import com.ssafy.foodthink.recipes.entity.IngredientEntity;
+import com.ssafy.foodthink.recipes.entity.ProcessEntity;
+import com.ssafy.foodthink.recipes.entity.ProcessImageEntity;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.webCrawling.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -131,9 +134,9 @@ public class CrawlingServiceWebClient {
                     IngredientEntity ingredientEntity = new IngredientEntity();
                     ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
                     ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
-                    ingredientEntity.setCrawlingRecipe(entity);
+                    ingredientEntity.setRecipeEntity(entity);
 
-                    if (!crawlingIngredientRepository.existsByIngreNameAndCrawlingRecipe_RecipeUrl(ingredientEntity.getIngreName(), entity.getRecipeUrl())) {
+                    if (!crawlingIngredientRepository.existsByIngreNameAndRecipeEntity_RecipeUrl(ingredientEntity.getIngreName(), entity.getRecipeUrl())) {
                         crawlingIngredientRepository.save(ingredientEntity);
                         crawlingIngredientRepository.flush();
                     }
@@ -147,7 +150,7 @@ public class CrawlingServiceWebClient {
                     ProcessEntity processEntity = new ProcessEntity();
                     processEntity.setProcessOrder(order++);
                     processEntity.setProcessExplain(process.select(".media-body").text());
-                    processEntity.setCrawlingRecipe(entity);
+                    processEntity.setRecipeEntity(entity);
 
                     crawlingProcessRepository.save(processEntity);
                     crawlingProcessRepository.flush();
@@ -157,7 +160,7 @@ public class CrawlingServiceWebClient {
                     if (!imageUrl.isEmpty()) {
                         ProcessImageEntity imageEntity = new ProcessImageEntity();
                         imageEntity.setImageUrl(imageUrl);
-                        imageEntity.setCrawlingProcess(processEntity);
+                        imageEntity.setProcessEntity(processEntity);
 
                         crawlingProcessImageRepository.save(imageEntity);
                         crawlingProcessImageRepository.flush();
