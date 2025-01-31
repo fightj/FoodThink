@@ -1,6 +1,7 @@
 package com.ssafy.foodthink.webCrawling.repository;
 
 import com.ssafy.foodthink.recipes.entity.ProcessImageEntity;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CrawlingProcessImageRepository extends JpaRepository<ProcessImageEntity, Long> {
 
+    void deleteByProcessEntity_RecipeEntity(RecipeEntity recipeEntity);
 }

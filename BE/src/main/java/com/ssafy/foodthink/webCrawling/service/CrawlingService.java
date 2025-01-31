@@ -159,20 +159,47 @@ public class CrawlingService {
 
             //1. 재료 정보 크롤링
             Elements ingredients = detailDoc.select("ul.case1 li");
-//            System.out.println("Found ingredients : " + ingredients.size());
+
+            List<IngredientEntity> ingredientEntityList = new ArrayList<>();
+            boolean hasInvalidIngredient = false;
 
             for(Element ingredient : ingredients) {
-                IngredientEntity ingredientEntity = new IngredientEntity();
-                ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
-                ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
-                ingredientEntity.setRecipeEntity(recipeEntity);
+                String ingreName = ingredient.select("div.ingre_list_name a").text();
+                String amount = ingredient.select("span.ingre_list_ea").text();
 
-                // 재료 이름이나 양이 비어있거나 null인 경우 해당 재료를 삭제
+                //재료의 빈 값이나 null 확인
+                if(ingreName == null || ingreName.isEmpty() || amount == null || amount.isEmpty()) {
+                    hasInvalidIngredient = true;    //잘못된 재료가 있음
+                    break;  //하나라도 있으면 더 이상 처리X
+                }
+
+
+                IngredientEntity ingredientEntity = new IngredientEntity();
+//                ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
+//                ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
+//                ingredientEntity.setRecipeEntity(recipeEntity);
+                ingredientEntity.setIngreName(ingreName);
+                ingredientEntity.setAmount(amount);
+                ingredientEntity.setRecipeEntity(recipeEntity);
+                ingredientEntityList.add(ingredientEntity);
+
+                //잘못된 재료가 있을 때, 해당 레시피 삭제 (cascade)
+                if(hasInvalidIngredient) {
+                    deleteRecipeWithCascade(recipeEntity.getRecipeId());
+                    return;
+                }
+
+                for(IngredientEntity ingre : ingredientEntityList) {
+                    if(!crawlingIngredientRepository.existsByIngreNameAndRecipeEntity_RecipeUrl(
+                            ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
+                        crawlingIngredientRepository.saveAndFlush(ingre);
+                    }
+                }
 
                 // 이미 존재하는지 확인하고 저장
-                if (!crawlingIngredientRepository.existsByIngreNameAndRecipeEntity_RecipeUrl(ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
-                    crawlingIngredientRepository.saveAndFlush(ingredientEntity);
-                }
+//                if (!crawlingIngredientRepository.existsByIngreNameAndRecipeEntity_RecipeUrl(ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
+//                    crawlingIngredientRepository.saveAndFlush(ingredientEntity);
+//                }
             }
 ;
             //2. 과정 정보 (요리 순서) 크롤링
@@ -212,6 +239,31 @@ public class CrawlingService {
         } catch(IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Transactional
+    private void deleteRecipeWithCascade(Long recipeId) {
+        if(recipeId == null) {
+            return;
+        }
+
+        // 1. RecipeEntity 찾기
+        Optional<RecipeEntity> optionalRecipe = crawlingRecipeRepository.findById(recipeId);
+        if (optionalRecipe.isEmpty()) return;
+        RecipeEntity recipeEntity = optionalRecipe.get();
+
+        // 2. 과정 이미지 삭제
+        crawlingProcessImageRepository.deleteByProcessEntity_RecipeEntity( recipeEntity);
+
+        // 3. 과정 삭제
+        crawlingProcessRepository.deleteByRecipeEntity(recipeEntity);
+
+        // 4. 재료 삭제
+        crawlingIngredientRepository.deleteByRecipeEntity(recipeEntity);
+
+        // 5. 최종적으로 레시피 삭제
+        crawlingRecipeRepository.delete(recipeEntity);
 
     }
 
