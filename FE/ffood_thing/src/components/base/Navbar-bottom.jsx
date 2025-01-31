@@ -44,7 +44,7 @@ function NavbarBottom() {
           <div className="navbar-section">
             <ul className="navbar-nav">
               <li className="nav-item" onClick={toggleSidebar}>
-                <i className="bi bi-card-list" style={{ cursor: "pointer" }}></i>
+                <img className="sidebar-nav" src="/images/sidebar-nav.png" alt="" />
               </li>
             </ul>
           </div>
@@ -52,7 +52,7 @@ function NavbarBottom() {
           <div className="navbar-section">
             <ul className="navbar-nav">
               <li className="nav-item" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
-                <i className="bi bi-house-fill"></i>
+                <img className="home-nav"src="/images/home-nav.png" alt="" />
               </li>
             </ul>
           </div>
@@ -60,7 +60,7 @@ function NavbarBottom() {
           <div className="navbar-section">
             <ul className="navbar-nav">
               <li className="nav-item" onClick={() => navigate("/sns")} style={{ cursor: "pointer" }}>
-                <i className="bi bi-chat-left-heart-fill"></i>
+                <img className="sns-nav"src="/images/sns-nav.png" alt="" />
               </li>
             </ul>
           </div>
