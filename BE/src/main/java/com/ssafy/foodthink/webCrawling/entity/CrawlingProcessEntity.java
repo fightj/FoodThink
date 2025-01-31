@@ -23,5 +23,6 @@ public class CrawlingProcessEntity {
     private Integer processOrder;      //과정순서
 
     @Lob    //TEXT로 필드 처리
+    @Column(columnDefinition="LONGTEXT")
     private String processExplain;     //과정설명
 }
