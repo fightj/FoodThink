@@ -9,7 +9,7 @@ pipeline {
         SPRING_JWT_SECRET = credentials('SPRING_JWT_SECRET')
         KAKAO_CLIENT_ID = credentials('KAKAO_CLIENT_ID')
         KAKAO_CLIENT_SECRET = credentials('KAKAO_CLIENT_SECRET')
-        KAKAO_REDIRECT_URL = credentials('kKAKAO_REDIRECT_URL')
+        KAKAO_REDIRECT_URL = credentials('KAKAO_REDIRECT_URL')
         S3_BUCKET = credentials('S3_BUCKET')
         AWS_CREDENTIALS_ACCESS_KEY = credentials('AWS_CREDENTIALS_ACCESS_KEY')
         AWS_CREDENTIALS_SECRET_KEY = credentials('AWS_CREDENTIALS_SECRET_KEY')
