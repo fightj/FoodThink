@@ -8,11 +8,24 @@
 		<version>3.2.4</version>
 		<relativePath/>
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>your-project-name</artifactId>
+	<groupId>com.ssafy</groupId>
+	<artifactId>foodthink</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>your-project-name</name>
-	<description>Your project description</description>
+	<name>foodthink</name>
+	<description>SSAFY 12기 공통 프로젝트 E107(해조)</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud-aws.version>3.1.1</spring-cloud-aws.version>
@@ -56,6 +69,7 @@
 			<artifactId>jjwt-impl</artifactId>
 			<version>0.12.3</version>
 			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
@@ -71,6 +85,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>1.18.30</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -83,6 +98,22 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Jsoup for HTML Parsing -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.18.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
@@ -118,6 +149,7 @@
 						<exclude>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+							<version>1.18.30</version>
 						</exclude>
 					</excludes>
 				</configuration>
