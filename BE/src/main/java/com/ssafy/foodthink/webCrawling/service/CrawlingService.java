@@ -116,7 +116,7 @@ public class CrawlingService {
     private void saveRecipe(CrawlingRecipeEntity entity) {
         //TEST
         long recipeCount = crawlingRecipeRepository.count();
-        if(recipeCount >= 100) {
+        if(recipeCount >= 50) {
             Instant endTime = Instant.now();
             Duration elapsedTime = Duration.between(startTime, endTime);
             System.out.println("crawling time : " + elapsedTime.toMillis() + "ms");
