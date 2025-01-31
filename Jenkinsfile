@@ -2,20 +2,20 @@ import java.awt.AWTKeyStroke
 
 pipeline {
     agent any
-//
-//    environment {
-//        DB_URL = credentials('DB_URL')
-//        DB_PASSWORD = credentials('DB_PWD')
-//        SPRING_JWT_SECRET = credentials('spring-jwt-secret')
-//        KAKAO_CLIENT_ID = credentials('kakao-client-id')
-//        KAKAO_CLIENT_SECRET = credentials('kakao-client-secret')
-//        KAKAO_REDIRECT_URL = credentials('kakao-redirect-url')
-//        S3_BUCKET = credentials('s3-bucket')
-//        AWS_CREDENTIALS_ACCESS_KEY = credentials('aws-credentials-access-key')
-//        AWS_CREDENTIALS_SECRET_KEY = credentials('aws-credentials-secret-key')
-//        DOCKER_IMAGE_NAME = 'yyb113'
-//        DOCKER_CREDENTIALS_ID = 'docker-hub'
-//    }
+
+    environment {
+        DB_URL = credentials('DB_URL')
+        DB_PASSWORD = credentials('DB_PWD')
+        SPRING_JWT_SECRET = credentials('spring-jwt-secret')
+        KAKAO_CLIENT_ID = credentials('kakao-client-id')
+        KAKAO_CLIENT_SECRET = credentials('kakao-client-secret')
+        KAKAO_REDIRECT_URL = credentials('kakao-redirect-url')
+        S3_BUCKET = credentials('s3-bucket')
+        AWS_CREDENTIALS_ACCESS_KEY = credentials('aws-credentials-access-key')
+        AWS_CREDENTIALS_SECRET_KEY = credentials('aws-credentials-secret-key')
+        DOCKER_IMAGE_NAME = 'yyb113'
+        DOCKER_CREDENTIALS_ID = 'docker-hub'
+    }
 
     stages {
         stage('Check Maven') {
