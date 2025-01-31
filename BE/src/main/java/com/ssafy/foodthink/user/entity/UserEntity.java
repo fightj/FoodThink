@@ -34,7 +34,7 @@ public class UserEntity {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    //==생성 메서드==//
+    // 생성 메서드
     public static UserEntity createUser(String socialId, String email, String nickname) {
         UserEntity userEntity = new UserEntity();
         userEntity.setSocialId(socialId);
