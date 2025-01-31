@@ -1,6 +1,7 @@
 package com.ssafy.foodthink.global.config;
 
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -32,5 +33,10 @@ public class S3Config {
                 .credentialsProvider(StaticCredentialsProvider.create(awsBasicCredentials))
                 .region(Region.of(region))
                 .build();
+    }
+
+    @PostConstruct
+    public void logProperties() {
+        System.out.println("accessKey" + accessKey);
     }
 }
