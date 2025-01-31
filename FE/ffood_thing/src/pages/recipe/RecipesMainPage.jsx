@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "../../styles/recipe/RecipesMainPage.css"; // styles 폴더에서 가져옴
+import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import "../../styles/recipe/RecipesMainPage.css" // styles 폴더에서 가져옴
+import SearchBar from "../../components/base/SearchBar"
 
 const RecipesMainPage = () => {
-  const navigate = useNavigate();
-  const [recipes, setRecipes] = useState([]);
+  const navigate = useNavigate()
+  const [recipes, setRecipes] = useState([])
 
   const exampleRecipes = [
     {
@@ -35,23 +36,21 @@ const RecipesMainPage = () => {
       image: "https://via.placeholder.com/300?text=Recipe+Title",
       bookmarks: 0,
     },
-  ];
+  ]
 
   useEffect(() => {
-    setRecipes(exampleRecipes);
-  }, []); // 빈 배열로 설정하여 처음 렌더링될 때만 실행
+    setRecipes(exampleRecipes)
+  }, []) // 빈 배열로 설정하여 처음 렌더링될 때만 실행
 
   const handleDetailClick = (id) => {
-    navigate(`/recipes/${id}`);
-  };
+    navigate(`/recipes/${id}`)
+  }
 
   return (
     <div className="base-div">
+      <SearchBar />
       <div className="card-div">
         <div className="recipes-main-page">
-          <div className="search-bar">
-            <input type="text" placeholder="search text" />
-          </div>
           <div className="categories">
             <span>종류별</span>
             <span>재료별</span>
@@ -64,7 +63,7 @@ const RecipesMainPage = () => {
             {/* Add more filters as needed */}
           </div>
           <div className="recipe-count">
-            <p>개인 레시피가 있어요</p>
+            <p>개의 레시피가 있어요</p>
           </div>
           <div className="recipe-grid">
             {recipes.map((recipe) => (
@@ -84,7 +83,7 @@ const RecipesMainPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RecipesMainPage;
+export default RecipesMainPage

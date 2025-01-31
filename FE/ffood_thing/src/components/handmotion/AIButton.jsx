@@ -31,11 +31,11 @@ const GestureComponent = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: 8,
+        borderRadius: 1600,
         touchAction: "none",
       }}
     >
-      Drag me!
+      오늘 뭐먹지?
     </animated.div>
   )
 }
