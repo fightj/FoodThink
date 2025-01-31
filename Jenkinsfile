@@ -46,7 +46,6 @@ pipeline {
 
                         # application.properties 내용 확인
                         cat application.properties  # 파일 내용 출력
-                        
 
                         # Docker 로그인
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin

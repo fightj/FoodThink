@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 
 @Configuration
-@PropertySource("classpath:application.properties")
 //@EnableConfigurationProperties(AwsProperties.class)
 public class S3Config {
     @Value("${cloud.aws.credentials.access-key}")
