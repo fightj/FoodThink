@@ -18,10 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,8 +39,10 @@ public class CrawlingService {
     //크롤링할 웹 사이트의 앞부분 URL
     private final String baseUrl = "https://www.10000recipe.com/recipe/list.html?";
 
-    //TEST : 크롤링 시작 시간 기록
-    Instant startTime = Instant.now();
+    //카테고리별 조합의 200개 데이터 개수 제한
+    private final int MAX_RECIPES_COMBO = 200;
+    //cat3 + cat4 조합별 크롤링된 레시피 개수를 저장
+    private final Map<String, Integer> recipeCountMap = new HashMap<>();
 
     //배치 스케줄러
     @Scheduled(fixedRate = 3600000)
@@ -64,6 +63,10 @@ public class CrawlingService {
                     String cateMainIngre = cat3Entry.getKey();      // 재료명
                     String cat3Value = cat3Entry.getValue();        // 재료별ID
 
+                    //조합별 개수 카우늩 초기화 (처음 크롤링 할 때만)
+                    String comboKey = cat3Value + "-" + cat4Value;
+                    recipeCountMap.putIfAbsent(comboKey, 0);
+
                     int page = 1;
                     boolean hasMorePages = true;
 
@@ -71,7 +74,7 @@ public class CrawlingService {
                     // 페이지가 없을 때, hasMorePages = false로 반복 종료
                     while (hasMorePages) {
                         String url = baseUrl + "cat3=" + cat3Value + "&cat4=" + cat4Value + "&order=accuracy&page=" + page;
-                        hasMorePages = processPage(cateType, cateMainIngre, url);   // 페이지 처리 메서드 호출
+                        hasMorePages = processPage(cateType, cateMainIngre, url, comboKey);   // 페이지 처리 메서드 호출
                         page++;
                     }
                 }
@@ -79,7 +82,7 @@ public class CrawlingService {
         }
     }
 
-    private boolean processPage(String cateType, String cateMainIngre, String url) {
+    private boolean processPage(String cateType, String cateMainIngre, String url, String comboKey) {
         try {
             Document doc = Jsoup.connect(url).get();    // Jsoup으로 URL에 접속해 HTML 문서 가져오기
             Elements recipes = doc.select(".common_sp_list_ul .common_sp_list_li");     // CSS 선택자로 필요한 HTML의 레시피 요소 선택
@@ -88,6 +91,11 @@ public class CrawlingService {
 
             // 각 레시피 데이터를 직접 추출 후 저장
             for (Element recipe : recipes) {
+                //조합별 데이터가 200개가 넘으면 중단
+                if(recipeCountMap.get(comboKey) >= MAX_RECIPES_COMBO) {
+                    return false;
+                }
+
                 RecipeEntity entity = new RecipeEntity();
                 entity.setRecipeTitle(recipe.select(".common_sp_caption_tit").text());  // 제목
                 entity.setRecipeUrl(recipe.select("a").attr("href"));                  // URL
@@ -95,15 +103,14 @@ public class CrawlingService {
                 entity.setCateType(cateType);                                           // 종류별 분류
                 entity.setCateMainIngre(cateMainIngre);                                 // 재료별 분류
 
-                //TEST용 메서드
-                saveRecipe(entity);
-
                 // 데이터 중복 확인 : existsByRecipeUrl()로 URL이 이미 저장되어 있는지 확인
                 if (!crawlingRecipeRepository.existsByRecipeUrl(entity.getRecipeUrl())) {
                     // 레시피 정보 먼저 저장
                     crawlingRecipeRepository.saveAndFlush(entity);
                     // 우선 저장으로 레시피 ID 생성 후 나머지 정보 처리
                     processDetailPage(entity);
+
+                    recipeCountMap.put(comboKey, recipeCountMap.get(comboKey) + 1);
                 }
 
             }
@@ -112,17 +119,6 @@ public class CrawlingService {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
-        }
-    }
-
-    private void saveRecipe(RecipeEntity entity) {
-        //TEST
-        long recipeCount = crawlingRecipeRepository.count();
-        if(recipeCount >= 50) {
-            Instant endTime = Instant.now();
-            Duration elapsedTime = Duration.between(startTime, endTime);
-            System.out.println("crawling time : " + elapsedTime.toMillis() + "ms");
-            throw new IllegalStateException("stop");
         }
     }
 
