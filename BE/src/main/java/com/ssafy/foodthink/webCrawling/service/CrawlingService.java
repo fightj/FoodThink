@@ -16,13 +16,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.*;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.transaction.annotation.Transactional;
+
+/*
+    웹 크롤링 주 기능 동작 구현
+ */
 
 @Service
 public class CrawlingService {
@@ -39,9 +41,9 @@ public class CrawlingService {
     //크롤링할 웹 사이트의 앞부분 URL
     private final String baseUrl = "https://www.10000recipe.com/recipe/list.html?";
 
-    //카테고리별 조합의 200개 데이터 개수 제한
+    //카테고리별 조합의 데이터 개수 제한
     private final int MAX_RECIPES_COMBO = 200;
-    //cat3 + cat4 조합별 크롤링된 레시피 개수를 저장
+    //cat3 + cat4 조합별 크롤링된 레시피 개수 저장용
     private final Map<String, Integer> recipeCountMap = new HashMap<>();
 
     //배치 스케줄러
@@ -51,6 +53,9 @@ public class CrawlingService {
         crawlRecipes();
     }
 
+    //만개의레시피 웹 사이트 크롤링
+    //종류별 카테고리(cat4)와 재료별 카테고리(cat3)를 하나씩 선택하여 해당 조합의 목록별로 데이터를 크롤링한다.
+    //종류별 카테고리는 새로 재정의한 규칙에 따른다.
     public void crawlRecipes() {
         // 종류별 카테고리 반복 처리
         for (Map.Entry<String, List<String>> cateTypeEntry : newCateTypeMap.entrySet()) {
@@ -63,7 +68,7 @@ public class CrawlingService {
                     String cateMainIngre = cat3Entry.getKey();      // 재료명
                     String cat3Value = cat3Entry.getValue();        // 재료별ID
 
-                    //조합별 개수 카우늩 초기화 (처음 크롤링 할 때만)
+                    //조합별 개수 카운트 초기화 (처음 크롤링 할 때만)
                     String comboKey = cat3Value + "-" + cat4Value;
                     recipeCountMap.putIfAbsent(comboKey, 0);
 
@@ -82,16 +87,18 @@ public class CrawlingService {
         }
     }
 
+    //Jsoup를 활용하여 HTML 및 CSS 선택자로 크롤링 정보 추출
+    //레시피 제목, 레시피URL, 레시피 대표 이미지, 종류별 카테고리, (메인)재료별 카테고리
     private boolean processPage(String cateType, String cateMainIngre, String url, String comboKey) {
         try {
             Document doc = Jsoup.connect(url).get();    // Jsoup으로 URL에 접속해 HTML 문서 가져오기
-            Elements recipes = doc.select(".common_sp_list_ul .common_sp_list_li");     // CSS 선택자로 필요한 HTML의 레시피 요소 선택
+            Elements recipes = doc.select(".common_sp_list_ul .common_sp_list_li");
 
             if (recipes.isEmpty()) return false; // 종료 조건: 더 이상 데이터가 없음
 
             // 각 레시피 데이터를 직접 추출 후 저장
             for (Element recipe : recipes) {
-                //조합별 데이터가 200개가 넘으면 중단
+                //조합별 데이터가 지정 개수를 넘으면 중단
                 if(recipeCountMap.get(comboKey) >= MAX_RECIPES_COMBO) {
                     return false;
                 }
@@ -109,7 +116,7 @@ public class CrawlingService {
                     crawlingRecipeRepository.saveAndFlush(entity);
                     // 우선 저장으로 레시피 ID 생성 후 나머지 정보 처리
                     processDetailPage(entity);
-
+                    // 조합별 데이터 개수 카운트 증가
                     recipeCountMap.put(comboKey, recipeCountMap.get(comboKey) + 1);
                 }
 
@@ -123,6 +130,8 @@ public class CrawlingService {
     }
 
     //레시피 상세 페이지에서 재료, 과정, 과정 이미지 크롤링
+    //레시피URL을 통해 상세 페이지로 이동하고, 그곳에서 정보를 추출한다.
+    //그래서 위의 processPage를 우선 크롤링 및 저장한 후, processDetailPage를 실행한다.
     @Transactional
     private void processDetailPage(RecipeEntity recipeEntity) {
 
@@ -137,13 +146,13 @@ public class CrawlingService {
 
             Document detailDoc = Jsoup.connect(recipeUrl).get();
 
-            //0. 추가 정보 크롤링 : 인분, 소요시간, 난이도
+            /*
+                0. 추가 정보 크롤링 : 인분, 소요시간, 난이도
+             */
             String serving = detailDoc.select(".view2_summary_info1").text();
             recipeEntity.setServing(serving);
-
             String requiredTime = detailDoc.select(".view2_summary_info2").text();
             recipeEntity.setRequiredTime(requiredTime);
-
             String level = detailDoc.select(".view2_summary_info3").text();
             recipeEntity.setLevel(newLevel(level));     //새로운 레벨 단계로 변경 비교하기
 
@@ -155,17 +164,20 @@ public class CrawlingService {
                 return;
             }
 
+            //Recipe 테이블 완성
             crawlingRecipeRepository.saveAndFlush(recipeEntity);  //CrawlingRecipeEntity 업데이트
 
-            //1. 재료 정보 크롤링
+            /*
+                1. 재료 정보 크롤링
+             */
             Elements ingredients = detailDoc.select("ul.case1 li");
 
             List<IngredientEntity> ingredientEntityList = new ArrayList<>();
             boolean hasInvalidIngredient = false;
 
             for(Element ingredient : ingredients) {
-                String ingreName = ingredient.select("div.ingre_list_name a").text();
-                String amount = ingredient.select("span.ingre_list_ea").text();
+                String ingreName = ingredient.select("div.ingre_list_name a").text();   //재료명
+                String amount = ingredient.select("span.ingre_list_ea").text();         //재료 수량+단위
 
                 //재료의 빈 값이나 null 확인
                 if(ingreName == null || ingreName.isEmpty() || amount == null || amount.isEmpty()) {
@@ -173,11 +185,7 @@ public class CrawlingService {
                     break;  //하나라도 있으면 더 이상 처리X
                 }
 
-
                 IngredientEntity ingredientEntity = new IngredientEntity();
-//                ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
-//                ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
-//                ingredientEntity.setRecipeEntity(recipeEntity);
                 ingredientEntity.setIngreName(ingreName);
                 ingredientEntity.setAmount(amount);
                 ingredientEntity.setRecipeEntity(recipeEntity);
@@ -189,20 +197,18 @@ public class CrawlingService {
                     return;
                 }
 
+                //재료 데이터 중복 확인
                 for(IngredientEntity ingre : ingredientEntityList) {
                     if(!crawlingIngredientRepository.existsByIngreNameAndRecipeEntity_RecipeUrl(
                             ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
                         crawlingIngredientRepository.saveAndFlush(ingre);
                     }
                 }
-
-                // 이미 존재하는지 확인하고 저장
-//                if (!crawlingIngredientRepository.existsByIngreNameAndRecipeEntity_RecipeUrl(ingredientEntity.getIngreName(), recipeEntity.getRecipeUrl())) {
-//                    crawlingIngredientRepository.saveAndFlush(ingredientEntity);
-//                }
             }
-;
-            //2. 과정 정보 (요리 순서) 크롤링
+
+            /*
+                2. 요리 과정 정보 크롤링
+             */
             Elements processes = detailDoc.select(".view_step_cont.media");
 
             int order = 1;  //요리 순서는 1번부터
@@ -213,11 +219,12 @@ public class CrawlingService {
                 processEntity.setProcessExplain(process.select(".media-body").text());
                 processEntity.setRecipeEntity(recipeEntity);
 
-                //우선 저장
+                //우선 저장 : 과정별 이미지 크롤링 때 각 과정의 process_id가 필요하다.
                 crawlingProcessRepository.saveAndFlush(processEntity);
-//                System.out.println("save processEntity with ID : " + processEntity.getProcessId());
-
-                //각 과정 별 이미지 크롤링 및 저장
+                
+                /*
+                    3. 각 과정별 이미지 크롤링
+                 */
                 String imageUrl = detailDoc.select("#stepimg"
                                         + processEntity.getProcessOrder()
                                         + " img").attr("src");
@@ -242,6 +249,7 @@ public class CrawlingService {
 
     }
 
+    //Ingredient 테이블 삭제 기능 : 데이터 정제
     @Transactional
     private void deleteRecipeWithCascade(Long recipeId) {
         if(recipeId == null) {
@@ -255,13 +263,10 @@ public class CrawlingService {
 
         // 2. 과정 이미지 삭제
         crawlingProcessImageRepository.deleteByProcessEntity_RecipeEntity( recipeEntity);
-
         // 3. 과정 삭제
         crawlingProcessRepository.deleteByRecipeEntity(recipeEntity);
-
         // 4. 재료 삭제
         crawlingIngredientRepository.deleteByRecipeEntity(recipeEntity);
-
         // 5. 최종적으로 레시피 삭제
         crawlingRecipeRepository.delete(recipeEntity);
 
@@ -306,7 +311,7 @@ public class CrawlingService {
         put("기타", "34");
     }};
 
-    //난이도 매핑 재구성
+    //난이도 재구성
     private int newLevel(String level) {
         switch (level) {
             case "아무나":
