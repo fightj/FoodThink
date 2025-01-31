@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
-@PropertySource("classpath:config/application.properties")
+@PropertySource("classpath:application.properties")
 public class S3Service {
 
     private final S3Client s3Client;
