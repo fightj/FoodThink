@@ -118,7 +118,7 @@ public class CrawlingService {
                 if (!crawlingRecipeRepository.existsByRecipeUrl(entity.getRecipeUrl())) {
                     // 레시피 정보 먼저 저장
                     crawlingRecipeRepository.saveAndFlush(entity);
-                    // 우선 저장으로 레시피 ID 생성 후 나머지 정보 처리
+                    // 우선 저장 : 레시피 ID 생성 후 나머지 정보 처리
                     processDetailPage(entity);
                     // 조합별 데이터 개수 카운트 증가
                     recipeCountMap.put(comboKey, recipeCountMap.get(comboKey) + 1);
