@@ -4,21 +4,18 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
-@Table(name = "crawling_process")
-public class CrawlingProcessEntity {
+@Table(name = "process")
+public class ProcessEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long processId;     //기본키
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id")
-    private CrawlingRecipeEntity crawlingRecipe;    //레시피ID 외래키
+    private RecipeEntity recipeEntity;    //레시피ID 외래키
 
     private Integer processOrder;      //과정순서
 

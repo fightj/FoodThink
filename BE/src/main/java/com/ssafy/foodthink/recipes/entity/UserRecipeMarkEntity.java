@@ -1,7 +1,7 @@
 package com.ssafy.foodthink.recipes.entity;
 
 import com.ssafy.foodthink.user.entity.UserEntity;
-import com.ssafy.foodthink.webCrawling.entity.CrawlingRecipeEntity;
+import com.ssafy.foodthink.webCrawling.entity.RecipeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class UserRecipeMarkEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id")
-    private CrawlingRecipeEntity crawlingRecipe;
+    private RecipeEntity crawlingRecipe;
 
     private LocalDateTime writeTime;    //작성시간
 

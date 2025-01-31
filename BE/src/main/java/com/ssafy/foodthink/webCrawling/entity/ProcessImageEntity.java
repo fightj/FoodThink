@@ -7,15 +7,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "crawling_process_image")
-public class CrawlingProcessImageEntity {
+@Table(name = "process_image")
+public class ProcessImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long imageId;     //기본키
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "process_id")
-    private CrawlingProcessEntity crawlingProcess;    //과정ID 외래키
+    private ProcessEntity processEntity;    //과정ID 외래키
 
     private String imageUrl;    //사진URL
 

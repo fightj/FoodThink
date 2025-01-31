@@ -1,14 +1,9 @@
 package com.ssafy.foodthink.webCrawling.service;
 
-/*
-    주요 크롤링 로직 처리
-    카테고리 맵핑
- */
-
-import com.ssafy.foodthink.webCrawling.entity.CrawlingIngredientEntity;
-import com.ssafy.foodthink.webCrawling.entity.CrawlingProcessEntity;
-import com.ssafy.foodthink.webCrawling.entity.CrawlingProcessImageEntity;
-import com.ssafy.foodthink.webCrawling.entity.CrawlingRecipeEntity;
+import com.ssafy.foodthink.webCrawling.entity.IngredientEntity;
+import com.ssafy.foodthink.webCrawling.entity.ProcessEntity;
+import com.ssafy.foodthink.webCrawling.entity.ProcessImageEntity;
+import com.ssafy.foodthink.webCrawling.entity.RecipeEntity;
 import com.ssafy.foodthink.webCrawling.repository.CrawlingIngredientRepository;
 import com.ssafy.foodthink.webCrawling.repository.CrawlingProcessImageRepository;
 import com.ssafy.foodthink.webCrawling.repository.CrawlingProcessRepository;
@@ -16,6 +11,7 @@ import com.ssafy.foodthink.webCrawling.repository.CrawlingRecipeRepository;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -43,12 +39,18 @@ public class CrawlingService {
     @Autowired
     private CrawlingProcessImageRepository crawlingProcessImageRepository;
 
-
     //크롤링할 웹 사이트의 앞부분 URL
     private final String baseUrl = "https://www.10000recipe.com/recipe/list.html?";
 
     //TEST : 크롤링 시작 시간 기록
     Instant startTime = Instant.now();
+
+    //배치 스케줄러
+    @Scheduled(fixedRate = 3600000)
+    public void crawlRecipesPeriodically() {
+        System.out.println("배치 크롤링 작업 시작");
+        crawlRecipes();
+    }
 
     public void crawlRecipes() {
         // 종류별 카테고리 반복 처리
@@ -86,7 +88,7 @@ public class CrawlingService {
 
             // 각 레시피 데이터를 직접 추출 후 저장
             for (Element recipe : recipes) {
-                CrawlingRecipeEntity entity = new CrawlingRecipeEntity();
+                RecipeEntity entity = new RecipeEntity();
                 entity.setRecipeTitle(recipe.select(".common_sp_caption_tit").text());  // 제목
                 entity.setRecipeUrl(recipe.select("a").attr("href"));                  // URL
                 entity.setImage(recipe.select(".common_sp_thumb img").attr("src"));    // 이미지URL
@@ -113,7 +115,7 @@ public class CrawlingService {
         }
     }
 
-    private void saveRecipe(CrawlingRecipeEntity entity) {
+    private void saveRecipe(RecipeEntity entity) {
         //TEST
         long recipeCount = crawlingRecipeRepository.count();
         if(recipeCount >= 50) {
@@ -126,7 +128,7 @@ public class CrawlingService {
 
     //레시피 상세 페이지에서 재료, 과정, 과정 이미지 크롤링
     @Transactional
-    private void processDetailPage(CrawlingRecipeEntity recipeEntity) {
+    private void processDetailPage(RecipeEntity recipeEntity) {
 
         String baseUrl = "https://www.10000recipe.com"; //기본 URL 설정
 
@@ -164,7 +166,7 @@ public class CrawlingService {
 //            System.out.println("Found ingredients : " + ingredients.size());
 
             for(Element ingredient : ingredients) {
-                CrawlingIngredientEntity ingredientEntity = new CrawlingIngredientEntity();
+                IngredientEntity ingredientEntity = new IngredientEntity();
                 ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
                 ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
                 ingredientEntity.setCrawlingRecipe(recipeEntity);
@@ -202,7 +204,7 @@ public class CrawlingService {
             int order = 1;  //요리 순서는 1번부터
 
             for(Element process : processes) {
-                CrawlingProcessEntity processEntity = new CrawlingProcessEntity();
+                ProcessEntity processEntity = new ProcessEntity();
                 processEntity.setProcessOrder(order++);
                 processEntity.setProcessExplain(process.select(".media-body").text());
                 processEntity.setCrawlingRecipe(recipeEntity);
@@ -221,7 +223,7 @@ public class CrawlingService {
                         imageUrl = new URL(new URL(baseUrl), imageUrl).toString();
                     }
 
-                    CrawlingProcessImageEntity imageEntity = new CrawlingProcessImageEntity();
+                    ProcessImageEntity imageEntity = new ProcessImageEntity();
                     imageEntity.setImageUrl(imageUrl);
                     imageEntity.setCrawlingProcess(processEntity);
 

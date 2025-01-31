@@ -74,7 +74,7 @@ public class CrawlingServiceWebClient {
                 System.out.println("레시피URL : " + recipeUrl);
 
                 if (!crawlingRecipeRepository.existsByRecipeUrl(recipeUrl)) {
-                    CrawlingRecipeEntity entity = extractRecipeData(recipe, recipeUrl, cat4Text, cat3Text);
+                    RecipeEntity entity = extractRecipeData(recipe, recipeUrl, cat4Text, cat3Text);
                     crawlingRecipeRepository.save(entity);
                     processDetailPage(entity);
                 }
@@ -82,9 +82,9 @@ public class CrawlingServiceWebClient {
         });
     }
 
-    private CrawlingRecipeEntity extractRecipeData(org.jsoup.nodes.Element recipe, String recipeUrl, String cat4Text, String cat3Text) {
+    private RecipeEntity extractRecipeData(org.jsoup.nodes.Element recipe, String recipeUrl, String cat4Text, String cat3Text) {
         System.out.println("크롤링 데이터 추출 : " + recipeUrl);
-        CrawlingRecipeEntity entity = new CrawlingRecipeEntity();
+        RecipeEntity entity = new RecipeEntity();
         entity.setRecipeTitle(recipe.select(".common_sp_caption_tit").text());
         entity.setRecipeUrl(recipeUrl);
         entity.setImage(recipe.select(".common_sp_thumb img").attr("src"));
@@ -97,7 +97,7 @@ public class CrawlingServiceWebClient {
     }
 
     @Transactional
-    public void processDetailPage(CrawlingRecipeEntity entity) {
+    public void processDetailPage(RecipeEntity entity) {
         System.out.println("상세 페이지 크롤링 : " + entity.getRecipeUrl());
         webClient.get()
                 .uri(entity.getRecipeUrl())
@@ -108,7 +108,7 @@ public class CrawlingServiceWebClient {
                 .subscribe();
     }
 
-    private Mono<Void> extractDetailsAndSave(CrawlingRecipeEntity entity, String html) {
+    private Mono<Void> extractDetailsAndSave(RecipeEntity entity, String html) {
         return Mono.fromRunnable(() -> {
             try {
                 org.jsoup.nodes.Document detailDoc = org.jsoup.Jsoup.parse(html);
@@ -128,7 +128,7 @@ public class CrawlingServiceWebClient {
                 // 재료 정보
                 org.jsoup.select.Elements ingredients = detailDoc.select("ul.case1 li");
                 for (org.jsoup.nodes.Element ingredient : ingredients) {
-                    CrawlingIngredientEntity ingredientEntity = new CrawlingIngredientEntity();
+                    IngredientEntity ingredientEntity = new IngredientEntity();
                     ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
                     ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
                     ingredientEntity.setCrawlingRecipe(entity);
@@ -144,7 +144,7 @@ public class CrawlingServiceWebClient {
                 int order = 1;
 
                 for (org.jsoup.nodes.Element process : processes) {
-                    CrawlingProcessEntity processEntity = new CrawlingProcessEntity();
+                    ProcessEntity processEntity = new ProcessEntity();
                     processEntity.setProcessOrder(order++);
                     processEntity.setProcessExplain(process.select(".media-body").text());
                     processEntity.setCrawlingRecipe(entity);
@@ -155,7 +155,7 @@ public class CrawlingServiceWebClient {
                     // 과정별 이미지 정보
                     String imageUrl = detailDoc.select("#stepimg" + processEntity.getProcessOrder() + " img").attr("src");
                     if (!imageUrl.isEmpty()) {
-                        CrawlingProcessImageEntity imageEntity = new CrawlingProcessImageEntity();
+                        ProcessImageEntity imageEntity = new ProcessImageEntity();
                         imageEntity.setImageUrl(imageUrl);
                         imageEntity.setCrawlingProcess(processEntity);
 

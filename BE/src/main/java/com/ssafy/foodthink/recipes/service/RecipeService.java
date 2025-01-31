@@ -2,20 +2,11 @@ package com.ssafy.foodthink.recipes.service;
 
 import com.ssafy.foodthink.recipes.dto.AllRecipeListResponseDto;
 import com.ssafy.foodthink.recipes.entity.AllRecipeListViewEntity;
-import com.ssafy.foodthink.recipes.entity.UserRecipeEntity;
 import com.ssafy.foodthink.recipes.repository.AllRecipeListViewRepository;
-import com.ssafy.foodthink.recipes.repository.CrawlingRecipesRepository;
-import com.ssafy.foodthink.recipes.repository.UserRecipesRepository;
-import com.ssafy.foodthink.webCrawling.entity.CrawlingRecipeEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
