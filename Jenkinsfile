@@ -39,6 +39,10 @@ pipeline {
                         echo "spring.jwt.secret=${SPRING_JWT_SECRET}" >> application.properties  # SPRING_JWT_SECRET 추가
                         echo "cloud.aws.credentials.access-key=${AWS_CREDENTIALS_ACCESS_KEY}"  >> application.properties
                         echo "cloud.aws.credentials.secret-key=${AWS_CREDENTIALS_SECRET_KEY}"  >> application.properties
+                        echo "spring.security.oauth2.client.registration.kakao.client-id=${KAKAO_CLIENT_ID}"  >> application.properties
+                        echo "spring.security.oauth2.client.registration.kakao.client-secret=${KAKAO_CLIENT_SECRET}"  >> application.properties
+                        echo "spring.security.oauth2.client.registration.kakao.redirect-uri=${KAKAO_REDIRECT_URL}"  >> application.properties
+                        echo "cloud.aws.s3.bucket=${S3_BUCKET}"  >> application.properties
 
                         # application.properties 내용 확인
                         cat application.properties  # 파일 내용 출력
