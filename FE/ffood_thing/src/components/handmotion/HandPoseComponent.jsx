@@ -21,11 +21,7 @@ const RecipeSwipeComponent = () => {
     let timerInterval = null
     if (isTimerRunning) {
       timerInterval = setInterval(() => {
-        setTimer((prevTimer) => {
-          const newTimer = prevTimer + 1
-          console.log("타이머:", newTimer)
-          return newTimer
-        })
+        setTimer((prevTimer) => prevTimer + 1)
       }, 1000)
     } else {
       clearInterval(timerInterval)
@@ -39,18 +35,12 @@ const RecipeSwipeComponent = () => {
       const palmY = handLandmarks[0].y // 손바닥의 Y 좌표를 가져옴
 
       // 손을 위로 올리면 타이머 시작
-      if (palmY < 0.3) {
-        if (!isTimerRunning) {
-          console.log("손을 위로 올림 - 타이머 시작")
-          setIsTimerRunning(true)
-        }
+      if (palmY < 0.3 && !isTimerRunning) {
+        setIsTimerRunning(true)
       }
       // 손을 아래로 내리면 타이머 일시 정지
-      else if (palmY > 0.7) {
-        if (isTimerRunning) {
-          console.log("손을 아래로 내림 - 타이머 일시 정지")
-          setIsTimerRunning(false)
-        }
+      else if (palmY > 0.7 && isTimerRunning) {
+        setIsTimerRunning(false)
       }
     }
   }
@@ -118,7 +108,9 @@ const RecipeSwipeComponent = () => {
         // 스와이프 방향 및 거리 계산
         const distance = avgX - swipeTrackingRef.current.startX
 
-        if (Math.abs(distance) > 0.1) {
+        // 감지 거리 임계값을 증가시킴
+        if (Math.abs(distance) > 0.2) {
+          // 기존 0.1에서 0.2로 증가
           const direction = distance > 0 ? "다음 페이지" : "이전 페이지"
           setSwipeMessage(direction)
 
