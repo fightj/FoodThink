@@ -36,6 +36,7 @@ pipeline {
                         mvn clean install
                         echo "spring.datasource.url=${DB_URL}" > application.properties
                         echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
+                        echo "spring.jwt.secret=${SPRING_JWT_SECRET}" >> application.properties  # SPRING_JWT_SECRET 추가
 
                         # Docker 로그인
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
