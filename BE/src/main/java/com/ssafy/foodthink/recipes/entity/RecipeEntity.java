@@ -13,7 +13,10 @@ import java.util.Random;
 @Entity
 @Getter
 @Setter
-@Table(name = "recipe")
+@Table(name = "recipe", indexes = {
+        @Index(name = "idx_recipe_hits", columnList = "hits DESC"),
+        @Index(name = "idx_recipe_hits_writeTime", columnList = "hits DESC, writeTime DESC")
+})
 public class RecipeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

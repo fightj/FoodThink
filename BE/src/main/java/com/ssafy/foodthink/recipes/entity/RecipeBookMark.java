@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "recipeBookMark")
+@Table(name = "recipe_book_mark")
 public class RecipeBookMark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
