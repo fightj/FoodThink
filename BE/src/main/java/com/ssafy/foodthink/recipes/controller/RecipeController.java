@@ -43,4 +43,18 @@ public class RecipeController {
         return recipeService.getRecipeDetail(recipeId);
     }
 
+    //레시피 보기 : 요리 과정 중 재료 정보 (첫페이지)
+    //재료 정보
+    @GetMapping("read/ingredients/{recipeId}")
+    public List<IngredientDto> getIngredients(@PathVariable Long recipeId) {
+        return recipeService.getIngredients(recipeId);
+    }
+
+    //레시피 보기 : 요리 과정 중 페이지별로 과정 보기
+    //과정 정보 + 페이지 정보
+    @GetMapping("read/processes/{recipeId}/{page}")
+    public ProcessPageResponseDto getProcessPage(@PathVariable Long recipeId, @PathVariable int page) {
+        return recipeService.getProcessPage(recipeId, page);
+    }
+
 }

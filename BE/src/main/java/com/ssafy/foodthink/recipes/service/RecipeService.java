@@ -1,6 +1,7 @@
 package com.ssafy.foodthink.recipes.service;
 
 import com.ssafy.foodthink.recipes.dto.*;
+import com.ssafy.foodthink.recipes.entity.ProcessEntity;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeBookMarkRepository;
 import com.ssafy.foodthink.recipes.repository.RecipeListRepository;
@@ -118,5 +119,53 @@ public class RecipeService {
                 processes
         );
     }
+
+    //레시피 보기 : 요리 과정 중 재료 정보 (첫페이지)
+    //재료 정보
+    public List<IngredientDto> getIngredients(Long recipeId) {
+        //레시피 조회
+        RecipeEntity recipeEntity = recipeListRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."));
+
+        //재료 정보 가져오기
+        return recipeEntity.getIngredients().stream()
+                .map(ingredient -> new IngredientDto(ingredient.getIngreName(), ingredient.getAmount()))
+                .collect(Collectors.toList());
+    }
+
+    //레시피 보기 : 요리 과정 중 페이지별로 과정 보기
+    //과정 정보 + 페이지네이션 정보
+    public ProcessPageResponseDto getProcessPage(Long recipeId, int page) {
+        // 레시피 조회
+        RecipeEntity recipeEntity = recipeListRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."));
+
+        // 과정 정보 가져오기
+        List<ProcessEntity> processEntities = recipeEntity.getProcesses();
+
+        // 페이지 단위로 데이터를 나누기
+        int startIndex = page * 1; // 한 페이지에 1개 과정만 보여주기
+        int endIndex = Math.min((page + 1) * 1, processEntities.size());
+
+        List<ProcessDto> processes = processEntities.subList(startIndex, endIndex).stream()
+                .map(process -> new ProcessDto(
+                        process.getProcessOrder(),
+                        process.getProcessExplain(),
+                        process.getProcessImages().stream()
+                                .map(image -> new ProcessImageDto(image.getImageUrl()))
+                                .collect(Collectors.toList())
+                ))
+                .collect(Collectors.toList());
+
+        // 총 과정 수와 총 페이지 수 계산
+        int totalProcess = processEntities.size();   // 필드 이름 변경
+        int totalPages = (int) Math.ceil((double) totalProcess / 1);  // 한 페이지에 1개씩 표시
+
+        return new ProcessPageResponseDto(processes, totalProcess, totalPages, page);
+
+    }
+
+
+
 }
 
