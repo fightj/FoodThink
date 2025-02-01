@@ -1,6 +1,7 @@
 package com.ssafy.foodthink.recipes.repository;
 
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,6 +31,11 @@ public interface RecipeListRepository extends JpaRepository<RecipeEntity, Long> 
             @Param("cateMainIngre") String cateMainIngre,
             @Param("sortType") String sortType
     );
+
+    //캐러셀용 : 레시피 목록 20개를 조회순으로
+    @Query("SELECT r FROM RecipeEntity r ORDER BY r.hits DESC")
+    List<RecipeEntity> findTopRecipesByHits(Pageable pageable);
+
 
 
 }
