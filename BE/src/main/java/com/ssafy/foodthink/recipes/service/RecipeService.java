@@ -7,8 +7,10 @@ import com.ssafy.foodthink.recipes.repository.RecipeBookMarkRepository;
 import com.ssafy.foodthink.recipes.repository.RecipeListRepository;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.internal.StringUtil;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -28,25 +30,34 @@ public class RecipeService {
 
     //레시피 목록 조회
     //cateType, cateMainIngre, sorType을 파라미터값으로 받아 처리
-    public List<RecipeListResponseDto> searchRecipeList(RecipeListRequestDto requestDto) {
+    public RecipeListPageResponseDto searchRecipeList(RecipeListRequestDto requestDto) {
         //기본값 설정
-        //cateType과 cateMainIngre는 빈 문자열 또는 NULL
-        //정렬 기준은 hits(조회순)
         String cateType = StringUtils.hasText(requestDto.getCateType()) ? requestDto.getCateType() : null;
         String cateMainIngre = StringUtils.hasText(requestDto.getCateMainIngre()) ? requestDto.getCateMainIngre() : null;
         String sortType = StringUtils.hasText(requestDto.getSortType()) ? requestDto.getSortType() : "조회순";
 
-        List<RecipeEntity> recipeEntities = recipeListRepository.findRecipesByFilter(cateType, cateMainIngre, sortType);
+        //페이지 번호, 사이즈
+        int page = requestDto.getPage();
+        int size = requestDto.getSize();
 
-        return recipeEntities.stream().map(recipeEntity -> {
-            //북마크 개수 조회 (null 방지)
+        //레시피 목록 조회 (페이지네이션 적용)
+        Pageable pageable = PageRequest.of(page, size);
+        Page<RecipeEntity> recipePage = recipeListRepository.findRecipesByFilter(cateType, cateMainIngre, sortType, pageable);
+
+        //총 레시피 수와 총 페이지 수
+        int totalRecipes = (int) recipePage.getTotalElements();
+        int totalPages = recipePage.getTotalPages();
+
+        //레시피 목록 DTO로 변환
+        List<RecipeListResponseDto> recipes = recipePage.getContent().stream().map(recipeEntity -> {
+            // 북마크 개수 조회 (null 방지)
             Long bookmarkCount = Optional.ofNullable(recipeBookMarkRepository.countByRecipeEntity(recipeEntity)).orElse(0L);
 
-            //로그인한 경우 북마크 여부 확인 (userId가 존재하면)
+            //로그인 : 북마크 여부 확인
             boolean isBookmarked = false;
-//            if (userId != null) {
-//                isBookmarked = recipeBookMarkRepository.existsByRecipeEntityAndUserEntityUserId(recipeEntity, userId);
-//            } //로그인 관련
+            // if (userId != null) {
+            //     isBookmarked = recipeBookMarkRepository.existsByRecipeEntityAndUserEntityUserId(recipeEntity, userId);
+            // }
 
             return new RecipeListResponseDto(
                     recipeEntity.getRecipeId(),
@@ -56,10 +67,14 @@ public class RecipeService {
                     recipeEntity.getUserEntity().getImage(),
                     recipeEntity.getHits(),
                     bookmarkCount,
-                    isBookmarked  // ⭐ 북마크 상태 추가
+                    isBookmarked
             );
         }).collect(Collectors.toList());
+
+        //페이지네이션 응답 DTO 반환
+        return new RecipeListPageResponseDto(recipes, totalRecipes, totalPages, page);
     }
+
 
     //캐러셀용 : 레시피 목록 20개를 조회순으로
     public List<RecipeListTop20ResponseDto> getTop20RecipesByHits() {

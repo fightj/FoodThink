@@ -1,6 +1,7 @@
 package com.ssafy.foodthink.recipes.repository;
 
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +19,7 @@ public interface RecipeListRepository extends JpaRepository<RecipeEntity, Long> 
      */
     @Query("SELECT r FROM RecipeEntity r " +
             "LEFT JOIN r.userEntity u " +
-            "LEFT JOIN RecipeBookMark b ON r.recipeId = b.recipeEntity.recipeId " +  // 북마크 수 최적화
+            "LEFT JOIN RecipeBookMark b ON r.recipeId = b.recipeEntity.recipeId " +
             "WHERE (:cateType IS NULL OR r.cateType = :cateType) " +
             "AND (:cateMainIngre IS NULL OR r.cateMainIngre = :cateMainIngre) " +
             "GROUP BY r " +
@@ -26,10 +27,11 @@ public interface RecipeListRepository extends JpaRepository<RecipeEntity, Long> 
             "CASE WHEN :sortType = '조회순' THEN r.hits END DESC, " +
             "CASE WHEN :sortType = '최신순' THEN r.writeTime END DESC, " +
             "CASE WHEN :sortType = '북마크순' THEN COUNT(b) END DESC")
-    List<RecipeEntity> findRecipesByFilter(
+    Page<RecipeEntity> findRecipesByFilter(
             @Param("cateType") String cateType,
             @Param("cateMainIngre") String cateMainIngre,
-            @Param("sortType") String sortType
+            @Param("sortType") String sortType,
+            Pageable pageable
     );
 
     //캐러셀용 : 레시피 목록 20개를 조회순으로

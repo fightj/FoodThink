@@ -17,10 +17,10 @@ public class RecipeController {
 
     //레시피 목록 조회 : 카테고리별 + 정렬
     @GetMapping("/read/recipeList")
-    public List<RecipeListResponseDto> searchRecipeList(
-            @ModelAttribute RecipeListRequestDto requestDto) {
+    public RecipeListPageResponseDto searchRecipeList(@RequestBody RecipeListRequestDto requestDto) {
         return recipeService.searchRecipeList(requestDto);
     }
+
 
 //    public List<RecipeListResponseDto> searchRecipeList(
 //            @ModelAttribute RecipeListRequestDto requestDto,

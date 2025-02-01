@@ -16,4 +16,8 @@ public class RecipeListRequestDto {
     private String cateType = null;        //종류별 카테고리 (선택)
     private String cateMainIngre = null;   //재료별 카테고리 (선택)
     private String sortType = "hits";        //정렬 기준 (조회순, 최신순, 북마크순)
+    
+    //무한스크롤 대비 페이지네이션
+    private int page;       //페이지 번호 (0부터 시작)
+    private int size;       //한 페이지 당 데이터 개수
 }
