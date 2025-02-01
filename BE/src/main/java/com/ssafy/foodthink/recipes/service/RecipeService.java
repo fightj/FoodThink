@@ -1,8 +1,6 @@
 package com.ssafy.foodthink.recipes.service;
 
-import com.ssafy.foodthink.recipes.dto.RecipeListRequestDto;
-import com.ssafy.foodthink.recipes.dto.RecipeListResponseDto;
-import com.ssafy.foodthink.recipes.dto.RecipeListTop20ResponseDto;
+import com.ssafy.foodthink.recipes.dto.*;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeBookMarkRepository;
 import com.ssafy.foodthink.recipes.repository.RecipeListRepository;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -81,5 +80,43 @@ public class RecipeService {
         )).collect(Collectors.toList());
     }
 
+    //로그인 했을 때 : 구독한 사용자의 다른 레시피들 (20개) 목록 조회
+
+    //레시피 상세 보기
+    public RecipeDetailResponseDto getRecipeDetail(Long recipeId) {
+        //레시피 조회
+        RecipeEntity recipeEntity = recipeListRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."));
+
+        //재료 정보
+        List<IngredientDto> ingredients = recipeEntity.getIngredients().stream()
+                .map(ingredient -> new IngredientDto(ingredient.getIngreName(), ingredient.getAmount()))
+                .collect(Collectors.toList());
+
+        // 과정 정보 (이미지 포함)
+        List<ProcessDto> processes = recipeEntity.getProcesses().stream()
+                .map(step -> new ProcessDto(
+                        step.getProcessOrder(),     //과정 순서
+                        step.getProcessExplain(),   //과정 설명
+                        step.getProcessImages() != null ?
+                                step.getProcessImages().stream()
+                                        .map(image -> new ProcessImageDto(image.getImageUrl()))
+                                        .collect(Collectors.toList()) : Collections.emptyList()  // null 체크 후 처리
+                ))
+                .collect(Collectors.toList());
+
+        // RecipeDetailResponseDto 반환
+        return new RecipeDetailResponseDto(
+                recipeEntity.getRecipeId(),
+                recipeEntity.getRecipeTitle(),
+                recipeEntity.getUserEntity().getNickname(),
+                recipeEntity.getUserEntity().getImage(),
+                recipeEntity.getServing(),
+                recipeEntity.getLevel(),
+                recipeEntity.getRequiredTime(),
+                ingredients,
+                processes
+        );
+    }
 }
 

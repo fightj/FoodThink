@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Entity
@@ -54,9 +55,10 @@ public class RecipeEntity {
         }
     }
 
-//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<IngredientEntity> ingredients = new ArrayList<>();
-//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ProcessEntity> processes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IngredientEntity> ingredients = new ArrayList<>();
+    @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProcessEntity> processes = new ArrayList<>();
 
 }
