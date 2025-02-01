@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/recommend")
-//@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasRole('USER')")
 public class RecommendController {
 
     private final RecommendInterestService recommendInterestService;

@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface UserRecipeTitleRepository extends JpaRepository<UserRecipeEntity, Long> {
     //List<String> findAllRecipeTitles();
+    List<UserRecipeEntity> findByIsPublicTrue();
 }
