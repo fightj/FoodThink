@@ -1,6 +1,9 @@
 package com.ssafy.foodthink.webCrawling.service;
 
-import com.ssafy.foodthink.webCrawling.entity.*;
+import com.ssafy.foodthink.recipes.entity.IngredientEntity;
+import com.ssafy.foodthink.recipes.entity.ProcessEntity;
+import com.ssafy.foodthink.recipes.entity.ProcessImageEntity;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.webCrawling.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
@@ -68,7 +71,7 @@ public class CrawlingServiceDemo {
                 System.out.println("레시피URL : " + recipeUrl);
 
                 if (!crawlingRecipeRepository.existsByRecipeUrl(recipeUrl)) {
-                    CrawlingRecipeEntity entity = extractRecipeData(recipe, recipeUrl, cat4Text, cat3Text);
+                    RecipeEntity entity = extractRecipeData(recipe, recipeUrl, cat4Text, cat3Text);
                     crawlingRecipeRepository.save(entity);
                     processDetailPage(entity);
                 }
@@ -79,9 +82,9 @@ public class CrawlingServiceDemo {
         }
     }
 
-    private CrawlingRecipeEntity extractRecipeData(Element recipe, String recipeUrl, String cat4Text, String cat3Text) {
+    private RecipeEntity extractRecipeData(Element recipe, String recipeUrl, String cat4Text, String cat3Text) {
         System.out.println("크롤링 데이터 추출 : " + recipeUrl);
-        CrawlingRecipeEntity entity = new CrawlingRecipeEntity();
+        RecipeEntity entity = new RecipeEntity();
         entity.setRecipeTitle(recipe.select(".common_sp_caption_tit").text());
         entity.setRecipeUrl(recipeUrl);
         entity.setImage(recipe.select(".common_sp_thumb img").attr("src"));
@@ -94,7 +97,7 @@ public class CrawlingServiceDemo {
     }
 
     @Transactional
-    public void processDetailPage(CrawlingRecipeEntity entity) {
+    public void processDetailPage(RecipeEntity entity) {
         try {
             System.out.println("상세 페이지 크롤링 : " + entity.getRecipeUrl());
             Document detailDoc = Jsoup.connect(entity.getRecipeUrl()).get();
@@ -116,15 +119,15 @@ public class CrawlingServiceDemo {
             //재료 정보
             Elements ingredients = detailDoc.select("div.ready_ingre3 ul.case1");
             for (Element ingredient : ingredients.select("li")) {
-                CrawlingIngredientEntity ingredientEntity = new CrawlingIngredientEntity();
+                IngredientEntity ingredientEntity = new IngredientEntity();
                 ingredientEntity.setIngreName(ingredient.select("div.ingre_list_name a").text());
                 ingredientEntity.setAmount(ingredient.select("span.ingre_list_ea").text());
-                ingredientEntity.setCrawlingRecipe(entity);
+                ingredientEntity.setRecipeEntity(entity);
 
                 System.out.println("Ingredient Name: " + ingredientEntity.getIngreName());
                 System.out.println("Ingredient Amount: " + ingredientEntity.getAmount());
 
-                if (!crawlingIngredientRepository.existsByIngreNameAndCrawlingRecipe_RecipeUrl(ingredientEntity.getIngreName(), entity.getRecipeUrl())) {
+                if (!crawlingIngredientRepository.existsByIngreNameAndRecipeEntity_RecipeUrl(ingredientEntity.getIngreName(), entity.getRecipeUrl())) {
                     crawlingIngredientRepository.save(ingredientEntity);
                     crawlingIngredientRepository.flush();
                 }
@@ -137,10 +140,10 @@ public class CrawlingServiceDemo {
             int order = 1;
 
             for (Element process : processes) {
-                CrawlingProcessEntity processEntity = new CrawlingProcessEntity();
+                ProcessEntity processEntity = new ProcessEntity();
                 processEntity.setProcessOrder(order++);
                 processEntity.setProcessExplain(process.select(".media-body").text());
-                processEntity.setCrawlingRecipe(entity);
+                processEntity.setRecipeEntity(entity);
 
                 System.out.println("Process Order: " + processEntity.getProcessOrder());
                 System.out.println("Process Explain: " + processEntity.getProcessExplain());
@@ -152,9 +155,9 @@ public class CrawlingServiceDemo {
                 //과정별 이미지 정보
                 String imageUrl = detailDoc.select("#stepimg" + processEntity.getProcessOrder() + " img").attr("src");
                 if (!imageUrl.isEmpty()) {
-                    CrawlingProcessImageEntity imageEntity = new CrawlingProcessImageEntity();
+                    ProcessImageEntity imageEntity = new ProcessImageEntity();
                     imageEntity.setImageUrl(imageUrl);
-                    imageEntity.setCrawlingProcess(processEntity);
+                    imageEntity.setProcessEntity(processEntity);
 
                     System.out.println("Process Image URL: " + imageEntity.getImageUrl());
 

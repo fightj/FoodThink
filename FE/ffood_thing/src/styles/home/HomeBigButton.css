@@ -26,6 +26,7 @@
   transition: transform 0.2s, box-shadow 0.2s;
   width: 100%;
   margin-bottom: 20px; /* 카드 사이에 간격 추가 */
+  overflow: hidden; /* 카드의 경계 밖으로 나가는 내용을 숨김 */
 }
 
 .card:hover {
@@ -48,6 +49,7 @@
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
   background: rgba(0, 0, 0, 0.3);
   border-radius: inherit;
+  overflow: hidden; /* 카드 내용의 경계 밖으로 나가는 내용을 숨김 */
 }
 
 /* 각 카드의 위치와 크기 설정 */

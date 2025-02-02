@@ -1,5 +1,6 @@
-package com.ssafy.foodthink.webCrawling.entity;
+package com.ssafy.foodthink.recipes.entity;
 
+import com.ssafy.foodthink.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,18 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/*
-       크롤링한 데이터를 DTO에서 Entity로 변환
-       Repository를 통해 저장
-       이 과정이 Serivce 계층에서 처리
-       Controller는 단순 크롤링 작업 트리거 용도
- */
-
 @Entity
 @Getter
 @Setter
-@Table(name = "crawling_recipe")
-public class CrawlingRecipeEntity {
+@Table(name = "recipe")
+public class RecipeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long recipeId;
@@ -33,9 +27,14 @@ public class CrawlingRecipeEntity {
     private Integer level;              //난이도   -> 새로 구성
     private String requiredTime;        //소요시간
     private LocalDateTime writeTime;    //작성시간
-    private Integer hits;               //조회수 : 기본값 0으로 설정
+    private Integer hits;               //조회수
     private String recipeUrl;           //레시피 URL
     private String image;               //대표이미지 URL
+    private Boolean isPublic;           //공개여부
+
+    @ManyToOne(cascade = CascadeType.ALL)   //부모 객체 CRUD 때 자식 객체도 동시에 작업 수행
+    @JoinColumn(name = "user_id")     //외래키 컬럼 지정 (recipeId로 생성된다.)
+    private UserEntity userEntity;      //사용자ID
 
     //작성시간을 현재로 설정
     @PrePersist
@@ -45,11 +44,15 @@ public class CrawlingRecipeEntity {
         //hits에 1~300 사이의 랜덤 숫자 값 설정
         Random random = new Random();
         this.hits = random.nextInt(300) + 1;
+
+        if(this.isPublic == null) {
+            this.isPublic = true;
+        }
     }
 
-    @OneToMany(mappedBy = "crawlingRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CrawlingIngredientEntity> ingredients = new ArrayList<>();
-    @OneToMany(mappedBy = "crawlingRecipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CrawlingProcessEntity> processes = new ArrayList<>();
+//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<IngredientEntity> ingredients = new ArrayList<>();
+//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ProcessEntity> processes = new ArrayList<>();
 
 }
