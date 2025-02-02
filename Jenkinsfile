@@ -91,7 +91,7 @@ pipeline {
                     sh '''
                     docker stop my-backend-container || true  # 기존 Backend 컨테이너 종료
                     docker rm my-backend-container || true  # 기존 Backend 컨테이너 제거
-                    docker run -d --name my-backend-container -p 8080:8080 ${DOCKER_IMAGE_NAME}/my-backend:latest  # 새로운 Backend 컨테이너 실행
+                    docker run -d --name my-backend-container -p 8085:8080 ${DOCKER_IMAGE_NAME}/my-backend:latest  # 새로운 Backend 컨테이너 실행
 
                     # 백엔드 컨테이너 로그 확인
                     docker logs my-backend-container
