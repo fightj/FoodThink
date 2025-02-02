@@ -4,6 +4,7 @@ import com.ssafy.foodthink.recipeBookmark.entity.RecipeBookmarkEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -12,4 +13,6 @@ public interface RecipeBookmarkRepository extends JpaRepository<RecipeBookmarkEn
     boolean existsByUserId_UserIdAndRecipeId_RecipeId(Long userId, Long recipeId); // 해당 사용자가 해당 레시피를 북마크 했는지 여부 확인
 
     Optional<RecipeBookmarkEntity> findByUserId_UserIdAndRecipeId_RecipeId(Long userId, Long recipeId); // 해당 사용자의 해당 레시피 북마크를 반환
+
+    List<RecipeBookmarkEntity> findByUserId_UserId(Long userId); // 해당 사용자가 북마크한 레시피 목록
 }

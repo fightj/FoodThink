@@ -1,6 +1,7 @@
 package com.ssafy.foodthink.recipeBookmark.service;
 
 import com.ssafy.foodthink.global.exception.AleadyExistsException;
+import com.ssafy.foodthink.recipeBookmark.dto.RecipeBookmarkListDto;
 import com.ssafy.foodthink.recipeBookmark.entity.RecipeBookmarkEntity;
 import com.ssafy.foodthink.recipeBookmark.repository.RecipeBookmarkRepository;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,7 @@ public class RecipeBookmarkService {
     // 북마크 추가
     @Transactional
     public void createBookmark(Long userId, Long recipeId) {
-        checkExistingBookmark(userId, recipeId);
+        checkExistingBookmark(userId, recipeId); // 이미 사용자가 해당 레시피를 북마크 했는지 확인
 
         RecipeBookmarkEntity bookmark = RecipeBookmarkEntity.builder()
                 .userId(userRepository.findById(userId)
@@ -51,6 +54,24 @@ public class RecipeBookmarkService {
 
         recipeBookmarkRepository.delete(bookmark);
     }
+
+    // 사용자가 북마크한 레시피 전체 목록 조회 (recipeId 조회)
+    public List<RecipeBookmarkListDto> readBookmarkedRecipes(Long userId) {
+        List<RecipeBookmarkEntity> bookmarks = recipeBookmarkRepository.findByUserId_UserId(userId);
+        return bookmarks.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private RecipeBookmarkListDto convertToDto(RecipeBookmarkEntity entity) {
+        return new RecipeBookmarkListDto(entity.getRecipeId().getRecipeId());
+    }
+
+    // 해당 사용자가 해당 레시피를 북마크 했는지
+    public boolean isBookmarked(Long userId, Long recipeId) {
+        return recipeBookmarkRepository.existsByUserId_UserIdAndRecipeId_RecipeId(userId, recipeId);
+    }
+
 
 
 }
