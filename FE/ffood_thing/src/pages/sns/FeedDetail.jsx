@@ -1,40 +1,56 @@
-import React, { useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { Feed, FeedImages, Users, FeedLike, FeedComment } from "./feed_data"
-import FeedCommentSection from "../../components/sns/FeedCommentSection"
-import SearchBar from "../../components/base/SearchBar"
-import "../../styles/sns/FeedDetail.css"
-import { motion, AnimatePresence } from "framer-motion"
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Feed, FeedImages, Users, FeedLike, FeedComment } from "./feed_data";
+import FeedCommentSection from "../../components/sns/FeedCommentSection";
+import SearchBar from "../../components/base/SearchBar";
+import "../../styles/sns/FeedDetail.css";
+import { motion, AnimatePresence } from "framer-motion";
 
 function FeedDetail() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [showComments, setShowComments] = useState(false)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showComments, setShowComments] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   // 현재 피드 데이터
-  const currentFeed = Feed.find((item) => item.feed_id === parseInt(id))
+  const currentFeed = Feed.find((item) => item.feed_id === parseInt(id));
   if (!currentFeed) {
-    return <div>Post not found</div>
+    return <div>Post not found</div>;
   }
 
   // 피드 이미지, 작성자, 좋아요 수, 댓글
-  const images = FeedImages.filter((image) => image.feed_id === currentFeed.feed_id)
-  const author = Users.find((user) => user.user_id === currentFeed.user_id)
-  const likesCount = FeedLike.filter((like) => like.feed_id === currentFeed.feed_id).length
-  const comments = FeedComment.filter((comment) => comment.feed_id === currentFeed.feed_id)
+  const images = FeedImages.filter((image) => image.feed_id === currentFeed.feed_id);
+  const author = Users.find((user) => user.user_id === currentFeed.user_id);
+  const likesCount = FeedLike.filter((like) => like.feed_id === currentFeed.feed_id).length;
+  const comments = FeedComment.filter((comment) => comment.feed_id === currentFeed.feed_id);
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-  }
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
-  }
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
 
   const toggleComments = () => {
-    setShowComments(!showComments)
-  }
+    setShowComments(!showComments);
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      // 삭제 로직 추가
+      console.log("Feed deleted");
+    }
+  };
+
+  const handleEdit = () => {
+    navigate(`/feed/${id}/update`);
+  };
 
   return (
     <div className="base-div">
@@ -53,7 +69,18 @@ function FeedDetail() {
               </div>
               <span className="username">{author?.nickname || "Unknown User"}</span>
             </div>
-            <button className="edit-button">✎</button>
+            <div className="edit-container" style={{ position: 'relative' }}>
+              <button className="edit-button" onClick={toggleDropdown}>
+                <img src="/images/etc-btn.png" alt="Edit Options" />
+              </button>
+              {showDropdown && (
+                <div className="dropdown-menu">
+                  <button className="dropdown-item" onClick={handleEdit}>feed 수정</button>
+                  <button className="dropdown-item" onClick={handleDelete}>feed 삭제</button>
+                </div>
+              )}
+            </div>
+
           </div>
 
           {/* 이미지 Carousel */}
@@ -125,7 +152,7 @@ function FeedDetail() {
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }
 
-export default FeedDetail
+export default FeedDetail;

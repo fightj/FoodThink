@@ -70,6 +70,9 @@
 }
 
 .content {
+  border-radius: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   background-color: #fff;
   padding: 20px;
 }
@@ -245,4 +248,46 @@ hr {
 .username {
   font-size: 2rem; /* 사용자 이름 글자 크기 */
   font-weight: bold; /* 사용자 이름 굵게 */
+}
+.edit-button {
+  width: 40px; /* 버튼 너비 조정 */
+  height: 40px; /* 버튼 높이 조정 */
+  background: none; /* 배경 색상 제거 */
+  border: none; /* 테두리 제거 */
+  cursor: pointer; /* 커서 포인터 */
+  padding: 0; /* 여백 제거 */
+  display: flex; /* 아이콘 가운데 정렬 */
+  align-items: center; /* 아이콘 가운데 정렬 */
+  justify-content: center; /* 아이콘 가운데 정렬 */
+}
+
+.edit-button img {
+  width: 100%; /* 이미지 너비를 버튼 크기에 맞춤 */
+  height: 100%; /* 이미지 높이를 버튼 크기에 맞춤 */
+  object-fit: contain; /* 이미지 비율을 유지하면서 크기 조정 */
+}
+
+
+.dropdown-menu {
+  position: absolute; /* 절대 위치 */
+  top: 40px; /* 버튼 아래에 위치하도록 */
+  right: 0; /* 버튼 오른쪽에 정렬 */
+  background-color: white; /* 흰색 배경 */
+  border: 1px solid #ccc; /* 회색 테두리 */
+  border-radius: 8px; /* 모서리 둥글게 */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  z-index: 10; /* 상위 레이어 */
+  width: 120px; /* 메뉴 너비 */
+  display: flex; /* 메뉴 가운데 정렬 */
+  flex-direction: column; /* 메뉴 가운데 정렬 */
+}
+
+.dropdown-item {
+  padding: 10px; /* 패딩 추가 */
+  cursor: pointer; /* 커서 포인터 */
+  white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0; /* 호버 시 배경색 변경 */
 }
