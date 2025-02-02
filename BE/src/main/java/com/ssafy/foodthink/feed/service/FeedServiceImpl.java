@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -171,10 +172,26 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
-    public void deleteFeedCommentByFeedId(Long feedCommentId) {
+    public void deleteFeedCommentByFeedCommentId(Long feedCommentId) {
         FeedCommentEntity feedCommentEntity = feedCommentRepository.findById(feedCommentId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드 댓글을 찾을 수 없습니다. ID: " + feedCommentId));
         feedCommentRepository.delete(feedCommentEntity);
+    }
+
+    @Override
+    public void updateFeedCommentByFeedCommentId(Long feedCommentId, FeedCommentRequestDto feedCommentRequestDto) {
+        //엔티티 조회
+        FeedCommentEntity feedCommentEntity = feedCommentRepository.findById(feedCommentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 피드 댓글을 찾을 수 없습니다. ID: " + feedCommentId));
+
+        //피드 댓글 작성자만 수정 가능
+        if(!Objects.equals(feedCommentEntity.getUsersEntity().getUserId(), feedCommentRequestDto.getUserId())){
+            throw new RuntimeException("댓글을 작성한 사용자와 다릅니다.");
+        }
+
+        //피드 댓글 수정
+        feedCommentEntity.setContent(feedCommentRequestDto.getContent());
+        feedCommentRepository.save(feedCommentEntity);
     }
 
 

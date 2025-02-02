@@ -78,7 +78,15 @@ public class FeedController {
     //피드 댓글 삭제 기능
     @DeleteMapping("/comment/delete/{feedCommentId}")
     public ResponseEntity<Void> deleteFeedCommentByFeedCommentId(@PathVariable Long feedCommentId){
-        feedService.deleteFeedCommentByFeedId(feedCommentId);
+        feedService.deleteFeedCommentByFeedCommentId(feedCommentId);
         return ResponseEntity.noContent().build();
+    }
+
+    //피드 댓글 수정 기능
+    @PutMapping("/comment/update/{feedCommentId}/{userId}")
+    public ResponseEntity<?> updateFeedComment(@PathVariable Long feedCommentId, @PathVariable Long userId, @RequestBody FeedCommentRequestDto feedCommentRequestDto){
+        feedCommentRequestDto.setUserId(userId);
+        feedService.updateFeedCommentByFeedCommentId(feedCommentId, feedCommentRequestDto);
+        return ResponseEntity.ok("피드 댓글이 성공적으로 수정되었습니다.");
     }
 }

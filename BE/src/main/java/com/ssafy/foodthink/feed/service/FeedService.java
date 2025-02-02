@@ -17,7 +17,8 @@ public interface FeedService {
     void createFeedLikeByFeedId(Long feedId, Long userId);  //피드 좋아요 추가
     void deleteFeedLikeByFeedId(Long feedId, Long userId);  //피드 좋아요 삭제
     void createFeedCommentByFeedId(Long feedId, FeedCommentRequestDto feedCommentRequestDto);  //피드 댓글 추가
-    void deleteFeedCommentByFeedId(Long feedCommentId); //피드 댓글 삭제
+    void deleteFeedCommentByFeedCommentId(Long feedCommentId); //피드 댓글 삭제
+    void updateFeedCommentByFeedCommentId(Long feedCommentId, FeedCommentRequestDto feedCommentRequestDto);  //피드 댓글 수정 기능
 
     //범용적 사용 메소드용
     List<String> readImageUrlsByFeedId(Long id);   //피드별 이미지 조회
