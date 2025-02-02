@@ -1,6 +1,8 @@
 package com.ssafy.foodthink.feed.controller;
 
+import com.ssafy.foodthink.feed.dto.FeedCommentRequestDto;
 import com.ssafy.foodthink.feed.dto.FeedRequestDto;
+import com.ssafy.foodthink.feed.entity.FeedCommentEntity;
 import com.ssafy.foodthink.feed.service.FeedService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -58,9 +60,18 @@ public class FeedController {
         return ResponseEntity.ok("피드 성공적으로 저장되었습니다.");
     }
 
+    //피드 좋아요 삭제 기능
     @DeleteMapping("/like/delete/{feedId}/{userId}")
     public ResponseEntity<Void> deleteFeedLike(@PathVariable Long feedId, @PathVariable Long userId){
         feedService.deleteFeedLikeByFeedId(feedId, userId);
         return ResponseEntity.noContent().build();  //성공시 204 응답(요청 성공나타내지만, 추가 정보가 필요하지 않을때 사용)
+    }
+
+    //피드 댓글 추가 기능
+    @PostMapping("/comment/create/{feedId}/{userId}")
+    public ResponseEntity<?> createFeedComment(@PathVariable Long feedId, @PathVariable Long userId, @RequestBody FeedCommentRequestDto feedCommentRequestDto){
+        feedCommentRequestDto.setUserId(userId);
+        feedService.createFeedCommentByFeedId(feedId, feedCommentRequestDto);
+        return ResponseEntity.ok("피드 댓글이 성공적으로 저장되었습니다.");
     }
 }

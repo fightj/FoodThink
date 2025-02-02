@@ -1,11 +1,14 @@
 package com.ssafy.foodthink.feed.service;
 
 import com.ssafy.foodthink.another.*;
+import com.ssafy.foodthink.feed.dto.FeedCommentRequestDto;
 import com.ssafy.foodthink.feed.dto.FeedRequestDto;
 import com.ssafy.foodthink.feed.dto.FeedResponseDto;
+import com.ssafy.foodthink.feed.entity.FeedCommentEntity;
 import com.ssafy.foodthink.feed.entity.FeedEntity;
 import com.ssafy.foodthink.feed.entity.FeedImageEntity;
 import com.ssafy.foodthink.feed.entity.FeedLikeEntity;
+import com.ssafy.foodthink.feed.repository.FeedCommentRepository;
 import com.ssafy.foodthink.feed.repository.FeedImageRepository;
 import com.ssafy.foodthink.feed.repository.FeedLikeRepository;
 import com.ssafy.foodthink.feed.repository.FeedRepository;
@@ -30,8 +33,9 @@ public class FeedServiceImpl implements FeedService{
     private final S3Service s3Service;
     private final FeedImageRepository feedImageRepository;
     private final FeedLikeRepository feedLikeRepository;
+    private final FeedCommentRepository feedCommentRepository;
 
-    public FeedServiceImpl(FeedRepository feedRepository, UsersRepository usersRepository, UserRecipeRepository userRecipeRepository, CrawlingRecipeRepository crawlingRecipeRepository, S3Service s3Service, FeedImageRepository feedImageRepository, FeedLikeRepository feedLikeRepository) {
+    public FeedServiceImpl(FeedRepository feedRepository, UsersRepository usersRepository, UserRecipeRepository userRecipeRepository, CrawlingRecipeRepository crawlingRecipeRepository, S3Service s3Service, FeedImageRepository feedImageRepository, FeedLikeRepository feedLikeRepository, FeedCommentRepository feedCommentRepository) {
         this.feedRepository = feedRepository;
         this.usersRepository = usersRepository;
         this.userRecipeRepository = userRecipeRepository;
@@ -39,6 +43,7 @@ public class FeedServiceImpl implements FeedService{
         this.s3Service = s3Service;
         this.feedImageRepository = feedImageRepository;
         this.feedLikeRepository = feedLikeRepository;
+        this.feedCommentRepository = feedCommentRepository;
     }
 
     @Override
@@ -147,6 +152,24 @@ public class FeedServiceImpl implements FeedService{
         FeedLikeEntity feedLikeEntity = feedLikeRepository.findByFeedEntity_IdAndUsersEntity_userId(feedId, userId);
         feedLikeRepository.delete(feedLikeEntity);
     }
+
+    @Override
+    public void createFeedCommentByFeedId(Long feedId, FeedCommentRequestDto feedCommentRequestDto) {
+        //엔티티 조회
+        FeedEntity feedEntity = feedRepository.findById(feedId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 피드를 찾을 수 없습니다. ID: " + feedId));
+        UsersEntity usersEntity = usersRepository.findUsersByUserId(feedCommentRequestDto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. ID: " + feedCommentRequestDto.getUserId()));
+
+        //댓글 저장
+        FeedCommentEntity feedCommentEntity = FeedCommentEntity.builder()
+                .content(feedCommentRequestDto.getContent())
+                .usersEntity(usersEntity)
+                .feedEntity(feedEntity)
+                .build();
+        feedCommentRepository.save(feedCommentEntity);
+    }
+
 
     @Override
     public List<FeedResponseDto> readFeedsByUserIdAndLogIn(Long searchUserId, Long logInUserId) {

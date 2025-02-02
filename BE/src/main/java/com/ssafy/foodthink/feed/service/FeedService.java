@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.feed.service;
 
+import com.ssafy.foodthink.feed.dto.FeedCommentRequestDto;
 import com.ssafy.foodthink.feed.dto.FeedRequestDto;
 import com.ssafy.foodthink.feed.dto.FeedResponseDto;
 import com.ssafy.foodthink.feed.entity.FeedEntity;
@@ -15,6 +16,7 @@ public interface FeedService {
     void deleteFeedByFeedId(Long feedId);
     void createFeedLikeByFeedId(Long feedId, Long userId);  //피드 좋아요 추가
     void deleteFeedLikeByFeedId(Long feedId, Long userId);
+    void createFeedCommentByFeedId(Long feedId, FeedCommentRequestDto feedCommentRequestDto);
 
     //범용적 사용 메소드용
     List<String> readImageUrlsByFeedId(Long id);   //피드별 이미지 조회
