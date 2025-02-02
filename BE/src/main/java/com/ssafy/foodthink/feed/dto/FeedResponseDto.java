@@ -23,5 +23,5 @@ public class FeedResponseDto {
     private Long crawlingRecipeId;
     private List<String> images;
     private boolean isLike;
-
+    private List<FeedCommentResponseDto> feedCommentResponseDtos;
 }
