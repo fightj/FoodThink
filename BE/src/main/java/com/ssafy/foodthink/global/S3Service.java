@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -48,5 +49,24 @@ public class S3Service {
     // 파일 이름 생성
     private String generateFileName(MultipartFile file) {
         return UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+    }
+
+    // S3에서 파일 삭제
+    public void deleteFileFromS3(String fileUrl) {
+        try {
+            // 파일명 추출 (URL에서 파일명만 가져오기)
+            String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+
+            // S3에서 삭제 요청
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileName)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+            System.out.println("S3 파일 삭제 완료: " + fileName);
+        } catch (Exception e) {
+            System.err.println("S3 파일 삭제 중 오류 발생: " + e.getMessage());
+        }
     }
 }

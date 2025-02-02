@@ -241,6 +241,7 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
+    @Transactional
     public void deleteFeedByFeedId(Long feedId, Long userId) {
         FeedEntity feedEntity = feedRepository.findById(feedId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드가 존재하지 않습니다."));
@@ -250,6 +251,15 @@ public class FeedServiceImpl implements FeedService{
             throw new AccessDeniedException("본인 피드만 삭제할 수 있습니다.");
         }
 
+        // S3에 업로드된 파일 삭제 (피드에 저장된 이미지 URL 리스트 가져오기)
+        List<FeedImageEntity> feedImageEntities = feedEntity.getImages(); // 가정: 이미지 URL을 저장하는 필드가 있음
+        if (feedImageEntities!= null) {
+            for (FeedImageEntity feedImageEntity : feedImageEntities) {
+                s3Service.deleteFileFromS3(feedImageEntity.getImageUrl());
+            }
+        }
+
+        //DB 삭제
         feedRepository.delete(feedEntity);
     }
 

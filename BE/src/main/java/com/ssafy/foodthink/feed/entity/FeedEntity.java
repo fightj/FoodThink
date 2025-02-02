@@ -48,4 +48,10 @@ public class FeedEntity {
     //cascade 설정을 위해 좋아요 엔티티와의 관계 설정
     @OneToMany(mappedBy = "feedEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FeedLikeEntity> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "feedEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedImageEntity> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "feedEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedCommentEntity> comments = new ArrayList<>();
 }
