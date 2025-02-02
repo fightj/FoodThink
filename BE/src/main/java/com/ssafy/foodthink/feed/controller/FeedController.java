@@ -4,7 +4,6 @@ import com.ssafy.foodthink.feed.dto.FeedCommentRequestDto;
 import com.ssafy.foodthink.feed.dto.FeedRequestDto;
 import com.ssafy.foodthink.feed.service.FeedService;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -146,5 +145,13 @@ public class FeedController {
     @GetMapping("/comment/read/{feedId}")
     public ResponseEntity<?> readFeedCommentsByFeedId(@PathVariable Long feedId){
         return ResponseEntity.ok(feedService.readFeedCommentsByFeedId(feedId));
+    }
+
+    //피드 최신순 조회(페이지네이션)
+    @GetMapping("/read/latest")
+    public ResponseEntity<?> readFeedsOrderByWriteTime(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size){
+        return ResponseEntity.ok(feedService.readFeedsOrderByWriteTime(page, size));
     }
 }

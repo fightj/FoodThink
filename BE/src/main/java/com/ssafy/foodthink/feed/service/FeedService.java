@@ -1,10 +1,8 @@
 package com.ssafy.foodthink.feed.service;
 
-import com.ssafy.foodthink.feed.dto.FeedCommentRequestDto;
-import com.ssafy.foodthink.feed.dto.FeedCommentResponseDto;
-import com.ssafy.foodthink.feed.dto.FeedRequestDto;
-import com.ssafy.foodthink.feed.dto.FeedResponseDto;
+import com.ssafy.foodthink.feed.dto.*;
 import com.ssafy.foodthink.feed.entity.FeedEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.AccessDeniedException;
@@ -18,6 +16,7 @@ public interface FeedService {
     List<FeedResponseDto> readFeedsByUserId(Long searchUserId, Long logInUserId);   //로그인한 유저일 경우 좋아요했는지 확인가능
     void deleteFeed(Long feedId, Long userId);   //피드 삭제
     void updateFeed(Long feedId, Long userId, FeedRequestDto feedRequestDto, List<MultipartFile> images);  //피드 수정
+    CustomPageResponseDto<FeedSummaryResponseDto> readFeedsOrderByWriteTime(int page, int size);
     void createFeedLikeByFeedId(Long feedId, Long userId);  //피드 좋아요 추가
     void deleteFeedLikeByFeedId(Long feedId, Long userId);  //피드 좋아요 삭제
     void createFeedCommentByFeedId(Long feedId, FeedCommentRequestDto feedCommentRequestDto);  //피드 댓글 추가

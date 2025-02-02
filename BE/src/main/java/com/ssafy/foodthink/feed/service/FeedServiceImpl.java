@@ -1,9 +1,6 @@
 package com.ssafy.foodthink.feed.service;
 
-import com.ssafy.foodthink.feed.dto.FeedCommentRequestDto;
-import com.ssafy.foodthink.feed.dto.FeedCommentResponseDto;
-import com.ssafy.foodthink.feed.dto.FeedRequestDto;
-import com.ssafy.foodthink.feed.dto.FeedResponseDto;
+import com.ssafy.foodthink.feed.dto.*;
 import com.ssafy.foodthink.feed.entity.FeedCommentEntity;
 import com.ssafy.foodthink.feed.entity.FeedEntity;
 import com.ssafy.foodthink.feed.entity.FeedImageEntity;
@@ -18,6 +15,9 @@ import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -316,6 +316,22 @@ public class FeedServiceImpl implements FeedService{
 
             feedImageRepository.saveAll(newFeedImageEntities);
         }
+    }
+
+    @Override
+    public CustomPageResponseDto<FeedSummaryResponseDto> readFeedsOrderByWriteTime(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<FeedEntity> feedEntities = feedRepository.findAllOrderByWriteTime(pageable);
+
+        Page<FeedSummaryResponseDto> feedDtos = feedEntities.map(feed -> FeedSummaryResponseDto.builder()
+                .id(feed.getId())
+                .image(feed.getImages().get(0).getImageUrl())
+                .imageSize(feed.getImages().size())
+                .userNickname(feed.getUserEntity().getNickname())
+                .userImage(feed.getUserEntity().getImage())
+                .build());
+
+        return new CustomPageResponseDto<>(feedDtos);
     }
 
 
