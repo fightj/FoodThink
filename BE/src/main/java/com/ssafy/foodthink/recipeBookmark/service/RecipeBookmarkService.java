@@ -34,11 +34,23 @@ public class RecipeBookmarkService {
 
         recipeBookmarkRepository.save(bookmark);
     }
+
     // 북마크 확인
     private void checkExistingBookmark(Long userId, Long recipeId) {
         if (recipeBookmarkRepository.existsByUserId_UserIdAndRecipeId_RecipeId(userId, recipeId)) {
             throw new AleadyExistsException("이미 북마크된 레시피입니다");
         }
     }
+
+    // 북마크 삭제
+    @Transactional
+    public void deleteBookmark(Long userId, Long recipeId) {
+        RecipeBookmarkEntity bookmark = recipeBookmarkRepository
+                .findByUserId_UserIdAndRecipeId_RecipeId(userId, recipeId)
+                .orElseThrow(() -> new RuntimeException("북마크를 찾을 수 없습니다"));
+
+        recipeBookmarkRepository.delete(bookmark);
+    }
+
 
 }

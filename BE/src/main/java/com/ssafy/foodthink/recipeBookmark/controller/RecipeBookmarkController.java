@@ -28,4 +28,15 @@ public class RecipeBookmarkController {
         return ResponseEntity.status(HttpStatus.CREATED).body("북마크가 추가되었습니다");
     }
 
+    // 북마크 삭제
+    @DeleteMapping("/delete/{recipeId}")
+    public ResponseEntity<String> deleteBookmark(@RequestHeader("Authorization") String token,@PathVariable Long recipeId) {
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        recipeBookmarkService.deleteBookmark(userId, recipeId);
+
+        return ResponseEntity.ok("북마크가 삭제되었습니다");
+    }
+
 }
