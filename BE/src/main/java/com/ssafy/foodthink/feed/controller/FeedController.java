@@ -70,11 +70,23 @@ public class FeedController {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
 
-        //피드 사용자 확인
-        feedService.deleteFeedByFeedId(feedId, userId);
+        feedService.deleteFeed(feedId, userId);
 
         //삭제 응답(204)
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/update/{feedId}")
+    public ResponseEntity<?> updateFeedByFeedId(@RequestHeader("Authorization") String token,
+                                                @PathVariable Long feedId,
+                                                @RequestPart FeedRequestDto feedRequestDto,
+                                                @RequestPart("images") List<MultipartFile> images){
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        feedService.updateFeed(feedId, userId, feedRequestDto, images);
+
+        return ResponseEntity.ok("피드가 정상적으로 수정되었습니다.");
     }
 
     //피드 좋아요 추가 기능

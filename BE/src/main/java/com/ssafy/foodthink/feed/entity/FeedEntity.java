@@ -37,11 +37,11 @@ public class FeedEntity {
     @CreatedDate
     private LocalDateTime writeTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity userEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "recipeId", nullable = true, referencedColumnName = "recipeId")
     private RecipeEntity recipeEntity;
 

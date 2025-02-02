@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -242,7 +243,7 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     @Transactional
-    public void deleteFeedByFeedId(Long feedId, Long userId) {
+    public void deleteFeed(Long feedId, Long userId) {
         FeedEntity feedEntity = feedRepository.findById(feedId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드가 존재하지 않습니다."));
 
@@ -262,6 +263,61 @@ public class FeedServiceImpl implements FeedService{
         //DB 삭제
         feedRepository.delete(feedEntity);
     }
+
+    @Override
+    @Transactional
+    public void updateFeed(Long feedId, Long userId, FeedRequestDto feedRequestDto, List<MultipartFile> images) {
+        FeedEntity feedEntity = feedRepository.findById(feedId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 피드입니다. ID: " + feedId));
+
+        // 피드 작성자인지 확인
+        if (!feedEntity.getUserEntity().getUserId().equals(userId)) {
+            throw new AccessDeniedException("본인 피드만 수정할 수 있습니다.");
+        }
+
+        RecipeEntity recipe = (feedRequestDto.getRecipeId() != null) ?
+                recipeRepository.findById(feedRequestDto.getRecipeId())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."))
+                : null;
+
+        // 선택적 업데이트
+        Optional.ofNullable(feedRequestDto.getFoodName()).ifPresent(feedEntity::setFoodName);
+        Optional.ofNullable(feedRequestDto.getContent()).ifPresent(feedEntity::setContent);
+        Optional.ofNullable(recipe).ifPresent(feedEntity::setRecipeEntity);
+
+        // 기존 이미지 삭제
+        List<FeedImageEntity> feedImageEntities = feedImageRepository.findByFeedEntity_Id(feedId);
+
+        if (feedImageEntities != null && !feedImageEntities.isEmpty()) {
+            for (FeedImageEntity feedImageEntity : feedImageEntities) {
+                s3Service.deleteFileFromS3(feedImageEntity.getImageUrl());
+            }
+
+            feedImageRepository.deleteAll(feedImageEntities);
+        }
+
+        // 새로운 이미지 업로드
+        if (images != null && !images.isEmpty()) {
+            List<FeedImageEntity> newFeedImageEntities = new ArrayList<>();
+            int sequence = 1;
+
+            for (MultipartFile image : images) {
+                if (image != null && !image.isEmpty()) {
+                    String imageUrl = s3Service.uploadFile(image);
+                    FeedImageEntity feedImageEntity = FeedImageEntity.builder()
+                            .imageUrl(imageUrl)
+                            .sequence(sequence++)
+                            .feedEntity(feedEntity)
+                            .build();
+
+                    newFeedImageEntities.add(feedImageEntity);
+                }
+            }
+
+            feedImageRepository.saveAll(newFeedImageEntities);
+        }
+    }
+
 
     @Override
     public List<String> readImageUrlsByFeedId(Long id) {
