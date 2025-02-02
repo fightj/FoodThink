@@ -2,6 +2,7 @@ package com.ssafy.foodthink.feed.service;
 
 import com.ssafy.foodthink.another.*;
 import com.ssafy.foodthink.feed.dto.FeedCommentRequestDto;
+import com.ssafy.foodthink.feed.dto.FeedCommentResponseDto;
 import com.ssafy.foodthink.feed.dto.FeedRequestDto;
 import com.ssafy.foodthink.feed.dto.FeedResponseDto;
 import com.ssafy.foodthink.feed.entity.FeedCommentEntity;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -100,14 +102,16 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public FeedResponseDto readFeedById(Long id) {
-        FeedResponseDto feedResponseDto;
 
         FeedEntity feedEntity = feedRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드를 찾을 수 없습니다. ID: " + id));
 
         List<String> imageUrls = readImageUrlsByFeedId(feedEntity.getId());
-
-        return createFeedResponseDtoByBuilder(feedEntity, imageUrls);
+        FeedResponseDto feedResponseDto = createFeedResponseDtoByBuilder(feedEntity, imageUrls);
+        //댓글 조회
+        List<FeedCommentResponseDto> feedCommentResponseDtos = readFeedCommentsByFeedId(id);
+        feedResponseDto.setFeedCommentResponseDtos(feedCommentResponseDtos);
+        return feedResponseDto;
     }
 
     @Override
@@ -192,6 +196,15 @@ public class FeedServiceImpl implements FeedService{
         //피드 댓글 수정
         feedCommentEntity.setContent(feedCommentRequestDto.getContent());
         feedCommentRepository.save(feedCommentEntity);
+    }
+
+    @Override
+    public List<FeedCommentResponseDto> readFeedCommentsByFeedId(Long feedId) {
+        List<FeedCommentEntity> feedCommentEntities = feedCommentRepository.findAllByFeedEntity_IdOrderByFeedEntity_writeTime(feedId);
+
+        return feedCommentEntities.stream()
+                .map(FeedCommentResponseDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
 

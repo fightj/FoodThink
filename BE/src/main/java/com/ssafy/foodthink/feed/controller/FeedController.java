@@ -89,4 +89,10 @@ public class FeedController {
         feedService.updateFeedCommentByFeedCommentId(feedCommentId, feedCommentRequestDto);
         return ResponseEntity.ok("피드 댓글이 성공적으로 수정되었습니다.");
     }
+
+    //피드별 댓글 조회 기능
+    @GetMapping("/comment/read/{feedId}")
+    public ResponseEntity<?> readFeedCommentsByFeedId(@PathVariable Long feedId){
+        return ResponseEntity.ok(feedService.readFeedCommentsByFeedId(feedId));
+    }
 }
