@@ -1,6 +1,6 @@
 package com.ssafy.foodthink.feed.entity;
 
-import com.ssafy.foodthink.another.UsersEntity;
+import com.ssafy.foodthink.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +30,7 @@ public class FeedLikeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UsersEntity usersEntity;
+    private UserEntity userEntity;
 
     @Column(name = "write_time")
     @CreatedDate

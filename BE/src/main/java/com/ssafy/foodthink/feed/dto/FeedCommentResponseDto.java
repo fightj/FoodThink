@@ -21,7 +21,7 @@ public class FeedCommentResponseDto {
         return FeedCommentResponseDto.builder()
                 .id(feedCommentEntity.getId())
                 .content(feedCommentEntity.getContent())
-                .username(feedCommentEntity.getUsersEntity().getUsername())
+                .username(feedCommentEntity.getUserEntity().getNickname())
                 .writeTime(feedCommentEntity.getWriteTime())
                 .build();
     }

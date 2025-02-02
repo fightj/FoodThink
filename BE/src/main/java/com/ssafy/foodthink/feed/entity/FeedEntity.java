@@ -1,8 +1,7 @@
 package com.ssafy.foodthink.feed.entity;
 
-import com.ssafy.foodthink.another.CrawlingRecipe;
-import com.ssafy.foodthink.another.UserRecipe;
-import com.ssafy.foodthink.another.UsersEntity;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
+import com.ssafy.foodthink.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,15 +39,11 @@ public class FeedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UsersEntity usersEntity;
+    private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_recipe_id", nullable = true, referencedColumnName = "recipe_id")
-    private UserRecipe userRecipe;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "crawling_recipe_id", nullable = true, referencedColumnName = "recipe_id")
-    private CrawlingRecipe crawlingRecipe;
+    @JoinColumn(name = "recipeId", nullable = true, referencedColumnName = "recipeId")
+    private RecipeEntity recipeEntity;
 
     //cascade 설정을 위해 좋아요 엔티티와의 관계 설정
     @OneToMany(mappedBy = "feedEntity", cascade = CascadeType.ALL, orphanRemoval = true)
