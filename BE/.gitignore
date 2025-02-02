@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# application.properties 제외
+/application.properties
