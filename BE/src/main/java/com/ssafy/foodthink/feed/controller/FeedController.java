@@ -74,4 +74,11 @@ public class FeedController {
         feedService.createFeedCommentByFeedId(feedId, feedCommentRequestDto);
         return ResponseEntity.ok("피드 댓글이 성공적으로 저장되었습니다.");
     }
+
+    //피드 댓글 삭제 기능
+    @DeleteMapping("/comment/delete/{feedCommentId}")
+    public ResponseEntity<Void> deleteFeedCommentByFeedCommentId(@PathVariable Long feedCommentId){
+        feedService.deleteFeedCommentByFeedId(feedCommentId);
+        return ResponseEntity.noContent().build();
+    }
 }

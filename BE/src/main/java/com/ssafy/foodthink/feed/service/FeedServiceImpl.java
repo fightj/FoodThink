@@ -170,6 +170,13 @@ public class FeedServiceImpl implements FeedService{
         feedCommentRepository.save(feedCommentEntity);
     }
 
+    @Override
+    public void deleteFeedCommentByFeedId(Long feedCommentId) {
+        FeedCommentEntity feedCommentEntity = feedCommentRepository.findById(feedCommentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 피드 댓글을 찾을 수 없습니다. ID: " + feedCommentId));
+        feedCommentRepository.delete(feedCommentEntity);
+    }
+
 
     @Override
     public List<FeedResponseDto> readFeedsByUserIdAndLogIn(Long searchUserId, Long logInUserId) {

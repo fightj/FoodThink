@@ -15,8 +15,9 @@ public interface FeedService {
     List<FeedResponseDto> readFeedsByUserIdAndLogIn(Long searchUserId, Long logInUserId);   //로그인한 유저일 경우 좋아요했는지 확인가능
     void deleteFeedByFeedId(Long feedId);
     void createFeedLikeByFeedId(Long feedId, Long userId);  //피드 좋아요 추가
-    void deleteFeedLikeByFeedId(Long feedId, Long userId);
-    void createFeedCommentByFeedId(Long feedId, FeedCommentRequestDto feedCommentRequestDto);
+    void deleteFeedLikeByFeedId(Long feedId, Long userId);  //피드 좋아요 삭제
+    void createFeedCommentByFeedId(Long feedId, FeedCommentRequestDto feedCommentRequestDto);  //피드 댓글 추가
+    void deleteFeedCommentByFeedId(Long feedCommentId); //피드 댓글 삭제
 
     //범용적 사용 메소드용
     List<String> readImageUrlsByFeedId(Long id);   //피드별 이미지 조회
