@@ -1,19 +1,146 @@
 .comment-div {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 20px;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1); /* 그림자는 여전히 남아있음 */
-    background-color: antiquewhite;
-    min-height: 70vh;
-    max-height: 80vh; /* 댓글 영역의 최대 높이를 더 크게 설정 */
-    overflow-y: auto;
-    margin-left: 20px; /* 왼쪽 마진 */
-    margin-right: 20px; /* 오른쪽 마진 */
-    z-index: 10; /* carousel 이동 버튼보다 위로 오도록 설정 */
-    display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
-  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  border-radius: 50px 50px 0 0; /* 아래 두 꼭지점만 둥글게 설정 */
-  }
-  
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+  background-color: rgb(45, 45, 45);
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  margin-left: 20px;
+  margin-right: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 50px 50px 0 0;
+}
+
+.comment-div h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.comment {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.profile-image-com {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.comment-author-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.comment-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.comment-author-name {
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.comment-content {
+  font-size: 1rem;
+  color: #ffffff;
+  margin: 0;
+}
+
+.comment-time {
+  font-size: 0.8rem;
+  color: #ffffff;
+  margin-top: 5px;
+  text-align: right;
+}
+
+.no-comments {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.close-button-image {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 20;
+}
+
+.close-button-image:hover {
+  transform: rotate(90deg);
+}
+
+.comment-input-wrapper {
+  display: flex;
+  width: 100%;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-input {
+  width: 80%;
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #333333;
+}
+
+.add-comment-btn {
+  padding: 10px 20px;
+  background-color: #e3c607;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.add-comment-btn:hover {
+  background-color: #45a049;
+}
+
+.add-comment-btn-image {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btn-background {
+  width: 50px;
+  background-color: #ff7f00; /* 주황색 배경 */
+  border-radius: 12px; /* 모서리 둥글게 */
+  display: inline-block; /* 이미지를 감싸는 직사각형 모양 */
+  padding: 10px; /* 버튼 내부 여백 */
+  cursor: pointer; /* 클릭 가능한 버튼처럼 보이게 */
+  transition: transform 0.2s ease; /* 마우스 호버 시 확대 효과 */
+}
+
+.add-comment-btn-image:hover {
+  transform: scale(1.1); /* 마우스 호버 시 살짝 확대 효과 */
+}

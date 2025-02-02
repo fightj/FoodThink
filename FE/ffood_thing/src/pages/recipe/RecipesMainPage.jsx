@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../../styles/recipe/RecipesMainPage.css" // styles 폴더에서 가져옴
-
-
+import SearchBar from "../../components/base/SearchBar"
 
 const RecipesMainPage = () => {
   const navigate = useNavigate()
@@ -11,39 +10,31 @@ const RecipesMainPage = () => {
   const exampleRecipes = [
     {
       id: 1,
-      title: "Chocolate Cake",
-      author: "John Doe",
-      image: "https://via.placeholder.com/300?text=Chocolate+Cake",
+      title: "스테이크 덮밥",
+      author: "칼잇나",
+      image: "https://via.placeholder.com/300?text=Steak+Donburi",
+      bookmarks: 27,
     },
     {
       id: 2,
-      title: "Pasta Carbonara",
-      author: "Jane Smith",
-      image: "https://via.placeholder.com/300?text=Pasta+Carbonara",
+      title: "레시피 제목",
+      author: "작성자",
+      image: "https://via.placeholder.com/300?text=Recipe+Title",
+      bookmarks: 0,
     },
     {
       id: 3,
-      title: "Caesar Salad",
-      author: "Alice Johnson",
-      image: "https://via.placeholder.com/300?text=Caesar+Salad",
+      title: "레시피 제목",
+      author: "작성자",
+      image: "https://via.placeholder.com/300?text=Recipe+Title",
+      bookmarks: 0,
     },
     {
       id: 4,
-      title: "Tiramisu",
-      author: "Bob Brown",
-      image: "https://via.placeholder.com/300?text=Tiramisu",
-    },
-    {
-      id: 5,
-      title: "Vegetable Stir Fry",
-      author: "Chris Lee",
-      image: "https://via.placeholder.com/300?text=Vegetable+Stir+Fry",
-    },
-    {
-      id: 6,
-      title: "Homemade Pizza",
-      author: "Sarah Kim",
-      image: "https://via.placeholder.com/300?text=Homemade+Pizza",
+      title: "레시피 제목",
+      author: "작성자",
+      image: "https://via.placeholder.com/300?text=Recipe+Title",
+      bookmarks: 0,
     },
   ]
 
@@ -57,16 +48,34 @@ const RecipesMainPage = () => {
 
   return (
     <div className="base-div">
+      <SearchBar />
       <div className="card-div">
         <div className="recipes-main-page">
-          <h1>Recipes</h1>
+          <div className="search-bar">
+            <input type="text" placeholder="search text" />
+          </div>
+          <div className="categories">
+            <span>종류별</span>
+            <span>재료별</span>
+            {/* Add more categories as needed */}
+          </div>
+          <div className="filters">
+            <span>전체</span>
+            <span>육류</span>
+            <span>채소류</span>
+            {/* Add more filters as needed */}
+          </div>
+          <div className="recipe-count">
+            <p>개인 레시피가 있어요</p>
+          </div>
           <div className="recipe-grid">
             {recipes.map((recipe) => (
               <div key={recipe.id} className="recipe-card">
                 <img src={recipe.image} alt={recipe.title} className="recipe-image" />
                 <div className="recipe-info">
                   <h2>{recipe.title}</h2>
-                  <p>By: {recipe.author}</p>
+                  <p>{recipe.author}</p>
+                  <p>북마크 수: {recipe.bookmarks}</p>
                   <button className="detail-button" onClick={() => handleDetailClick(recipe.id)}>
                     View Details
                   </button>

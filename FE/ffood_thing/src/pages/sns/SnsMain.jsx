@@ -61,7 +61,7 @@ function SnsMain() {
                         <div className="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
                           {/* 유저의 프로필 이미지와 이름 추가 */}
                           <div className="user-info">
-                            <img src={user?.image} alt={user?.nickname} className="profile-image" />
+                            <img src={user?.image} alt={user?.nickname} className="profile-image-main" />
                             <span>{user?.nickname}</span>
                           </div>
                         </div>
