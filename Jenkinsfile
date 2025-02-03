@@ -168,7 +168,7 @@ pipeline {
             steps {
                 script {
                     // Nginx Docker 이미지 빌드
-                    sh 'docker pull ${DOCKER_IMAGE_NAME}/my-nginx-container'
+//                     sh 'docker pull ${DOCKER_IMAGE_NAME}/my-nginx-container'
                     sh 'docker build -f nginx/Dockerfile -t my-nginx-container .'
                 }
             }
@@ -193,6 +193,15 @@ pipeline {
                 }
             }
         }
+
+         stage('Stop and Remove Containers') {
+              steps {
+                   script {
+                        // 기존 컨테이너가 있으면 강제로 종료하고 제거
+                        sh 'docker rm -f my-backend-container my-frontend-container  my-nginx-container  || true'
+                   }
+              }
+         }
 
         stage('Deploy') {
             steps {
