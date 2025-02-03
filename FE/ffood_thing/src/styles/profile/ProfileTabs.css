@@ -2,11 +2,11 @@
 .tab-container {
   display: flex;
   justify-content: space-around;
-  padding: 10px 0;
   background: #fff;
-  border-bottom: 1px solid #ddd;
   width: 100%;
   flex-wrap: nowrap; /* 줄바꿈 방지 */
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
 }
 
 /* 탭 버튼 */

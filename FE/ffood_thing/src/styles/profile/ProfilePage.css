@@ -14,7 +14,11 @@
 .tab-content {
   width: 100%;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
+  background: #fff;
+  width: 100%;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
   /* 모달 배경 (어두운 효과) */
@@ -27,6 +31,3 @@
     background: rgba(0, 0, 0, 0.5); /* 반투명 어두운 배경 */
     z-index: 999; /* 모달보다 낮은 z-index */
 }
-
-
-
