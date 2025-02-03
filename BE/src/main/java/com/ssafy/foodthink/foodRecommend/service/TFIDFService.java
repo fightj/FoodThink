@@ -6,12 +6,14 @@ import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TFIDFService {
@@ -30,9 +32,9 @@ public class TFIDFService {
         Map<String, Double> idfValues = calculateIdf(documents);
 
         recipes.forEach(recipe -> {
-            List<String> features = getRecipeFeatures(recipe);
-            Map<String, Double> tfidfVector = calculateTfIdfVector(features, documents, idfValues);
-            saveTfIdfVector(recipe, tfidfVector);
+            List<String> features = getRecipeFeatures(recipe); // 특성 추출
+            Map<String, Double> tfidfVector = calculateTfIdfVector(features, documents, idfValues); // TF-IDF 계산
+            saveTfIdfVector(recipe, tfidfVector); // DB에 저장
         });
     }
 
@@ -52,18 +54,38 @@ public class TFIDFService {
     }
 
     // 각 특성에 대해 TF-IDF 계산, 해당 레시피에서 각 특성의 중요도를 나타냄
-    private Map<String,Double> calculateTfIdfVector(List<String> features, List<List<String>> docs, Map<String, Double> idf){
+    private Map<String, Double> calculateTfIdfVector(List<String> features,
+                                                     List<List<String>> docs,
+                                                     Map<String, Double> idf) {
+
+        // TF 계산
         Map<String, Long> tf = features.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-        return tf.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e->(e.getValue()/(double) features.size()) * idf.getOrDefault(e.getKey(), 0.0)));
+
+        // TF-IDF 계산
+        Map<String, Double> tfidf = tf.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> (e.getValue() / (double) features.size()) * idf.getOrDefault(e.getKey(), 0.0)
+                ));
+
+        // L2 정규화
+        double l2Norm = Math.sqrt(tfidf.values().stream()
+                .mapToDouble(v -> v * v)
+                .sum());
+
+        return tfidf.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue() / l2Norm
+                ));
     }
+
 
     // 레시피 특성 추출
     private List<String> getRecipeFeatures(RecipeEntity recipe) {
         List<String> features = new ArrayList<>();
-        features.add(recipe.getCateType()); // 레시피의 종류
-        features.add(recipe.getCateMainIngre()); // 주재료
+        //features.add(recipe.getCateType()); // 레시피의 종류 -> 오로지 재료로만 하는게 나을듯
         recipe.getIngredients().forEach(ingredient ->
                 features.add(ingredient.getIngreName()) // 모든 재료
         );
@@ -71,21 +93,15 @@ public class TFIDFService {
     }
 
     // 각 레시피의 모든 특성에 대한 TF-IDF 값 저장
-    private void saveTfIdfVector(RecipeEntity recipe, Map<String, Double> tfidfVector){
-        // 기존 TF-IDF 값 삭제
-        recipeTfIdfRepository.deleteByRecipe(recipe);
-
-        // 새로운 TF-IDF 값 저장
+    private void saveTfIdfVector(RecipeEntity recipe, Map<String, Double> tfidfVector) {
         tfidfVector.forEach((feature, value) -> {
-            RecipeTfIdf recipeTfIdf = new RecipeTfIdf();
-            recipeTfIdf.setRecipe(recipe);
-            recipeTfIdf.setFeature(feature);
-            recipeTfIdf.setTfIdfValue(value);
-            recipeTfIdfRepository.save(recipeTfIdf);
-
+            recipeTfIdfRepository.upsertTfIdf( // 해당 레코드가 존재하면 업데이트하고, 존재하지 않으면 새로 삽입
+                    recipe.getRecipeId(),
+                    feature,
+                    value
+            );
         });
-
-        recipeTfIdfRepository.flush();
     }
+
 
 }
