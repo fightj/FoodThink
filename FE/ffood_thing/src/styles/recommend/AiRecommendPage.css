@@ -23,7 +23,7 @@
   width: auto;
   position: relative;
   margin-bottom: 20px;
-  order: -1; /* 📌 모든 화면에서 항상 최상단 */
+  order: -1; /* 모든 화면에서 항상 최상단 */
 }
 
 /* AI 캐릭터 + 선택지 정렬 (데스크톱: 가로 배치, 모바일: 세로 배치) */
@@ -35,7 +35,7 @@
   gap: 20px;
   width: 100%;
   max-width: 800px;
-  flex-direction: row; /* 📌 기본적으로 가로 배치 */
+  flex-direction: row; /* 기본적으로 가로 배치 */
 }
 
 /* AI 캐릭터 */
@@ -43,7 +43,7 @@
   width: 200px;
   height: 200px;
   object-fit: contain;
-  order: 2; /* 📌 데스크톱에서는 두 번째 선택지 앞 */
+  order: 2; /* 데스크톱에서는 두 번째 선택지 앞 */
 }
 
 /* 선택 카드 */
@@ -62,12 +62,12 @@
 
 /* 첫 번째 선택지 */
 .choice-card:first-child {
-  order: 1; /* 📌 데스크톱에서 AI 그림보다 앞에 배치 */
+  order: 1; /* 데스크톱에서 AI 그림보다 앞에 배치 */
 }
 
 /* 두 번째 선택지 */
 .choice-card:last-child {
-  order: 3; /* 📌 데스크톱에서는 AI 그림 뒤 */
+  order: 3; /* 데스크톱에서는 AI 그림 뒤 */
 }
 
 .choice-card:hover {
@@ -100,10 +100,10 @@
   transform: translateY(-2px);
 }
 
-/* 📌 반응형: 모바일에서는 세로 배치 */
+/* 반응형: 모바일에서는 세로 배치 */
 @media (max-width: 768px) {
   .ai-content {
-      flex-direction: column; /* 📌 모바일에서는 세로 정렬 */
+      flex-direction: column; /* 모바일에서는 세로 정렬 */
       align-items: center;
   }
 
@@ -112,19 +112,19 @@
       padding: 12px 20px;
       max-width: 90%;
       margin-bottom: 15px;
-      order: -1; /* 📌 모바일에서도 항상 최상단 */
+      order: -1; /* 모바일에서도 항상 최상단 */
   }
 
   .ai-image {
-      order: 1; /* 📌 모바일에서는 말풍선 아래 */
+      order: 1; /* 모바일에서는 말풍선 아래 */
   }
 
   .choice-card:first-child {
-      order: 2; /* 📌 첫 번째 선택지 */
+      order: 2; /* 첫 번째 선택지 */
   }
 
   .choice-card:last-child {
-      order: 3; /* 📌 두 번째 선택지 */
+      order: 3; /* 두 번째 선택지 */
   }
 }
 
