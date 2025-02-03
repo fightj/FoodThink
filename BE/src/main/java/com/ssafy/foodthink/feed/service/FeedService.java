@@ -3,6 +3,7 @@ package com.ssafy.foodthink.feed.service;
 import com.ssafy.foodthink.feed.dto.*;
 import com.ssafy.foodthink.feed.entity.FeedEntity;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.AccessDeniedException;
@@ -27,4 +28,7 @@ public interface FeedService {
     //범용적 사용 메소드용
     List<String> readImageUrlsByFeedId(Long id);   //피드별 이미지 조회
     FeedResponseDto createFeedResponseDtoByBuilder(FeedEntity feedEntity, List<String> imageUrls);
+
+    //특정 레시피아이디를 가진 피드 조회
+    List<FeedInRecipeResponseDto> getTop6FeedsByRecipeId(Long recipeId);
 }
