@@ -1,0 +1,210 @@
+/* 모달 배경 (어두운 효과) */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* 반투명 어두운 배경 */
+  z-index: 999;
+}
+
+/* 음식 선호도 모달 */
+.preference-container {
+  position: fixed;
+  top: 50%; /* 화면 중앙 */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 70%;
+  max-width: 1000px;
+  text-align: center;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* 닫기 버튼 */
+.close-btn {
+  position: absolute;
+  top: 10px; /* 버튼 위치 조정 */
+  right: 10px; /* 버튼 위치 조정 */
+  background: none;
+  border: none;
+  font-size: 20px; /* 크기를 줄이려면 이 값을 변경 */
+  width: 40px; /* 📌 버튼 크기 조정 */
+  height: 40px; /* 📌 버튼 크기 조정 */
+  cursor: pointer;
+  color: #777;
+  z-index: 1001;
+  transition: color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #000;
+  transform: scale(1.1); /* 📌 마우스 오버 시 약간 확대 */
+}
+
+
+.close-btn:hover {
+  color: #000;
+}
+
+/* 선호 음식 & 기피 재료 컨테이너 */
+.preference-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  position: relative;
+  padding: 20px 0;
+  flex-grow: 1;
+}
+
+/* 선호 음식 & 기피 재료 개별 컨테이너 */
+.preference-section,
+.avoidance-section {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 선호 음식 영역을 기피 재료보다 더 크게 설정 */
+.preference-section {
+  flex: 2;
+}
+
+.avoidance-section {
+  flex: 1;
+}
+
+/* 리스트 스타일 */
+.preference-list,
+.avoidance-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+/* 버튼 스타일 */
+.preference-btn,
+.avoidance-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  min-width: 70px;
+}
+
+/* 선호 음식 버튼 선택 시 색 변경 */
+.preference-btn.selected {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* 기피 재료 버튼 선택 시 색 변경 */
+.avoidance-btn.selected {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+/* 저장 버튼 */
+.save-btn {
+  display: block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100px;
+  text-align: center;
+}
+
+.save-btn:hover {
+  background-color: #0056b3;
+}
+
+/* 📌 반응형: 모바일에서는 세로 정렬 */
+@media (max-width: 768px) {
+  .preference-container {
+    width: 90%;
+    top: 50%;
+    bottom: auto;
+    padding: 15px;
+    max-height: 80vh; /* 📌 세로 화면에서도 스크롤 가능하도록 */
+    overflow-y: auto;
+  }
+
+  .preference-wrapper {
+    flex-direction: column; /* 📌 세로 정렬 */
+    align-items: center;
+    gap: 15px;
+  }
+
+  .preference-section,
+  .avoidance-section {
+    width: 100%;
+    text-align: center;
+  }
+
+  .preference-list,
+  .avoidance-list {
+    justify-content: center;
+  }
+
+  .preference-btn,
+  .avoidance-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-width: 70px;
+  }
+
+  .save-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+    /* width: 50%; */
+  }
+}
+
+/* 📌 작은 모바일 화면 (480px 이하) */
+@media (max-width: 480px) {
+  .preference-container {
+    width: 95%;
+    padding: 10px;
+    max-height: 80vh;
+  }
+
+  .preference-btn,
+  .avoidance-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+    min-width: 60px;
+  }
+
+  .save-btn {
+    font-size: 12px;
+    padding: 8px 16px;
+    /* width: 70%; */
+  }
+}
