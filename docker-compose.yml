@@ -42,7 +42,7 @@ services:
     volumes:
       - ./letsencrypt:/etc/letsencrypt:ro  # SSL 인증서
       - ./dist:/app/dist  # 프론트엔드 빌드 파일
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # nginx 설정 파일
+      - ./nginx.conf:/etc/nginx/nginx.conf  # nginx 설정 파일
     depends_on:
       - backend
       - frontend
