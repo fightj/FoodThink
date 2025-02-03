@@ -1,0 +1,81 @@
+/* 컨테이너 스타일 */
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* Grid 레이아웃 */
+.custom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 두 개의 열 */
+  grid-template-rows: auto; /* 행 높이를 자동으로 조정 */
+  grid-template-areas:
+    "card1 card2"
+    "card1 card3"
+    "card4 card3"; /* 모든 카드 위치 고정 */
+  grid-gap: 20px;
+}
+
+/* 기본 카드 스타일 */
+.card {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  margin-bottom: 20px; /* 카드 사이에 간격 추가 */
+  overflow: hidden; /* 카드의 경계 밖으로 나가는 내용을 숨김 */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2), 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 카드 내용 스타일 */
+.card .content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  color: white;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: inherit;
+  overflow: hidden; /* 카드 내용의 경계 밖으로 나가는 내용을 숨김 */
+}
+
+/* 각 카드의 위치와 크기 설정 */
+.card-1 {
+  grid-area: card1;
+  height: 300px;
+}
+
+.card-2 {
+  grid-area: card2;
+  height: 400px;
+}
+
+.card-3 {
+  grid-area: card3;
+  height: 450px;
+}
+
+.card-4 {
+  grid-area: card4;
+  height: 350px;
+  align-self: end; /* 카드 4번을 하단에 배치 */
+}
+
+/* Link 스타일 */
+.card-link {
+  display: block;
+  text-decoration: none;
+}

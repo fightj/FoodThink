@@ -1,0 +1,170 @@
+.feature-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+}
+
+.icon-square {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+}
+
+.text-shadow-1 {
+  text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
+}
+.text-shadow-2 {
+  text-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+}
+.text-shadow-3 {
+  text-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+}
+
+.card-cover {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.feature-icon-small {
+  width: 3rem;
+  height: 3rem;
+}
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+}
+
+.b-example-divider {
+  width: 100%;
+  height: 3rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: solid rgba(0, 0, 0, 0.15);
+  border-width: 1px 0;
+  box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1), inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
+}
+
+.b-example-vr {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 100vh;
+}
+
+.bi {
+  vertical-align: -0.125em;
+  fill: currentColor;
+}
+
+.nav-scroller {
+  position: relative;
+  z-index: 2;
+  height: 2.75rem;
+  overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  padding-bottom: 1rem;
+  margin-top: -1px;
+  overflow-x: auto;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.btn-bd-primary {
+  --bd-violet-bg: #712cf9;
+  --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+  --bs-btn-font-weight: 600;
+  --bs-btn-color: var(--bs-white);
+  --bs-btn-bg: var(--bd-violet-bg);
+  --bs-btn-border-color: var(--bd-violet-bg);
+  --bs-btn-hover-color: var(--bs-white);
+  --bs-btn-hover-bg: #6528e0;
+  --bs-btn-hover-border-color: #6528e0;
+  --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+  --bs-btn-active-color: var(--bs-btn-hover-color);
+  --bs-btn-active-bg: #5a23c8;
+  --bs-btn-active-border-color: #5a23c8;
+}
+
+.bd-mode-toggle {
+  z-index: 1500;
+}
+
+.bd-mode-toggle .dropdown-menu .active .bi {
+  display: block !important;
+}
+/* 부모 요소를 정사각형으로 조정 */
+.feed-card {
+  aspect-ratio: 1 / 1; /* 정사각형 비율 유지 */
+  background-size: cover; /* 이미지가 영역을 꽉 채움 */
+  background-position: center; /* 이미지 가운데 정렬 */
+  border-radius: 8px; /* 카드의 모서리 둥글게 */
+  transition: transform 0.3s ease; /* 호버 효과 추가 */
+}
+
+/* 호버 시 확대 효과 */
+.feed-card:hover {
+  transform: scale(1.05);
+}
+
+/* 반응형: 모바일에서도 적절히 표시 */
+@media (max-width: 576px) {
+  .feed-card {
+    aspect-ratio: 1 / 1; /* 모바일에서도 정사각형 유지 */
+  }
+}
+.image-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10; /* 이미지 위에 표시되도록 */
+}
+
+.image-icon img {
+  width: 30px;  /* 아이콘 크기 줄이기 */
+  height: 30px; /* 아이콘 크기 줄이기 */
+}
+
+/* .card {
+  position: relative;
+} */
+
+.user-info {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  /* background-color: rgba(0, 0, 0, 0.5); 배경색 추가로 가독성 향상 */
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.profile-image-main {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info span {
+  font-weight: bold;
+  color: white;
+}
+.search-result-title {
+  text-align: center; /* 텍스트 중앙 정렬 */
+  flex-grow: 1; /* 나머지 공간을 차지하게 하여 제목을 중앙에 위치시킴 */
+}
