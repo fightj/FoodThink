@@ -2,7 +2,6 @@ package com.ssafy.foodthink.foodRecommend.service;
 
 import com.ssafy.foodthink.foodRecommend.repository.RecommendInterestRepository;
 import com.ssafy.foodthink.foodRecommend.repository.UserRecipeTitleRepository;
-import com.ssafy.foodthink.recipes.entity.UserRecipeEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.entity.UserInterestEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
