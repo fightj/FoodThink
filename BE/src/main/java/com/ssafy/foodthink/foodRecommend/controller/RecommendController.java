@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/recommend")
-@PreAuthorize("hasRole('USER')")
+//@PreAuthorize("hasRole('USER')")
 @RequiredArgsConstructor
 public class RecommendController {
 

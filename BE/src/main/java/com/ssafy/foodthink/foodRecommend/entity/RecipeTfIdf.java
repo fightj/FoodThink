@@ -17,7 +17,7 @@ public class RecipeTfIdf {
     private Long tfidfId;
 
     @ManyToOne
-    @JoinColumn(name = "recipe_id", unique = true)
+    @JoinColumn(name = "recipe_id")
     private RecipeEntity recipe;
 
     @Column(name="feature")

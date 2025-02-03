@@ -32,6 +32,7 @@ public class TFIDFService {
         recipes.forEach(recipe -> {
             List<String> features = getRecipeFeatures(recipe);
             Map<String, Double> tfidfVector = calculateTfIdfVector(features, documents, idfValues);
+            saveTfIdfVector(recipe, tfidfVector);
         });
     }
 
@@ -81,9 +82,10 @@ public class TFIDFService {
             recipeTfIdf.setFeature(feature);
             recipeTfIdf.setTfIdfValue(value);
             recipeTfIdfRepository.save(recipeTfIdf);
+
         });
 
-
+        recipeTfIdfRepository.flush();
     }
 
 }
