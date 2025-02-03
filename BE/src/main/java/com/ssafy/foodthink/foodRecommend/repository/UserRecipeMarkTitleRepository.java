@@ -1,6 +1,5 @@
 package com.ssafy.foodthink.foodRecommend.repository;
 
-import com.ssafy.foodthink.foodRecommend.dto.RecipeInfoDto;
 import com.ssafy.foodthink.recipes.entity.UserRecipeMarkEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
