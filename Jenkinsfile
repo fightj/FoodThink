@@ -93,7 +93,7 @@ pipeline {
     agent any
 
     environment {
-        NODE_HOME = tool name: 'NodeJS 22.13.0', type: 'NodeJS'
+//         NODE_HOME = tool name: 'NodeJS 22.13.0', type: 'NodeJS'
 
         // Docker Hub 로그인 정보
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub')  // Jenkins에 저장된 Docker Hub 로그인 정보
@@ -135,8 +135,10 @@ pipeline {
                     script {
                         // 프론트엔드 빌드: npm install 및 npm run build
                         dir('frontend') {  // 프론트엔드 디렉토리로 이동
-                             sh 'npm install'  // 의존성 설치
-                             sh 'npm run build'  // 빌드 실행
+                            nodejs('NodeJS 22.13.0'){
+                                sh 'npm install'  // 의존성 설치
+                                 sh 'npm run build'  // 빌드 실행
+                            }
                         }
                     }
              }
