@@ -8,12 +8,16 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "recipe")
+@Table(name = "recipe", indexes = {
+        @Index(name = "idx_recipe_hits", columnList = "hits DESC"),
+        @Index(name = "idx_recipe_hits_writeTime", columnList = "hits DESC, writeTime DESC")
+})
 public class RecipeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,23 +40,25 @@ public class RecipeEntity {
     @JoinColumn(name = "user_id")     //외래키 컬럼 지정 (recipeId로 생성된다.)
     private UserEntity userEntity;      //사용자ID
 
-    //작성시간을 현재로 설정
     @PrePersist
     protected void onCreate() {
+        //작성 시간을 현재로 설정
         this.writeTime = LocalDateTime.now();
 
         //hits에 1~300 사이의 랜덤 숫자 값 설정
         Random random = new Random();
         this.hits = random.nextInt(300) + 1;
 
+        //공개유무 기본값은 true
         if(this.isPublic == null) {
             this.isPublic = true;
         }
     }
 
-//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<IngredientEntity> ingredients = new ArrayList<>();
-//    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ProcessEntity> processes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IngredientEntity> ingredients = new ArrayList<>();
+    @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProcessEntity> processes = new ArrayList<>();
 
 }

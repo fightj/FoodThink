@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 useNavigate 추가
 import "../../styles/recommend/TodayRecommendModal.css";
-import todayRecipeData from "../../data/todayRecipeData"; // 더미 데이터
+import todayRecipeData from "../../data/TodayRecipeData"; // 더미 데이터
 
 const TodayRecommendModal = ({ isOpen, onClose }) => {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
