@@ -13,5 +13,7 @@ RUN npm install
 # 소스 코드 복사
 COPY ./src/ ./
 
+COPY ./index.html ./
+
 # 빌드 실행
 RUN npm run build
