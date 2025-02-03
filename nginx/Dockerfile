@@ -15,7 +15,7 @@ COPY --from=my-frontend-container:latest /app/dist /usr/share/nginx/html
 
 # nginx.conf 파일을 컨테이너에 복사
 #COPY ./nginx.conf /etc/nginx/conf.d/
-COPY nginx.conf /etc/nginx/conf.d/
+COPY /nginx.conf /etc/nginx/conf.d/
 
 # 443 포트 개방 (HTTPS)
 EXPOSE 443
