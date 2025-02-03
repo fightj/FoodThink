@@ -207,6 +207,7 @@ pipeline {
             steps {
                 script {
                     // docker-compose로 배포
+                    sh 'docker-compose build --pull --no-cache'
                     sh 'docker-compose -f docker-compose.yml up -d'
                 }
             }
