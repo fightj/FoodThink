@@ -93,7 +93,7 @@ pipeline {
     agent any
 
     environment {
-        NODE_HOME = tool name: 'node', type: 'NodeJS'
+        NODE_HOME = tool name: 'NodeJS 22.13.0', type: 'NodeJS'
 
         // Docker Hub 로그인 정보
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub')  // Jenkins에 저장된 Docker Hub 로그인 정보
