@@ -1,6 +1,8 @@
 package com.ssafy.foodthink.feed.controller;
 
 import com.ssafy.foodthink.feed.dto.FeedCommentRequestDto;
+import com.ssafy.foodthink.feed.dto.FeedInRecipeRequestDto;
+import com.ssafy.foodthink.feed.dto.FeedInRecipeResponseDto;
 import com.ssafy.foodthink.feed.dto.FeedRequestDto;
 import com.ssafy.foodthink.feed.service.FeedService;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
@@ -154,4 +156,12 @@ public class FeedController {
             @RequestParam(defaultValue = "12") int size){
         return ResponseEntity.ok(feedService.readFeedsOrderByWriteTime(page, size));
     }
+
+    //특정 레시피를 참고한 피드들 조회 (레시피 상세 보기 페이지)
+    @PostMapping("/read/inRecipe")
+    public ResponseEntity<FeedInRecipeResponseDto> getFeedByRecipe(@RequestBody FeedInRecipeRequestDto requestDto) {
+        FeedInRecipeResponseDto responseDtoList = feedService.getTopFeedByRecipeId(requestDto.getRecipeId());
+        return ResponseEntity.ok(responseDtoList);
+    }
+
 }
