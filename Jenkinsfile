@@ -1,9 +1,101 @@
-import java.awt.AWTKeyStroke
+// pipeline {
+//     agent any
+//
+//     environment {
+//         DB_URL = credentials('DB_URL')
+//         DB_PASSWORD = credentials('DB_PWD')
+//         SPRING_JWT_SECRET = credentials('SPRING_JWT_SECRET')
+//         KAKAO_CLIENT_ID = credentials('KAKAO_CLIENT_ID')
+//         KAKAO_CLIENT_SECRET = credentials('KAKAO_CLIENT_SECRET')
+//         KAKAO_REDIRECT_URL = credentials('KAKAO_REDIRECT_URL')
+//         S3_BUCKET = credentials('S3_BUCKET')
+//         AWS_CREDENTIALS_ACCESS_KEY = credentials('AWS_CREDENTIALS_ACCESS_KEY')
+//         AWS_CREDENTIALS_SECRET_KEY = credentials('AWS_CREDENTIALS_SECRET_KEY')
+//         GPT_API_KEY = credentials('GPT_API_KEY')
+//         API_SERVICE_KEY = credentials('API_SERVICE_KEY')
+//         DOCKER_IMAGE_NAME = 'yyb113'
+//         DOCKER_CREDENTIALS_ID = 'docker-hub'
+//     }
+//
+//     stages {
+//         stage('Build & Push Backend') {
+//             steps {
+//                 script {
+//                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+//                         sh '''
+//                         cd BE
+//                         mvn clean install
+//                         echo "spring.datasource.url=${DB_URL}" > application.properties
+//                         echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
+//                         echo "spring.jwt.secret=${SPRING_JWT_SECRET}" >> application.properties
+//                         echo "cloud.aws.credentials.access-key=${AWS_CREDENTIALS_ACCESS_KEY}"  >> application.properties
+//                         echo "cloud.aws.credentials.secret-key=${AWS_CREDENTIALS_SECRET_KEY}"  >> application.properties
+//                         echo "spring.security.oauth2.client.registration.kakao.client-id=${KAKAO_CLIENT_ID}"  >> application.properties
+//                         echo "spring.security.oauth2.client.registration.kakao.client-secret=${KAKAO_CLIENT_SECRET}"  >> application.properties
+//                         echo "spring.security.oauth2.client.registration.kakao.redirect-uri=${KAKAO_REDIRECT_URL}"  >> application.properties
+//                         echo "gpt.api.key=${GPT_API_KEY}" >> application.properties
+//                         echo "api.service-key=${API_SERVICE_KEY}" >> application.properties
+//                         echo "cloud.aws.s3.bucket=${S3_BUCKET}"  >> application.properties
+//
+//                         # application.properties 내용 확인
+//                         cat application.properties  # 파일 내용 출력
+//
+//                         # Docker 로그인
+//                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+//
+//                         # 로그인 성공 후 확인
+//                         docker info | grep "Username"
+//
+//                         # Docker 빌드 및 푸시
+//                         docker build -t ${DOCKER_IMAGE_NAME}/my-backend:latest .
+//                         docker push ${DOCKER_IMAGE_NAME}/my-backend:latest
+//                         '''
+//                     }
+//                 }
+//             }
+//         }
+//
+//         stage('Build & Push Frontend') {
+//             steps {
+//                 script {
+//                     withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+//                         nodejs('node') {
+//                             sh '''
+//                             cd FE/ffood_thing
+//                             npm install
+//                             npm run build
+//
+//                             # Docker 로그인
+//                             docker login -u $DOCKER_USER -p $DOCKER_PASS
+//
+//                             # Frontend Docker 이미지 빌드 및 푸시
+//                             docker build -t ${DOCKER_IMAGE_NAME}/my-frontend:latest .
+//                             docker push ${DOCKER_IMAGE_NAME}/my-frontend:latest
+//                             '''
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//
+//         stage('Deploy with Docker Compose') {
+//             steps {
+//                 script {
+//                     // docker-compose를 이용하여 모든 서비스 실행
+//                     sh 'docker-compose up -d --build'
+//                 }
+//             }
+//         }
+//     }
+// }
 
 pipeline {
     agent any
 
     environment {
+        // Docker Hub 로그인 정보
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub')  // Jenkins에 저장된 Docker Hub 로그인 정보
+        // .env 파일에 저장된 환경 변수들 (추가할 경우)
         DB_URL = credentials('DB_URL')
         DB_PASSWORD = credentials('DB_PWD')
         SPRING_JWT_SECRET = credentials('SPRING_JWT_SECRET')
@@ -15,75 +107,60 @@ pipeline {
         AWS_CREDENTIALS_SECRET_KEY = credentials('AWS_CREDENTIALS_SECRET_KEY')
         GPT_API_KEY = credentials('GPT_API_KEY')
         API_SERVICE_KEY = credentials('API_SERVICE_KEY')
-        DOCKER_IMAGE_NAME = 'yyb113'
-        DOCKER_CREDENTIALS_ID = 'docker-hub'
     }
 
     stages {
-        stage('Check Maven') {
+        stage('Checkout') {
             steps {
                 script {
-                    sh 'echo $MAVEN_HOME'
-                    sh 'mvn -v'
+                    // Git 저장소에서 코드 체크아웃
+                    checkout scm
                 }
             }
         }
 
-        stage('Build & Push Backend') {
+        stage('Build Backend') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh '''
-                        cd BE
-                        mvn clean install
-                        echo "spring.datasource.url=${DB_URL}" > application.properties
-                        echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
-                        echo "spring.jwt.secret=${SPRING_JWT_SECRET}" >> application.properties  # SPRING_JWT_SECRET 추가
-                        echo "cloud.aws.credentials.access-key=${AWS_CREDENTIALS_ACCESS_KEY}"  >> application.properties
-                        echo "cloud.aws.credentials.secret-key=${AWS_CREDENTIALS_SECRET_KEY}"  >> application.properties
-                        echo "spring.security.oauth2.client.registration.kakao.client-id=${KAKAO_CLIENT_ID}"  >> application.properties
-                        echo "spring.security.oauth2.client.registration.kakao.client-secret=${KAKAO_CLIENT_SECRET}"  >> application.properties
-                        echo "spring.security.oauth2.client.registration.kakao.redirect-uri=${KAKAO_REDIRECT_URL}"  >> application.properties
-                        echo "gpt.api.key=${GPT_API_KEY}" >> application.properties
-                        echo "api.service-key=${API_SERVICE_KEY}" >> application.properties
-                        echo "cloud.aws.s3.bucket=${S3_BUCKET}"  >> application.properties
-
-                        # application.properties 내용 확인
-                        cat application.properties  # 파일 내용 출력
-
-                        # Docker 로그인
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-
-                        # 로그인 성공 후 확인
-                        docker info | grep "Username"
-
-                        # Docker 빌드 및 푸시
-                        docker build -t ${DOCKER_IMAGE_NAME}/my-backend:latest .
-                        docker push ${DOCKER_IMAGE_NAME}/my-backend:latest
-                        '''
-                    }
+                    // Backend Docker 이미지 빌드
+                    sh 'docker build -f BE/Dockerfile -t my-backend-container ./BE'
                 }
             }
         }
 
-        stage('Build & Push Frontend') {
+        stage('Build Frontend') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        nodejs('node') {  // NodeJS 환경을 사용
-                            sh '''
-                            cd FE/ffood_thing  # Frontend 디렉토리로 이동
-                            npm install
-                            npm run build
+                    // Frontend Docker 이미지 빌드
+                    sh 'docker build -f FE/ffood_thing/Dockerfile -t my-frontend-container ./FE/ffood_thing'
+                }
+            }
+        }
 
-                            # Docker 로그인
-                            docker login -u $DOCKER_USER -p $DOCKER_PASS
+        stage('Build Nginx') {
+            steps {
+                script {
+                    // Nginx Docker 이미지 빌드
+                    sh 'docker build -f Dockerfile -t my-nginx-container .'
+                }
+            }
+        }
 
-                            # Frontend Docker 이미지 빌드 및 푸시
-                            docker build -t ${DOCKER_IMAGE_NAME}/my-frontend:latest .
-                            docker push ${DOCKER_IMAGE_NAME}/my-frontend:latest
-                            '''
-                        }
+        stage('Push Docker Images') {
+            steps {
+                script {
+                    // Docker Hub에 이미지를 푸시
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh """
+                            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                            docker tag my-backend-container $DOCKER_USERNAME/my-backend-container
+                            docker tag my-frontend-container $DOCKER_USERNAME/my-frontend-container
+                            docker tag my-nginx-container $DOCKER_USERNAME/my-nginx-container
+
+                            docker push $DOCKER_USERNAME/my-backend-container
+                            docker push $DOCKER_USERNAME/my-frontend-container
+                            docker push $DOCKER_USERNAME/my-nginx-container
+                        """
                     }
                 }
             }
@@ -92,21 +169,33 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh '''
-                    docker stop my-backend-container || true  # 기존 Backend 컨테이너 종료
-                    docker rm my-backend-container || true  # 기존 Backend 컨테이너 제거
-                    docker run -d --name my-backend-container -p 8085:8080 ${DOCKER_IMAGE_NAME}/my-backend:latest  # 새로운 Backend 컨테이너 실행
-
-                    # 백엔드 컨테이너 로그 확인
-                    docker logs my-backend-container
-                    
-                    docker stop my-frontend-container || true  # 기존 Frontend 컨테이너 종료
-                    docker rm my-frontend-container || true  # 기존 Frontend 컨테이너 제거
-                    docker run -d --name my-frontend-container -p 80:80 ${DOCKER_IMAGE_NAME}/my-frontend:latest  # 새로운 Frontend 컨테이너 실행
-                    
-                    '''
+                    // docker-compose로 배포
+                    sh 'docker-compose -f docker-compose.yml up -d'
                 }
             }
+        }
+
+        stage('Clean Up') {
+            steps {
+                script {
+                    // Docker 이미지 및 컨테이너 정리
+                    sh 'docker system prune -af'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment was successful!'
+        }
+
+        failure {
+            echo 'Deployment failed.'
+        }
+
+        always {
+            cleanWs()  // 워크스페이스 정리
         }
     }
 }
