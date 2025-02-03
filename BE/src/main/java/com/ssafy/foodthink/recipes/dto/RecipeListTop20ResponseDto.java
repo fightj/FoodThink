@@ -15,7 +15,6 @@ public class RecipeListTop20ResponseDto {
     private String userImage;
     private Integer hits;
     private Long bookMarkCount;
-//    private boolean isBookMarked;   //북마크 상태 여부
 
     public void RecipeListRequestDto(Long recipeId, String recipeTitle, String image,
                                      String nickname, String userImage, Integer hits,
@@ -27,6 +26,5 @@ public class RecipeListTop20ResponseDto {
         this.userImage = userImage;
         this.hits = hits;
         this.bookMarkCount = bookMarkCount;
-//        this.isBookMarked = isBookMarked;
     }
 }

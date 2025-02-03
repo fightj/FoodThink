@@ -3,14 +3,94 @@
   text-align: center;
 }
 
+.recipe-card-div {
+  background: linear-gradient(to bottom, #ffffff, #a1a1a1);
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  padding: 20px 0;
+  display: flex;
+  border-radius: 50px;
+  height: auto;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3);
+  flex-direction: column;
+}
+
 h1 {
   font-size: 2rem;
   margin-bottom: 2rem;
 }
 
+h2 {
+  font-size: 2rem;
+  color: #fdb13f;
+  margin-top: 1.2rem;
+  margin-right: 2rem;
+  padding: 1rem;
+  border-radius: 10rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-top: 1.2rem;
+  margin-right: 2rem;
+  padding: 1rem;
+}
+
+.categories {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  margin-left: 3rem;
+  flex-wrap: wrap;
+}
+
+.category-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  font-size: 1.5rem;
+}
+
+.category-group h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.category-item,
+.filter-item {
+  display: inline-block;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 15px;
+  transition: background-color 0.3s, color 0.3s;
+  white-space: nowrap;
+  height: 3rem;
+  margin-top: 1.5rem;
+}
+
+.category-item.selected,
+.filter-item.selected {
+  background-color: #fdb13f;
+  color: #ffffff;
+  margin: 1rem;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.carousel-wrapper {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
 .recipe-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 기본 4개 열 */
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   justify-items: center;
 }
@@ -22,7 +102,7 @@ h1 {
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 280px; /* 카드 크기 제한 */
+  max-width: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -62,15 +142,14 @@ h1 {
   background-color: #45a049;
 }
 
-/* 반응형 디자인: 화면 크기에 따라 카드 수를 조정 */
 @media (max-width: 768px) {
   .recipe-grid {
-    grid-template-columns: repeat(2, 1fr); /* 모바일에서는 2개 열 */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
   .recipe-grid {
-    grid-template-columns: 1fr; /* 모바일에서 더 작은 화면에서는 1개 열 */
+    grid-template-columns: 1fr;
   }
 }

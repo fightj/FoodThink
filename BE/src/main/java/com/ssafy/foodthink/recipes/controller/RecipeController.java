@@ -20,14 +20,6 @@ public class RecipeController {
         return recipeService.searchRecipeList(requestDto);
     }
 
-
-//    public List<RecipeListResponseDto> searchRecipeList(
-//            @ModelAttribute RecipeListRequestDto requestDto,
-//            @AuthenticationPrincipal CustomUserDetails userDetails) {  // ⭐ JWT에서 사용자 정보 가져오기
-//        Long userId = (userDetails != null) ? userDetails.getUserId() : null;  // 로그인 안 했으면 null
-//        return recipeService.searchRecipeList(requestDto, userId);
-//    } //로그인 관련 - 북마크
-
     //레시피 조회순 상위 20 목록 조회
     @GetMapping("read/recipeList/top20/hits")
     public List<RecipeListTop20ResponseDto> getTop20RecipesByHits() {
