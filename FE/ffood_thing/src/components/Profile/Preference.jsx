@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../../styles/profile/ProfilePage.css";
+import "../../styles/profile/Preference.css";
 import profileData from "../../data/ProfileData"; // 더미 데이터 가져오기
 
 const PREFERENCE_ITEMS = [
@@ -85,7 +85,7 @@ const Preference = ({ onClose }) => {
           </div>
 
           {/* 세로 구분선 */}
-          <div className="divider"></div>
+          {/* <div className="divider"></div> */}
 
           {/* 기피 재료 섹션 */}
           <div className="avoidance-section">

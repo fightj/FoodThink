@@ -1,0 +1,78 @@
+/* 프로필 헤더 */
+.profile-header {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(to right, #8360c3, #2ebf91);
+  color: #fff;
+  border-radius: 20px;
+  /* border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px; */
+  width: 100%;
+}
+
+/* 프로필 아바타 */
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+}
+
+/* Profile 버튼 기본 스타일 */
+.preference-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #FF7F00; /* 주황색 */
+  border: 2px solid #FF7F00;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(255, 127, 0, 0.3);
+}
+
+/* 호버 시 더 진한 주황색 */
+.preference-button:hover {
+  background-color: #E66A00;
+  border-color: #E66A00;
+  box-shadow: 0 6px 8px rgba(230, 106, 0, 0.4);
+}
+
+/* 클릭 시 (활성화 효과) */
+.preference-button:active {
+  background-color: #CC5C00;
+  border-color: #CC5C00;
+  transform: scale(0.97);
+  box-shadow: 0 3px 5px rgba(204, 92, 0, 0.5);
+}
+
+/* 비활성화된 버튼 */
+.preference-button:disabled {
+  background-color: #FFA64D;
+  border-color: #FFA64D;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+/* 아이콘 있는 경우 */
+.preference-button i {
+  margin-right: 8px;
+}
+
+/* 반응형 (모바일에서 크기 조정) */
+@media (max-width: 768px) {
+  .preference-button {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+}
+
+

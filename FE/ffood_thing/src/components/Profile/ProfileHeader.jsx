@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/profile/ProfilePage.css";
+import "../../styles/profile/ProfileHeader.css";
 
 const ProfileHeader = ({ profileImage, nickname, subscribers, posts, onOpenPreference }) => {
   return (
@@ -15,7 +15,7 @@ const ProfileHeader = ({ profileImage, nickname, subscribers, posts, onOpenPrefe
       </div>
 
       {/* ProfilePage에서 관리하는 상태를 사용하도록 변경 */}
-      <button className="profile-button" onClick={onOpenPreference}>선호/기피</button>
+      <button className="preference-button" onClick={onOpenPreference}>선호/기피</button>
     </div>
   );
 };
