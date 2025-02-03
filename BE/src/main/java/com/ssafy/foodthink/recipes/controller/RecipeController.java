@@ -3,7 +3,6 @@ package com.ssafy.foodthink.recipes.controller;
 import com.ssafy.foodthink.recipes.dto.*;
 import com.ssafy.foodthink.recipes.service.RecipeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,16 +1,14 @@
 package com.ssafy.foodthink.recipes.service;
 
+import com.ssafy.foodthink.recipeBookmark.repository.RecipeBookmarkRepository;
 import com.ssafy.foodthink.recipes.dto.*;
 import com.ssafy.foodthink.recipes.entity.ProcessEntity;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
-import com.ssafy.foodthink.recipes.repository.RecipeBookMarkRepository;
 import com.ssafy.foodthink.recipes.repository.RecipeListRepository;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.internal.StringUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -26,7 +24,7 @@ import java.util.stream.Collectors;
 public class RecipeService {
 
     private final RecipeListRepository recipeListRepository;
-    private final RecipeBookMarkRepository recipeBookMarkRepository;
+    private final RecipeBookmarkRepository recipeBookmarkRepository;
 
     //레시피 목록 조회
     //cateType, cateMainIngre, sorType을 파라미터값으로 받아 처리
@@ -51,7 +49,7 @@ public class RecipeService {
         //레시피 목록 DTO로 변환
         List<RecipeListResponseDto> recipes = recipePage.getContent().stream().map(recipeEntity -> {
             // 북마크 개수 조회 (null 방지)
-            Long bookmarkCount = Optional.ofNullable(recipeBookMarkRepository.countByRecipeEntity(recipeEntity)).orElse(0L);
+            Long bookmarkCount = Optional.ofNullable(recipeBookmarkRepository.countByRecipeEntity(recipeEntity)).orElse(0L);
 
             //로그인 : 북마크 여부 확인
             boolean isBookmarked = false;
@@ -92,7 +90,7 @@ public class RecipeService {
                 recipeEntity.getUserEntity().getNickname(),
                 recipeEntity.getUserEntity().getImage(),
                 recipeEntity.getHits(),
-                recipeBookMarkRepository.countByRecipeEntity(recipeEntity)  // 북마크 개수 조회
+                recipeBookmarkRepository.countByRecipeEntity(recipeEntity)  // 북마크 개수 조회
         )).collect(Collectors.toList());
     }
 
