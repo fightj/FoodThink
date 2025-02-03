@@ -1,89 +1,155 @@
 /* 전체 컨테이너 */
 .ai-recommend-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    /* background: #f8f9fa; */
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: auto;
+  min-height: 100vh;
+  position: relative;
+  padding: 20px;
+  overflow: auto;
 }
 
-/* 말풍선 (질문) */
+/* 말풍선 (질문) → 항상 최상단 */
 .speech-bubble {
-    background: #ffd98d;
-    padding: 15px 25px;
-    border-radius: 30px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    max-width: 350px;
-    position: absolute;
-    top: 15%;
-    transform: translateY(-50%);
+  background: #ffd98d;
+  padding: 15px 25px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  width: auto;
+  position: relative;
+  margin-bottom: 20px;
+  order: -1; /* 📌 모든 화면에서 항상 최상단 */
 }
 
-/* AI 캐릭터 + 선택지 정렬 */
+/* AI 캐릭터 + 선택지 정렬 (데스크톱: 가로 배치, 모바일: 세로 배치) */
 .ai-content {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    max-width: 800px;
-    margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+  flex-direction: row; /* 📌 기본적으로 가로 배치 */
 }
 
-/* AI 캐릭터 (항상 중앙 고정) */
+/* AI 캐릭터 */
 .ai-image {
-    width: 220px;
-    height: 220px;
-    object-fit: contain;
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  order: 2; /* 📌 데스크톱에서는 두 번째 선택지 앞 */
 }
 
-/* 선택 카드 (기분/재료) */
+/* 선택 카드 */
 .choice-card {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 180px;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 180px;
+  transition: transform 0.2s ease-in-out;
 }
 
-/* 왼쪽 & 오른쪽 배치 */
-.choice-card.left {
-    margin-right: 40px;
+/* 첫 번째 선택지 */
+.choice-card:first-child {
+  order: 1; /* 📌 데스크톱에서 AI 그림보다 앞에 배치 */
 }
 
-.choice-card.right {
-    margin-left: 40px;
+/* 두 번째 선택지 */
+.choice-card:last-child {
+  order: 3; /* 📌 데스크톱에서는 AI 그림 뒤 */
+}
+
+.choice-card:hover {
+  transform: scale(1.05);
 }
 
 /* 선택 이미지 */
 .choice-image {
-    width: 180px;
-    height: 180px;
-    object-fit: contain;
-    margin-bottom: 10px;
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  margin-bottom: 10px;
 }
 
 /* 선택 버튼 */
 .choice-btn {
-    background: #ffb74d;
-    color: white;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    transition: background 0.3s;
-    width: 100%;
+  background: #ffb74d;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s, transform 0.2s;
+  width: 100%;
 }
 
 .choice-btn:hover {
-    background: #ffa726;
+  background: #ffa726;
+  transform: translateY(-2px);
+}
+
+/* 📌 반응형: 모바일에서는 세로 배치 */
+@media (max-width: 768px) {
+  .ai-content {
+      flex-direction: column; /* 📌 모바일에서는 세로 정렬 */
+      align-items: center;
+  }
+
+  .speech-bubble {
+      font-size: 16px;
+      padding: 12px 20px;
+      max-width: 90%;
+      margin-bottom: 15px;
+      order: -1; /* 📌 모바일에서도 항상 최상단 */
+  }
+
+  .ai-image {
+      order: 1; /* 📌 모바일에서는 말풍선 아래 */
+  }
+
+  .choice-card:first-child {
+      order: 2; /* 📌 첫 번째 선택지 */
+  }
+
+  .choice-card:last-child {
+      order: 3; /* 📌 두 번째 선택지 */
+  }
+}
+
+@media (max-width: 480px) {
+  .speech-bubble {
+      font-size: 14px;
+      padding: 10px 15px;
+  }
+
+  .ai-image {
+      width: 160px;
+      height: 160px;
+  }
+
+  .choice-card {
+      width: 100%;
+  }
+
+  .choice-image {
+      width: 120px;
+      height: 120px;
+  }
+
+  .choice-btn {
+      font-size: 14px;
+      padding: 8px 12px;
+  }
 }
