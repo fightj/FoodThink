@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface RecipeListRepository extends JpaRepository<RecipeEntity, Long> 
      */
     @Query("SELECT r FROM RecipeEntity r " +
             "LEFT JOIN r.userEntity u " +
-            "LEFT JOIN RecipeBookMark b ON r.recipeId = b.recipeEntity.recipeId " +
+            "LEFT JOIN RecipeBookmarkEntity b ON r.recipeId = b.recipeEntity.recipeId " +
             "WHERE (:cateType IS NULL OR r.cateType = :cateType) " +
             "AND (:cateMainIngre IS NULL OR r.cateMainIngre = :cateMainIngre) " +
             "GROUP BY r " +
