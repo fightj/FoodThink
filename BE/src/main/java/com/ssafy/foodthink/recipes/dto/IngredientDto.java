@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class IngredientDto {
-//    private Long ingreId;
     private String ingreName;
     private String amount;
 }
