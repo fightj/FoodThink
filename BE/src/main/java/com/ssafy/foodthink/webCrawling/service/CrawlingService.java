@@ -42,7 +42,7 @@ public class CrawlingService {
     private final String baseUrl = "https://www.10000recipe.com/recipe/list.html?";
 
     //카테고리별 조합의 데이터 개수 제한
-    private final int MAX_RECIPES_COMBO = 5;
+    private final int MAX_RECIPES_COMBO = 10;
     //cat3 + cat4 조합별 크롤링된 레시피 개수 저장용
     private final Map<String, Integer> recipeCountMap = new HashMap<>();
 
