@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name="RecipeBookmark")
+@Table(name="recipe_bookmark")
 public class RecipeBookmarkEntity {
 
     @Id
@@ -27,12 +27,12 @@ public class RecipeBookmarkEntity {
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "recipe_id")
-    private RecipeEntity recipeId;
+    private RecipeEntity recipeEntity;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
-    private UserEntity userId;
+    private UserEntity userEntity;
 
     @CreatedDate // 엔티티가 생성될 때의 시간을 자동 저장
     @Column(name="write_time")
