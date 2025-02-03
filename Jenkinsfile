@@ -6,13 +6,13 @@ pipeline {
     environment {
         DB_URL = credentials('DB_URL')
         DB_PASSWORD = credentials('DB_PWD')
-        SPRING_JWT_SECRET = credentials('spring-jwt-secret')
-        KAKAO_CLIENT_ID = credentials('kakao-client-id')
-        KAKAO_CLIENT_SECRET = credentials('kakao-client-secret')
-        KAKAO_REDIRECT_URL = credentials('kakao-redirect-url')
-        S3_BUCKET = credentials('s3-bucket')
-        AWS_CREDENTIALS_ACCESS_KEY = credentials('aws-credentials-access-key')
-        AWS_CREDENTIALS_SECRET_KEY = credentials('aws-credentials-secret-key')
+        SPRING_JWT_SECRET = credentials('SPRING_JWT_SECRET')
+        KAKAO_CLIENT_ID = credentials('KAKAO_CLIENT_ID')
+        KAKAO_CLIENT_SECRET = credentials('KAKAO_CLIENT_SECRET')
+        KAKAO_REDIRECT_URL = credentials('KAKAO_REDIRECT_URL')
+        S3_BUCKET = credentials('S3_BUCKET')
+        AWS_CREDENTIALS_ACCESS_KEY = credentials('AWS_CREDENTIALS_ACCESS_KEY')
+        AWS_CREDENTIALS_SECRET_KEY = credentials('AWS_CREDENTIALS_SECRET_KEY')
         DOCKER_IMAGE_NAME = 'yyb113'
         DOCKER_CREDENTIALS_ID = 'docker-hub'
     }
@@ -37,8 +37,15 @@ pipeline {
                         echo "spring.datasource.url=${DB_URL}" > application.properties
                         echo "spring.datasource.password=${DB_PASSWORD}" >> application.properties
                         echo "spring.jwt.secret=${SPRING_JWT_SECRET}" >> application.properties  # SPRING_JWT_SECRET 추가
-                        
-                        
+                        echo "cloud.aws.credentials.access-key=${AWS_CREDENTIALS_ACCESS_KEY}"  >> application.properties
+                        echo "cloud.aws.credentials.secret-key=${AWS_CREDENTIALS_SECRET_KEY}"  >> application.properties
+                        echo "spring.security.oauth2.client.registration.kakao.client-id=${KAKAO_CLIENT_ID}"  >> application.properties
+                        echo "spring.security.oauth2.client.registration.kakao.client-secret=${KAKAO_CLIENT_SECRET}"  >> application.properties
+                        echo "spring.security.oauth2.client.registration.kakao.redirect-uri=${KAKAO_REDIRECT_URL}"  >> application.properties
+                        echo "cloud.aws.s3.bucket=${S3_BUCKET}"  >> application.properties
+
+                        # application.properties 내용 확인
+                        cat application.properties  # 파일 내용 출력
 
                         # Docker 로그인
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
@@ -84,7 +91,7 @@ pipeline {
                     sh '''
                     docker stop my-backend-container || true  # 기존 Backend 컨테이너 종료
                     docker rm my-backend-container || true  # 기존 Backend 컨테이너 제거
-                    docker run -d --name my-backend-container -p 8080:8080 ${DOCKER_IMAGE_NAME}/my-backend:latest  # 새로운 Backend 컨테이너 실행
+                    docker run -d --name my-backend-container -p 8085:8080 ${DOCKER_IMAGE_NAME}/my-backend:latest  # 새로운 Backend 컨테이너 실행
 
                     # 백엔드 컨테이너 로그 확인
                     docker logs my-backend-container
