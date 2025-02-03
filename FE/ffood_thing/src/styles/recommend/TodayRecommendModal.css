@@ -1,74 +1,91 @@
-/* 모달 오버레이 */
+/* 📌 모달 오버레이 */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3); /* 배경을 조금 더 연하게 */
+  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 
-/* 카드 스타일 - 기존 카드 디자인 유지 */
+/* 📌 모달 카드 */
 .today-recommend-card {
+  position: relative;
   background: white;
   padding: 20px;
-  border-radius: 15px; /* 둥글게 */
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
-  width: 320px;
-  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 500px;
+  max-width: 90%;
+  text-align: center; /* 📌 내부 텍스트 중앙 정렬 */
+  z-index: 1001;
+}
+
+/* 📌 제목 스타일 */
+.today-recommend-card h2 {
+  display: block; /* 📌 전체 너비를 차지하도록 설정 */
+  margin: 16px auto; /* 📌 좌우 여백 자동으로 설정하여 중앙 정렬 */
+  font-size: 32px;
+  font-family: MyCustomFont, sans-serif;
+  color: #FDB13F;
+}
+
+/* 📌 음식 리스트 (가로 정렬) */
+.recipe-list {
+  display: flex;
+  gap: 15px; /* 카드 간격 */
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto; /* 가로 스크롤 가능 */
+  padding: 10px 0;
+}
+
+/* 📌 개별 음식 카드 */
+.recipe-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: scale(1);
-  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  transition: transform 0.2s;
+  width: 120px;
 }
 
-/* 카드 애니메이션 */
-.today-recommend-card:hover {
-  transform: scale(1.05); /* 마우스 올리면 살짝 커지게 */
+.recipe-item:hover {
+  transform: scale(1.05);
 }
 
-/* 이미지 스타일 */
+/* 📌 음식 이미지 */
 .recipe-image {
-  width: 280px; /* 이미지 크기 조정 */
-  height: 180px;
+  width: 100px;
+  height: 100px;
   border-radius: 10px;
   object-fit: cover;
-  margin-bottom: 10px;
 }
 
-/* 제목 스타일 */
+/* 📌 음식 이름 */
 .recipe-title {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: bold;
   margin-top: 5px;
-  color: #333;
 }
 
-/* 카드 설명 */
-.recipe-description {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-/* 닫기 버튼 */
+/* 📌 닫기 버튼 */
 .close-btn {
-  background: #ff6b6b;
-  color: white;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  font-size: 20px;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 15px;
-  font-weight: bold;
+  color: #777;
+  transition: color 0.3s;
 }
 
 .close-btn:hover {
-  background: #ff4d4d;
+  color: black;
 }
