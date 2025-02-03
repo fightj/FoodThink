@@ -1,0 +1,154 @@
+.card-div-topsection {
+  background: linear-gradient(to bottom, #ffffff, #a1a1a1);
+  background-color: rgb(255, 255, 255);
+  width: 100%; /* 수평 공간 전체를 차지 */
+  padding: 20px;
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
+  border-radius: 50px 50px 50px 50px; /* 네 꼭지점을 둥글게 설정 */
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
+}
+
+.card-div-section {
+  background: linear-gradient(to bottom, #ffffff, #a1a1a1);
+  background-color: rgb(255, 255, 255);
+  width: 100%; /* 수평 공간 전체를 차지 */
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
+  border-radius: 50px 50px 50px 50px; /* 네 꼭지점을 둥글게 설정 */
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
+  margin-top: 50px;
+}
+
+.recipe-image1 {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  object-fit: cover; /* Ensure the image covers the entire area */
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -50px; /* Adjust based on the desired position */
+  left: 50%;
+  transform: translateX(-50%);
+  border: 2px solid white; /* Optional: Add a border to make it stand out */
+}
+
+.nickname-container {
+  display: flex;
+  align-items: center;
+  left: 57%;
+  transform: translateX(-50%);
+  position: absolute;
+  bottom: -100px; /* Adjust based on the desired position */
+}
+
+.nickname-area {
+  margin-right: 10px;
+}
+
+.sub-btn {
+  border-radius: 15px; /* Apply rounded corners */
+  background-color: #fdb13f; /* Apply the specified background color */
+  color: white; /* Set text color to white for better contrast */
+  padding: 0px 20px;
+  border: none; /* Remove the border */
+  cursor: pointer; /* Add a pointer cursor on hover */
+  font-size: 25px;
+}
+
+.icon-container {
+  display: flex;
+  gap: 70px;
+  margin-top: 20px;
+  width: 100%; /* Make sure it takes the full width */
+  height: 100%;
+  justify-content: center; /* Center the icons horizontally */
+}
+
+.icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icon-item img {
+  width: 70px; /* Adjust the size as needed */
+  height: 70px; /* Adjust the size as needed */
+}
+
+.icon-item p {
+  margin-top: 8px;
+  font-size: 25px;
+}
+
+.title-container {
+  margin-top: 50px;
+  width: 100%; /* Ensure the container takes up the full width */
+  text-align: center; /* Center the text */
+}
+
+.cook-btn {
+  margin-top: 50px;
+  border-radius: 15px; /* Apply rounded corners */
+  background-color: #fdb13f; /* Apply the specified background color */
+  color: white; /* Set text color to white for better contrast */
+  padding: 0px 20px;
+  border: none; /* Remove the border */
+  cursor: pointer; /* Add a pointer cursor on hover */
+  font-size: 80px;
+}
+
+.feed-btn {
+  margin-top: 50px;
+  border-radius: 15px; /* Apply rounded corners */
+  background-color: #ffc876; /* Apply the specified background color */
+  color: white; /* Set text color to white for better contrast */
+  padding: 0px 20px;
+  border: none; /* Remove the border */
+  cursor: pointer; /* Add a pointer cursor on hover */
+  font-size: 30px;
+}
+
+.card-div-firstsection {
+  background: linear-gradient(to bottom, #ffffff, #a1a1a1);
+  background-color: rgb(255, 255, 255);
+  width: 100%; /* 수평 공간 전체를 차지 */
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
+  border-radius: 50px 50px 50px 50px; /* 네 꼭지점을 둥글게 설정 */
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
+  margin-top: 50px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Ensure the navigation bar is above other content */
+  padding: 10px; /* Add padding for spacing */
+}
+
+.card-div-firstsection button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  background-color: #fdb13f;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.card-div-firstsection button:hover {
+  background-color: #ffa726; /* Slightly darker shade on hover */
+}
+
+.card-div-section {
+  padding: 50px;
+  margin-top: 50px;
+  background-color: #f3f3f3;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

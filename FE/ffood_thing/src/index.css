@@ -5,10 +5,4 @@
 }
 #root {
   background-color: #fdb13f;
-  position: relative !important;
-  width: 100% !important;
-  overflow: hidden !important;
-  padding-bottom: 0 !important;
-  opacity: 1 !important;
-  transform: none !important;
 }
