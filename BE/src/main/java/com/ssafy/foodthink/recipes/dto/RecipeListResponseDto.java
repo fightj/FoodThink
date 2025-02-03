@@ -20,11 +20,10 @@ public class RecipeListResponseDto {
     private String userImage;
     private Integer hits;
     private Long bookMarkCount;
-    private boolean isBookMarked;   //북마크 상태 여부
 
     public void RecipeListRequestDto(Long recipeId, String recipeTitle, String image,
                                      String nickname, String userImage, Integer hits,
-                                     Long bookMarkCount, boolean isBookMarked) {
+                                     Long bookMarkCount) {
         this.recipeId = recipeId;
         this.recipeTitle = recipeTitle;
         this.image = image;
@@ -32,6 +31,5 @@ public class RecipeListResponseDto {
         this.userImage = userImage;
         this.hits = hits;
         this.bookMarkCount = bookMarkCount;
-        this.isBookMarked = isBookMarked;
     }
 }

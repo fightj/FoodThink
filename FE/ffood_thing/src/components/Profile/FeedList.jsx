@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../../styles/profile/FeedList.css";
 
 const FeedList = ({ feeds }) => {
   // 최신순 정렬

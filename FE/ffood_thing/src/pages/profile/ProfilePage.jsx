@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import ProfileHeader from "../../components/profile/ProfileHeader";
-import ProfileTabs from "../../components/profile/ProfileTabs";
-import RecipeList from "../../components/profile/RecipeList";
-import BookmarkList from "../../components/profile/BookmarkList";
-import FeedList from "../../components/profile/FeedList";
-import Preference from "../../components/profile/Preference";
+import ProfileHeader from "../../components/Profile/ProfileHeader";
+import ProfileTabs from "../../components/Profile/ProfileTabs";
+import RecipeList from "../../components/Profile/RecipeList";
+import BookmarkList from "../../components/Profile/BookmarkList";
+import FeedList from "../../components/Profile/FeedList";
+import Preference from "../../components/Profile/Preference";
 import profileData from "../../data/ProfileData"; // 더미 데이터 불러오기
 import "../../styles/profile/ProfilePage.css";
 
