@@ -168,6 +168,7 @@ pipeline {
             steps {
                 script {
                     // Nginx Docker 이미지 빌드
+                    sh 'git pull ${DOCKER_IMAGE_NAME}/my-nginx-container'
                     sh 'docker build -f nginx/Dockerfile -t my-nginx-container .'
                 }
             }
