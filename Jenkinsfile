@@ -13,6 +13,8 @@ pipeline {
         S3_BUCKET = credentials('S3_BUCKET')
         AWS_CREDENTIALS_ACCESS_KEY = credentials('AWS_CREDENTIALS_ACCESS_KEY')
         AWS_CREDENTIALS_SECRET_KEY = credentials('AWS_CREDENTIALS_SECRET_KEY')
+        GPT_API_KEY = credentials('GPT_API_KEY')
+        API_SERVICE_KEY = credentials('API_SERVICE_KEY')
         DOCKER_IMAGE_NAME = 'yyb113'
         DOCKER_CREDENTIALS_ID = 'docker-hub'
     }
@@ -42,6 +44,8 @@ pipeline {
                         echo "spring.security.oauth2.client.registration.kakao.client-id=${KAKAO_CLIENT_ID}"  >> application.properties
                         echo "spring.security.oauth2.client.registration.kakao.client-secret=${KAKAO_CLIENT_SECRET}"  >> application.properties
                         echo "spring.security.oauth2.client.registration.kakao.redirect-uri=${KAKAO_REDIRECT_URL}"  >> application.properties
+                        echo "gpt.api.key=${GPT_API_KEY}" >> application.properties
+                        echo "api.service-key=${API_SERVICE_KEY}" >> application.properties
                         echo "cloud.aws.s3.bucket=${S3_BUCKET}"  >> application.properties
 
                         # application.properties 내용 확인
