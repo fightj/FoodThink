@@ -141,7 +141,7 @@ pipeline {
             steps {
                 script {
                     // Nginx Docker 이미지 빌드
-                    sh 'docker build -f Dockerfile -t my-nginx-container .'
+                    sh 'docker build -f nginx/Dockerfile -t my-nginx-container .'
                 }
             }
         }
