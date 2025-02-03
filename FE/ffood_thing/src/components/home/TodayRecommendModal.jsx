@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/recommend/TodayRecommendModal.css";
-import todayRecipeData from "../../data/TodayRecipeData";
+import todayRecipeData from "../../data/TodayRecipeData"; // 더미 데이터
 
 const TodayRecommendModal = ({ isOpen, onClose }) => {
   const [activeIndex, setActiveIndex] = useState(1); // 중앙 카드 인덱스
+  const [selectedRecipes, setSelectedRecipes] = useState([]); // 랜덤으로 선택된 음식 3개
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
+      // 랜덤으로 3개의 음식 선택
+      const shuffled = [...todayRecipeData].sort(() => 0.5 - Math.random());
+      setSelectedRecipes(shuffled.slice(0, 3));
+
+      // 배경 스크롤 방지
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
+
     return () => {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || selectedRecipes.length < 3) return null; // 데이터가 준비되지 않았을 때 렌더링 방지
 
   // 📌 음식 선택 시 검색 결과 페이지로 이동 (중앙 카드 클릭 시)
   const goToSearchPage = (recipeTitle) => {
@@ -39,7 +46,7 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
         <h2>오늘 뭐 먹지? 🍽️</h2>
         <div className="carousel">
           <div className="recipe-list" style={{ transform: `translateX(${-activeIndex * 10}px)` }}>
-            {todayRecipeData.slice(0, 3).map((recipe, i) => (
+            {selectedRecipes.map((recipe, i) => (
               <div
                 key={i}
                 className={`recipe-item ${i === activeIndex ? "active" : ""}`}
