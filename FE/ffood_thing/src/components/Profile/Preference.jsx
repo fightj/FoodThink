@@ -15,60 +15,51 @@ const AVOID_ITEMS = [
 ];
 
 const Preference = ({ onClose }) => {
-  // 로그인 기능이 없으므로 첫 번째 유저(`id: "1"`)를 기본값으로 사용
-  const user = profileData[0]; // profileData 배열에서 첫 번째 유저 가져오기
+  const user = profileData[0]; // 첫 번째 유저 기본값 사용
 
   // Local Storage에서 기존 저장된 데이터 불러오기
   const storedPreferences = JSON.parse(localStorage.getItem("selectedPreferences")) || user.preferences;
   const storedAvoidances = JSON.parse(localStorage.getItem("selectedAvoidances")) || user.avoidances;
 
-  // 유저의 선호/기피 음식 상태 관리
   const [selectedPreferences, setSelectedPreferences] = useState(storedPreferences);
   const [selectedAvoidances, setSelectedAvoidances] = useState(storedAvoidances);
   const modalRef = useRef(null);
 
-  // 모달 외부 클릭 시 닫기
+  // 배경 스크롤 방지 (모달 열릴 때)
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onClose();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
+    document.body.style.overflow = "hidden"; // 배경 스크롤 막기
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "auto"; // 모달 닫힐 때 원래대로
     };
-  }, [onClose]);
+  }, []);
 
-  // 버튼 클릭 시 선택/해제 (선호/기피 구분)
+  // 버튼 클릭 시 선택/해제
   const handleToggle = (item, isAvoidance = false) => {
     if (isAvoidance) {
-      setSelectedAvoidances((prev) =>
-        prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-      );
+      setSelectedAvoidances((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]));
     } else {
-      setSelectedPreferences((prev) =>
-        prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-      );
+      setSelectedPreferences((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]));
     }
   };
 
-  // 저장 버튼 클릭 시 Local Storage에 저장 (임시 저장 유지)
+  // 저장 버튼 클릭 시 Local Storage에 저장
   const handleSave = () => {
     localStorage.setItem("selectedPreferences", JSON.stringify(selectedPreferences));
     localStorage.setItem("selectedAvoidances", JSON.stringify(selectedAvoidances));
-
-    console.log("저장됨:", { selectedPreferences, selectedAvoidances });
     onClose();
   };
 
   return (
     <>
-      <div className="modal-backdrop" onClick={onClose}></div>
+      {/* 모달 배경 */}
+      <div className="modal-backdrop"></div>
 
-      <div className="preference-container" ref={modalRef}>
+      {/* 모달 창 */}
+      <div className="preference-container">
+        {/* 닫기 버튼 */}
+        <button className="close-btn" onClick={onClose}>×</button>
+
         <div className="preference-wrapper">
-          {/* 선호 음식 섹션 */}
           <div className="preference-section">
             <h4>선호 음식</h4>
             <div className="preference-list">
@@ -83,11 +74,7 @@ const Preference = ({ onClose }) => {
               ))}
             </div>
           </div>
-
-          {/* 세로 구분선 */}
-          {/* <div className="divider"></div> */}
-
-          {/* 기피 재료 섹션 */}
+          
           <div className="avoidance-section">
             <h4>기피 재료</h4>
             <div className="avoidance-list">

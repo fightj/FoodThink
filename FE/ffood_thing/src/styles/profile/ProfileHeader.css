@@ -2,7 +2,8 @@
 .profile-header {
   text-align: center;
   padding: 20px;
-  background: linear-gradient(to right, #8360c3, #2ebf91);
+  /* background: linear-gradient(to right, #8360c3, #2ebf91); */
+  background: black;
   color: #fff;
   border-radius: 20px;
   /* border-bottom-left-radius: 20px;

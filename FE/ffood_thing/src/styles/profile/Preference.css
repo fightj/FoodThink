@@ -12,9 +12,9 @@
 /* 음식 선호도 모달 */
 .preference-container {
   position: fixed;
-  bottom: 10%; /* 📌 모바일에서 중앙 정렬 */
+  top: 50%; /* 화면 중앙 */
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   background: white;
   padding: 20px;
   border-radius: 10px;
@@ -26,8 +26,37 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 80vh; /* 📌 화면 높이를 초과하면 스크롤 */
-  overflow-y: auto; /* 📌 내부 스크롤 허용 */
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* 닫기 버튼 */
+.close-btn {
+  position: absolute;
+  top: 10px; /* 버튼 위치 조정 */
+  right: 10px; /* 버튼 위치 조정 */
+  background: none;
+  border: none;
+  font-size: 20px; /* 크기를 줄이려면 이 값을 변경 */
+  width: 40px; /* 📌 버튼 크기 조정 */
+  height: 40px; /* 📌 버튼 크기 조정 */
+  cursor: pointer;
+  color: #777;
+  z-index: 1001;
+  transition: color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #000;
+  transform: scale(1.1); /* 📌 마우스 오버 시 약간 확대 */
+}
+
+
+.close-btn:hover {
+  color: #000;
 }
 
 /* 선호 음식 & 기피 재료 컨테이너 */
@@ -61,14 +90,6 @@
   flex: 1;
 }
 
-/* 세로 구분선 (기본: 데스크톱) */
-.divider {
-  width: 2px;
-  background-color: #ccc;
-  height: 100%;
-  align-self: stretch;
-}
-
 /* 리스트 스타일 */
 .preference-list,
 .avoidance-list {
@@ -90,7 +111,7 @@
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
-  min-width: 80px;
+  min-width: 70px;
 }
 
 /* 선호 음식 버튼 선택 시 색 변경 */
@@ -108,15 +129,15 @@
 /* 저장 버튼 */
 .save-btn {
   display: block;
-  margin-top: auto;
-  padding: 10px 20px;
+  margin-top: 20px;
+  padding: 12px 24px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 20%;
+  width: 100px;
   text-align: center;
 }
 
@@ -128,7 +149,8 @@
 @media (max-width: 768px) {
   .preference-container {
     width: 90%;
-    bottom: 8%;
+    top: 50%;
+    bottom: auto;
     padding: 15px;
     max-height: 80vh; /* 📌 세로 화면에서도 스크롤 가능하도록 */
     overflow-y: auto;
@@ -138,12 +160,6 @@
     flex-direction: column; /* 📌 세로 정렬 */
     align-items: center;
     gap: 15px;
-  }
-
-  .divider {
-    height: 2px; /* 📌 가로 구분선 */
-    width: 80%;
-    margin: 10px 0;
   }
 
   .preference-section,
@@ -166,14 +182,17 @@
 
   .save-btn {
     font-size: 14px;
-    padding: 8px 16px;
+    padding: 10px 20px;
+    /* width: 50%; */
   }
 }
 
+/* 📌 작은 모바일 화면 (480px 이하) */
 @media (max-width: 480px) {
   .preference-container {
     width: 95%;
-    bottom: 5%;
+    padding: 10px;
+    max-height: 80vh;
   }
 
   .preference-btn,
@@ -185,6 +204,7 @@
 
   .save-btn {
     font-size: 12px;
-    padding: 6px 12px;
+    padding: 8px 16px;
+    /* width: 70%; */
   }
 }
