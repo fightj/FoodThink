@@ -9,10 +9,10 @@ RUN rm /etc/nginx/conf.d/default.conf
 #COPY ./nginx/ssl/server.key /etc/ssl/private/
 
 # 빌드된 프론트엔드 파일을 /usr/share/nginx/html로 복사
-COPY ./FE/ffood_thing/dist /usr/share/nginx/html
+COPY ./app/dist /usr/share/nginx/html
 
 # nginx.conf 파일을 컨테이너에 복사
-COPY ./nginx/nginx.conf /etc/nginx/conf.d/
+COPY ./nginx.conf /etc/nginx/conf.d/
 
 # 443 포트 개방 (HTTPS)
 EXPOSE 443
