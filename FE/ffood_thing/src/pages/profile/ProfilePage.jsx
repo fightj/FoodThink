@@ -5,6 +5,7 @@ import ProfileTabs from "../../components/Profile/ProfileTabs";
 import RecipeList from "../../components/Profile/RecipeList";
 import BookmarkList from "../../components/Profile/BookmarkList";
 import FeedList from "../../components/Profile/FeedList";
+import Preference from "../../components/Profile/Preference";
 import profileData from "../../data/ProfileData"; // 더미 데이터 불러오기
 import "../../styles/profile/ProfilePage.css";
 
@@ -39,37 +40,41 @@ const ProfilePage = () => {
   }, [location.search]);
 
   return (
-    <div className="profile-container">
-      <ProfileHeader 
-        id={user.id} 
-        nickname={user.nickname} 
-        profileImage={user.profileImage}
-        subscribers={user.subscribers} 
-        posts={user.posts}
-        preferences={preferences} 
-        onOpenPreference={() => setShowPreference(true)} // 음식선호도 버튼 클릭 이벤트 전달
-      />
-      
-      <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+    <div className="base-div">
+      <div className="card-div">
+        <div className="profile-container">
+        <ProfileHeader 
+          id={user.id} 
+          nickname={user.nickname} 
+          profileImage={user.profileImage}
+          subscribers={user.subscribers} 
+          posts={user.posts}
+          preferences={preferences} 
+          onOpenPreference={() => setShowPreference(true)} // 음식선호도 버튼 클릭 이벤트 전달
+        />
+        
+        <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="tab-content">
-        {activeTab === "recipes" && <RecipeList recipes={user.recipes} />}
-        {activeTab === "bookmarks" && <BookmarkList bookmarks={user.bookmarks} />}
-        {activeTab === "feed" && <FeedList feeds={user.feeds} />}
+        <div className="tab-content">
+          {activeTab === "recipes" && <RecipeList recipes={user.recipes} />}
+          {activeTab === "bookmarks" && <BookmarkList bookmarks={user.bookmarks} />}
+          {activeTab === "feed" && <FeedList feeds={user.feeds} />}
+        </div>
+
+        {/* 음식선호도 설정 모달 + 배경 블러 처리 */}
+        {showPreference && (
+          <>
+            <div className="modal-backdrop" onClick={() => setShowPreference(false)}></div>
+            <Preference 
+              preferences={preferences} 
+              onClose={() => setShowPreference(false)}
+              onSave={handlePreferenceChange}
+            />
+          </>
+        )}
       </div>
-
-      {/* 음식선호도 설정 모달 + 배경 블러 처리 */}
-      {showPreference && (
-        <>
-          <div className="modal-backdrop" onClick={() => setShowPreference(false)}></div>
-          <Preference 
-            preferences={preferences} 
-            onClose={() => setShowPreference(false)}
-            onSave={handlePreferenceChange}
-          />
-        </>
-      )}
     </div>
+  </div>
   );
 };
 

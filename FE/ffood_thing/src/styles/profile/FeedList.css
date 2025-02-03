@@ -1,0 +1,25 @@
+.gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* 사진 사이의 간격 */
+  justify-content: center;
+  padding: 10px;
+}
+
+.gallery-image {
+  width: 350px; /* 이미지 너비 고정 */
+  height: 350px; /* 이미지 높이 고정 */
+  object-fit: cover; /* 이미지 비율 유지하면서 크롭 */
+  border-radius: 10px; /* 모서리 라운드 처리 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.gallery-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+
+

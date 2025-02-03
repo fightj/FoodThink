@@ -5,7 +5,8 @@ const profileData = [
       profileImage: "/images/karina.jpg", // 프로필 이미지 추가
       subscribers: 256, // 구독자 수
       posts: 6, // 게시물 수
-      preferences: ["고수"], // 음식선호도(재료)
+      preferences: ["고수"], // 선호 음식(재료)
+      avoidances: ["우유", "대두", "새우"], // 기피 음식(재료)
       recipes: [
         { id: 1, title: "울리는 맛있는 라멘 🍜", image: "/images/recipe1.jpg" },
         { id: 2, title: "김치찌개가 힘들게 가르쳐준 맛", image: "/images/recipe2.jpg" },
@@ -34,7 +35,8 @@ const profileData = [
       profileImage: "/images/winter.jpg", // 프로필 이미지 추가
       subscribers: 300, // 구독자 수
       posts: 2, // 게시물 수
-      preferences: ["올리브"], // 음식선호도(재료)
+      preferences: ["올리브"], // 선호 음식(재료)
+      avoidances: ["고등어", "밀"], // 기피 음식(재료)
       recipes: [
         { id: 11, title: "아메리카노와 잘 어울리는 디저트 🍪", image: "/images/recipe7.jpg" },
         { id: 12, title: "딸기우유 케이크 🍰", image: "/images/recipe8.jpg" },
