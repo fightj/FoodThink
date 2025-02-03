@@ -4,9 +4,9 @@ FROM nginx:latest
 # 기본 Nginx 설정 파일 제거
 RUN rm /etc/nginx/conf.d/default.conf
 
-# SSL 인증서와 키를 컨테이너에 복사
-COPY ./nginx/ssl/server.crt /etc/ssl/certs/
-COPY ./nginx/ssl/server.key /etc/ssl/private/
+## SSL 인증서와 키를 컨테이너에 복사
+#COPY ./nginx/ssl/server.crt /etc/ssl/certs/
+#COPY ./nginx/ssl/server.key /etc/ssl/private/
 
 # 빌드된 프론트엔드 파일을 /usr/share/nginx/html로 복사
 COPY ./FE/ffood_thing/dist /usr/share/nginx/html
