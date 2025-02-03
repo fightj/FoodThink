@@ -16,14 +16,12 @@ import java.util.List;
 public class RecipeDetailResponseDto {
     private Long recipeId;
     private String recipeTitle;
+    private String image;
     private String nickname;
     private String userImage;
     private String serving; //인분
     private Integer level;   //난이도
     private String requiredTime;    //소요시간
-
-    //+해당 레시피의 작성자 구독 여부
-//    private boolean isBookMark; //북마크 상태 여부
 
     //재료 정보
     private List<IngredientDto> ingredients;

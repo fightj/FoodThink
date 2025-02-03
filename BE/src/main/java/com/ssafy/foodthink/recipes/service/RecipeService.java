@@ -53,12 +53,6 @@ public class RecipeService {
             // 북마크 개수 조회 (null 방지)
             Long bookmarkCount = Optional.ofNullable(recipeBookMarkRepository.countByRecipeEntity(recipeEntity)).orElse(0L);
 
-            //로그인 : 북마크 여부 확인
-            boolean isBookmarked = false;
-            // if (userId != null) {
-            //     isBookmarked = recipeBookMarkRepository.existsByRecipeEntityAndUserEntityUserId(recipeEntity, userId);
-            // }
-
             return new RecipeListResponseDto(
                     recipeEntity.getRecipeId(),
                     recipeEntity.getRecipeTitle(),
@@ -66,8 +60,7 @@ public class RecipeService {
                     recipeEntity.getUserEntity().getNickname(),
                     recipeEntity.getUserEntity().getImage(),
                     recipeEntity.getHits(),
-                    bookmarkCount,
-                    isBookmarked
+                    bookmarkCount
             );
         }).collect(Collectors.toList());
 
@@ -125,6 +118,7 @@ public class RecipeService {
         return new RecipeDetailResponseDto(
                 recipeEntity.getRecipeId(),
                 recipeEntity.getRecipeTitle(),
+                recipeEntity.getImage(),
                 recipeEntity.getUserEntity().getNickname(),
                 recipeEntity.getUserEntity().getImage(),
                 recipeEntity.getServing(),
