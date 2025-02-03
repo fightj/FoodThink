@@ -1,38 +1,40 @@
-import React, { useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import RecipeComponent from "../../components/recipe/RecipeComponent"
-import HandPoseComponent from "../../components/handmotion/HandPoseComponent" // HandPoseComponent 임포트
-import SearchBar from "../../components/base/SearchBar"
-import { Recipe } from "./recipe_data"
-import "../../styles/recipe/RecipeDetailPage.css"
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import RecipeComponent from "../../components/recipe/RecipeComponent";
+import HandPoseComponent from "../../components/handmotion/HandPoseComponent";
+import SearchBar from "../../components/base/SearchBar";
+import { Recipe } from "./recipe_data";
+import "../../styles/recipe/RecipeDetailPage.css";
 
 const RecipeDetailPage = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [showModal, setShowModal] = useState(false)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [activeSection, setActiveSection] = useState("ingredients"); // 추가된 상태
 
-  const recipe = Recipe.find((item) => item.recipeId === parseInt(id))
+  const recipe = Recipe.find((item) => item.recipeId === parseInt(id));
 
   if (!recipe) {
-    return <div>Recipe not found</div>
+    return <div>Recipe not found</div>;
   }
 
   const getLevelText = (level) => {
     switch (level) {
       case 1:
-        return "하"
+        return "하";
       case 2:
-        return "중"
+        return "중";
       case 3:
-        return "상"
+        return "상";
       default:
-        return level
+        return level;
     }
-  }
+  };
 
   const scrollToSection = (section) => {
-    document.getElementById(section).scrollIntoView({ behavior: "smooth" })
-  }
+    setActiveSection(section); // 선택된 섹션 업데이트
+    document.getElementById(section).scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div className="base-div">
@@ -102,18 +104,34 @@ const RecipeDetailPage = () => {
         </div>
       </div>
 
-      {/* Navigation Buttons */}
+      {/* Sticky Navigation Bar */}
       <div className="card-div-firstsection">
-        <button onClick={() => scrollToSection("ingredients")}>재료</button>
-        <button onClick={() => scrollToSection("steps")}>조리순서</button>
-        <button onClick={() => scrollToSection("completed")}>완성 이미지</button>
-        <button onClick={() => scrollToSection("feed")}>FEED</button>
+        <button className={activeSection === "ingredients" ? "active" : ""} onClick={() => scrollToSection("ingredients")}>
+          재료
+        </button>
+        <button className={activeSection === "steps" ? "active" : ""} onClick={() => scrollToSection("steps")}>
+          조리순서
+        </button>
+        <button className={activeSection === "completed" ? "active" : ""} onClick={() => scrollToSection("completed")}>
+          완성 이미지
+        </button>
+        <button className={activeSection === "feed" ? "active" : ""} onClick={() => scrollToSection("feed")}>
+          FEED
+        </button>
       </div>
 
       {/* Sections */}
       <div id="ingredients" className="card-div-section">
-        <h1>재료</h1>
-      </div>
+  <h1 className="section-title">재료</h1>
+  <div className="left-half">
+    <h1>왼쪽</h1>
+  </div>
+  <div className="right-half">
+    <h1>ㅁㄴㅇㄴㅁㅇ</h1>
+  </div>
+</div>
+
+
       <div id="steps" className="card-div-section">
         <h1>조리 순서</h1>
       </div>
@@ -124,7 +142,7 @@ const RecipeDetailPage = () => {
         <h1>FEED</h1>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RecipeDetailPage
+export default RecipeDetailPage;

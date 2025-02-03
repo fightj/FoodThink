@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
 const PageSlide = ({ children }) => {
   return (
@@ -14,14 +14,13 @@ const PageSlide = ({ children }) => {
         position: "relative",
         width: "100%",
         minHeight: "100vh",
-        overflowX: "hidden",
-        overflowY: "auto",
+        overflow: "visible", // 부모 요소의 overflow 제거
         paddingBottom: "60px", // 네비게이션 바 공간 확보
       }}
     >
       {children}
     </motion.div>
-  )
-}
+  );
+};
 
-export default PageSlide
+export default PageSlide;

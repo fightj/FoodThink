@@ -7,6 +7,7 @@
   justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
   border-radius: 50px 50px 50px 50px; /* 네 꼭지점을 둥글게 설정 */
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
+  margin-bottom: 0; /* 아래 섹션과의 간격을 없앱니다 */
 }
 
 .card-div-section {
@@ -14,10 +15,60 @@
   background-color: rgb(255, 255, 255);
   width: 100%; /* 수평 공간 전체를 차지 */
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
-  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  border-radius: 50px 50px 50px 50px; /* 네 꼭지점을 둥글게 설정 */
+  border-radius: 50px; 
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
-  margin-top: 50px;
+  margin-top: 50px; /* Sticky 네비게이션 바와의 간격을 없앱니다 */
+  padding: 20px; /* 내부 패딩 추가 */
+}
+
+.card-div-firstsection {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Ensure the sticky section is above other content */
+  background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+  padding: 20px; /* Add padding for spacing */
+  width: 80%;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3);
+  margin: 50px auto 0 auto; /* 화면 전체의 가운데에 배치 */
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  justify-content: space-between; /* 자식 요소 간의 간격을 균등하게 설정 */
+  align-items: center; /* 자식 요소를 수직 가운데 정렬 */
+  gap: 20px; /* 버튼들 간의 간격 */
+}
+
+.card-div-firstsection button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  background-color: #fdb13f;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* 배경 색상 전환에 애니메이션 추가 */
+}
+
+.card-div-firstsection button:hover {
+  background-color: #ffa726; /* Slightly darker shade on hover */
+}
+
+.card-div-firstsection button.active {
+  background-color: #ff8c00; /* 선택된 버튼에 사용할 배경 색상 */
+}
+
+
+
+.sticky-section {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Ensure the sticky section is above other content */
+  background: linear-gradient(to bottom, #ffffff, #a1a1a1); /* Match the background of parent div */
+  padding: 20px; /* Add padding for spacing */
+  width: 100%;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
+  border-radius: 50px 50px 0 0; /* 윗쪽만 둥글게 설정 */
+  margin-bottom: -50px; /* 다음 섹션과의 간격을 자연스럽게 만듭니다 */
 }
 
 .recipe-image1 {
@@ -114,41 +165,25 @@
   cursor: pointer; /* Add a pointer cursor on hover */
   font-size: 30px;
 }
-
-.card-div-firstsection {
-  background: linear-gradient(to bottom, #ffffff, #a1a1a1);
-  background-color: rgb(255, 255, 255);
-  width: 100%; /* 수평 공간 전체를 차지 */
-  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
-  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  border-radius: 50px 50px 50px 50px; /* 네 꼭지점을 둥글게 설정 */
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
+.left-half, .right-half {
   margin-top: 50px;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 1000; /* Ensure the navigation bar is above other content */
-  padding: 10px; /* Add padding for spacing */
+  width: 50%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.card-div-firstsection button {
-  margin: 0 10px;
-  padding: 10px 20px;
-  background-color: #fdb13f;
-  color: white;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
+.left-half {
+  float: left;
 }
 
-.card-div-firstsection button:hover {
-  background-color: #ffa726; /* Slightly darker shade on hover */
+.right-half {
+  float: right;
 }
-
-.card-div-section {
-  padding: 50px;
-  margin-top: 50px;
-  background-color: #f3f3f3;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.section-title {
+  position: absolute;
+  left: 10%;
+  transform: translateX(-50%);
+ 
+  z-index: 20;
+  margin-bottom: 30px;
 }
