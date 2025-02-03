@@ -210,7 +210,7 @@ pipeline {
 
         always {
             // 'node' 블록 내에서 cleanWs 호출
-            node('any') {  // 'any'는 사용 가능한 노드에서 실행되도록 지정
+            node('master') {  // 'any'는 사용 가능한 노드에서 실행되도록 지정
                 cleanWs()  // 워크스페이스 정리
             }
         }
