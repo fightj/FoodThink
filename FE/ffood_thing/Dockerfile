@@ -35,7 +35,7 @@ COPY --from=build /app/dist ./dist
 RUN rm /etc/nginx/conf.d/default.conf
 
 # host PC의 nginx.conf 파일을 컨테이너에 복사
-COPY ./nginx.conf /etc/nginx/conf.d
+COPY ./nginx/nginx.conf /etc/nginx/conf.d
 
 # 80 포트 개방
 EXPOSE 80
