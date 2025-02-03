@@ -124,8 +124,9 @@ pipeline {
         stage('Build') {
              steps {
                   script {
-                       // 원격 서버에서 mvn clean install 실행
-                       sh 'mvn clean install -f BE/pom.xml'  // BE 디렉토리에서 Maven 빌드
+                      dir('BE') {  // BE 디렉토리로 이동
+                          sh 'mvn clean install -f pom.xml'  // BE 디렉토리에서 Maven 빌드
+                      }
                   }
              }
         }
@@ -134,7 +135,7 @@ pipeline {
              steps {
                     script {
                         // 프론트엔드 빌드: npm install 및 npm run build
-                        dir('frontend') {  // 프론트엔드 디렉토리로 이동
+                        dir('FE/ffood_thing') {  // 프론트엔드 디렉토리로 이동
                             nodejs('NodeJS 22.13.0'){
                                 sh 'npm install'  // 의존성 설치
                                  sh 'npm run build'  // 빌드 실행
