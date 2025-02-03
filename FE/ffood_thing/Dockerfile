@@ -5,7 +5,7 @@ FROM node:22 AS build
 WORKDIR /app
 
 # package.json 작업 디렉토리에 복사
-COPY package.json .
+COPY package.json ./
 
 # 의존성 설치 명령어 실행
 RUN npm install

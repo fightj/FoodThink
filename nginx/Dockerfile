@@ -8,8 +8,8 @@ RUN rm /etc/nginx/conf.d/default.conf
 #COPY ./nginx/ssl/server.crt /etc/ssl/certs/
 #COPY ./nginx/ssl/server.key /etc/ssl/private/
 
-# 빌드된 프론트엔드 파일을 /usr/share/nginx/html로 복사
-COPY ./app/FE/ffood_thing/dist /usr/share/nginx/html
+# 프론트엔드 빌드 결과물을 Nginx HTML 폴더로 복사
+COPY --from=build /app/FE/ffood_thing/dist /usr/share/nginx/html
 
 # nginx.conf 파일을 컨테이너에 복사
 COPY ./nginx.conf /etc/nginx/conf.d/
