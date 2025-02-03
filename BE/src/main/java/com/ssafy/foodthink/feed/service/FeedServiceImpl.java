@@ -359,24 +359,24 @@ public class FeedServiceImpl implements FeedService {
                 .build();
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<FeedInRecipeResponseDto> getTop6FeedsByRecipeId(Long recipeId) {
-        List<FeedEntity> feeds = feedRepository.findTop6ByRecipeEntity_RecipeIdOrderByLikesDesc(recipeId);
-
-        return feeds.stream().map(feed -> {
-            String firstImageUrl = feed.getImages().stream()
-                    .findFirst()
-                    .map(image -> image.getImageUrl())
-                    .orElse(null);
-            return new FeedInRecipeResponseDto(
-                    recipeId,
-                    feed.getId(),
-                    firstImageUrl,
-                    feed.getUserEntity().getNickname(),
-                    feed.getUserEntity().getImage()
-            );
-        }).collect(Collectors.toList());
-    }
+//    @Transactional(readOnly = true)
+//    @Override
+//    public List<FeedInRecipeResponseDto> getTop6FeedsByRecipeId(Long recipeId) {
+//        List<FeedEntity> feeds = feedRepository.findTop6ByRecipeEntity_RecipeIdOrderByLikesDesc(recipeId);
+//
+//        return feeds.stream().map(feed -> {
+//            String firstImageUrl = feed.getImages().stream()
+//                    .findFirst()
+//                    .map(image -> image.getImageUrl())
+//                    .orElse(null);
+//            return new FeedInRecipeResponseDto(
+//                    recipeId,
+//                    feed.getId(),
+//                    firstImageUrl,
+//                    feed.getUserEntity().getNickname(),
+//                    feed.getUserEntity().getImage()
+//            );
+//        }).collect(Collectors.toList());
+//    }
 
 }
