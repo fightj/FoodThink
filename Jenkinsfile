@@ -119,6 +119,27 @@ pipeline {
             }
         }
 
+        stage('Build') {
+             steps {
+                  script {
+                       // 원격 서버에서 mvn clean install 실행
+                       sh 'mvn clean install -f BE/pom.xml'  // BE 디렉토리에서 Maven 빌드
+                  }
+             }
+        }
+
+        stage('Frontend Build') {
+             steps {
+                    script {
+                        // 프론트엔드 빌드: npm install 및 npm run build
+                        dir('frontend') {  // 프론트엔드 디렉토리로 이동
+                             sh 'npm install'  // 의존성 설치
+                             sh 'npm run build'  // 빌드 실행
+                        }
+                    }
+             }
+        }
+
         stage('Build Backend') {
             steps {
                 script {
@@ -171,15 +192,6 @@ pipeline {
                 script {
                     // docker-compose로 배포
                     sh 'docker-compose -f docker-compose.yml up -d'
-                }
-            }
-        }
-
-        stage('Clean Up') {
-            steps {
-                script {
-                    // Docker 이미지 및 컨테이너 정리
-                    sh 'docker system prune -af'
                 }
             }
         }
