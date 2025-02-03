@@ -199,20 +199,20 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            echo 'Deployment was successful!'
-        }
-
-        failure {
-            echo 'Deployment failed.'
-        }
-
-        always {
-            // 'node' 블록 내에서 cleanWs 호출
-            node('master') {  // 'any'는 사용 가능한 노드에서 실행되도록 지정
-                cleanWs()  // 워크스페이스 정리
-            }
-        }
-    }
+//     post {
+//         success {
+//             echo 'Deployment was successful!'
+//         }
+//
+//         failure {
+//             echo 'Deployment failed.'
+//         }
+//
+//         always {
+//             // 'node' 블록 내에서 cleanWs 호출
+//             node('master') {  // 'any'는 사용 가능한 노드에서 실행되도록 지정
+//                 cleanWs()  // 워크스페이스 정리
+//             }
+//         }
+//     }
 }
