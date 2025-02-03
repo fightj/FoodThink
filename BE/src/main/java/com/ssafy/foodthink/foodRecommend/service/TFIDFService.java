@@ -37,9 +37,9 @@ public class TFIDFService {
 
     // IDF 계산 (특성이 전체 레시피에서 얼마나 희소한지)
     private Map<String, Double> calculateIdf(List<List<String>> docs){
-        Map<String, Integer> docFrequency = new HashMap<>(); // 각 feature이 등장하는 레시피의 수를 저장
+        Map<String, Integer> docFrequency = new HashMap<>(); // 각 특성이 등장하는 레시피의 수를 저장
         for(List<String> doc:docs){ // 모든 레시피
-            Set<String> uniqueFeatures = new HashSet<>(doc); // 각 레시피의 고유한 feature 추출
+            Set<String> uniqueFeatures = new HashSet<>(doc); // 각 레시피의 고유한 특성 추출
             uniqueFeatures.forEach(feature -> docFrequency.put(feature, docFrequency.getOrDefault(feature,0)+1)); // 한 레시피 내에서 feature이 여러번 등장해도 한번만 카운트
 
         }
@@ -50,7 +50,7 @@ public class TFIDFService {
 
     }
 
-    // 각 feature에 대해 TF-IDF 계산, 해당 레시피에서 각 특성의 중요도를 나타냄
+    // 각 특성에 대해 TF-IDF 계산, 해당 레시피에서 각 특성의 중요도를 나타냄
     private Map<String,Double> calculateTfIdfVector(List<String> features, List<List<String>> docs, Map<String, Double> idf){
         Map<String, Long> tf = features.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -58,7 +58,7 @@ public class TFIDFService {
                 .collect(Collectors.toMap(Map.Entry::getKey, e->(e.getValue()/(double) features.size()) * idf.getOrDefault(e.getKey(), 0.0)));
     }
 
-
+    // 레시피 특성 추출
     private List<String> getRecipeFeatures(RecipeEntity recipe) {
         List<String> features = new ArrayList<>();
         features.add(recipe.getCateType()); // 레시피의 종류
