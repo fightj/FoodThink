@@ -209,7 +209,9 @@ pipeline {
         }
 
         always {
-            cleanWs()  // 워크스페이스 정리
+            node{
+                cleanWs()  // 워크스페이스 정리
+            }
         }
     }
 }
