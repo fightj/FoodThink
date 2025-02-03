@@ -97,6 +97,7 @@ pipeline {
 
         // Docker Hub 로그인 정보
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub')  // Jenkins에 저장된 Docker Hub 로그인 정보
+        DOCKER_IMAGE_NAME = 'yyb113'
         // .env 파일에 저장된 환경 변수들 (추가할 경우)
         DB_URL = credentials('DB_URL')
         DB_PASSWORD = credentials('DB_PWD')
@@ -179,13 +180,13 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh """
                             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-                            docker tag my-backend-container $DOCKER_USERNAME/my-backend-container
-                            docker tag my-frontend-container $DOCKER_USERNAME/my-frontend-container
-                            docker tag my-nginx-container $DOCKER_USERNAME/my-nginx-container
+                            docker tag my-backend-container ${DOCKER_IMAGE_NAME}/my-backend-container
+                            docker tag my-frontend-container ${DOCKER_IMAGE_NAME}/my-frontend-container
+                            docker tag my-nginx-container ${DOCKER_IMAGE_NAME}/my-nginx-container
 
-                            docker push $DOCKER_USERNAME/my-backend-container
-                            docker push $DOCKER_USERNAME/my-frontend-container
-                            docker push $DOCKER_USERNAME/my-nginx-container
+                            docker push ${DOCKER_IMAGE_NAME}/my-backend-container
+                            docker push ${DOCKER_IMAGE_NAME}/my-frontend-container
+                            docker push ${DOCKER_IMAGE_NAME}/my-nginx-container
                         """
                     }
                 }
