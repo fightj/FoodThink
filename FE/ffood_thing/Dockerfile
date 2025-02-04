@@ -96,7 +96,22 @@ RUN ls -l /app
 FROM nginx:latest
 
 # 빌드된 프론트엔드 파일 복사
-COPY --from=build /app/dist /usr/share/nginx/html
+#COPY --from=build /app/dist /usr/share/nginx/html
+
+# root에 /app 폴더 생성
+RUN mkdir /app
+
+# work dir 고정
+WORKDIR /app
+
+# work dir에 dist 폴더 생성
+RUN mkdir ./dist
+
+# 현재 디렉토리에서 dist 폴더를 /app/dist로 복사
+COPY ./dist ./dist
+
+COPY /etc/letsencrypt/live/i12e107.p.ssafy.io /etc/letsencrypt/live/i12e107.p.ssafy.io
+COPY /etc/letsencrypt/archive/i12e107.p.ssafy.io /etc/letsencrypt/archive/i12e107.p.ssafy.io
 
 # Nginx 설정 파일 복사
 COPY ./nginx.conf /etc/nginx/conf.d
