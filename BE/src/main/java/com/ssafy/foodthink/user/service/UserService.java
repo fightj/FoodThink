@@ -8,6 +8,7 @@ import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.entity.UserInterestEntity;
 import com.ssafy.foodthink.user.repository.UserInterestRepository;
 import com.ssafy.foodthink.user.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -138,6 +139,35 @@ public class UserService {
                 .ingredient(interestEntity.getIngredient())
                 .isLiked(interestEntity.getIsLiked())
                 .build();
+    }
+
+    @PostConstruct
+    public void initializeUsers() {
+        if (userRepository.count() == 0) {
+            userRepository.saveAll(List.of(
+                    UserEntity.createUser("1", "1", "윈터"),
+                    UserEntity.createUser("2", "2", "루피"),
+                    UserEntity.createUser("3", "3", "호크스"),
+                    UserEntity.createUser("4", "4", "엘사"),
+                    UserEntity.createUser("5", "5", "파토스"),
+                    UserEntity.createUser("6", "6", "아린"),
+                    UserEntity.createUser("7", "7", "루미너스"),
+                    UserEntity.createUser("8", "8", "카리나"),
+                    UserEntity.createUser("9", "9", "고윤정"),
+                    UserEntity.createUser("10", "10", "박보영"),
+                    UserEntity.createUser("1", "11", "닝닝"),
+                    UserEntity.createUser("12", "12", "미키마우스"),
+                    UserEntity.createUser("13", "13", "와조스키"),
+                    UserEntity.createUser("14", "14", "영케이"),
+                    UserEntity.createUser("15", "15", "주디"),
+                    UserEntity.createUser("16", "16", "닉"),
+                    UserEntity.createUser("17", "17", "핑핑이"),
+                    UserEntity.createUser("18", "18", "스폰지밥"),
+                    UserEntity.createUser("19", "19", "뚱이"),
+                    UserEntity.createUser("20", "20", "짱구")
+
+            ));
+        }
     }
 }
 
