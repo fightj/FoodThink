@@ -37,73 +37,90 @@ public class MyOwnRecipeService {
 
     //레시피 등록
     @Transactional
-    public void createRecipe(MyRecipeWriteRequestDto dto,
-                             MultipartFile imageFile, List<MultipartFile> processImages) {
+    public void createRecipe(MyRecipeWriteRequestDto dto, MultipartFile imageFile) {
+
         log.info(dto.toString()); // 레시피 저장 요청
 
         // 사용자 인증 : JWT
         UserEntity user = userRepository.findByUserId(dto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException(("해당 사용자가 없습니다.")));
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
 
         // 대표 이미지 업로드
-        String recipeImageUrl = (imageFile != null && !imageFile.isEmpty()) ? s3Service.uploadFile(imageFile) : null;
+        String recipeImageUrl = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            recipeImageUrl = s3Service.uploadFile(imageFile);
+        }
 
-        // 레시피 엔티티 생성 및 저장
-        RecipeEntity recipeEntity = new RecipeEntity();
-        recipeEntity.setUserEntity(user);
-        recipeEntity.setRecipeTitle(dto.getRecipeTitle());
-        recipeEntity.setCateType(dto.getCateType());
-        recipeEntity.setCateMainIngre(dto.getCateMainIngre());
-        recipeEntity.setServing(dto.getServing());
-        recipeEntity.setLevel(dto.getLevel());
-        recipeEntity.setRequiredTime(dto.getRequiredTime());
-        recipeEntity.setIsPublic(dto.isPublic());
-        recipeEntity.setImage(recipeImageUrl);
+        try {
+            // 레시피 엔티티 생성 및 저장
+            RecipeEntity recipeEntity = new RecipeEntity();
+            recipeEntity.setUserEntity(user);
+            recipeEntity.setRecipeTitle(dto.getRecipeTitle());
+            recipeEntity.setCateType(dto.getCateType());
+            recipeEntity.setCateMainIngre(dto.getCateMainIngre());
+            recipeEntity.setServing(dto.getServing());
+            recipeEntity.setLevel(dto.getLevel());
+            recipeEntity.setRequiredTime(dto.getRequiredTime());
+            recipeEntity.setIsPublic(dto.isPublic());
+            recipeEntity.setImage(recipeImageUrl);
 
-        recipeRepository.save(recipeEntity);
+            recipeRepository.save(recipeEntity);
 
-        // 재료 저장
-        List<IngredientEntity> ingredientEntities = dto.getIngredients().stream()
-                .map(ingreDto -> {
-                    IngredientEntity ingredient = new IngredientEntity();
-                    ingredient.setIngreName(ingreDto.getIngreName());
-                    ingredient.setAmount(ingreDto.getAmount());
-                    ingredient.setRecipeEntity(recipeEntity);
-                    return ingredient;
-                }).collect(Collectors.toList());
+            // 재료 저장
+            List<IngredientEntity> ingredientEntities = dto.getIngredients().stream()
+                    .map(ingreDto -> {
+                        IngredientEntity ingredient = new IngredientEntity();
+                        ingredient.setIngreName(ingreDto.getIngreName());
+                        ingredient.setAmount(ingreDto.getAmount());
+                        ingredient.setRecipeEntity(recipeEntity);
+                        return ingredient;
+                    }).collect(Collectors.toList());
 
-        ingredientRepository.saveAll(ingredientEntities);
+            ingredientRepository.saveAll(ingredientEntities);
 
-        // 과정 저장
-        List<ProcessEntity> processEntities = dto.getProcesses().stream()
-                .map(processDto -> {
-                    ProcessEntity process = new ProcessEntity();
-                    process.setProcessOrder(processDto.getProcessOrder());
-                    process.setProcessExplain(processDto.getProcessExplain());
-                    process.setRecipeEntity(recipeEntity);
+            // 과정 저장
+            List<ProcessEntity> processEntities = dto.getProcesses().stream()
+                    .map(processDto -> {
+                        ProcessEntity process = new ProcessEntity();
+                        process.setProcessOrder(processDto.getProcessOrder());
+                        process.setProcessExplain(processDto.getProcessExplain());
+                        process.setRecipeEntity(recipeEntity);
+                        return process;
+                    }).collect(Collectors.toList());
+            processRepository.saveAll(processEntities);
 
-                    process = processRepository.save(process);
+            // 강제 flush() 호출 (process_id 확보)
+            processRepository.flush();
 
-                    // 과정 순서에 맞는 이미지 처리
-                    if (processDto.getImages() != null && !processDto.getImages().isEmpty()) {
-                        for (ProcessImageRequestDto imageRequestDto : processDto.getImages()) {
-                            // 이미지가 존재할 때만 S3에 업로드 후 저장
-                            if (imageRequestDto.getProcessImage() != null && !imageRequestDto.getProcessImage().isEmpty()) {
-                                String uploadedImageUrl = s3Service.uploadFile(imageRequestDto.getProcessImage());
-                                ProcessImageEntity processImage = new ProcessImageEntity();
-                                processImage.setImageUrl(uploadedImageUrl);
-                                processImage.setProcessEntity(process);
-                                processImageRepository.save(processImage);
-                            }
+            // 과정 이미지 저장 (과정 ID 매칭)
+            for (ProcessRequestDto processDto : dto.getProcesses()) {
+                ProcessEntity processEntity = processEntities.stream()
+                        .filter(p -> p.getProcessOrder().equals(processDto.getProcessOrder()))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalArgumentException("과정 매칭 실패"));
+
+                if (processDto.getImages() != null) {
+                    for (ProcessImageRequestDto imageRequestDto : processDto.getImages()) {
+                        if (imageRequestDto.getProcessImage() != null && !imageRequestDto.getProcessImage().isEmpty()) {
+                            String uploadedImageUrl = s3Service.uploadFile(imageRequestDto.getProcessImage());
+                            ProcessImageEntity processImage = new ProcessImageEntity();
+                            processImage.setImageUrl(uploadedImageUrl);
+                            processImage.setProcessEntity(processEntity);
+                            processImageRepository.save(processImage);
                         }
                     }
+                }
+            }
 
-                    return process;
-                }).collect(Collectors.toList());
-
-        processRepository.saveAll(processEntities);
-
-        log.info("레시피 저장 완료 : recipeId ", recipeEntity.getRecipeId());
+            log.info("레시피 저장 완료");
+        } catch (Exception e) {
+            if (recipeImageUrl != null) {
+                s3Service.deleteFileFromS3(recipeImageUrl);     // 실패 시, S3에 업로드된 이미지 삭제
+            }
+            throw new RuntimeException("레시피 저장 중 오류 발생", e);
+        }
     }
+
+
 
 }

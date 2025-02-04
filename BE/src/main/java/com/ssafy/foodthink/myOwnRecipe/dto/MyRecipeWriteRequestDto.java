@@ -5,6 +5,7 @@ package com.ssafy.foodthink.myOwnRecipe.dto;
     (프론트에서 온 정보)
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.foodthink.recipes.dto.IngredientDto;
 import com.ssafy.foodthink.recipes.dto.ProcessDto;
 import lombok.Getter;
@@ -17,12 +18,12 @@ import java.util.List;
 @Setter
 public class MyRecipeWriteRequestDto {
     private String recipeTitle;     //레시피 제목
-    private MultipartFile image;           //대표이미지
     private String cateType;        //종류별 카테고리
     private String cateMainIngre;   //메인재료별 카테고리
     private String serving;         //인분
     private int level;           //난이도
     private String requiredTime;    //소요시간
+    @JsonProperty("isPublic")   //JSON 필드명 명시적
     private boolean isPublic;       //공개유무
 
     private List<IngredientDto> ingredients;   //재료 정보
