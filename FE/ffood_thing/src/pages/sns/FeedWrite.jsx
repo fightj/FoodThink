@@ -1,160 +1,198 @@
-import React, { useState, useRef } from "react";
-import imageIcon from "../../assets/image.svg"; // SVG 파일 경로
-import { Form } from "react-bootstrap"; // react-bootstrap에서 Form 가져오기
-import { useNavigate } from "react-router-dom"; // useNavigate import
+import React, { useState, useRef, useEffect } from "react"
+import imageIcon from "../../assets/image.svg"
+import { Form } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
+import "../../styles/sns/FeedWrite.css"
 
 function FeedWrite() {
-  const [selectedImages, setSelectedImages] = useState([]); // 사용자가 선택한 이미지
-  const [checkedImages, setCheckedImages] = useState([]); // 체크박스로 선택된 이미지
-  const fileInputRef = useRef(); // 파일 입력 요소 접근용 ref
-  const navigate = useNavigate(); // navigate 훅 사용
+  const navigate = useNavigate()
 
-  // 이미지 선택
+  const [selectedImages, setSelectedImages] = useState([])
+  const [checkedImages, setCheckedImages] = useState([])
+  const [foodName, setFoodName] = useState("")
+  const [description, setDescription] = useState("")
+  const fileInputRef = useRef()
+
+  useEffect(() => {
+    // Check if there are saved changes and prompt the user to load them
+    const savedFoodName = localStorage.getItem("foodName")
+    const savedDescription = localStorage.getItem("description")
+    const savedImages = localStorage.getItem("selectedImages")
+    const savedCheckedImages = localStorage.getItem("checkedImages")
+
+    if (savedFoodName || savedDescription || savedImages || savedCheckedImages) {
+      Swal.fire({
+        title: "이전에 저장한 임시 데이터가 있습니다. 불러올까요?",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "불러오기",
+        denyButtonText: `불러오지 않기`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if (savedFoodName) setFoodName(savedFoodName)
+          if (savedDescription) setDescription(savedDescription)
+          if (savedImages) setSelectedImages(JSON.parse(savedImages))
+          if (savedCheckedImages) setCheckedImages(JSON.parse(savedCheckedImages))
+          Swal.fire("불러오기 완료!", "", "success")
+        } else if (result.isDenied) {
+          localStorage.removeItem("foodName")
+          localStorage.removeItem("description")
+          localStorage.removeItem("selectedImages")
+          localStorage.removeItem("checkedImages")
+          Swal.fire("임시 저장 데이터를 삭제했습니다.", "", "info")
+        }
+      })
+    }
+  }, [])
+
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files); // 선택된 파일
+    const files = Array.from(e.target.files)
     const previews = files.map((file) => ({
-      id: URL.createObjectURL(file), // 미리보기 URL 생성
-      file, // 실제 파일 저장
-    }));
-    setSelectedImages((prev) => [...prev, ...previews]); // 기존 이미지에 추가
-  };
+      id: URL.createObjectURL(file),
+      file,
+    }))
+    setSelectedImages((prev) => [...prev, ...previews])
+  }
 
-  // 체크박스로 이미지 선택
   const handleCheck = (id) => {
-    setCheckedImages((prev) =>
-      prev.includes(id) ? prev.filter((imgId) => imgId !== id) : [...prev, id]
-    );
-  };
+    setCheckedImages((prev) => (prev.includes(id) ? prev.filter((imgId) => imgId !== id) : [...prev, id]))
+  }
 
-  // 업로드 버튼 클릭
+  const temporarySave = () => {
+    localStorage.setItem("selectedImages", JSON.stringify(selectedImages))
+    localStorage.setItem("checkedImages", JSON.stringify(checkedImages))
+    localStorage.setItem("foodName", foodName)
+    localStorage.setItem("description", description)
+    console.log("임시저장 완료")
+  }
+
+  const handleBack = () => {
+    Swal.fire({
+      title: "변경사항을 임시저장하고 나갈까요?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "임시저장",
+      denyButtonText: `임시저장하지 않기`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        temporarySave()
+        Swal.fire("임시저장!", "", "success").then(() => navigate(-1))
+      } else if (result.isDenied) {
+        Swal.fire("임시 저장하지 않기", "", "info").then(() => navigate(-1))
+      }
+    })
+  }
+
+  const handleNavigate = (path) => {
+    temporarySave()
+    navigate(path)
+  }
+
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const imagesToUpload = selectedImages.filter((img) =>
-      checkedImages.includes(img.id)
-    );
-    console.log("업로드할 이미지:", imagesToUpload);
-    // 업로드 로직 추가
-  };
+    e.preventDefault()
+    const imagesToUpload = selectedImages.filter((img) => checkedImages.includes(img.id))
+    console.log("업로드할 이미지:", imagesToUpload)
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success me-2",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    })
+
+    swalWithBootstrapButtons
+      .fire({
+        title: "정말 작성을 완료할까요?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "작성완료!",
+        cancelButtonText: "취소!",
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          // 폼 제출 후 localStorage 비우기
+          localStorage.removeItem("selectedImages")
+          localStorage.removeItem("checkedImages")
+          localStorage.removeItem("foodName")
+          localStorage.removeItem("description")
+          swalWithBootstrapButtons
+            .fire({
+              title: "작성완료!",
+              text: "성공적으로 피드가 작성됐어요.",
+              imageUrl: "/images/mainlogo.jpg",
+              imageWidth: 350,
+              imageHeight: 300,
+              imageAlt: "Custom image",
+              icon: "success",
+            })
+            .then(() => navigate(-1))
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire({
+            title: "작성 취소!",
+            text: "작성을 취소했어요.",
+            icon: "error",
+          })
+        }
+      })
+  }
 
   return (
     <div className="base-div">
       <div className="card-div">
-        <div style={{ width: "80%", margin: "0 auto" }}>
-          {/* 이전 버튼 클릭 시, 이전 페이지로 이동 */}
-          <button onClick={() => navigate(-1)} className="back-button">
+        <div className="div-80">
+          <button onClick={handleBack} className="back-button">
             <img src="/images/previous_button.png" alt="Previous" className="icon" />
             이전
           </button>
           <form onSubmit={handleSubmit}>
-            {/* 미리보기와 체크박스 */}
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "10px",
-                marginTop: "20px",
-              }}
-            >
+            <div className="preview-container">
               {selectedImages.map((image) => (
-                <div
-                  key={image.id}
-                  style={{
-                    position: "relative",
-                    width: "calc(33.33% - 10px)", // 3개씩 배치
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "100%",
-                      paddingBottom: "100%", // 정사각형 유지
-                      position: "relative",
-                      overflow: "hidden",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <img
-                      src={image.id}
-                      alt="미리보기"
-                      style={{
-                        position: "absolute",
-                        top: "0",
-                        left: "0",
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
+                <div key={image.id} className="preview-image">
+                  <div className="square">
+                    <img src={image.id} alt="미리보기" />
                   </div>
-                  <input
-                    type="checkbox"
-                    style={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "10px",
-                      width: "20px",
-                      height: "20px",
-                    }}
-                    onChange={() => handleCheck(image.id)}
-                  />
+                  <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
                 </div>
               ))}
             </div>
 
-            {/* 파일 선택 */}
-            <div
-              style={{
-                border: "2px dashed #ccc",
-                padding: "20px",
-                borderRadius: "8px",
-                textAlign: "center",
-                cursor: "pointer",
-                marginTop: "20px", // 미리보기 아래로 이동
-              }}
-              onClick={() => fileInputRef.current.click()}
-            >
-              <img
-                src={imageIcon}
-                alt="이미지 아이콘"
-                style={{ width: "2rem", height: "2rem", marginBottom: "10px" }}
-              />
+            <div className="file-upload" onClick={() => fileInputRef.current.click()}>
+              <img src={imageIcon} alt="이미지 아이콘" />
               <p>이미지 선택</p>
-              <input
-                type="file"
-                ref={fileInputRef}
-                id="imageUpload"
-                name="imageUpload"
-                accept="image/*"
-                multiple
-                style={{ display: "none" }}
-                onChange={handleImageChange}
-              />
+              <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
             </div>
 
-            {/* 추가 정보 입력 */}
             <hr className="featurette-divider" />
 
-            <Form.Control size="lg" type="text" placeholder="음식명" />
+            <Form.Control size="lg" type="text" placeholder="음식명" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
             <br />
-            <Form.Control type="text" placeholder="문구 추가..." />
+            <Form.Control type="text" placeholder="문구 추가..." value={description} onChange={(e) => setDescription(e.target.value)} />
 
-            {/* 게시물 작성 버튼 */}
-            <div
-              className="submit-button"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "20px", // 상단 여백 추가
-              }}
-            >
+            {/* 참고한 레시피 섹션 */}
+            <div className="recipe-section">
+              <h5>참고한 레시피</h5>
+              <div className="button-container">
+                <button type="button" className="btn btn-secondary" onClick={() => handleNavigate("/recipes")}>
+                  레시피 검색
+                </button>
+                <button type="button" className="btn btn-secondary" onClick={() => handleNavigate("/profile/1?tab=bookmarks")}>
+                  내 북마크에서 찾기
+                </button>
+              </div>
+            </div>
+
+            <div className="submit-button">
               <button type="submit" className="btn btn-primary">
-                공유 하기
+                작성 완료
               </button>
             </div>
           </form>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default FeedWrite;
+export default FeedWrite

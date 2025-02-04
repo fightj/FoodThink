@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.user.jwt;
 
+import com.ssafy.foodthink.global.exception.InvalidTokenException;
 import com.ssafy.foodthink.user.dto.CustomOAuth2User;
 import com.ssafy.foodthink.user.dto.UserDto;
 import jakarta.servlet.FilterChain;
@@ -25,25 +26,34 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = extractToken(request); // request에서 토큰을 추출
+        try {
+            String token = extractToken(request); // request에서 토큰을 추출
 
-        // 유효한 토큰이 존재하는 경우
-        if (token != null && jwtUtil.validateToken(token)) {
-            String email = jwtUtil.getEmail(token);
-            String role = jwtUtil.getRole(token);
+            // 유효한 토큰이 존재하는 경우
+            if (token != null && jwtUtil.validateToken(token)) {
+                String email = jwtUtil.getEmail(token);
+                String role = jwtUtil.getRole(token);
 
-            UserDto userDTO = new UserDto();
-            userDTO.setEmail(email);
-            userDTO.setRole(role);
-            userDTO.setSocialType("KAKAO");
+                UserDto userDTO = new UserDto();
+                userDTO.setEmail(email);
+                userDTO.setRole(role);
+                userDTO.setSocialType("KAKAO");
 
-            CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
+                CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
+                Authentication auth = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+
+            filterChain.doFilter(request, response);
+        } catch (InvalidTokenException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            String jsonResponse = "{\"available\": false, \"message\": \"토큰이 만료되었습니다.\"}";
+            response.getWriter().write(jsonResponse);
         }
 
-        filterChain.doFilter(request, response);
     }
 
     private String extractToken(HttpServletRequest request) {
@@ -54,4 +64,13 @@ public class JWTFilter extends OncePerRequestFilter {
         }
         return null;
     }
+
+
+    // 리프레시 토큰 재발급 경로 제외
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/auth/reissue");
+    }
+
 }
