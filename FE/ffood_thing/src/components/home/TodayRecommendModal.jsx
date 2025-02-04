@@ -43,8 +43,11 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="today-recommend-card" onClick={(e) => e.stopPropagation()}>
-        <h2>오늘 뭐 먹지? 🍽️</h2>
-        <div className="carousel">
+        {/* 닫기 버튼 추가 */}
+        <button className="today-close-btn" onClick={onClose}>×</button>
+
+        <div className="today-title">오늘 뭐 먹지? 🍽️</div>
+        <div className="today-carousel">
           <div className="recipe-list" style={{ transform: `translateX(${-activeIndex * 10}px)` }}>
             {selectedRecipes.map((recipe, i) => (
               <div
@@ -53,7 +56,7 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
                 onClick={() => (i === activeIndex ? goToSearchPage(recipe.title) : moveToCenter(i))}
               >
                 <img src={recipe.image} alt={recipe.title} className="recipe-image" />
-                {i === activeIndex && <p className="recipe-title">{recipe.title}</p>}
+                {i === activeIndex && <p className="recipe-title-main">{recipe.title}</p>}
               </div>
             ))}
           </div>
