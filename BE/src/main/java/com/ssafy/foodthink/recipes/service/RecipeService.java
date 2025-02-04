@@ -122,6 +122,7 @@ public class RecipeService {
                 recipeEntity.getServing(),
                 recipeEntity.getLevel(),
                 recipeEntity.getRequiredTime(),
+                recipeEntity.getHits(),
                 ingredients,
                 processes
         );
