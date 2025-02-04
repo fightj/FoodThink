@@ -5,16 +5,19 @@ package com.ssafy.foodthink.myOwnRecipe.dto;
     (프론트에서 온 정보)
  */
 
+import com.ssafy.foodthink.recipes.dto.IngredientDto;
+import com.ssafy.foodthink.recipes.dto.ProcessDto;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Getter
 @Setter
-public class myRecipeWriteRequestDto {
+public class MyRecipeWriteRequestDto {
     private String recipeTitle;     //레시피 제목
-    private String image;           //대표이미지
+    private MultipartFile image;           //대표이미지
     private String cateType;        //종류별 카테고리
     private String cateMainIngre;   //메인재료별 카테고리
     private String serving;         //인분
@@ -22,8 +25,8 @@ public class myRecipeWriteRequestDto {
     private String requiredTime;    //소요시간
     private boolean isPublic;       //공개유무
 
-    private List<String> ingredients;   //재료 정보
-    private List<String> processes;     //과정 정보
+    private List<IngredientDto> ingredients;   //재료 정보
+    private List<ProcessRequestDto> processes;     //과정 정보
     
     private Long userId;    //사용자 정보 확인용
     //과정 정보 속 이미지 처리 필요
