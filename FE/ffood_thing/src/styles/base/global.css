@@ -4,6 +4,11 @@
   padding-top: 30px; /* 상단 여백 지정 (100px로 예시) */
   box-sizing: border-box; /* 패딩 포함 높이 계산 */
 }
+.parent-container {
+  display: flex;
+  justify-content: center;
+}
+
 .card-div {
   background: linear-gradient(to bottom, #ffffff, #a1a1a1);
   background-color: rgb(255, 255, 255);

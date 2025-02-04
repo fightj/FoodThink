@@ -1,7 +1,11 @@
+.parent-container {
+  display: flex;
+  justify-content: center;
+}
+
 .card-div-topsection {
-  background: linear-gradient(to bottom, #ffffff, #a1a1a1);
   background-color: rgb(255, 255, 255);
-  width: 100%; /* 수평 공간 전체를 차지 */
+  width: 95%; /* 수평 공간 전체를 차지 */
   padding: 20px;
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
   justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
@@ -11,14 +15,25 @@
 }
 
 .card-div-section {
-  background: linear-gradient(to bottom, #ffffff, #a1a1a1);
   background-color: rgb(255, 255, 255);
-  width: 100%; /* 수평 공간 전체를 차지 */
+  width: 95%; /* 수평 공간 전체를 차지 */
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
-  border-radius: 50px; 
+  border-radius: 50px;
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
   margin-top: 50px; /* Sticky 네비게이션 바와의 간격을 없앱니다 */
   padding: 20px; /* 내부 패딩 추가 */
+}
+.card-div-step-section {
+  background-color: rgb(255, 255, 255);
+  width: 95%; /* 수평 공간 전체를 차지 */
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  flex-direction: column; /* 자식 요소를 세로로 쌓음 */
+  border-radius: 50px;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
+  margin-top: 50px; /* Sticky 네비게이션 바와의 간격을 없앱니다 */
+  padding: 20px; /* 내부 패딩 추가 */
+  min-height: 400px; /* 최소 높이 설정 */
+  overflow: hidden; /* 오버플로우 숨김 */
 }
 
 .card-div-firstsection {
@@ -26,15 +41,16 @@
   position: sticky;
   top: 0;
   z-index: 1000; /* Ensure the sticky section is above other content */
-  background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+  background-color: rgb(255, 255, 255);
   padding: 20px; /* Add padding for spacing */
-  width: 80%;
+  width: 95%;
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3);
   margin: 50px auto 0 auto; /* 화면 전체의 가운데에 배치 */
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
-  justify-content: space-between; /* 자식 요소 간의 간격을 균등하게 설정 */
+  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
   align-items: center; /* 자식 요소를 수직 가운데 정렬 */
-  gap: 20px; /* 버튼들 간의 간격 */
+  gap: 80px; /* 버튼들 간의 간격 */
+  font-size: 1.5rem; /* 글자 크기 추가 */
 }
 
 .card-div-firstsection button {
@@ -53,10 +69,8 @@
 }
 
 .card-div-firstsection button.active {
-  background-color: #ff8c00; /* 선택된 버튼에 사용할 배경 색상 */
+  background-color: #ff5500; /* 선택된 버튼에 사용할 배경 색상 */
 }
-
-
 
 .sticky-section {
   position: -webkit-sticky; /* For Safari */
@@ -89,7 +103,40 @@
   transform: translateX(-50%);
   border: 2px solid white; /* Optional: Add a border to make it stand out */
 }
+.bookmark-icon-btn {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+}
 
+.bookmark-icon {
+  width: 80px;
+  height: 80px;
+}
+
+.hit-eye-icon-area {
+  position: absolute;
+  right: 2%;
+  bottom: 0;
+  background-color: rgba(128, 128, 128, 0.6); /* 약간 투명한 회색 배경 */
+  padding: 0px 10px; /* 내부 패딩 추가 */
+  border-radius: 30px; /* 모서리를 둥글게 설정 */
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.hit-eye-icon {
+  width: 40px;
+  height: 40px;
+}
+.hit-eye-icon-area p {
+  font-size: 1.5rem; /* 폰트 크기 설정 */
+  color: white; /* 폰트 색상 설정 */
+  margin: 0 0 0 5px; /* 왼쪽 여백 추가 */
+}
 .nickname-container {
   display: flex;
   align-items: center;
@@ -165,7 +212,8 @@
   cursor: pointer; /* Add a pointer cursor on hover */
   font-size: 30px;
 }
-.left-half, .right-half {
+.left-half,
+.right-half {
   margin-top: 50px;
   width: 50%;
   padding: 20px;
@@ -183,7 +231,29 @@
   position: absolute;
   left: 10%;
   transform: translateX(-50%);
- 
+
   z-index: 20;
   margin-bottom: 30px;
+}
+
+/* 재료 아이템 스타일 */
+.ingredient-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+  font-size: 1.5rem; /* 글자 크기 추가 */
+}
+
+.ingredient-name {
+  margin-right: 10px;
+}
+.steps {
+  margin-top: 70px;
+}
+
+.process-item h2 {
+  font-size: 1.5rem; /* 글자 크기 설정 */
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

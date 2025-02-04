@@ -8,6 +8,7 @@ const Recipe = [
     level: 1,
     requiredTime: "30분 이내",
     image: "https://recipe1.ezmember.co.kr/cache/recipe/2017/11/22/43379879983e255fd8e0e8bccfe210af1.jpg",
+    hits: 155,
     ingredients: [
       {
         ingreName: "양파",
