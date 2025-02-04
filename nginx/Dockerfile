@@ -1,8 +1,8 @@
 # Nginx 베이스 이미지 사용
-FROM nginx:latest
+# FROM nginx:latest
 
 # 기본 Nginx 설정 파일 제거
-RUN rm /etc/nginx/conf.d/default.conf
+# RUN rm /etc/nginx/conf.d/default.conf
 
 ## SSL 인증서와 키를 컨테이너에 복사
 #COPY ./nginx/ssl/server.crt /etc/ssl/certs/
@@ -11,18 +11,32 @@ RUN rm /etc/nginx/conf.d/default.conf
 # 빌드된 프론트엔드 파일을 /usr/share/nginx/html로 복사
 #COPY  ./app/FE/ffood_thing/dist /usr/share/nginx/html
 #COPY  ./app/dist /usr/share/nginx/html
-COPY --from=my-frontend-container:latest /app/dist /usr/share/nginx/html
+# COPY --from=my-frontend-container:latest /dist /usr/share/nginx/html
 
 # nginx.conf 파일을 컨테이너에 복사
 # COPY nginx.conf /etc/nginx/nginx.conf
 # COPY nginx.conf /etc/nginx/conf.d/
 
 # 443 포트 개방 (HTTPS)
-EXPOSE 443
+# EXPOSE 443
 
 # 80 포트 개방 (HTTP 리디렉션을 위해)
-EXPOSE 80
+# EXPOSE 80
 
 # Nginx 실행
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]
 
+# Nginx 기본 이미지 사용
+FROM nginx:latest
+
+# Nginx 설정 파일 복사
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# SSL 인증서 복사
+COPY ./ssl /etc/letsencrypt
+
+# 빌드된 프론트엔드 파일 복사
+COPY ./dist /app/dist
+
+# Nginx가 80과 443 포트를 열도록 설정
+EXPOSE 80 443
