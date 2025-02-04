@@ -13,5 +13,8 @@ public interface FeedRepository extends JpaRepository<FeedEntity, Long> {
     List<FeedEntity> findAllByUserEntity_userIdOrderByWriteTime(Long id);
     @Query("SELECT f FROM FeedEntity f ORDER BY f.writeTime DESC")
     Page<FeedEntity> findAllOrderByWriteTime(Pageable pageable);
+
+    //좋아요순 상위 6개의 특정 레시피 아이디를 가진 피드 조회
+//    List<FeedEntity> findTop6ByRecipeEntity_RecipeIdOrderByLikesDesc(Long recipeId);
 }
 
