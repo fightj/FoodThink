@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Getter @Setter
 @Table(name = "recipe_tfidf")
-public class RecipeTfIdf {
+public class RecipeTfIdfEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tfidf_Id")

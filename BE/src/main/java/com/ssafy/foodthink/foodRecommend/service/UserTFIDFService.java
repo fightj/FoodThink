@@ -1,6 +1,6 @@
 package com.ssafy.foodthink.foodRecommend.service;
 
-import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdf;
+import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdfEntity;
 import com.ssafy.foodthink.foodRecommend.repository.RecipeTfIdfRepository;
 import com.ssafy.foodthink.foodRecommend.repository.RecommendInterestRepository;
 import com.ssafy.foodthink.recipeBookmark.entity.RecipeBookmarkEntity;
@@ -91,9 +91,9 @@ public class UserTFIDFService {
         // 북마크한 모든 레시피의 재료 TF-IDF 값 합산
         for (RecipeBookmarkEntity bookmark : bookmarkedRecipes) {
             RecipeEntity recipe = bookmark.getRecipeEntity();
-            List<RecipeTfIdf> tfIdfValues = recipeTfIdfRepository.findByRecipe(recipe);
+            List<RecipeTfIdfEntity> tfIdfValues = recipeTfIdfRepository.findByRecipe(recipe);
 
-            for (RecipeTfIdf tfIdf : tfIdfValues) {
+            for (RecipeTfIdfEntity tfIdf : tfIdfValues) {
                 String feature = tfIdf.getFeature();
                 double value = tfIdf.getTfIdfValue();
 
@@ -110,22 +110,15 @@ public class UserTFIDFService {
                 ));
     }
 
-    // 정규화
+    // L2 정규화
     private Map<String, Double> normalizeProfile(Map<String, Double> profile) {
-        // L2 정규화 수행
-        double norm = Math.sqrt(
-                profile.values().stream()
-                        .mapToDouble(v -> v * v)
-                        .sum()
-        );
+
+        double norm = Math.sqrt(profile.values().stream().mapToDouble(v -> v * v).sum());
 
         if (norm == 0) return profile;
 
         return profile.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue() / norm
-                ));
+                .collect(Collectors.toMap(Map.Entry::getKey,e -> e.getValue() / norm));
     }
 
 }
