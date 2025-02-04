@@ -4,6 +4,7 @@ import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import com.ssafy.foodthink.user.service.CustomOAuth2UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class AuthController {
 
         Long userId = user.getUserId();
 
-        String accessToken = jwtUtil.createAccessToken(userId, role, 60*60*60L);
+        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 1000L);
 
         return ResponseEntity.ok().body(accessToken);
     }
@@ -61,27 +62,36 @@ public class AuthController {
     
     // 리프레시 토큰으로 액세스 토큰 재발급
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissueAccessToken(@RequestBody Map<String, String> tokenRequest) {
-        String refreshToken = tokenRequest.get("refreshToken");
+    public ResponseEntity<?> reissueAccessToken(@RequestHeader("Authorization") String bearerToken) {
 
-        // 리프레시 토큰 유효성 검사
-        if (!jwtUtil.validateToken(refreshToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 리프레시 토큰");
+        try {
+            // "Bearer " 제거
+            String accessToken = bearerToken.substring(7);
+
+            // 액세스 토큰에서 사용자 ID 추출
+            Long userId = jwtUtil.getUserIdFromExpiredToken(accessToken);
+
+            // DB에서 사용자 조회
+            UserEntity user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
+
+            // DB에 저장된 리프레시 토큰 조회
+            String refreshToken = user.getRefreshToken();
+
+            // 리프레시 토큰 유효성 검사
+            if (!jwtUtil.validateToken(refreshToken)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 리프레시 토큰");
+            }
+
+            // 새로운 액세스 토큰 생성
+            String newAccessToken = jwtUtil.createAccessToken(user.getUserId(), user.getRole(), 60 * 60 * 1000L); // 1시간
+
+            return ResponseEntity.ok().body(Map.of("accessToken", newAccessToken));
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "토큰이 만료되었습니다."));
         }
 
-        // DB에서 사용자 조회
-        String email = jwtUtil.getEmail(refreshToken);
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
-
-        // 토큰 일치 여부 확인
-        if (!refreshToken.equals(user.getRefreshToken())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰 정보 불일치");
-        }
-
-        // 새로운 액세스 토큰 생성
-        String newAccessToken = jwtUtil.createAccessToken(user.getUserId(),user.getRole(),60 * 60 * 60L);
-
-        return ResponseEntity.ok().body(Map.of("accessToken", newAccessToken));
     }
+
 }
