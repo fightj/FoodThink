@@ -291,7 +291,7 @@ pipeline {
                 script {
                     sh 'docker build -f BE/Dockerfile -t my-backend-container ./BE'
                     sh 'docker build -f FE/ffood_thing/Dockerfile -t my-frontend-container ./FE/ffood_thing'
-                    sh 'docker build -f nginx/Dockerfile -t my-nginx-container ./nginx'
+//                    sh 'docker build -f nginx/Dockerfile -t my-nginx-container ./nginx'
                 }
             }
         }
@@ -319,7 +319,7 @@ pipeline {
                 script {
                     sh 'docker-compose -f docker-compose.yml down'
                     sh 'docker-compose -f docker-compose.yml up -d --build'
-                    sh 'docker-compose -f docker-compose.yml logs nginx'
+//                    sh 'docker-compose -f docker-compose.yml logs nginx'
                 }
             }
         }
