@@ -1,43 +1,66 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 useNavigate 추가
+import { useNavigate } from "react-router-dom";
 import "../../styles/recommend/TodayRecommendModal.css";
-import todayRecipeData from "../../data/todayRecipeData"; // 더미 데이터
+import todayRecipeData from "../../data/TodayRecipeData"; // 더미 데이터
 
 const TodayRecommendModal = ({ isOpen, onClose }) => {
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
-  const navigate = useNavigate(); // 페이지 이동을 위한 navigate 함수
+  const [activeIndex, setActiveIndex] = useState(1); // 중앙 카드 인덱스
+  const [selectedRecipes, setSelectedRecipes] = useState([]); // 랜덤으로 선택된 음식 3개
+  const navigate = useNavigate();
 
-  // 모달이 열릴 때마다 랜덤 레시피 선택
   useEffect(() => {
     if (isOpen) {
-      const randomIndex = Math.floor(Math.random() * todayRecipeData.length);
-      setSelectedRecipe(todayRecipeData[randomIndex]);
+      // 랜덤으로 3개의 음식 선택
+      const shuffled = [...todayRecipeData].sort(() => 0.5 - Math.random());
+      setSelectedRecipes(shuffled.slice(0, 3));
+
+      // 배경 스크롤 방지
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
     }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [isOpen]);
 
-  if (!isOpen) return null; // 모달이 닫혀 있으면 렌더링 안 함
-  if (!selectedRecipe) return <p className="loading-text">로딩 중...</p>;
+  if (!isOpen || selectedRecipes.length < 3) return null; // 데이터가 준비되지 않았을 때 렌더링 방지
 
-  // 이미지 클릭 시 상세 페이지로 이동
-  const goToDetailPage = () => {
-    navigate(`/recipes/${selectedRecipe.id}`); // 상세 페이지로 이동
-    onClose(); // 모달 닫기
+  // 📌 음식 선택 시 검색 결과 페이지로 이동 (중앙 카드 클릭 시)
+  const goToSearchPage = (recipeTitle) => {
+    navigate(`/search?query=${encodeURIComponent(recipeTitle)}`);
+    onClose();
+  };
+
+  // 📌 클릭한 카드를 중앙으로 이동시키는 함수
+  const moveToCenter = (index) => {
+    if (index !== activeIndex) {
+      setActiveIndex(index);
+    }
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="today-recommend-card" onClick={(e) => e.stopPropagation()}>
-        <h2>오늘 뭐 먹지? 🍽️</h2>
-        <img
-          src={selectedRecipe.image}
-          alt={selectedRecipe.title}
-          className="recipe-image"
-          onClick={goToDetailPage} // 이미지 클릭 시 상세 페이지 이동
-          style={{ cursor: "pointer" }} // 마우스 오버 시 클릭 가능하게 변경
-        />
-        <p className="recipe-title">{selectedRecipe.title}</p>
-        <p className="recipe-description">{selectedRecipe.description || "맛있는 요리를 추천해드려요!"}</p>
-        <button className="close-btn" onClick={onClose}>닫기</button>
+        {/* 닫기 버튼 추가 */}
+        <button className="today-close-btn" onClick={onClose}>×</button>
+
+        <div className="today-title">오늘 뭐 먹지? 🍽️</div>
+        <div className="today-carousel">
+          <div className="recipe-list" style={{ transform: `translateX(${-activeIndex * 10}px)` }}>
+            {selectedRecipes.map((recipe, i) => (
+              <div
+                key={i}
+                className={`recipe-item ${i === activeIndex ? "active" : ""}`}
+                onClick={() => (i === activeIndex ? goToSearchPage(recipe.title) : moveToCenter(i))}
+              >
+                <img src={recipe.image} alt={recipe.title} className="recipe-image" />
+                {i === activeIndex && <p className="recipe-title-main">{recipe.title}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

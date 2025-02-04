@@ -18,6 +18,7 @@
     "react-dom": "^18.3.1",
     "react-slick": "^0.30.3",
     "slick-carousel": "^1.8.1",
+
     "sweetalert2": "^11.15.10",
     "sweetalert2-react-content": "^5.1.0"
   },

@@ -1,0 +1,108 @@
+/* 📌 기본값 (태블릿/PC) */
+.profile-header {
+  display: flex;
+  flex-direction: row; /* 기본: 가로 정렬 */
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+  padding: 30px;
+  background: #ffe6d4;
+  color: black;
+  border-radius: 20px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* 📌 프로필 컨테이너 */
+.profile-container {
+  display: flex;
+  flex-direction: row; /* 기본값: 가로 정렬 */
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+/* 프로필 아바타 */
+.profile-avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+}
+
+/* 📌 프로필 정보 (닉네임, 구독자, 게시물) */
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding-left: 50px;
+}
+
+/* 구독자, 게시물 */
+.profile-info {
+  display: flex;
+  justify-content: flex-start;
+  gap: 30px;
+  font-size: 14px;
+}
+
+/* 📌 반응형 - 모바일에서는 세로 정렬 */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column; /* 📌 모바일에서는 세로 정렬 */
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .profile-container {
+    flex-direction: column; /* 📌 세로 정렬 */
+    align-items: center;
+  }
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-details {
+    align-items: center;
+    text-align: center;
+    padding-left: 0;
+    padding-top: 15px;
+  }
+
+  .profile-info {
+    justify-content: center;
+    gap: 15px;
+  }
+}
+
+/* 📌 Profile 버튼 */
+.preference-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  background-color: #FF7F00;
+  border: 2px solid #FF7F00;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 3px 5px rgba(255, 127, 0, 0.3);
+}
+
+/* 📌 반응형 (모바일에서 크기 조정) */
+@media (max-width: 768px) {
+  .preference-button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}

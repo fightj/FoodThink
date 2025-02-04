@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../../styles/profile/RecipeList.css";
 
 const RecipeList = ({ recipes }) => {
   return (
