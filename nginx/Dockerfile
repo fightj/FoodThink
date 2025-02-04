@@ -29,6 +29,18 @@
 # Nginx 기본 이미지 사용
 FROM nginx:latest
 
+# root에 /app 폴더 생성
+RUN mkdir /app
+
+# work dir 고정
+WORKDIR /app
+
+# work dir에 dist 폴더 생성
+RUN mkdir ./dist
+
+# 현재 디렉토리에서 dist 폴더를 /app/dist로 복사
+COPY ./dist ./dist
+
 # Nginx 설정 파일 복사
 COPY nginx.conf /etc/nginx/nginx.conf
 
