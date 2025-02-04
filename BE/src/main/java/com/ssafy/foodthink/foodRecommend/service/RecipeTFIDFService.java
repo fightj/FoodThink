@@ -1,6 +1,5 @@
 package com.ssafy.foodthink.foodRecommend.service;
 
-import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdf;
 import com.ssafy.foodthink.foodRecommend.repository.RecipeTfIdfRepository;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TFIDFService {
+public class RecipeTFIDFService {
 
     private final RecipeRepository recipeRepository;
     private final RecipeTfIdfRepository recipeTfIdfRepository;
@@ -54,13 +53,10 @@ public class TFIDFService {
     }
 
     // 각 특성에 대해 TF-IDF 계산, 해당 레시피에서 각 특성의 중요도를 나타냄
-    private Map<String, Double> calculateTfIdfVector(List<String> features,
-                                                     List<List<String>> docs,
-                                                     Map<String, Double> idf) {
+    private Map<String, Double> calculateTfIdfVector(List<String> features, List<List<String>> docs, Map<String, Double> idf) {
 
         // TF 계산
-        Map<String, Long> tf = features.stream()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<String, Long> tf = features.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         // TF-IDF 계산
         Map<String, Double> tfidf = tf.entrySet().stream()
@@ -70,15 +66,10 @@ public class TFIDFService {
                 ));
 
         // L2 정규화
-        double l2Norm = Math.sqrt(tfidf.values().stream()
-                .mapToDouble(v -> v * v)
-                .sum());
+        double l2Norm = Math.sqrt(tfidf.values().stream().mapToDouble(v -> v * v).sum());
 
         return tfidf.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue() / l2Norm
-                ));
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() / l2Norm));
     }
 
 

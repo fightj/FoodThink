@@ -3,13 +3,12 @@ package com.ssafy.foodthink.foodRecommend.controller;
 import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdf;
 import com.ssafy.foodthink.foodRecommend.repository.RecipeTfIdfRepository;
 import com.ssafy.foodthink.foodRecommend.service.RecommendInterestService;
-import com.ssafy.foodthink.foodRecommend.service.TFIDFService;
+import com.ssafy.foodthink.foodRecommend.service.RecipeTFIDFService;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class RecommendController {
     private final RecommendInterestService recommendInterestService;
     private final JWTUtil jwtUtil;
 
-    private final TFIDFService tfidfService;
+    private final RecipeTFIDFService tfidfService;
     private final RecipeRepository recipeRepository;
     private final RecipeTfIdfRepository recipeTfIdfRepository;
 
@@ -52,6 +51,8 @@ public class RecommendController {
 
         return ResponseEntity.ok(recommendation);
     }
+    
+    // 모든 레시피 TF-IDF 계산
     @PostMapping("/calculate")
     public ResponseEntity<String> calculateTfIdf() {
         tfidfService.calculateAndSaveAllTfIdf();
