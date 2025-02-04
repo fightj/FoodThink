@@ -1,12 +1,10 @@
 .base-div {
-  background-color: #fdb13f; /* 배경색 설정 */
+  background: linear-gradient(to bottom, #ff5252d7, #ffd5af, #ff9a57);
   min-height: 10vh; /* 최소 높이를 화면 전체로 설정 */
   padding-top: 30px; /* 상단 여백 지정 (100px로 예시) */
   box-sizing: border-box; /* 패딩 포함 높이 계산 */
 }
 .card-div {
-  background: linear-gradient(to bottom, #ffffff, #a1a1a1);
-
   background-color: rgb(255, 255, 255);
   width: 100%; /* 수평 공간 전체를 차지 */
   padding: 20px 0; /* 상하 패딩을 늘려서 높이를 증가 */
