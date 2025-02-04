@@ -27,8 +27,8 @@ services:
       dockerfile: Dockerfile
     container_name: my-frontend-container
     ports:
-      - "8081:80"
-      - "8443:443"
+      - "80:80"
+      - "443:443"
     volumes:
 #      - ./app:/app # 필요한 경우 추가적인 볼륨 마운트
       - /etc/letsencrypt:/etc/letsencrypt:ro
