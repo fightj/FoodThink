@@ -110,9 +110,6 @@ RUN mkdir ./dist
 # 현재 디렉토리에서 dist 폴더를 /app/dist로 복사
 COPY ./dist ./dist
 
-COPY /etc/letsencrypt/live/i12e107.p.ssafy.io /etc/letsencrypt/live/i12e107.p.ssafy.io
-COPY /etc/letsencrypt/archive/i12e107.p.ssafy.io /etc/letsencrypt/archive/i12e107.p.ssafy.io
-
 # Nginx 설정 파일 복사
 COPY ./nginx.conf /etc/nginx/conf.d
 
