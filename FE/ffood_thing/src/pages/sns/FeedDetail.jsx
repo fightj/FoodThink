@@ -5,12 +5,14 @@ import FeedCommentSection from "../../components/sns/FeedCommentSection"
 import SearchBar from "../../components/base/SearchBar"
 import "../../styles/sns/FeedDetail.css"
 import { motion, AnimatePresence } from "framer-motion"
+import Swal from "sweetalert2"
 
 function FeedDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showComments, setShowComments] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
 
   // 현재 피드 데이터
   const currentFeed = Feed.find((item) => item.feed_id === parseInt(id))
@@ -36,6 +38,36 @@ function FeedDetail() {
     setShowComments(!showComments)
   }
 
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown)
+  }
+
+  const handleDelete = () => {
+    Swal.fire({
+      title: "정말 삭제할까요?",
+      text: "되돌릴 수 없어요!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Delete!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 삭제 로직 추가
+        console.log("Feed deleted")
+        Swal.fire({
+          title: "삭제!",
+          text: "피드가 삭제되었습니다.",
+          icon: "success",
+        })
+      }
+    })
+  }
+
+  const handleEdit = () => {
+    navigate(`/feed/${id}/update`)
+  }
+
   return (
     <div className="base-div">
       <SearchBar />
@@ -53,7 +85,21 @@ function FeedDetail() {
               </div>
               <span className="username">{author?.nickname || "Unknown User"}</span>
             </div>
-            <button className="edit-button">✎</button>
+            <div className="edit-container" style={{ position: "relative" }}>
+              <button className="edit-button" onClick={toggleDropdown}>
+                <img src="/images/etc-btn.png" alt="Edit Options" />
+              </button>
+              {showDropdown && (
+                <div className="dropdown-menu">
+                  <button className="dropdown-item" onClick={handleEdit}>
+                    feed 수정
+                  </button>
+                  <button className="dropdown-item" onClick={handleDelete}>
+                    feed 삭제
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* 이미지 Carousel */}
