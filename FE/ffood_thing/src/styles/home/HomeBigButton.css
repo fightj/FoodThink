@@ -47,7 +47,7 @@
   padding: 20px;
   color: white;
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0);
   border-radius: inherit;
   overflow: hidden; /* 카드 내용의 경계 밖으로 나가는 내용을 숨김 */
 }

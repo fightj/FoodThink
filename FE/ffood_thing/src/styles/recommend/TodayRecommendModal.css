@@ -5,70 +5,138 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3); /* 배경을 조금 더 연하게 */
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 
-/* 카드 스타일 - 기존 카드 디자인 유지 */
+/* 모달 카드 */
 .today-recommend-card {
+  position: relative;
   background: white;
   padding: 20px;
-  border-radius: 15px; /* 둥글게 */
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
-  width: 320px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 75%;
+  max-width: 1000px;
+  height: 70%;
   text-align: center;
+  z-index: 1001;
+  overflow: hidden;
+}
+
+/* 제목 (h2) 중앙 정렬 */
+.today-title {
+  text-align: center;
+  font-size: 35px;
+  font-weight: bold;
+  color: #fdb13f;
+  transition: opacity 0.4s ease-in-out;
+  padding: 20px;
+}
+
+
+/* 캐러셀 컨테이너 */
+.today-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 85%;
+  position: relative;
+  overflow: hidden;
+  /* padding: 20px; */
+}
+
+/* 음식 리스트 (가로 정렬 + 중앙 정렬) */
+.recipe-list {
+  display: flex;
+  justify-content: center;
+  width: 85%;
+  /* max-width: 90%; */
+  transition: transform 0.5s ease-in-out;
+  position: relative;
+}
+
+/* 개별 음식 카드 */
+.recipe-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: scale(1);
-  transition: transform 0.3s ease-in-out;
-}
-
-/* 카드 애니메이션 */
-.today-recommend-card:hover {
-  transform: scale(1.05); /* 마우스 올리면 살짝 커지게 */
-}
-
-/* 이미지 스타일 */
-.recipe-image {
-  width: 280px; /* 이미지 크기 조정 */
-  height: 180px;
-  border-radius: 10px;
-  object-fit: cover;
-  margin-bottom: 10px;
-}
-
-/* 제목 스타일 */
-.recipe-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 5px;
-  color: #333;
-}
-
-/* 카드 설명 */
-.recipe-description {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-/* 닫기 버튼 */
-.close-btn {
-  background: #ff6b6b;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 15px;
-  font-weight: bold;
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+  width: 35%;
+  opacity: 0.6;
+  transform: scale(1);
+  position: relative;
+  z-index: 1; /* 기본적으로 낮은 z-index */
 }
 
-.close-btn:hover {
-  background: #ff4d4d;
+/* 중앙 카드 (크기 확대) */
+.recipe-item.active {
+  transform: scale(1.3);
+  opacity: 1;
+  z-index: 2; /* 🔥 중앙 음식이 항상 위에 있도록 설정 */
+}
+
+/* 음식 이미지 */
+.recipe-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out;
+}
+
+/* 중앙 카드에만 음식 이름 표시 */
+.recipe-title-main {
+  font-size: 18px;
+  /* font-weight: bold; */
+  margin-top: 5px;
+  transition: opacity 0.4s ease-in-out;
+  padding-top: 20px;
+}
+
+/* 📌 닫기 버튼 스타일 */
+.today-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s ease-in-out;
+}
+
+.today-close-btn:hover {
+  color: black;
+}
+
+
+/* 반응형: 모바일에서 중앙 정렬 유지 */
+@media (max-width: 500px) {
+  .today-recommend-card {
+    width: 85%;
+    padding: 15px;
+  }
+
+  .recipe-list {
+    max-width: 95%;
+  }
+
+  .recipe-item {
+    width: 90px;
+  }
+
+  .recipe-item.active {
+    transform: scale(1.2);
+  }
+
+  .recipe-image {
+    max-width: 90px;
+  }
 }

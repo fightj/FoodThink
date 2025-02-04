@@ -22,6 +22,7 @@ public class RecipeDetailResponseDto {
     private String serving; //인분
     private Integer level;   //난이도
     private String requiredTime;    //소요시간
+    private Integer hits;       //조회수
 
     //재료 정보
     private List<IngredientDto> ingredients;
