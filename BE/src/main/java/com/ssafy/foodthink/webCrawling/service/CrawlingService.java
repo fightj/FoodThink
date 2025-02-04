@@ -4,6 +4,9 @@ import com.ssafy.foodthink.recipes.entity.IngredientEntity;
 import com.ssafy.foodthink.recipes.entity.ProcessEntity;
 import com.ssafy.foodthink.recipes.entity.ProcessImageEntity;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
+import com.ssafy.foodthink.recipes.repository.RecipeRepository;
+import com.ssafy.foodthink.user.entity.UserEntity;
+import com.ssafy.foodthink.user.repository.UserRepository;
 import com.ssafy.foodthink.webCrawling.repository.CrawlingIngredientRepository;
 import com.ssafy.foodthink.webCrawling.repository.CrawlingProcessImageRepository;
 import com.ssafy.foodthink.webCrawling.repository.CrawlingProcessRepository;
@@ -37,12 +40,15 @@ public class CrawlingService {
     private CrawlingProcessRepository crawlingProcessRepository;
     @Autowired
     private CrawlingProcessImageRepository crawlingProcessImageRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
     //크롤링할 웹 사이트의 앞부분 URL
     private final String baseUrl = "https://www.10000recipe.com/recipe/list.html?";
 
     //카테고리별 조합의 데이터 개수 제한
-    private final int MAX_RECIPES_COMBO = 10;
+    private final int MAX_RECIPES_COMBO = 20;
     //cat3 + cat4 조합별 크롤링된 레시피 개수 저장용
     private final Map<String, Integer> recipeCountMap = new HashMap<>();
 
@@ -89,6 +95,8 @@ public class CrawlingService {
         System.out.println("크롤링 완료");
         deleteRecipesWithoutIngredients();
         System.out.println("재료 정보가 담기지 않은 레시피 전체 삭제 완료");
+        assignRandomUserToRecipes();;
+        System.out.println("user_id 랜던 삽입 완료");
     }
 
     //Jsoup를 활용하여 HTML 및 CSS 선택자로 크롤링 정보 추출
@@ -297,6 +305,36 @@ public class CrawlingService {
             crawlingRecipeRepository.deleteByRecipeIdIn(invalidRecipeIds);
         }
     }
+
+    // 1. 크롤링이 끝난 후 사용자 ID를 랜덤으로 할당
+    @Transactional
+    public void assignRandomUserToRecipes() {
+        // 모든 레시피 조회
+        List<RecipeEntity> allRecipes = crawlingRecipeRepository.findAll();
+
+        // 1~20 사이의 랜덤 값으로 사용자 ID 할당
+        Random random = new Random();
+
+        for (RecipeEntity recipe : allRecipes) {
+            // 랜덤 사용자 ID (1~20)
+            Long randomUserId = (long) (random.nextInt(20) + 1);
+
+            // 해당 사용자 ID가 존재하는지 확인
+            Optional<UserEntity> userEntityOptional = userRepository.findById(randomUserId);
+            if (userEntityOptional.isPresent()) {
+                UserEntity randomUser = userEntityOptional.get();
+                recipe.setUserEntity(randomUser); // 사용자 아이디 할당
+            } else {
+                // 해당 사용자 ID가 없다면, 어떤 처리를 할지 결정 (예: 로그 남기기, 기본값 할당 등)
+                System.out.println("사용자 ID " + randomUserId + " 가 존재하지 않음");
+            }
+        }
+
+        // 업데이트된 레시피 정보 저장
+        crawlingRecipeRepository.saveAll(allRecipes);
+        System.out.println("모든 레시피에 사용자 아이디를 할당했습니다.");
+    }
+
 
     // 종류별 카테고리 재정의
     // 반찬 국/탕 찌개 디저트 면/만투 밥/죽/떡 김치/젓갈/장류 양념/소스쨈 양식 샐러드 차/음료/술 기타

@@ -5,7 +5,11 @@ import com.ssafy.foodthink.recipes.dto.*;
 import com.ssafy.foodthink.recipes.entity.ProcessEntity;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeListRepository;
+import com.ssafy.foodthink.recipes.repository.RecipeRepository;
+import com.ssafy.foodthink.user.entity.UserEntity;
+import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +20,7 @@ import org.springframework.util.StringUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service

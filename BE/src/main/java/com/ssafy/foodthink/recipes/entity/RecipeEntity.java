@@ -60,13 +60,6 @@ public class RecipeEntity {
         if(this.isPublic == null) {
             this.isPublic = true;
         }
-
-        //사용자 기본값 랜덤 생성
-        if(this.userEntity == null) {
-            Long randomUserId = (long) (random.nextInt(20) + 1);
-            Optional<UserEntity> randomUser = userRepository.findById(randomUserId);
-            randomUser.ifPresent(user -> this.userEntity = user);
-        }
     }
 
 
