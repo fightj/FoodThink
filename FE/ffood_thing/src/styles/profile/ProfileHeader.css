@@ -1,83 +1,100 @@
-/* 📌 기본값 (태블릿/PC) */
+/* 📌 프로필 헤더 */
 .profile-header {
-  display: flex;
-  flex-direction: row; /* 기본: 가로 정렬 */
-  justify-content: center;
-  align-items: center;
-  text-align: left;
-  padding: 30px;
+  position: relative;
+  width: 100%;
+  height: 250px; /* ✅ 헤더 높이 설정 */
   background: #ffe6d4;
-  color: black;
-  border-radius: 20px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-/* 📌 프로필 컨테이너 */
-.profile-container {
   display: flex;
-  flex-direction: row; /* 기본값: 가로 정렬 */
   align-items: center;
-  justify-content: flex-start;
-  width: 100%;
+  justify-content: center;
+  border-radius: 20px;
+  overflow: hidden; /* ✅ 헤더 밖으로 요소가 못 나가게 설정 */
 }
 
-/* 프로필 아바타 */
+/* 📌 푸딩 컨테이너 */
+.falling-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-end; /* ✅ 푸딩이 바닥에서 멈추도록 설정 */
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1; /* ✅ 프로필 정보보다 뒤에 위치 */
+}
+
+/* 📌 푸딩 아이템 */
+.falling-item {
+  position: absolute;
+  width: 60px;
+  height: 50px;
+  opacity: 0;
+  animation: fallDown 2.5s ease-in-out forwards;
+  z-index: 2;
+  bottom: 2px; /* ✅ 푸딩이 헤더 내부에 유지 */
+}
+
+/* 📌 푸딩이 랜덤한 위치에서 떨어지고 바닥에 쌓이도록 설정 */
+@keyframes fallDown {
+  0% {
+    transform: translateY(-230px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 📌 프로필 정보 컨테이너 */
+.profile-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center; /* ✅ 중앙 정렬 */
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+  gap: 40px; /* ✅ 기본 화면에서는 40px 간격 */
+  z-index: 3; /* ✅ 푸딩보다 위에 배치 */
+}
+
+/* 📌 프로필 아바타 */
 .profile-avatar {
-  width: 140px;
+  width: 140px; /* ✅ 크기 조정 */
   height: 140px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid white;
+  max-width: 100%;
 }
 
 /* 📌 프로필 정보 (닉네임, 구독자, 게시물) */
 .profile-details {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  padding-left: 50px;
+  align-items: center;
+  text-align: center;
+  padding: 10px 0;
 }
 
-/* 구독자, 게시물 */
+/* 📌 닉네임 */
+.profile-username {
+  font-size: 35px;
+  color: #fdb13f;
+}
+
+/* 📌 구독자, 게시물 */
 .profile-info {
   display: flex;
-  justify-content: flex-start;
-  gap: 30px;
+  justify-content: center;
+  gap: 20px;
   font-size: 14px;
-}
-
-/* 📌 반응형 - 모바일에서는 세로 정렬 */
-@media (max-width: 768px) {
-  .profile-header {
-    flex-direction: column; /* 📌 모바일에서는 세로 정렬 */
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-  }
-
-  .profile-container {
-    flex-direction: column; /* 📌 세로 정렬 */
-    align-items: center;
-  }
-
-  .profile-avatar {
-    width: 120px;
-    height: 120px;
-  }
-
-  .profile-details {
-    align-items: center;
-    text-align: center;
-    padding-left: 0;
-    padding-top: 15px;
-  }
-
-  .profile-info {
-    justify-content: center;
-    gap: 15px;
-  }
 }
 
 /* 📌 Profile 버튼 */
@@ -85,8 +102,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 18px;
-  font-size: 15px;
+  padding: 8px 16px;
+  font-size: 14px;
   font-weight: bold;
   color: white;
   background-color: #FF7F00;
@@ -97,10 +114,44 @@
   text-decoration: none;
   text-align: center;
   box-shadow: 0 3px 5px rgba(255, 127, 0, 0.3);
+  max-width: 100%;
+  position: relative;
+  bottom: 0;
+  margin-top: 10px; /* ✅ 버튼 위치 조정 */
 }
 
-/* 📌 반응형 (모바일에서 크기 조정) */
-@media (max-width: 768px) {
+/* 📌 반응형 - 모바일에서는 세로 정렬 */
+@media (max-width: 540px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .profile-content {
+    flex-direction: column; /* ✅ 모바일에서는 세로 정렬 */
+    align-items: center;
+    gap: 10px; /* ✅ 모바일에서는 10px 간격 */
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-details {
+    align-items: center;
+    text-align: center;
+    padding-left: 0;
+    padding-top: 10px;
+  }
+
+  .profile-info {
+    justify-content: center;
+    gap: 15px;
+  }
+
   .preference-button {
     font-size: 14px;
     padding: 8px 16px;
