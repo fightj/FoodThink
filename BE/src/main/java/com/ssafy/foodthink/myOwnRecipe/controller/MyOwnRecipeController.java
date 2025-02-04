@@ -3,6 +3,7 @@ package com.ssafy.foodthink.myOwnRecipe.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.foodthink.myOwnRecipe.dto.*;
 import com.ssafy.foodthink.myOwnRecipe.service.MyOwnRecipeService;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
 import com.ssafy.foodthink.user.repository.UserRepository;
@@ -161,6 +162,30 @@ public class MyOwnRecipeController {
 
 
     //레시피 삭제
+    // 레시피 삭제
+    @DeleteMapping("/delete/{recipeId}")
+    public ResponseEntity<?> deleteRecipe(@RequestHeader("Authorization") String token,
+                                          @PathVariable("recipeId") Long recipeId) {
+        try {
+            // JWT에서 userId 호출
+            String accessToken = token.replace("Bearer ", "");
+            Long userId = jwtUtil.getUserId(accessToken);
+
+            // 레시피가 사용자가 작성한 것인지 확인
+            RecipeEntity recipeEntity = myOwnRecipeService.getRecipeByIdAndUserId(recipeId, userId);
+            if (recipeEntity == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 레시피는 삭제할 수 없습니다.");
+            }
+
+            // 레시피 삭제
+            myOwnRecipeService.deleteRecipe(recipeId);
+
+            return ResponseEntity.ok("레시피가 삭제되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("레시피 삭제에 실패했습니다.");
+        }
+    }
 
 
 }

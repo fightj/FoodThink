@@ -19,7 +19,6 @@ import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -275,4 +274,30 @@ public class MyOwnRecipeService {
     }
 
 
+    //레시피 삭제
+    @Transactional
+    public void deleteRecipe(Long recipeId) {
+        // 레시피 조회
+        RecipeEntity recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("레시피를 찾을 수 없습니다."));
+// 1. 관련된 ProcessImageEntity 먼저 삭제 (ProcessEntity와 관련된 이미지들 삭제)
+        for (ProcessEntity process : recipe.getProcesses()) {
+            processImageRepository.deleteByProcessEntity_ProcessId(process.getProcessId()); // ProcessImageEntity 삭제
+        }
+
+        // 2. ProcessEntity 삭제
+        processRepository.deleteByRecipeEntity_RecipeId(recipeId); // ProcessEntity 삭제
+
+        // 3. IngredientEntity 삭제
+        ingredientRepository.deleteByRecipeEntity_RecipeId(recipeId); // IngredientEntity 삭제
+
+        // 4. 레시피 삭제
+        recipeRepository.delete(recipe); // RecipeEntity 삭제
+    }
+
+
+    public RecipeEntity getRecipeByIdAndUserId(Long recipeId, Long userId) {
+        return recipeRepository.findByRecipeIdAndUserEntity_UserId(recipeId, userId)
+                .orElseThrow(() -> new RuntimeException("이 레시피는 해당 사용자가 작성한 것이 아닙니다."));
+    }
 }
