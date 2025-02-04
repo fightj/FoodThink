@@ -92,9 +92,6 @@ RUN npm run build
 # 빌드 결과물 확인
 RUN ls -l /app
 
-# React의 경우 build -> dist로 변경 (필요하면)
-RUN mv /app/build /app/dist
-
 # Nginx를 사용하여 정적 파일 서빙
 FROM nginx:latest
 
