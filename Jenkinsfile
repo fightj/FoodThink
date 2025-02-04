@@ -208,7 +208,10 @@ pipeline {
                 script {
                     // docker-compose로 배포
 //                    sh 'docker-compose build --pull --no-cache'
-                    sh 'docker-compose -f docker-compose.yml up -d'
+                    sh 'docker-compose -f docker-compose.yml down'
+                    sh 'docker-compose -f docker-compose.yml up --build'
+                    sh 'docker-compose -f docker-compose.yml logs nginx'
+
                 }
             }
         }
