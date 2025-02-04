@@ -50,10 +50,16 @@ public class UserTFIDFService {
         // 북마크한 레시피의 IF-IDF 벡터 평균 계산
         Map<String, Double> bookmarkProfile = calculateBookmarkProfile(userId);
 
+        //  프로필 정보 통합
+        bookmarkProfile.forEach((feature, value) -> {
+            userProfile.merge(feature, value * BOOKMARK_WEIGHT, Double::sum);
+        });
 
-        return null;
+        // 프로필 벡터 정규화
+        return normalizeProfile(userProfile);
     }
 
+    // 사용자 선호 재료
     public List<String> getLikedIngredients(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요"));
@@ -63,6 +69,7 @@ public class UserTFIDFService {
                 .collect(Collectors.toList());
     }
 
+    // 사용자 기피 재료
     public List<String> getDislikedIngredients(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요"));
@@ -72,23 +79,53 @@ public class UserTFIDFService {
                 .collect(Collectors.toList());
     }
 
+    // 북마크한 레시피
     private Map<String, Double> calculateBookmarkProfile(Long userId) {
-
+        // 사용자의 북마크한 레시피 목록 조회
         List<RecipeBookmarkEntity> bookmarkedRecipes = recipeBookmarkRepository.findByUserEntity_UserId(userId);
 
-        Map<String, Double> aggregations = new HashMap<>(); // 각 특성 별 TF-IDF 합
-        Map<String, Integer> counts = new HashMap<>(); // 각 특성 별 TF-IDF 개수
+        // 각 특성(feature)별 TF-IDF 값의 합과 개수를 저장할 맵
+        Map<String, Double> aggregatedValues = new HashMap<>();
+        Map<String, Integer> featureCounts = new HashMap<>();
 
-        for(RecipeBookmarkEntity recipe: bookmarkedRecipes){
-//            List<RecipeTfIdf> tfIdfValues = recipeTfIdfRepository.findByRecipe(recipe);
-//
-//            for
+        // 북마크한 모든 레시피의 재료 TF-IDF 값 합산
+        for (RecipeBookmarkEntity bookmark : bookmarkedRecipes) {
+            RecipeEntity recipe = bookmark.getRecipeEntity();
+            List<RecipeTfIdf> tfIdfValues = recipeTfIdfRepository.findByRecipe(recipe);
+
+            for (RecipeTfIdf tfIdf : tfIdfValues) {
+                String feature = tfIdf.getFeature();
+                double value = tfIdf.getTfIdfValue();
+
+                aggregatedValues.merge(feature, value, Double::sum);
+                featureCounts.merge(feature, 1, Integer::sum);
+            }
         }
 
+        // 평균 계산
+        return aggregatedValues.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue() / featureCounts.get(e.getKey())
+                ));
+    }
 
+    // 정규화
+    private Map<String, Double> normalizeProfile(Map<String, Double> profile) {
+        // L2 정규화 수행
+        double norm = Math.sqrt(
+                profile.values().stream()
+                        .mapToDouble(v -> v * v)
+                        .sum()
+        );
 
+        if (norm == 0) return profile;
 
-        return null;
+        return profile.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue() / norm
+                ));
     }
 
 }

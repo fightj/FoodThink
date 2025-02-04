@@ -4,6 +4,7 @@ import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdf;
 import com.ssafy.foodthink.foodRecommend.repository.RecipeTfIdfRepository;
 import com.ssafy.foodthink.foodRecommend.service.RecommendInterestService;
 import com.ssafy.foodthink.foodRecommend.service.RecipeTFIDFService;
+import com.ssafy.foodthink.foodRecommend.service.UserTFIDFService;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
@@ -27,6 +28,7 @@ public class RecommendController {
     private final RecipeTFIDFService tfidfService;
     private final RecipeRepository recipeRepository;
     private final RecipeTfIdfRepository recipeTfIdfRepository;
+    private final UserTFIDFService userTFIDFService;
 
     @GetMapping("/keywords")
     public ResponseEntity<String> getRecommendationKeywords(@RequestHeader("Authorization") String token) {
@@ -57,6 +59,16 @@ public class RecommendController {
     public ResponseEntity<String> calculateTfIdf() {
         tfidfService.calculateAndSaveAllTfIdf();
         return ResponseEntity.ok("TF-IDF 계산 및 DB에 저장 완료 ");
+    }
+
+    // 사용자 TF-IDF 계산
+    @GetMapping("/user")
+    public ResponseEntity<Map<String, Double>> getUserProfile(@RequestHeader("Authorization") String token) {
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        Map<String, Double> userProfile = userTFIDFService.generateUserProfile(userId);
+        return ResponseEntity.ok(userProfile);
     }
 
     @GetMapping("/recipe/{recipeId}")
