@@ -160,11 +160,13 @@ public class CrawlingService {
             String level = detailDoc.select(".view2_summary_info3").text();
             recipeEntity.setLevel(newLevel(level));     //새로운 레벨 단계로 변경 비교하기
 
-            // 난이도, 인분, 조리시간이 없으면 저장하지 않음 : 데이터 필터링
+            //난이도, 인분, 조리시간이 없으면 저장하지 않음 : 데이터 필터링
+            //+대표 이미지에 Icon_vod가 포함되어 있다면 저장하지 않음 (영상 제거)
             if (recipeEntity.getLevel() == 0 || recipeEntity.getServing().isEmpty() || recipeEntity.getRequiredTime().isEmpty()
-                    || recipeEntity.getLevel() == null || recipeEntity.getServing() == null || recipeEntity.getRequiredTime() == null) {
-                System.out.println("난이도,인분,조리시간 없는 데이터 필터링: " + recipeEntity.getRecipeUrl());
-                crawlingRecipeRepository.delete(recipeEntity);    //DB에서 즉시 삭제
+                    || recipeEntity.getLevel() == null || recipeEntity.getServing() == null || recipeEntity.getRequiredTime() == null
+                    || (recipeEntity.getImage() != null && recipeEntity.getImage().contains("icon_vod"))) {
+                System.out.println("난이도, 인분, 조리시간 없는 데이터 또는 'icon_vod' 포함된 이미지 필터링: " + recipeEntity.getRecipeUrl());
+                crawlingRecipeRepository.delete(recipeEntity);    // DB에서 즉시 삭제
                 return;
             }
 
