@@ -304,10 +304,8 @@ pipeline {
                             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
                             docker tag my-backend-container ${DOCKER_IMAGE_NAME}/my-backend-container
                             docker tag my-frontend-container ${DOCKER_IMAGE_NAME}/my-frontend-container
-                            docker tag my-nginx-container ${DOCKER_IMAGE_NAME}/my-nginx-container
                             docker push ${DOCKER_IMAGE_NAME}/my-backend-container
                             docker push ${DOCKER_IMAGE_NAME}/my-frontend-container
-                            docker push ${DOCKER_IMAGE_NAME}/my-nginx-container
                         """
                     }
                 }
