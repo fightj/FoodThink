@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from "react"
 import { Holistic } from "@mediapipe/holistic"
+import { Recipe } from "../../pages/recipe/recipe_data"
 import { Camera } from "@mediapipe/camera_utils"
+import RecipeDetailPage from "../../pages/recipe/RecipeDetailPage"
 
 const RecipeSwipeComponent = () => {
   const videoRef = useRef(null)
@@ -122,22 +124,8 @@ const RecipeSwipeComponent = () => {
         }
       }
 
-      // 손 랜드마크 시각화
-      drawLandmarks(ctx, handLandmarks, "cyan")
-
       // 타이머 제어 함수 호출
       handleTimerGesture(handLandmarks)
-    }
-
-    function drawLandmarks(ctx, landmarks, color = "white") {
-      landmarks.forEach((landmark) => {
-        const x = landmark.x * canvasRef.current.width
-        const y = landmark.y * canvasRef.current.height
-        ctx.beginPath()
-        ctx.arc(x, y, 5, 0, 2 * Math.PI)
-        ctx.fillStyle = color
-        ctx.fill()
-      })
     }
 
     return () => {
@@ -150,13 +138,30 @@ const RecipeSwipeComponent = () => {
       <video ref={videoRef} style={{ display: "none" }} autoPlay playsInline />
       <canvas
         ref={canvasRef}
-        width="640"
-        height="480"
+        width="1px"
+        height="1px"
         style={{
           border: "1px solid black",
           backgroundColor: "rgba(0,0,0,0.1)",
         }}
       />
+      <div className="card-div">
+        <div className="steps">
+          {Recipe.recipe && Recipe.recipe.processes ? (
+            Recipe.recipe.processes.map((process, index) => (
+              <div key={index} className="process-item">
+                <h2 className="steps-h2">
+                  {process.processOrder}. {process.processExplain}
+                </h2>
+                {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
+                <hr />
+              </div>
+            ))
+          ) : (
+            <div>레시피 데이터를 찾을 수 없습니다.</div>
+          )}
+        </div>
+      </div>
       <div
         style={{
           position: "absolute",

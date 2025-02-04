@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import RecipeComponent from "../../components/recipe/RecipeComponent"
-import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 import SearchBar from "../../components/base/SearchBar"
 import { Recipe } from "./recipe_data"
 import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
+import RecipeSwipeComponent from "../../components/handmotion/HandPoseComponent"
 
 const RecipeDetailPage = () => {
   const { id } = useParams()
@@ -157,7 +157,7 @@ const RecipeDetailPage = () => {
                   <button className="close-button" onClick={() => setShowModal(false)}>
                     X
                   </button>
-                  <HandPoseComponent
+                  <RecipeSwipeComponent
                     onNextPage={() => {
                       /* 다음 페이지로 이동하는 로직 구현 */
                     }}
@@ -226,7 +226,7 @@ const RecipeDetailPage = () => {
           <div className="steps">
             {recipe.processes.map((process, index) => (
               <div key={index} className="process-item">
-                <h2>
+                <h2 className="steps-h2">
                   {process.processOrder}. {process.processExplain}
                 </h2>
                 {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
