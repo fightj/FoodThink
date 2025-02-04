@@ -1,10 +1,9 @@
 package com.ssafy.foodthink.myOwnRecipe.service;
 
 import com.ssafy.foodthink.global.S3Service;
-import com.ssafy.foodthink.myOwnRecipe.dto.MyRecipeModifyReadResponseDto;
-import com.ssafy.foodthink.myOwnRecipe.dto.MyRecipeWriteRequestDto;
-import com.ssafy.foodthink.myOwnRecipe.dto.ProcessImageRequestDto;
-import com.ssafy.foodthink.myOwnRecipe.dto.ProcessRequestDto;
+import com.ssafy.foodthink.myOwnRecipe.dto.*;
+import com.ssafy.foodthink.myOwnRecipe.repository.MyOwnRecipeListRepository;
+import com.ssafy.foodthink.recipeBookmark.repository.RecipeBookmarkRepository;
 import com.ssafy.foodthink.recipes.dto.IngredientDto;
 import com.ssafy.foodthink.recipes.dto.ProcessDto;
 import com.ssafy.foodthink.recipes.dto.ProcessImageDto;
@@ -20,11 +19,13 @@ import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,6 +39,9 @@ public class MyOwnRecipeService {
     private final ProcessImageRepository processImageRepository;
     private final UserRepository userRepository;
     private final S3Service s3Service;
+
+    private final MyOwnRecipeListRepository myOwnRecipeListRepository;
+    private final RecipeBookmarkRepository recipeBookmarkRepository;
 
     //레시피 등록
     @Transactional
@@ -125,6 +129,7 @@ public class MyOwnRecipeService {
         }
     }
 
+
     //수정할 레시피 내용 조회 (미리보기)
     public MyRecipeModifyReadResponseDto getRecipeForModification(Long recipeId, Long userId) {
         //레시피가 존재하는지 확인
@@ -166,6 +171,107 @@ public class MyOwnRecipeService {
         responseDto.setProcesses(processes);
 
         return responseDto;
+    }
+
+
+    //레시피 수정
+    @Transactional
+    public void modifyRecipe(MyRecipeModifyRequestDto dto, MultipartFile imageFile) throws Exception {
+
+        Optional<RecipeEntity> recipeEntityOpt = recipeRepository.findById(dto.getRecipeId());
+
+        //레시피 존재 확인
+        if (!recipeEntityOpt.isPresent()) {
+            throw new IllegalArgumentException("레시피를 찾을 수 없습니다.");
+        }
+        RecipeEntity recipe = recipeEntityOpt.get();
+
+        //이미지 수정이 필요하다면 처리
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String uploadedImageUrl = s3Service.uploadFile(imageFile);
+            recipe.setImage(uploadedImageUrl);
+        }
+
+        //레시피 기본 정보 수정
+        recipe.setRecipeTitle(dto.getRecipeTitle());
+        recipe.setCateType(dto.getCateType());
+        recipe.setCateMainIngre(dto.getCateMainIngre());
+        recipe.setServing(dto.getServing());
+        recipe.setLevel(dto.getLevel());
+        recipe.setRequiredTime(dto.getRequiredTime());
+        recipe.setIsPublic(dto.isPublic());
+
+        //재료 수정
+        ingredientRepository.deleteByRecipeEntity_RecipeId(recipe.getRecipeId());    //기존 재료 삭제
+        List<IngredientEntity> ingredients = dto.getIngredients().stream()
+                .map(ingreDto -> new IngredientEntity(ingreDto.getIngreName(), ingreDto.getAmount(), recipe))
+                .collect(Collectors.toList());
+        ingredientRepository.saveAll(ingredients);
+
+        //과정 수정
+        processRepository.deleteByRecipeEntity_RecipeId(recipe.getRecipeId());   //기존 과정 삭제
+        List<ProcessEntity> processes = dto.getProcesses().stream()
+                .map(processDto -> new ProcessEntity(processDto.getProcessOrder(), processDto.getProcessExplain(), recipe))
+                .collect(Collectors.toList());
+        processRepository.saveAll(processes);
+
+        //과정 이미지 처리
+        processRepository.flush();  // 과정 ID 확보
+        for (ProcessRequestDto processDto : dto.getProcesses()) {
+            ProcessEntity processEntity = processes.stream()
+                    .filter(p -> p.getProcessOrder().equals(processDto.getProcessOrder()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("과정 매칭 실패"));
+
+            if (processDto.getImages() != null) {
+                // 기존 이미지 삭제 (모든 이미지를 삭제)
+                processImageRepository.deleteByProcessEntity_ProcessOrder(processDto.getProcessOrder());
+
+                // 새로 추가된 이미지들만 업로드
+                for (ProcessImageRequestDto imageRequestDto : processDto.getImages()) {
+                    // 이미지가 null 이거나 비어 있지 않으면 새로 업로드
+                    if (imageRequestDto.getProcessImage() != null && !imageRequestDto.getProcessImage().isEmpty()) {
+                        // S3에 이미지 업로드
+                        String uploadedImageUrl = s3Service.uploadFile(imageRequestDto.getProcessImage());
+                        // 새로운 ProcessImageEntity 생성
+                        ProcessImageEntity processImage = new ProcessImageEntity(uploadedImageUrl, processEntity);
+                        // 새 이미지를 DB에 저장
+                        processImageRepository.save(processImage);
+                    }
+                }
+            }
+        }
+    }
+
+
+    //내가 작성한 레시피 목록 조회 (북마크 순)
+    public List<MyOwnRecipeListResponseDto> getMyOwnRecipeList(UserEntity userEntity) {
+        //내가 작성한 레시피 목록 조회
+        List<RecipeEntity> recipes = myOwnRecipeListRepository.findByUserEntity(userEntity);
+
+        //각 레시피에 대한 북마크 수 세기
+        //북마크순 + 조회순
+        return recipes.stream()
+                .map(recipeEntity -> {
+                    long bookmarkCount = recipeBookmarkRepository.countByRecipeEntity(recipeEntity);
+                    return new MyOwnRecipeListResponseDto(
+                            recipeEntity.getRecipeId(),
+                            recipeEntity.getRecipeTitle(),
+                            recipeEntity.getImage(),
+                            recipeEntity.getHits(),
+                            (int) bookmarkCount
+                    );
+                })
+                .sorted((r1, r2) -> {
+                    // 북마크 순으로 먼저 정렬
+                    int bookmarkCompare = Integer.compare(r2.getBookmarkCount(), r1.getBookmarkCount());
+                    if (bookmarkCompare != 0) {
+                        return bookmarkCompare;
+                    }
+                    // 북마크 수가 같으면 조회수(hits) 순으로 정렬
+                    return Integer.compare(r2.getHits(), r1.getHits());
+                })
+                .collect(Collectors.toList());
     }
 
 

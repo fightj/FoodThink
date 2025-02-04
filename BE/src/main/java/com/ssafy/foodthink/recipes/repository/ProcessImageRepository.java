@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProcessImageRepository extends JpaRepository<ProcessImageEntity, Long> {
-    
+
+    //레시피 수정 : 기존 과정별 이미지 삭제
+    void deleteByProcessEntity_ProcessOrder(Integer processOrder);
 }

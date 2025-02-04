@@ -1,10 +1,7 @@
 package com.ssafy.foodthink.recipes.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
@@ -24,5 +21,11 @@ public class IngredientEntity {
     @ManyToOne(cascade = CascadeType.ALL)   //부모 객체 CRUD 때 자식 객체도 동시에 작업 수행
     @JoinColumn(name = "recipe_id")     //외래키 컬럼 지정 (recipeId로 생성된다.)
     private RecipeEntity recipeEntity;    //CrawlingRecipeEntity와 관계 설정
+
+    public IngredientEntity(String ingreName, String amount, RecipeEntity recipeEntity) {
+        this.ingreName = ingreName;
+        this.amount = amount;
+        this.recipeEntity = recipeEntity;
+    }
 
 }
