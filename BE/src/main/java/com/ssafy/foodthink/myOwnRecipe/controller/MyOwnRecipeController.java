@@ -1,6 +1,7 @@
 package com.ssafy.foodthink.myOwnRecipe.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.foodthink.myOwnRecipe.dto.MyRecipeModifyReadResponseDto;
 import com.ssafy.foodthink.myOwnRecipe.dto.MyRecipeWriteRequestDto;
 import com.ssafy.foodthink.myOwnRecipe.dto.ProcessImageRequestDto;
 import com.ssafy.foodthink.myOwnRecipe.dto.ProcessRequestDto;
@@ -76,5 +77,23 @@ public class MyOwnRecipeController {
         }
     }
 
+    //수정할 레시피 정보 조회 (미리보기)
+    @GetMapping("/read/modifyRecipe/{recipeId}")
+    public ResponseEntity<?> getRecipeForModification(@RequestHeader("Authorization") String token,
+                                                      @PathVariable("recipeId") Long recipeId) {
+        try {
+            //JWT에서 userId 호출
+            String accessToken = token.replace("Bearer ", "");
+            Long userId = jwtUtil.getUserId(accessToken);   //로그인한 사용자 정보 추출
+
+            //수정할 레시피 조회
+            MyRecipeModifyReadResponseDto recipe = myOwnRecipeService.getRecipeForModification(recipeId, userId);
+
+            return ResponseEntity.ok(recipe);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수정할 레시피 정보 조회에 실패했습니다.");
+        }
+    }
 
 }

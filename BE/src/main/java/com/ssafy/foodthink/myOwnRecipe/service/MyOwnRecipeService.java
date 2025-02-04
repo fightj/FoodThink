@@ -1,9 +1,13 @@
 package com.ssafy.foodthink.myOwnRecipe.service;
 
 import com.ssafy.foodthink.global.S3Service;
+import com.ssafy.foodthink.myOwnRecipe.dto.MyRecipeModifyReadResponseDto;
 import com.ssafy.foodthink.myOwnRecipe.dto.MyRecipeWriteRequestDto;
 import com.ssafy.foodthink.myOwnRecipe.dto.ProcessImageRequestDto;
 import com.ssafy.foodthink.myOwnRecipe.dto.ProcessRequestDto;
+import com.ssafy.foodthink.recipes.dto.IngredientDto;
+import com.ssafy.foodthink.recipes.dto.ProcessDto;
+import com.ssafy.foodthink.recipes.dto.ProcessImageDto;
 import com.ssafy.foodthink.recipes.entity.IngredientEntity;
 import com.ssafy.foodthink.recipes.entity.ProcessEntity;
 import com.ssafy.foodthink.recipes.entity.ProcessImageEntity;
@@ -121,6 +125,48 @@ public class MyOwnRecipeService {
         }
     }
 
+    //수정할 레시피 내용 조회 (미리보기)
+    public MyRecipeModifyReadResponseDto getRecipeForModification(Long recipeId, Long userId) {
+        //레시피가 존재하는지 확인
+        RecipeEntity recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("레시피를 찾을 수 없습니다."));
+
+        //요청한 사용자가 작성한 레시피인지 확인
+        if(!recipe.getUserEntity().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
+
+        //레시피 정보 DTO 변환
+        MyRecipeModifyReadResponseDto responseDto = new MyRecipeModifyReadResponseDto();
+        responseDto.setRecipeId(recipe.getRecipeId());
+        responseDto.setRecipeTitle(recipe.getRecipeTitle());
+        responseDto.setImage(recipe.getImage());
+        responseDto.setCateType(recipe.getCateType());
+        responseDto.setCateMainIngre(recipe.getCateMainIngre());
+        responseDto.setServing(recipe.getServing());
+        responseDto.setLevel(recipe.getLevel());
+        responseDto.setRequiredTime(recipe.getRequiredTime());
+        responseDto.setPublic(recipe.getIsPublic());
+
+        // 재료 정보 조회
+        List<IngredientDto> ingredients = ingredientRepository.findByRecipeEntity_RecipeId(recipeId).stream()
+                .map(ingredient -> new IngredientDto(ingredient.getIngreName(), ingredient.getAmount()))
+                .collect(Collectors.toList());
+        responseDto.setIngredients(ingredients);
+
+        // 과정 정보 조회
+        List<ProcessDto> processes = processRepository.findByRecipeEntity_RecipeId(recipeId).stream()
+                .map(process -> {
+                    List<ProcessImageDto> processImages = process.getProcessImages().stream()
+                            .map(image -> new ProcessImageDto(image.getImageUrl()))
+                            .collect(Collectors.toList());
+                    return new ProcessDto(process.getProcessOrder(), process.getProcessExplain(), processImages);
+                })
+                .collect(Collectors.toList());
+        responseDto.setProcesses(processes);
+
+        return responseDto;
+    }
 
 
 }
