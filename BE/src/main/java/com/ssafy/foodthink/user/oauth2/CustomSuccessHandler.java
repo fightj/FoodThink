@@ -47,7 +47,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Long userId = user.getUserId();
 
-        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 1000L);
+        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 60 * 1000L);
         String refreshToken = jwtUtil.createRefreshToken(email, 60*60*60*24*7L); // 7일
         
         user.setRefreshToken(refreshToken);

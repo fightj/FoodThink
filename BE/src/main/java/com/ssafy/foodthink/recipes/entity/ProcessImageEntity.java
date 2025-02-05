@@ -1,12 +1,16 @@
 package com.ssafy.foodthink.recipes.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "process_image")
 public class ProcessImageEntity {
     @Id
@@ -19,4 +23,8 @@ public class ProcessImageEntity {
 
     private String imageUrl;    //사진URL
 
+    public ProcessImageEntity(String imageUrl, ProcessEntity processEntity) {
+        this.imageUrl = imageUrl;
+        this.processEntity = processEntity;
+    }
 }
