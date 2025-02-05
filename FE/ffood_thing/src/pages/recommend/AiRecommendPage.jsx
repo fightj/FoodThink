@@ -35,6 +35,7 @@ function AiRecommendPage() {
 
   return (
     <div className="base-div">
+      <div className="parent-container">
       <div className="card-div">
         <div className="ai-recommend-container">
 
@@ -66,6 +67,7 @@ function AiRecommendPage() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

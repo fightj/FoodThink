@@ -40,12 +40,9 @@ function RecipeWritePage() {
 
   return (
     <div className="base-div">
+    <div className="parent-container">
     <div className="recipe-write-container">
-    <button onClick={() => navigate(-1)} className="back-button">
-              <img src="/images/previous_button.png" alt="Previous" className="icon" />
-              이전
-            </button>
-      <div className="recipe-title">레시피 등록</div>
+      <h2 className="recipe-title">레시피 등록</h2>
 
       {/* 레시피 제목 */}
       <label className="form-label">레시피 제목</label>
@@ -132,6 +129,7 @@ function RecipeWritePage() {
         <button className="publish-btn">저장 후 공개하기</button>
         <button className="cancel-btn">취소</button>
       </div>
+    </div>
     </div>
     </div>
   );
