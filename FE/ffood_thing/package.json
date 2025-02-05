@@ -12,13 +12,13 @@
   "dependencies": {
     "@mediapipe/hands": "^0.4.1675469240",
     "@use-gesture/react": "^10.3.1",
+    "axios": "^1.7.9",
     "bootstrap-icons": "^1.11.3",
     "framer-motion": "^12.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-slick": "^0.30.3",
     "slick-carousel": "^1.8.1",
-
     "sweetalert2": "^11.15.10",
     "sweetalert2-react-content": "^5.1.0"
   },

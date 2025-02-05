@@ -226,7 +226,7 @@ const RecipeDetailPage = () => {
           <div className="steps">
             {recipe.processes.map((process, index) => (
               <div key={index} className="process-item">
-                <h2>
+                <h2 className="steps-h2">
                   {process.processOrder}. {process.processExplain}
                 </h2>
                 {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
