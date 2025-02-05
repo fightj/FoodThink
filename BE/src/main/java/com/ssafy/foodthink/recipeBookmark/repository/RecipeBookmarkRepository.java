@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface RecipeBookmarkRepository extends JpaRepository<RecipeBookmarkEntity, Long> {
-
+    //특정 레시피에 대한 북마크 수 조회
     Long countByRecipeEntity(RecipeEntity recipeEntity);
 
     boolean existsByUserEntity_UserIdAndRecipeEntity_RecipeId(Long userId, Long recipeId); // 해당 사용자가 해당 레시피를 북마크 했는지 여부 확인

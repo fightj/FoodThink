@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/recommend")
+@RequestMapping("/api/recommend")
 @PreAuthorize("hasRole('USER')")
 public class RecommendController {
 

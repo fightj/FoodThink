@@ -1,28 +1,58 @@
 /* 📌 기본값 (태블릿/PC) */
 .profile-header {
   display: flex;
-  flex-direction: row; /* 기본: 가로 정렬 */
-  justify-content: center;
-  align-items: center;
-  text-align: left;
   padding: 30px;
-  background: #ffe6d4;
+  background: #ffe6d4; /* 기본 배경 (봄) */
   color: black;
   border-radius: 20px;
   width: 100%;
   margin: 0 auto;
+  position: relative;
+  overflow: hidden; /* 🌸 헤더 안에서 이펙트 유지 */
+  transition: background 0.5s ease-in-out;
 }
+
+/* 📌 계절 변경 버튼 컨테이너 */
+.season-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+/* 📌 계절 버튼 스타일 */
+.season-buttons button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.season-buttons button:hover {
+  transform: scale(1.2);
+}
+
+/* 📌 계절별 버튼 색상 */
+.spring-btn { background: #FFB6C1; } /* 벚꽃색 */
+.summer-btn { background: #87CEEB; } /* 여름 하늘색 */
+.autumn-btn { background: #FFA500; } /* 가을 단풍색 */
+.winter-btn { background: #B0D0E6; } /* 겨울 얼음색 */
 
 /* 📌 프로필 컨테이너 */
-.profile-container {
+.profile-content {
   display: flex;
-  flex-direction: row; /* 기본값: 가로 정렬 */
+  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
+  z-index: 2;
 }
 
-/* 프로필 아바타 */
+/* 📌 프로필 아바타 */
 .profile-avatar {
   width: 140px;
   height: 140px;
@@ -31,7 +61,7 @@
   border: 3px solid white;
 }
 
-/* 📌 프로필 정보 (닉네임, 구독자, 게시물) */
+/* 📌 프로필 정보 */
 .profile-details {
   display: flex;
   flex-direction: column;
@@ -40,44 +70,21 @@
   padding-left: 50px;
 }
 
-/* 구독자, 게시물 */
+/* 📌 닉네임 */
+.profile-username {
+  font-size: 35px;
+  /* color: #fdb13f; */
+  /* background-color: #d2d2d2; */
+
+}
+
+/* 📌 구독자, 게시물 */
 .profile-info {
   display: flex;
   justify-content: flex-start;
   gap: 30px;
   font-size: 14px;
-}
-
-/* 📌 반응형 - 모바일에서는 세로 정렬 */
-@media (max-width: 768px) {
-  .profile-header {
-    flex-direction: column; /* 📌 모바일에서는 세로 정렬 */
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-  }
-
-  .profile-container {
-    flex-direction: column; /* 📌 세로 정렬 */
-    align-items: center;
-  }
-
-  .profile-avatar {
-    width: 120px;
-    height: 120px;
-  }
-
-  .profile-details {
-    align-items: center;
-    text-align: center;
-    padding-left: 0;
-    padding-top: 15px;
-  }
-
-  .profile-info {
-    justify-content: center;
-    gap: 15px;
-  }
+  margin: 25px 0px 10px 0px;
 }
 
 /* 📌 Profile 버튼 */
@@ -99,10 +106,97 @@
   box-shadow: 0 3px 5px rgba(255, 127, 0, 0.3);
 }
 
-/* 📌 반응형 (모바일에서 크기 조정) */
+/* 📌 반응형 - 모바일에서는 세로 정렬 */
 @media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .profile-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-details {
+    align-items: center;
+    text-align: center;
+    padding-left: 0;
+    padding-top: 15px;
+  }
+
+  .profile-info {
+    justify-content: center;
+    gap: 15px;
+  }
+
   .preference-button {
     font-size: 14px;
     padding: 8px 16px;
   }
+}
+
+/* 📌 계절 이펙트 컨테이너 */
+.falling-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 📌 계절별 애니메이션 */
+@keyframes fall {
+  0% { transform: translateY(-10px) translateX(0px) rotate(0deg); opacity: 1; }
+  30% { opacity: 1; }
+  100% { transform: translateY(200px) translateX(50px) rotate(360deg); opacity: 0.7; } /* ✅ 바닥에서 사라짐 */
+}
+
+/* 📌 비는 직선으로 떨어지도록 변경 */
+@keyframes fall-straight {
+  0% { transform: translateY(-10px) translateX(0px); opacity: 1; }
+  100% { transform: translateY(200px) translateX(-100px); opacity: 0; } /* ✅ 바닥에서 사라짐 */
+}
+
+/* 📌 이펙트 요소 (벚꽃, 비, 낙엽, 눈) */
+.falling-effect {
+  position: absolute;
+  font-size: 22px;
+  top: 0;
+  animation: fall linear infinite;
+}
+
+/* 📌 벚꽃잎 */
+.falling-cherry-blossom {
+  color: pink;
+  animation-duration: 5s;
+}
+
+/* 📌 비 */
+.falling-rain {
+  color: blue;
+  animation: fall-straight linear infinite; /* ✅ 비는 직선으로 떨어짐 */
+  animation-duration: 2s;
+}
+
+/* 📌 낙엽 */
+.falling-leaves {
+  color: orange;
+  animation-duration: 4s;
+}
+
+/* 📌 눈 */
+.falling-snow {
+  color: white;
+  animation-duration: 6s;
+  text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
 }

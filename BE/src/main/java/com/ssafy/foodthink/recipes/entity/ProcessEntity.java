@@ -1,7 +1,9 @@
 package com.ssafy.foodthink.recipes.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -10,6 +12,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "process")
 public class ProcessEntity {
     @Id
@@ -29,4 +33,9 @@ public class ProcessEntity {
     @OneToMany(mappedBy = "processEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProcessImageEntity> processImages = new ArrayList<>();
 
+    public ProcessEntity(Integer processOrder, String processExplain, RecipeEntity recipeEntity) {
+        this.processOrder = processOrder;
+        this.processExplain = processExplain;
+        this.recipeEntity = recipeEntity;
+    }
 }
