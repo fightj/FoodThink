@@ -24,7 +24,6 @@ import PageSlide from "./components/base/PageSlide"
 import Sidebar from "./components/base/Sidebar"
 import { UserProvider } from "./contexts/UserContext"
 import FetchUserSession from "./components/base/FetchUserSession"
-
 const AnimatedRoutes = () => {
   const location = useLocation()
 

@@ -229,8 +229,12 @@ function FeedDetail() {
               <div className="linked-recipe-area">
                 <h1>참고한 레시피</h1>
                 <hr />
-                <div className="recipe-detail" onClick={() => navigate(`/recipe/${linkedRecipe.recipeId}`)}>
-                  <img src={linkedRecipe.image} alt={linkedRecipe.recipeTitle} className="recipe-image" />
+                <div style={{ flex: "0 0 60%", position: "relative" }}>
+                  <div className="recipe-detail" onClick={() => navigate(`/recipe/${linkedRecipe.recipeId}`)}>
+                    <img src={linkedRecipe.image} alt={linkedRecipe.recipeTitle} className="recipe-image" />
+                  </div>
+                </div>
+                <div style={{ flex: "0 0 40%", display: "flex", flexDirection: "column", alignItems: "center" }}>
                   <p className="recipe-title">{linkedRecipe.recipeTitle}</p>
                 </div>
               </div>

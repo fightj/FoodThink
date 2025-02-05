@@ -1,28 +1,64 @@
-import React from "react"
+import React, { useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import "../../styles/login/LoginPage.css"
 
-async function fetchUserData(token) {
+async function fetchAccessToken(code) {
   try {
-    const response = await fetch("http://localhost:8080/users/read", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await fetch(`http://localhost:8080/api/auth/login/kakao?code=${code}`, {
+      method: "GET",
+      credentials: "include",
     })
 
     if (response.ok) {
-      const data = await response.json()
-      console.log("User Data:", data)
+      const accessToken = await response.text() // response.json() 대신 response.text() 사용
+      return accessToken
     } else {
-      console.log("Failed to fetch user data.")
+      console.error("Failed to fetch access token.")
+      return null
     }
   } catch (error) {
-    console.log("Error fetching user data:", error)
+    console.error("Error fetching access token:", error)
+    return null
   }
 }
 
 function LoginPage() {
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    console.log("useEffect triggered")
+    const searchParams = new URLSearchParams(location.search)
+    const code = searchParams.get("code")
+
+    console.log("Authorization code from URL:", code)
+
+    if (code) {
+      console.log("Authorization code is present")
+      fetchAccessToken(code).then((accessToken) => {
+        if (accessToken) {
+          console.log("Access Token:", accessToken)
+
+          // 액세스 토큰을 로컬 스토리지에 저장
+          localStorage.setItem("accessToken", accessToken)
+
+          // 로그인 성공 메시지 출력
+          console.log("로그인 성공")
+
+          // 메인 페이지로 리디렉트
+          navigate("/")
+        } else {
+          console.log("Failed to retrieve access token")
+        }
+      })
+    } else {
+      console.log("Authorization code is not present")
+    }
+  }, [location, navigate])
+
   const handleKakaoClick = () => {
-    window.location.href = "https://kauth.kakao.com/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=http://localhost:5173/callback&response_type=code"
+    console.log("Kakao login button clicked")
+    window.location.href = "http://localhost:8080/oauth2/authorization/kakao"
   }
 
   return (

@@ -292,3 +292,7 @@ hr {
 .dropdown-item:hover {
   background-color: #f0f0f0; /* 호버 시 배경색 변경 */
 }
+
+.linked-recipe-area {
+  padding: 20px;
+}
