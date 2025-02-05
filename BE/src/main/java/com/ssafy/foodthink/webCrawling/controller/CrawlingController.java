@@ -17,7 +17,7 @@ public class CrawlingController {
     private CrawlingService crawlingService;
 
     //크롤링 시작 API
-    @GetMapping("/web-crawling/crawling")
+    @GetMapping("/api/web-crawling/crawling")
     public String crawlRecipes() {
         crawlingService.crawlRecipes();
         return "Crawling completed!";
