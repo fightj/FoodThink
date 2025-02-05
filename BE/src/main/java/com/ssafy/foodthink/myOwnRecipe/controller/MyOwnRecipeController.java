@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/myOwnRecipe")
+@RequestMapping("/api/myOwnRecipe")
 @RequiredArgsConstructor
 public class MyOwnRecipeController {
 
