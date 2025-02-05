@@ -2,9 +2,8 @@ import React, { useRef, useEffect, useState } from "react"
 import { Holistic } from "@mediapipe/holistic"
 import { Recipe } from "../../pages/recipe/recipe_data"
 import { Camera } from "@mediapipe/camera_utils"
-import RecipeDetailPage from "../../pages/recipe/RecipeDetailPage"
 
-const RecipeSwipeComponent = () => {
+const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep }) => {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const swipeTrackingRef = useRef({
@@ -116,6 +115,12 @@ const RecipeSwipeComponent = () => {
           const direction = distance > 0 ? "다음 페이지" : "이전 페이지"
           setSwipeMessage(direction)
 
+          if (direction === "다음 페이지") {
+            onNextStep()
+          } else {
+            onPrevStep()
+          }
+
           // 쿨다운 및 초기화
           swipeTrackingRef.current.isTracking = false
           swipeTrackingRef.current.lastSwipeTimestamp = currentTime
@@ -133,82 +138,33 @@ const RecipeSwipeComponent = () => {
     }
   }, [isTimerRunning]) // 타이머 상태를 의존성 배열에 추가
 
+  const currentProcess = Recipe[0].processes[currentStep]
+
   return (
-    <div style={{ position: "relative", width: "640px", height: "480px" }}>
+    <div className="handpose-container3">
       <video ref={videoRef} style={{ display: "none" }} autoPlay playsInline />
-      <canvas
-        ref={canvasRef}
-        width="1px"
-        height="1px"
-        style={{
-          border: "1px solid black",
-          backgroundColor: "rgba(0,0,0,0.1)",
-        }}
-      />
-      <div className="card-div">
-        <div className="steps">
-          {Recipe.recipe && Recipe.recipe.processes ? (
-            Recipe.recipe.processes.map((process, index) => (
-              <div key={index} className="process-item">
-                <h2 className="steps-h2">
-                  {process.processOrder}. {process.processExplain}
-                </h2>
-                {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
-                <hr />
-              </div>
-            ))
-          ) : (
-            <div>레시피 데이터를 찾을 수 없습니다.</div>
-          )}
+      <canvas ref={canvasRef} className="handpose-canvas" />
+      <div className="card-div3">
+        <div className="steps3">
+          <div className="process-item3">
+            <h2 className="steps-h23">
+              {currentProcess.processOrder}. {currentProcess.processExplain}
+            </h2>
+          </div>
+          <div className="process-image-container3">
+            {currentProcess.images &&
+              currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
+          </div>
+          <hr />
         </div>
       </div>
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          padding: "5px 10px",
-          color: handDetected ? "green" : "red",
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          borderRadius: "5px",
-        }}
-      >
-        {handDetected ? "손 인식됨" : "손 미인식"}
-      </div>
-      {swipeMessage && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            color: "white",
-            backgroundColor: "rgba(0,0,0,0.7)",
-            padding: "15px",
-            borderRadius: "10px",
-            fontSize: "1.5rem",
-          }}
-        >
-          {swipeMessage}
-        </div>
-      )}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "10px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          backgroundColor: "rgba(0,0,0,0.7)",
-          padding: "10px",
-          borderRadius: "10px",
-          color: "white",
-          fontSize: "1.2rem",
-        }}
-      >
-        타이머: {Math.floor(timer / 60)}분 {timer % 60}초
+      {swipeMessage && <div className="swipe-message">{swipeMessage}</div>}
+      <div className="timer3">
+        <img className="timer-image3" src="/images/timerequired.png" alt="Time Required" />
+        {Math.floor(timer / 60)}분 {timer % 60}초
       </div>
     </div>
   )
 }
 
-export default RecipeSwipeComponent
+export default HandPoseComponent

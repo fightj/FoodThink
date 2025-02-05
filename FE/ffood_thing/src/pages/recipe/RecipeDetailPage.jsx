@@ -5,7 +5,7 @@ import SearchBar from "../../components/base/SearchBar"
 import { Recipe } from "./recipe_data"
 import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
-import RecipeSwipeComponent from "../../components/handmotion/HandPoseComponent"
+import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 
 const RecipeDetailPage = () => {
   const { id } = useParams()
@@ -13,6 +13,7 @@ const RecipeDetailPage = () => {
   const [showModal, setShowModal] = useState(false)
   const [activeSection, setActiveSection] = useState("ingredients")
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const [currentStep, setCurrentStep] = useState(0)
 
   const recipe = Recipe.find((item) => item.recipeId === parseInt(id))
 
@@ -98,6 +99,14 @@ const RecipeDetailPage = () => {
     document.getElementById(section).scrollIntoView({ behavior: "smooth" })
   }
 
+  const handleNextStep = () => {
+    setCurrentStep((prevStep) => Math.min(prevStep + 1, recipe.processes.length - 1))
+  }
+
+  const handlePrevStep = () => {
+    setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))
+  }
+
   return (
     <div className="base-div">
       <SearchBar />
@@ -152,20 +161,12 @@ const RecipeDetailPage = () => {
             </div>
 
             {showModal && (
-              <div className="modal-overlay">
-                <div className="modal-content">
-                  <button className="close-button" onClick={() => setShowModal(false)}>
+              <div className="modal-overlay3">
+                <div className="modal-content3">
+                  <button className="close-button3" onClick={() => setShowModal(false)}>
                     X
                   </button>
-                  <RecipeSwipeComponent
-                    onNextPage={() => {
-                      /* 다음 페이지로 이동하는 로직 구현 */
-                    }}
-                    onPrevPage={() => {
-                      /* 이전 페이지로 이동하는 로직 구현 */
-                    }}
-                  />
-                  <RecipeComponent pages={recipe.processes} />
+                  <HandPoseComponent currentStep={currentStep} onNextStep={handleNextStep} onPrevStep={handlePrevStep} />
                 </div>
               </div>
             )}
