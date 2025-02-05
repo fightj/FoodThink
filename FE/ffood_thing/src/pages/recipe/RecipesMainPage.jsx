@@ -1,8 +1,7 @@
-// src/pages/recipe/RecipesMainPage.jsx
 import React, { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../../styles/recipe/RecipesMainPage.css"
-import SearchBar from "../../components/base/SearchBar"
+import SearchBarRecipe from "../../components/base/SearchBarRecipe"
 import { recipes as exampleRecipes } from "./recipe_data" // 레시피 데이터 가져오기
 
 const RecipesMainPage = () => {
@@ -55,6 +54,10 @@ const RecipesMainPage = () => {
     navigate(`/recipes/${id}`)
   }
 
+  const handleSearch = (query) => {
+    navigate(`/search?query=${query}`)
+  }
+
   const handleCategoryClick = (category) => {
     if (selectedCategories.includes(category)) {
       setSelectedCategories(selectedCategories.filter((c) => c !== category))
@@ -91,9 +94,14 @@ const RecipesMainPage = () => {
 
   return (
     <div className="base-div">
-      <SearchBar />
+      <SearchBarRecipe onSearch={handleSearch} />
       <div className="recipe-parent-div">
         <div className="recipe-card-div">
+          <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
+            <h2></h2>
+            <img src="/images/feed_write_button.png" alt="Recipe 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
+          </div>
+          <br />
           <div className="categories2">
             <div className="category-group2">
               <h2>종류별</h2>
