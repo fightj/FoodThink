@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
+import axios from "axios" // Axios import 추가
 import "../../styles/recipe/RecipesMainPage.css"
 import SearchBarRecipe from "../../components/base/SearchBarRecipe"
-import { recipes as exampleRecipes } from "./recipe_data" // 레시피 데이터 가져오기
 
 const RecipesMainPage = () => {
   const navigate = useNavigate()
@@ -12,7 +12,17 @@ const RecipesMainPage = () => {
   const carouselRef2 = useRef(null)
 
   useEffect(() => {
-    setRecipes(exampleRecipes)
+    const fetchTop20Recipes = async () => {
+      try {
+        const response = await axios.get("https://i12e107.p.ssafy.io/api/recipes/read/recipeList/top20/hits")
+        setRecipes(response.data) // 가져온 데이터 사용
+      } catch (error) {
+        console.error("Error fetching the top 20 recipes", error)
+        setRecipes([]) // 오류가 발생하면 빈 배열 사용
+      }
+    }
+
+    fetchTop20Recipes()
   }, [])
 
   useEffect(() => {
