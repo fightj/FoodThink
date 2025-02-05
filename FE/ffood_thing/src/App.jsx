@@ -1,13 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import { AnimatePresence } from "framer-motion"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "./App.css"
-
-// 공통 스타일
 import "./styles/base/global.css"
 
-// 페이지 컴포넌트
 import Home from "./pages/home/Home"
 import SnsMain from "./pages/sns/SnsMain"
 import FeedDetail from "./pages/sns/FeedDetail"
@@ -20,14 +17,13 @@ import RecipeUpdatePage from "./pages/recipe/RecipeUpdatePage"
 import FeedUpdatePage from "./pages/sns/FeedUpdatePage"
 import LoginPage from "./pages/login/LoginPage"
 import AiRecommendPage from "./pages/recommend/AiRecommendPage"
-// import TodayRecommendPage from "./pages/recommend/TodayRecommendPage";
-import SnsSearchResultPage from "./pages/sns/SnsSearchResultPage" // 검색 결과 페이지 임포트
+import SnsSearchResultPage from "./pages/sns/SnsSearchResultPage"
 
-// 공통 컴포넌트
 import NavbarBottom from "./components/base/Navbar-bottom"
-
-// PageSlide 컴포넌트
 import PageSlide from "./components/base/PageSlide"
+import Sidebar from "./components/base/Sidebar"
+import { UserProvider } from "./contexts/UserContext"
+import FetchUserSession from "./components/base/FetchUserSession"
 
 const AnimatedRoutes = () => {
   const location = useLocation()
@@ -43,7 +39,6 @@ const AnimatedRoutes = () => {
             </PageSlide>
           }
         />
-
         <Route
           path="/login"
           element={
@@ -52,7 +47,6 @@ const AnimatedRoutes = () => {
             </PageSlide>
           }
         />
-
         <Route
           path="/sns"
           element={
@@ -93,7 +87,6 @@ const AnimatedRoutes = () => {
             </PageSlide>
           }
         />
-
         <Route
           path="/recipes"
           element={
@@ -126,7 +119,6 @@ const AnimatedRoutes = () => {
             </PageSlide>
           }
         />
-
         <Route
           path="/profile/:id"
           element={
@@ -135,7 +127,6 @@ const AnimatedRoutes = () => {
             </PageSlide>
           }
         />
-
         <Route
           path="/ai-recommend"
           element={
@@ -144,19 +135,24 @@ const AnimatedRoutes = () => {
             </PageSlide>
           }
         />
-        {/* <Route path="/today-recommend" element={<PageSlide><TodayRecommendPage /></PageSlide>} /> */}
       </Routes>
     </AnimatePresence>
   )
 }
 
 const App = () => {
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleSidebar = () => setIsOpen(!isOpen)
+
   return (
-    <Router>
-      <AnimatedRoutes />
-      {/* NavbarBottom은 App 최상위에서 고정 위치로 렌더링 */}
-      <NavbarBottom />
-    </Router>
+    <UserProvider>
+      <Router>
+        <FetchUserSession /> {/* 세션 확인 컴포넌트 추가 */}
+        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+        <AnimatedRoutes />
+        <NavbarBottom />
+      </Router>
+    </UserProvider>
   )
 }
 
