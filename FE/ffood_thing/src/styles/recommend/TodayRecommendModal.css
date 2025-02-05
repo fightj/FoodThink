@@ -35,8 +35,58 @@
   color: #fdb13f;
   transition: opacity 0.4s ease-in-out;
   padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
+/* 📌 새로고침 버튼 (좌측 상단 고정) */
+.refresh-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #ff9800;
+  transition: color 0.2s ease-in-out, transform 0.3s ease-in-out;
+  
+  /* ✅ 클릭 영역 확장 */
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 50%;
+  z-index: 2; /* ✅ 닫기 버튼과 충돌 방지 */
+}
+
+
+/* 📌 클릭하면 회전되지만 배경 유지 X */
+.refresh-btn:active {
+  transform: rotate(360deg);
+}
+
+/* 📌 닫기 버튼 스타일 (우선순위 조정) */
+.today-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s ease-in-out;
+  z-index: 3; /* ✅ 새로고침 버튼보다 위에 배치 */
+}
+
+.today-close-btn:hover {
+  color: black;
+}
 
 /* 캐러셀 컨테이너 */
 .today-carousel {
@@ -47,15 +97,13 @@
   height: 85%;
   position: relative;
   overflow: hidden;
-  /* padding: 20px; */
 }
 
-/* 음식 리스트 (가로 정렬 + 중앙 정렬) */
+/* 음식 리스트 */
 .recipe-list {
   display: flex;
   justify-content: center;
   width: 85%;
-  /* max-width: 90%; */
   transition: transform 0.5s ease-in-out;
   position: relative;
 }
@@ -71,14 +119,14 @@
   opacity: 0.6;
   transform: scale(1);
   position: relative;
-  z-index: 1; /* 기본적으로 낮은 z-index */
+  z-index: 1;
 }
 
 /* 중앙 카드 (크기 확대) */
 .recipe-item.active {
   transform: scale(1.3);
   opacity: 1;
-  z-index: 2; /* 🔥 중앙 음식이 항상 위에 있도록 설정 */
+  z-index: 2;
 }
 
 /* 음식 이미지 */
@@ -93,29 +141,10 @@
 /* 중앙 카드에만 음식 이름 표시 */
 .recipe-title-main {
   font-size: 18px;
-  /* font-weight: bold; */
   margin-top: 5px;
   transition: opacity 0.4s ease-in-out;
   padding-top: 20px;
 }
-
-/* 📌 닫기 버튼 스타일 */
-.today-close-btn {
-  position: absolute;
-  top: 15px;
-  right: 25px;
-  background: none;
-  border: none;
-  font-size: 26px;
-  cursor: pointer;
-  color: #333;
-  transition: color 0.2s ease-in-out;
-}
-
-.today-close-btn:hover {
-  color: black;
-}
-
 
 /* 반응형: 모바일에서 중앙 정렬 유지 */
 @media (max-width: 500px) {
@@ -138,5 +167,14 @@
 
   .recipe-image {
     max-width: 90px;
+  }
+
+  /* 📌 모바일에서 새로고침 버튼 크기 조정 */
+  .refresh-btn {
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    top: 10px;
+    left: 10px;
   }
 }
