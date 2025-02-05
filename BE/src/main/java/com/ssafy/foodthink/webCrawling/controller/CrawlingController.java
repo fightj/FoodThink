@@ -2,6 +2,7 @@ package com.ssafy.foodthink.webCrawling.controller;
 
 import com.ssafy.foodthink.webCrawling.service.CrawlingService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,7 +17,7 @@ public class CrawlingController {
     private CrawlingService crawlingService;
 
     //크롤링 시작 API
-    @GetMapping("/web-crawling/crawling")
+    @GetMapping("/api/web-crawling/crawling")
     public String crawlRecipes() {
         crawlingService.crawlRecipes();
         return "Crawling completed!";

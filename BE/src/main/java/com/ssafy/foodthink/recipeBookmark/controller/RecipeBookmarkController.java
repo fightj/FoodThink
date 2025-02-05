@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/bookmark")
+@RequestMapping("/api/bookmark")
 @PreAuthorize("hasRole('USER')")
 public class RecipeBookmarkController {
 
