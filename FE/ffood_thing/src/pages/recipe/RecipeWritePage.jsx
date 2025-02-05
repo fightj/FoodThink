@@ -1,12 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+// import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@shadcn/ui";
 import "../../styles/recipe/RecipeWritePage.css";
+
 
 function RecipeWritePage() {
   const navigate = useNavigate();
   const [ingredients, setIngredients] = useState([{ name: "", amount: "" }]);
-  const [steps, setSteps] = useState([""]); // 요리 순서
+  const [steps, setSteps] = useState([{ text: "", image: null }]);
   const [image, setImage] = useState(null);
+
+  // 📌 대표 사진 업로드 핸들러
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImage(URL.createObjectURL(file)); // 이미지 URL 생성 후 상태 업데이트
+    }
+  };
+
+  // 📌 대표 사진 삭제 핸들러
+  const removeImage = () => {
+    setImage(null);
+  };
 
   // 📌 재료 추가
   const addIngredient = () => {
@@ -22,7 +37,7 @@ function RecipeWritePage() {
 
   // 📌 요리 순서 추가
   const addStep = () => {
-    setSteps([...steps, ""]);
+    setSteps([...steps, { text: "", image: null }]);
   };
 
   // 📌 요리 순서 삭제
@@ -33,15 +48,27 @@ function RecipeWritePage() {
   };
 
   // 📌 이미지 업로드 핸들러
-  const handleImageUpload = (event) => {
+  const handleStepImageUpload = (event, index) => {
     const file = event.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file));
+      const newSteps = [...steps];
+      newSteps[index].image = URL.createObjectURL(file);
+      setSteps(newSteps);
     }
   };
+
   // 📌 이미지 삭제 핸들러
-  const removeImage = () => {
-    setImage(null);
+  const removeStepImage = (index) => {
+    const newSteps = [...steps];
+    newSteps[index].image = null;
+    setSteps(newSteps);
+  };
+
+  // 📌 스텝 텍스트 업데이트
+  const updateStepText = (index, text) => {
+    const newSteps = [...steps];
+    newSteps[index].text = text;
+    setSteps(newSteps);
   };
 
   return (
@@ -57,7 +84,7 @@ function RecipeWritePage() {
             <div className="recipe-title">레시피 등록</div>
           </div>
 
-          {/* 📌 입력 영역 (60% 제목 + 소개) (40% 대표 사진) */}
+          {/* 입력 영역 (65% 제목 + 소개) (35% 대표 사진) */}
           <div className="recipe-info-container">
 
             {/* 왼쪽: 제목 + 소개 */}
@@ -95,8 +122,8 @@ function RecipeWritePage() {
           {/* 📌 카테고리 선택 */}
           <div className="category-container">
             <label className="form-label">카테고리</label>
-            <select className="dropdown">
-              <option>종류별</option>
+            <select className="dropdown1">
+              <option value="" disabled selected>종류별</option>
               <option>반찬</option>
               <option>국/탕</option>
               <option>찌개</option>
@@ -110,29 +137,46 @@ function RecipeWritePage() {
               <option>차/음료/술</option>
               <option>기타</option>
             </select>
-            <select className="dropdown">
-              <option>메인재료별</option>
-              <option>고기</option>
-              <option>채소</option>
+            <select className="dropdown1">
+              <option value="" disabled selected>메인재료별</option>
+              <option>소고기</option>
+              <option>돼지고기</option>
+              <option>닭고기</option>
+              <option>육류</option>
+              <option>채소류</option>
+              <option>해물류</option>
+              <option>달걀/유제품</option>
+              <option>가공식품</option>
+              <option>쌀</option>
+              <option>밀가루</option>
+              <option>건어물류</option>
+              <option>버섯류</option>
+              <option>과일류</option>
+              <option>빵/견과류</option>
+              <option>곡류</option>
+              <option>기타</option>
             </select>
           </div>
 
           {/* 📌 요리 정보 선택 */}
           <div className="cooking-info-container">
             <label className="form-label">요리정보</label>
-            <select className="dropdown">
-              <option>인분</option>
+            <select className="dropdown1">
+              <option value="" disabled selected>인분</option>
               <option>1인분</option>
               <option>2인분</option>
+              <option>3인분</option>
             </select>
-            <select className="dropdown">
-              <option>시간</option>
+            <select className="dropdown1">
+              <option value="" disabled selected>시간</option>
               <option>10분 이내</option>
+              <option>20분</option>
               <option>30분</option>
             </select>
-            <select className="dropdown">
-              <option>난이도</option>
+            <select className="dropdown1">
+              <option value="" disabled selected>난이도</option>
               <option>쉬움</option>
+              <option>중간</option>
               <option>어려움</option>
             </select>
           </div>
@@ -144,10 +188,12 @@ function RecipeWritePage() {
               <div className="ingredient-input-group" key={index}>
                 <input type="text" className="text-input small" placeholder="예) 연어" />
                 <input type="text" className="text-input small" placeholder="예) 300g" />
-                <button className="delete-btn" onClick={() => removeIngredient(index)}>❌</button>
+                <button type="button" class="btn btn-outline-danger" onClick={() => removeIngredient(index)}>❌</button>
               </div>
             ))}
-            <button className="add-btn" onClick={addIngredient}>➕ 재료 추가</button>
+            <div className="add-ingredient-btn-wrapper">
+              <button type="button" className="btn btn-outline-primary" onClick={addIngredient}>재료 추가</button>
+            </div>
           </div>
 
           {/* 📌 요리 순서 입력 */}
@@ -155,18 +201,55 @@ function RecipeWritePage() {
             <label className="form-label">요리순서</label>
             {steps.map((step, index) => (
               <div className="step-input-group" key={index}>
-                <textarea className="text-area small" placeholder={`Step ${index + 1}`} />
-                <button className="delete-btn" onClick={() => removeStep(index)}>❌</button>
+                {/* 이미지 업로드 기능 추가 */}
+                <div className="step-image-upload">
+                  <input
+                    type="file"
+                    id={`stepImageUpload-${index}`}
+                    accept="image/*"
+                    onChange={(e) => handleStepImageUpload(e, index)}
+                    hidden
+                  />
+                  <label htmlFor={`stepImageUpload-${index}`} className="step-image-label">
+                    {step.image ? (
+                      <>
+                        <img src={step.image} alt={`Step ${index + 1}`} className="step-uploaded-image" />
+                        <button type="button" className="remove-step-image-btn" onClick={() => removeStepImage(index)}>✖</button>
+                      </>
+                    ) : (
+                      "📷 이미지 추가"
+                    )}
+                  </label>
+                </div>
+
+                {/* 요리 설명 입력 */}
+                <textarea
+                  className="text-area small"
+                  placeholder={`Step ${index + 1}`}
+                  value={step.text}
+                  onChange={(e) => updateStepText(index, e.target.value)}
+                />
+
+                {/* 삭제 버튼 */}
+                <button type="button" className="btn btn-outline-danger" onClick={() => removeStep(index)}>❌</button>
               </div>
             ))}
-            <button className="add-btn" onClick={addStep}>➕ 순서 추가</button>
+
+            {/* 버튼을 감싸는 div 추가하여 중앙 정렬 */}
+            <div className="add-ingredient-btn-wrapper">
+              <button type="button" className="btn btn-outline-primary" onClick={addStep}>순서 추가</button>
+            </div>
           </div>
+
 
           {/* 📌 저장/취소 버튼 */}
           <div className="button-group">
-            <button className="save-btn">저장</button>
+            {/* <button className="save-btn">저장</button>
             <button className="publish-btn">저장 후 공개하기</button>
-            <button className="cancel-btn">취소</button>
+            <button className="cancel-btn">취소</button> */}
+            <button type="button" className="btn btn-primary">저장</button>
+            <button type="button" className="btn btn-success">저장 후 공개하기</button>
+            <button type="button" className="btn btn-danger">취소</button>
           </div>
         </div>
       </div>

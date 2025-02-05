@@ -14,7 +14,7 @@ const RecipeList = ({ recipes }) => {
             style={{ textDecoration: "none", color: "inherit" }}
           >
             <img src={recipe.image} alt={recipe.title} className="recipe-image" />
-            <p className="recipe-title">{recipe.title}</p>
+            <p className="recipe-title1">{recipe.title}</p>
           </Link>
         ))}
       </div>

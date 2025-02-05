@@ -172,34 +172,48 @@
 
 /*    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    */
 /* 📌 카테고리 선택 컨테이너 */
-.category-container {
-  display: flex; /* ✅ 가로 정렬 */
+.category-container, .cooking-info-container {
+  display: flex; /* 가로 정렬 */
   align-items: center;
-  gap: 15px; /* ✅ 요소 간격 추가 */
+  gap: 15px; /* 요소 간격 추가 */
   margin-bottom: 20px;
+  width: 100%;
 }
 
 /* 📌 라벨 (카테고리 글씨) */
-.category-container .form-label {
-  white-space: nowrap; /* ✅ 줄바꿈 방지 */
+.category-container .form-label,
+.cooking-info-container .form-label,
+.ingredients-container .form-label,
+.steps-container .form-label {
+  white-space: nowrap; /* 줄바꿈 방지 */
   font-size: 2rem;
   margin-right: 35px;
 }
 
 /* 드롭다운 스타일 */
-.dropdown {
+.dropdown1 {
+  width: 180px;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
   background: #f0f0f0;
-  font-size: 16px;
+  font-size: 1rem;
+  /* cursor: pointer; */
+}
+
+/* 📌 드롭다운 옵션 스타일 */
+.dropdown1 option {
+  width: inherit;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem; /* 옵션 글씨 크기 */
+  padding: 8px;
 }
 
 
-.cooking-info-container, .ingredients-container, .steps-container {
+.ingredients-container, .steps-container {
   margin-bottom: 20px;
-  border: 1px solid #ddd;
-  padding: 15px;
   border-radius: 10px;
 }
 
@@ -210,15 +224,92 @@
   margin-bottom: 10px;
 }
 
-.text-input, .text-area, .dropdown {
+/* .text-input, .text-area, .dropdown { */
+.text-input, .text-area {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 6px;
 }
 
+
+
+/* 📌 요리 순서 입력 그룹 */
+.step-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* 📌 이미지 업로드 버튼 스타일 */
+.step-image-upload {
+  flex: 0 0 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.step-image-label {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  color: #666;
+  transition: background 0.2s ease-in-out;
+}
+
+/* 📌 업로드된 이미지 스타일 */
+.step-uploaded-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* 📌 이미지 삭제 버튼 */
+.remove-step-image-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease-in-out;
+}
+
+
+
+
+
 /* 버튼 그룹 */
 .button-group {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 30px;
+}
+
+.add-ingredient-btn-wrapper {
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  margin-top: 10px; /* 위쪽 여백 추가 */
 }
