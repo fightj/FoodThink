@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @PreAuthorize("hasRole('USER')") // 접근 권한 적용
 public class UserController {
 

@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
@@ -44,7 +44,7 @@ public class AuthController {
 
         Long userId = user.getUserId();
 
-        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 1000L);
+        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 60 * 1000L);
 
         return ResponseEntity.ok().body(accessToken);
     }
