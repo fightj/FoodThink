@@ -253,10 +253,12 @@
   margin-top: 70px;
 }
 
-.process-item h2 {
+.steps-h2 {
   font-size: 1.5rem; /* 글자 크기 설정 */
   margin-top: 10px;
   margin-bottom: 10px;
+  color: rgb(0, 0, 0);
+  white-space: wrap;
 }
 
 .steps-h2 {
