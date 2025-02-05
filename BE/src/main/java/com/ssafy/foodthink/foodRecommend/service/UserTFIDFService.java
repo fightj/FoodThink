@@ -1,5 +1,8 @@
 package com.ssafy.foodthink.foodRecommend.service;
 
+import com.ssafy.foodthink.feed.entity.FeedEntity;
+import com.ssafy.foodthink.feed.entity.FeedLikeEntity;
+import com.ssafy.foodthink.feed.repository.FeedLikeRepository;
 import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdfEntity;
 import com.ssafy.foodthink.foodRecommend.repository.RecipeTfIdfRepository;
 import com.ssafy.foodthink.foodRecommend.repository.RecommendInterestRepository;
@@ -25,11 +28,13 @@ public class UserTFIDFService {
     private final RecipeBookmarkRepository recipeBookmarkRepository;
     private final RecommendInterestRepository recommendInterestRepository;
     private final UserRepository userRepository;
+    private final FeedLikeRepository feedLikeRepository;
 
     // 가중치 상수
     private static final double LIKED_WEIGHT = 1.0;
     private static final double DISLIKED_WEIGHT = -1.0;
     private static final double BOOKMARK_WEIGHT = 0.5;
+    private static final double LIKED_FEED_WEIGHT = 0.7;
 
     public Map<String,Double> generateUserProfile(Long userId) {
 
@@ -49,10 +54,15 @@ public class UserTFIDFService {
 
         // 북마크한 레시피의 IF-IDF 벡터 평균 계산
         Map<String, Double> bookmarkProfile = calculateBookmarkProfile(userId);
+        // 피드 좋아요한 레시피의 IF-IDF 벡터 평균 계산
+        Map<String, Double> feedLikedProfile = calculateLikedFeedProfile(userId);
 
         //  프로필 정보 통합
         bookmarkProfile.forEach((feature, value) -> {
             userProfile.merge(feature, value * BOOKMARK_WEIGHT, Double::sum);
+        });
+        feedLikedProfile.forEach((feature, value) -> {
+            userProfile.merge(feature, value * LIKED_FEED_WEIGHT, Double::sum);
         });
 
         // 프로필 벡터 정규화
@@ -109,6 +119,43 @@ public class UserTFIDFService {
                         e -> e.getValue() / featureCounts.get(e.getKey())
                 ));
     }
+
+    // 피드 좋아요한 레시피
+    private Map<String, Double> calculateLikedFeedProfile(Long userId) {
+        // 사용자가 좋아요한 피드 목록 조회
+        List<FeedLikeEntity> likedFeeds = feedLikeRepository.findByUserEntity_userId(userId);
+
+        // 각 특성별 TF-IDF 값의 합과 개수
+        Map<String, Double> aggregatedValues = new HashMap<>();
+        Map<String, Integer> featureCounts = new HashMap<>();
+
+        // 좋아요한 모든 피드의 레시피 재료 TF-IDF 값 합산
+        for (FeedLikeEntity like : likedFeeds) {
+            FeedEntity feed = like.getFeedEntity();
+            RecipeEntity recipe = feed.getRecipeEntity();
+
+            // 사용자가 좋아요한 피드에 레시피 정보가 있는 경우만
+            if (recipe != null) {
+                List<RecipeTfIdfEntity> tfIdfValues = recipeTfIdfRepository.findByRecipe(recipe);
+
+                for (RecipeTfIdfEntity tfIdf : tfIdfValues) {
+                    String feature = tfIdf.getFeature();
+                    double value = tfIdf.getTfIdfValue();
+
+                    aggregatedValues.merge(feature, value, Double::sum);
+                    featureCounts.merge(feature, 1, Integer::sum);
+                }
+            }
+        }
+
+        // 평균 계산
+        return aggregatedValues.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue() / featureCounts.get(e.getKey())
+                ));
+    }
+
 
     // L2 정규화
     private Map<String, Double> normalizeProfile(Map<String, Double> profile) {
