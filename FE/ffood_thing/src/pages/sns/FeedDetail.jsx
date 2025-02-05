@@ -226,19 +226,31 @@ function FeedDetail() {
 
             {/* sns관련 연동된 레시피 */}
             {currentFeed.userRecipeId && linkedRecipe ? (
-              <div className="linked-recipe-area">
-                <h1>참고한 레시피</h1>
-                <hr />
-                <div style={{ flex: "0 0 60%", position: "relative" }}>
-                  <div className="recipe-detail" onClick={() => navigate(`/recipe/${linkedRecipe.recipeId}`)}>
-                    <img src={linkedRecipe.image} alt={linkedRecipe.recipeTitle} className="recipe-image" />
-                  </div>
-                </div>
-                <div style={{ flex: "0 0 40%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <p className="recipe-title">{linkedRecipe.recipeTitle}</p>
-                </div>
-              </div>
-            ) : null}
+  <div className="linked-recipe-area" style={{ display: "flex", flexDirection: "column" }}>
+    <div className="link-recipe" style={{ marginBottom: "20px" }}>
+      <h1>참고한 레시피</h1>
+      <hr />
+    </div>
+    <div style={{ display: "flex" }}>
+    <div style={{ flex: "0 0 50%", position: "relative", display: "flex", justifyContent: "center" }}>
+  <div className="recipe-detail" onClick={() => navigate(`/recipe/${linkedRecipe.recipeId}`)}>
+    <img src={linkedRecipe.image} alt={linkedRecipe.recipeTitle} className="recipe-image-sns" />
+  </div>
+</div>
+
+      <div style={{ flex: "0 0 50%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div className="recipe-info">
+        <p className="recipe-title1">{linkedRecipe.recipeTitle}</p>
+          <img src={linkedRecipe.userImage || "/images/default_profile.png"} alt="" className="profile-image1"/>
+          <span className="username">{linkedRecipe.nickname || "Unknown User"}</span>
+          <p>조회수: {linkedRecipe.hits}</p>
+          <p>북마크: {linkedRecipe.bookMarkCount}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+) : null}
+
           </div>
         </div>
 
