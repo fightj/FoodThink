@@ -5,6 +5,7 @@ import com.ssafy.foodthink.user.dto.UserInfoDto;
 import com.ssafy.foodthink.user.dto.UserInterestDto;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
 import com.ssafy.foodthink.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/users")
-@PreAuthorize("hasRole('USER')") // 접근 권한 적용
 public class UserController {
 
     private final UserService userService;

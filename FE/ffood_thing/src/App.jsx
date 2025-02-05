@@ -18,6 +18,7 @@ import FeedUpdatePage from "./pages/sns/FeedUpdatePage"
 import LoginPage from "./pages/login/LoginPage"
 import AiRecommendPage from "./pages/recommend/AiRecommendPage"
 import SnsSearchResultPage from "./pages/sns/SnsSearchResultPage"
+import RecipeSearchResultPage from "./pages/recipe/RecipeSearchResultPage"
 
 import NavbarBottom from "./components/base/Navbar-bottom"
 import PageSlide from "./components/base/PageSlide"
@@ -132,6 +133,14 @@ const AnimatedRoutes = () => {
           element={
             <PageSlide>
               <AiRecommendPage />
+            </PageSlide>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <PageSlide>
+              <RecipeSearchResultPage />
             </PageSlide>
           }
         />
