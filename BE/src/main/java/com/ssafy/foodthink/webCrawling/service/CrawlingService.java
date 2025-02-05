@@ -54,17 +54,17 @@ public class CrawlingService {
     private final Map<String, Integer> recipeCountMap = new HashMap<>();
 
     //배치 스케줄러 : 이전 실행 종료 후 1시간마다 1번씩
-//    @Scheduled(fixedRate = 3600000)
-//    public void crawlRecipesPeriodically() {
-//        try {
-//            System.out.println("배치 크롤링 작업 시작");
-//            crawlRecipes();
-//            System.out.println("배치 크롤링 완료");
-//        } catch(Exception e) {
-//            System.out.println("크롤링 오류 발생 : " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
+    @Scheduled(fixedRate = 3600000)
+    public void crawlRecipesPeriodically() {
+        try {
+            System.out.println("배치 크롤링 작업 시작");
+            crawlRecipes();
+            System.out.println("배치 크롤링 완료");
+        } catch(Exception e) {
+            System.out.println("크롤링 오류 발생 : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     //만개의레시피 웹 사이트 크롤링
     //종류별 카테고리(cat4)와 재료별 카테고리(cat3)를 하나씩 선택하여 해당 조합의 목록별로 데이터를 크롤링한다.
