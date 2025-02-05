@@ -2,7 +2,7 @@ import React from "react"
 import { Dropdown } from "react-bootstrap" // react-bootstrap에서 Dropdown 가져오기
 import "../../styles/base/Sidebar.css"
 
-function Sidebar({ isOpen, toggleSidebar }) {
+function Sidebar({ isOpen, toggleSidebar, userId }) {
   if (!isOpen) return null
 
   return (
@@ -46,26 +46,22 @@ function Sidebar({ isOpen, toggleSidebar }) {
           </a>
         </li>
         <li>
-          <a href="/profile/1" className="nav-link text-white">
+          <a href={`/profile/${userId}`} className="nav-link text-white">
             마이페이지
           </a>
         </li>
       </ul>
       <hr />
       <Dropdown className="dropdown">
-        <Dropdown.Toggle
-          variant="link"
-          id="user-dropdown"
-          className="d-flex align-items-center text-white text-decoration-none"
-        >
+        <Dropdown.Toggle variant="link" id="user-dropdown" className="d-flex align-items-center text-white text-decoration-none">
           <img src="https://github.com/mdo.png" alt="" width="32" height="32" className="rounded-circle me-2" />
           <strong>User</strong>
         </Dropdown.Toggle>
 
         <Dropdown.Menu className="dropdown-menu-dark text-small shadow">
-          <Dropdown.Item href="/profile/1?tab=bookmarks">북마크한 레시피</Dropdown.Item>
-          <Dropdown.Item href="/profile/1?tab=recipes">내 레시피</Dropdown.Item>
-          <Dropdown.Item href="/profile/1?tab=feed">내 피드</Dropdown.Item>
+          <Dropdown.Item href={`/profile/${userId}?tab=bookmarks`}>북마크한 레시피</Dropdown.Item>
+          <Dropdown.Item href={`/profile/${userId}?tab=recipes`}>내 레시피</Dropdown.Item>
+          <Dropdown.Item href={`/profile/${userId}?tab=feed`}>내 피드</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item href="/">Log Out</Dropdown.Item>
         </Dropdown.Menu>
