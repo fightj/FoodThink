@@ -1,6 +1,6 @@
 package com.ssafy.foodthink.foodRecommend.service;
 
-import com.ssafy.foodthink.foodRecommend.dto.RecipeRecommendationDto;
+import com.ssafy.foodthink.foodRecommend.dto.RecipeRecommendDto;
 import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdfEntity;
 import com.ssafy.foodthink.foodRecommend.repository.RecipeTfIdfRepository;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
@@ -18,14 +18,14 @@ public class RecipeRecommendService {
     private final RecipeRepository recipeRepository;
     private final UserTFIDFService userTFIDFService;
 
-    public List<RecipeRecommendationDto> getRecommendedRecipes(Long userId, int limit) {
+    public List<RecipeRecommendDto> getRecommendedRecipes(Long userId, int limit) {
         // 사용자 프로필 벡터
         Map<String, Double> userProfile = userTFIDFService.generateUserProfile(userId);
 
         // 모든 레시피의 TF-IDF 벡터
         List<RecipeEntity> allRecipes = recipeRepository.findAll();
 
-        List<RecipeRecommendationDto> recommendations = allRecipes.stream()
+        List<RecipeRecommendDto> recommendations = allRecipes.stream()
                 .map(recipe -> {
                     List<RecipeTfIdfEntity> recipeTfIdfs = recipeTfIdfRepository.findByRecipe(recipe);
                     Map<String, Double> recipeVector = recipeTfIdfs.stream()
@@ -45,17 +45,19 @@ public class RecipeRecommendService {
                     // 코사인 유사도
                     double similarity = calculateCosineSimilarity(userProfile, recipeVector);
 
-                    return new RecipeRecommendationDto(
+                    return new RecipeRecommendDto(
                             recipe.getRecipeId(),
                             recipe.getRecipeTitle(),
+                            recipe.getCateType(),
                             recipe.getRequiredTime(),
                             ingredients,
+                            recipe.getLevel(),
                             processCount,
                             similarity
 
                     );
                 })
-                .sorted(Comparator.comparingDouble(RecipeRecommendationDto::getSimilarity).reversed())
+                .sorted(Comparator.comparingDouble(RecipeRecommendDto::getSimilarity).reversed())
                 .limit(limit)
                 .collect(Collectors.toList());
 

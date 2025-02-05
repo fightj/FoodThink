@@ -34,7 +34,8 @@ public class UserTFIDFService {
     private static final double LIKED_WEIGHT = 1.0;
     private static final double DISLIKED_WEIGHT = -1.0;
     private static final double BOOKMARK_WEIGHT = 0.5;
-    private static final double LIKED_FEED_WEIGHT = 0.7;
+    private static final double LIKED_FEED_WEIGHT = 0.5;
+    private static final double Viewed_RECIPE_WEIGHT = 0.5;
 
     public Map<String,Double> generateUserProfile(Long userId) {
 
@@ -56,6 +57,8 @@ public class UserTFIDFService {
         Map<String, Double> bookmarkProfile = calculateBookmarkProfile(userId);
         // 피드 좋아요한 레시피의 IF-IDF 벡터 평균 계산
         Map<String, Double> feedLikedProfile = calculateLikedFeedProfile(userId);
+        // 조회한 레시피의 IF-IDF 벡터 평균 계산
+        //Map<String, Double> recipeViewedProfile = calculateViewedRecipeProfile(userId);
 
         //  프로필 정보 통합
         bookmarkProfile.forEach((feature, value) -> {
@@ -64,6 +67,9 @@ public class UserTFIDFService {
         feedLikedProfile.forEach((feature, value) -> {
             userProfile.merge(feature, value * LIKED_FEED_WEIGHT, Double::sum);
         });
+        //recipeViewedProfile.forEach((feature, value) -> {
+        //    userProfile.merge(feature, value * Viewed_RECIPE_WEIGHT, Double::sum);
+        //});
 
         // 프로필 벡터 정규화
         return normalizeProfile(userProfile);
@@ -88,6 +94,7 @@ public class UserTFIDFService {
                 .map(UserInterestEntity::getIngredient)
                 .collect(Collectors.toList());
     }
+
 
     // 북마크한 레시피
     private Map<String, Double> calculateBookmarkProfile(Long userId) {
@@ -155,6 +162,11 @@ public class UserTFIDFService {
                         e -> e.getValue() / featureCounts.get(e.getKey())
                 ));
     }
+
+    // 사용자가 조회한 레시피
+    //private Map<String, Double> calculateViewedRecipeProfile(Long userId) {
+
+   // }
 
 
     // L2 정규화
