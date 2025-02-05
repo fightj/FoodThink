@@ -4,9 +4,13 @@
   padding-top: 30px; /* 상단 여백 지정 (100px로 예시) */
   box-sizing: border-box; /* 패딩 포함 높이 계산 */
 }
+.parent-container {
+  display: flex;
+  justify-content: center;
+}
 .card-div {
   background-color: rgb(255, 255, 255);
-  width: 100%; /* 수평 공간 전체를 차지 */
+  width: 95%; /* 수평 공간 전체를 차지 */
   padding: 20px 0; /* 상하 패딩을 늘려서 높이를 증가 */
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
   justify-content: center; /* 자식 요소를 수평 가운데 정렬 */

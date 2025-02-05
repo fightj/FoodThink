@@ -1,10 +1,46 @@
 import React, { useState } from "react"
 import "../../styles/sns/FeedCommentSection.css"
-import { FeedComment, Users } from "../../pages/sns/feed_data"
+
+// 주어진 데이터를 사용하여 댓글 섹션 구성
+const feedData = {
+  id: 7,
+  foodName: "음식이름7",
+  content: "피드내용7",
+  writeTime: "2025-01-28T00:47:07.905327",
+  userId: 2,
+  username: "닉네임2",
+  userRecipeId: 1,
+  crawlingRecipeId: null,
+  images: [
+    "https://foodthinkawsbucket.s3.amazonaws.com/3cd0bc20-e8db-47c1-b49a-380ee3ab7825-짜장면.jpeg",
+    "https://foodthinkawsbucket.s3.amazonaws.com/db7f95aa-e358-4f8a-bd75-742e5e5695fe-떡볶이.jpeg",
+  ],
+  feedCommentResponseDtos: [
+    {
+      id: 2,
+      content: "수정된 댓글입니다.",
+      username: "닉네임",
+      writeTime: "2025-02-02T15:24:36.99946",
+    },
+    {
+      id: 3,
+      content: "참 맛있어보여요!",
+      username: "닉네임3",
+      writeTime: "2025-02-02T15:32:14.684305",
+    },
+    {
+      id: 4,
+      content: "추가한 댓글이에요!",
+      username: "닉네임",
+      writeTime: "2025-02-02T15:32:31.031496",
+    },
+  ],
+  like: false,
+}
 
 const FeedCommentSection = ({ feedId, onClose, onAddComment, currentUserId }) => {
   // feedId에 해당하는 댓글 필터링
-  const comments = FeedComment.filter((comment) => comment.feed_id === feedId)
+  const comments = feedData.feedCommentResponseDtos
 
   // 댓글 입력을 위한 상태
   const [newComment, setNewComment] = useState("")
@@ -23,8 +59,8 @@ const FeedCommentSection = ({ feedId, onClose, onAddComment, currentUserId }) =>
   }
 
   // 로그인한 유저의 프로필 이미지 가져오기
-  const currentUser = Users.find((user) => user.user_id === currentUserId)
-  const profileImage = currentUser?.image || "/images/default_profile.png" // 기본 이미지
+  const currentUser = { user_id: currentUserId, image: null, nickname: "Current User" } // 임시 데이터
+  const profileImage = currentUser.image || "/images/default_profile.png" // 기본 이미지
 
   return (
     <div className="comment-div">
@@ -32,19 +68,16 @@ const FeedCommentSection = ({ feedId, onClose, onAddComment, currentUserId }) =>
 
       {/* 댓글 목록 출력 */}
       {comments.length > 0 ? (
-        comments.map((comment) => {
-          const user = Users.find((user) => user.user_id === comment.user_id)
-          return (
-            <div key={comment.comment_id} className="comment">
-              <img src={user?.image || "/images/default_profile.png"} alt={user?.nickname || "User"} className="profile-image-com" />
-              <div className="comment-content-wrapper">
-                <span className="comment-author-name">{user?.nickname || "Unknown User"}</span>
-                <p className="comment-content">{comment.content}</p>
-                <span className="comment-time">{comment.write_time}</span>
-              </div>
+        comments.map((comment) => (
+          <div key={comment.id} className="comment">
+            <img src="/images/default_profile.png" alt={comment.username || "User"} className="profile-image-com" />
+            <div className="comment-content-wrapper">
+              <span className="comment-author-name">{comment.username || "Unknown User"}</span>
+              <p className="comment-content">{comment.content}</p>
+              <span className="comment-time">{comment.writeTime}</span>
             </div>
-          )
-        })
+          </div>
+        ))
       ) : (
         <p className="no-comments">댓글이 없습니다.</p>
       )}

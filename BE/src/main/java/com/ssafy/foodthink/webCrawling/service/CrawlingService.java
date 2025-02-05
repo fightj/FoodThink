@@ -14,6 +14,7 @@ import com.ssafy.foodthink.webCrawling.repository.CrawlingRecipeRepository;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -101,7 +102,7 @@ public class CrawlingService {
         System.out.println("크롤링 완료");
         deleteRecipesWithoutIngredients();
         System.out.println("재료 정보가 담기지 않은 레시피 전체 삭제 완료");
-        assignRandomUserToRecipes();;
+        assignRandomUserToRecipes();
         System.out.println("user_id 랜덤 삽입 완료");
     }
 
@@ -177,10 +178,9 @@ public class CrawlingService {
             //난이도, 인분, 조리시간이 없으면 저장하지 않음 : 데이터 필터링
             //+대표 이미지에 Icon_vod가 포함되어 있다면 저장하지 않음 (영상 제거)
             if (recipeEntity.getLevel() == 0 || recipeEntity.getServing().isEmpty() || recipeEntity.getRequiredTime().isEmpty()
-                    || recipeEntity.getLevel() == null || recipeEntity.getServing() == null || recipeEntity.getRequiredTime() == null
                     || (recipeEntity.getImage() != null && recipeEntity.getImage().contains("icon_vod"))) {
-                System.out.println("난이도, 인분, 조리시간 없는 데이터 또는 'icon_vod' 포함된 이미지 필터링: " + recipeEntity.getRecipeUrl());
-                crawlingRecipeRepository.delete(recipeEntity);    // DB에서 즉시 삭제
+                System.out.println("필터링된 데이터: " + recipeEntity.getRecipeUrl());
+                crawlingRecipeRepository.delete(recipeEntity);
                 return;
             }
 
@@ -200,7 +200,7 @@ public class CrawlingService {
                 String amount = ingredient.select("span.ingre_list_ea").text();         //재료 수량+단위
 
                 //재료의 빈 값이나 null 확인
-                if(ingreName == null || ingreName.isEmpty() || amount == null || amount.isEmpty()) {
+                if(ingreName.isEmpty() || amount.isEmpty()) {
                     hasInvalidIngredient = true;    //잘못된 재료가 있음
                     break;  //하나라도 있으면 더 이상 처리X
                 }
@@ -231,7 +231,6 @@ public class CrawlingService {
                 2. 요리 과정 정보 크롤링
              */
             Elements processes = detailDoc.select(".view_step_cont.media");
-
             int order = 1;  //요리 순서는 1번부터
 
             for(Element process : processes) {
@@ -258,7 +257,6 @@ public class CrawlingService {
                     ProcessImageEntity imageEntity = new ProcessImageEntity();
                     imageEntity.setImageUrl(imageUrl);
                     imageEntity.setProcessEntity(processEntity);
-
                     crawlingProcessImageRepository.saveAndFlush(imageEntity);
                 }
 
@@ -277,18 +275,14 @@ public class CrawlingService {
             return;
         }
 
-        // 1. RecipeEntity 찾기
+        //RecipeEntity 찾기
         Optional<RecipeEntity> optionalRecipe = crawlingRecipeRepository.findById(recipeId);
         if (optionalRecipe.isEmpty()) return;
-        RecipeEntity recipeEntity = optionalRecipe.get();
 
-        // 2. 과정 이미지 삭제
+        RecipeEntity recipeEntity = optionalRecipe.get();
         crawlingProcessImageRepository.deleteByProcessEntity_RecipeEntity(recipeEntity);
-        // 3. 과정 삭제
         crawlingProcessRepository.deleteByRecipeEntity(recipeEntity);
-        // 4. 재료 삭제
         crawlingIngredientRepository.deleteByRecipeEntity(recipeEntity);
-        // 5. 최종적으로 레시피 삭제
         crawlingRecipeRepository.delete(recipeEntity);
 
     }
@@ -340,7 +334,6 @@ public class CrawlingService {
         crawlingRecipeRepository.saveAll(allRecipes);
         System.out.println("모든 레시피에 사용자 아이디를 할당했습니다.");
     }
-
 
     // 종류별 카테고리 재정의
     // 반찬 국/탕 찌개 디저트 면/만투 밥/죽/떡 김치/젓갈/장류 양념/소스쨈 양식 샐러드 차/음료/술 기타
