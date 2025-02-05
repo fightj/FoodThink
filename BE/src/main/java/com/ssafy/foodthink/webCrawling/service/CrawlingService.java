@@ -48,16 +48,22 @@ public class CrawlingService {
     private final String baseUrl = "https://www.10000recipe.com/recipe/list.html?";
 
     //카테고리별 조합의 데이터 개수 제한
-    private final int MAX_RECIPES_COMBO = 2;
+    private final int MAX_RECIPES_COMBO = 5;
     //cat3 + cat4 조합별 크롤링된 레시피 개수 저장용
     private final Map<String, Integer> recipeCountMap = new HashMap<>();
 
-    //배치 스케줄러
-//    @Scheduled(fixedRate = 3600000)
-//    public void crawlRecipesPeriodically() {
-//        System.out.println("배치 크롤링 작업 시작");
-//        crawlRecipes();
-//    }
+    //배치 스케줄러 : 이전 실행 종료 후 1시간마다 1번씩
+    @Scheduled(fixedRate = 3600000)
+    public void crawlRecipesPeriodically() {
+        try {
+            System.out.println("배치 크롤링 작업 시작");
+            crawlRecipes();
+            System.out.println("배치 크롤링 완료");
+        } catch(Exception e) {
+            System.out.println("크롤링 오류 발생 : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     //만개의레시피 웹 사이트 크롤링
     //종류별 카테고리(cat4)와 재료별 카테고리(cat3)를 하나씩 선택하여 해당 조합의 목록별로 데이터를 크롤링한다.
@@ -96,7 +102,7 @@ public class CrawlingService {
         deleteRecipesWithoutIngredients();
         System.out.println("재료 정보가 담기지 않은 레시피 전체 삭제 완료");
         assignRandomUserToRecipes();;
-        System.out.println("user_id 랜던 삽입 완료");
+        System.out.println("user_id 랜덤 삽입 완료");
     }
 
     //Jsoup를 활용하여 HTML 및 CSS 선택자로 크롤링 정보 추출
