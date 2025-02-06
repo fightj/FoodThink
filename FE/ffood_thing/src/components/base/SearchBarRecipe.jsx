@@ -1,9 +1,10 @@
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import "../../styles/base/SearchBar.css"
-import Form from "react-bootstrap/Form"
 
-function SearchBar({ onSearch, initialQuery }) {
+function SearchBarRecipe({ initialQuery }) {
   const [query, setQuery] = useState(initialQuery || "")
+  const navigate = useNavigate()
 
   const handleInputChange = (event) => {
     setQuery(event.target.value)
@@ -16,8 +17,8 @@ function SearchBar({ onSearch, initialQuery }) {
   }
 
   const handleSearch = () => {
-    if (onSearch) {
-      onSearch(query) // 부모 컴포넌트로 검색어 전달
+    if (query) {
+      navigate(`/search?query=${query}`) // 검색어를 쿼리 파라미터로 전달
     }
   }
 
@@ -33,4 +34,4 @@ function SearchBar({ onSearch, initialQuery }) {
   )
 }
 
-export default SearchBar
+export default SearchBarRecipe

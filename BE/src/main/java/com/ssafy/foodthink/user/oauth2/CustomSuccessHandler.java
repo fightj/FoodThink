@@ -40,16 +40,17 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("=== 로그인 성공 ===");
         log.info("사용자 이메일: {}", customOAuth2User.getEmail());
 
-
-        // 생성된 refresh_token을 DB에 저장
+        // 사용자 조회
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
 
         Long userId = user.getUserId();
 
-        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 60 * 1000L);
+        // 토큰 생성
+        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 60 * 1000L); // 1시간
         String refreshToken = jwtUtil.createRefreshToken(email, 60*60*60*24*7L); // 7일
-        
+
+        // 리프레시 토큰 DB에 저장
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
