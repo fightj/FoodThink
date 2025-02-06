@@ -13,13 +13,16 @@
     "@mediapipe/hands": "^0.4.1675469240",
     "@radix-ui/react-select": "^2.1.5",
     "@shadcn/ui": "^0.0.4",
+    "array-move": "^4.0.0",
     "bootstrap-icons": "^1.11.3",
     "framer-motion": "^12.0.3",
     "matter-js": "^0.20.0",
     "react": "^18.3.1",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.3.1",
     "sweetalert2-react-content": "^5.1.0",
-    "tailwindcss": "^4.0.3"
+    "tailwindcss": "^4.0.3",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

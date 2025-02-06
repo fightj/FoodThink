@@ -218,7 +218,7 @@
 }
 
 /* 재료 입력 */
-.ingredient-input-group, .step-input-group {
+.ingredient-input-group {
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
@@ -278,6 +278,7 @@
   border-radius: 10px;
 }
 
+
 /* 📌 이미지 삭제 버튼 */
 .remove-step-image-btn {
   position: absolute;
@@ -299,8 +300,6 @@
 
 
 
-
-
 /* 버튼 그룹 */
 .button-group {
   display: flex;
@@ -312,4 +311,42 @@
   display: flex;
   justify-content: center; /* 중앙 정렬 */
   margin-top: 10px; /* 위쪽 여백 추가 */
+}
+
+
+
+/* 📌 드래그 핸들 스타일 */
+.drag-handle {
+  cursor: grab;
+  font-size: 1.5rem;
+  padding: 8px;
+  background: none;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  position: relative; /* ✅ 추가 */
+}
+
+/* 📌 드래그 중 스타일 */
+.drag-handle:active {
+  cursor: grabbing;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.droppable-container {
+  display: block;
+  min-height: 50px;
+  padding: 10px;
+}
+
+.step-input-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
