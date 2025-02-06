@@ -21,6 +21,11 @@ services:
       - API_SERVICE_KEY=${API_SERVICE_KEY}
       - S3_BUCKET=${S3_BUCKET}
       - DB_USERNAME=${DB_USERNAME}
+    depends_on:
+      - elasticsearch
+    networks:
+      - backend_network
+      - frontend_network
 
   frontend:
     build:
@@ -31,8 +36,45 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-#      - ./app:/app # 필요한 경우 추가적인 볼륨 마운트
       - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - frontend_network
+      - backend_network
+    depends_on:
+      - backend
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
+    environment:
+      - node.name=elasticsearch
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - backend_network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - backend_network
+
+volumes:
+  elasticsearch-data: {}
+
+networks:
+  backend_network:
+    driver: bridge
+  frontend_network:
+    driver: bridge
+
+
 
 #  nginx:
 #    build:

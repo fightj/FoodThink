@@ -8,15 +8,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/recipes")
+@RequestMapping("/api/recipes/")
 @RequiredArgsConstructor
 public class RecipeController {
 
     private final RecipeService recipeService;
 
     //레시피 목록 조회 : 카테고리별 + 정렬
-    @GetMapping("/read/recipeList")
-    public RecipeListPageResponseDto searchRecipeList(@RequestBody RecipeListRequestDto requestDto) {
+    @GetMapping("read/recipeList")
+    public RecipeListPageResponseDto searchRecipeList(
+            @RequestParam(value = "cateType", required = false) String cateType,
+            @RequestParam(value = "cateMainIngre", required = false) String cateMainIngre,
+            @RequestParam(value = "sortType", required = false, defaultValue = "조회순") String sortType,
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size) {
+
+        RecipeListRequestDto requestDto = new RecipeListRequestDto(cateType, cateMainIngre, sortType, page, size);
         return recipeService.searchRecipeList(requestDto);
     }
 

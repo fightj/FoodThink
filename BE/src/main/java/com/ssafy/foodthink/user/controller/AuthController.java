@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.user.controller;
 
+import com.ssafy.foodthink.user.dto.CustomOAuth2User;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
 import com.ssafy.foodthink.user.repository.UserRepository;
