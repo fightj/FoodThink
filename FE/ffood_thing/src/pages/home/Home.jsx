@@ -55,11 +55,6 @@ function Home() {
       <div className="base-div">
         <SearchBar />
         <HomeBigButton />
-        {accessToken && (
-          <div className="login-info">
-            <p>현재 로그인한 유저: {accessToken}</p>
-          </div>
-        )}
       </div>
     </PageSlide>
   )
