@@ -58,11 +58,14 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("[Slf4j]refreshToken: " + refreshToken);
 
         // HTTP 응답의 본문(body)에 JSON 형태로 포함되어 클라이언트에게 전송
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"accessToken\":\"" + accessToken + "\"}");
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.getWriter().write("{\"accessToken\":\"" + accessToken + "\"}");
+//
+//        response.setStatus(HttpServletResponse.SC_OK);
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        String redirectUrl = "http://localhost:5173/?accessToken=" + accessToken;
+        response.sendRedirect(redirectUrl);
     }
 
 }
