@@ -2,35 +2,41 @@ package com.ssafy.foodthink.user.service;
 
 import com.ssafy.foodthink.global.S3Service;
 import com.ssafy.foodthink.global.exception.AleadyExistsException;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
+import com.ssafy.foodthink.recipes.repository.RecipeRepository;
+import com.ssafy.foodthink.user.dto.RecipeViewDto;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
 import com.ssafy.foodthink.user.dto.UserInterestDto;
+import com.ssafy.foodthink.user.entity.RecipeViewHistoryEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.entity.UserInterestEntity;
+import com.ssafy.foodthink.user.repository.RecipeViewRepository;
 import com.ssafy.foodthink.user.repository.UserInterestRepository;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserInterestRepository userInterestRepository;
     private final S3Service s3Service;
-
-    @Autowired
-    public UserService(UserRepository userRepository, UserInterestRepository userInterestRepository, S3Service s3Service) {
-        this.userRepository = userRepository;
-        this.userInterestRepository = userInterestRepository;
-        this.s3Service = s3Service;
-    }
+    private final RecipeViewRepository recipeViewRepository;
+    private final RecipeRepository recipeRepository;
 
     // userid로 회원 찾기
     public UserInfoDto readUserByUserId(Long userId) {
@@ -127,12 +133,58 @@ public class UserService {
 
     // 회원 관심사 삭제
     @Transactional
-    public void deleteUserInterest(Long interestId) {
-        UserInterestEntity interest = userInterestRepository.findById(interestId)
-                .orElseThrow(() -> new RuntimeException("관심사를 찾을 수 없습니다."));
+    public void deleteUserInterest(Long userId, Long interestId) {
+        UserEntity userEntity = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
 
-        userInterestRepository.delete(interest);
+        UserInterestEntity interestEntity = userInterestRepository.findById(interestId)
+                .orElseThrow(() -> new RuntimeException("관심사를 찾을 수 없어요!!!"));
+
+        if (!interestEntity.getUserId().getUserId().equals(userId)) {
+            throw new RuntimeException("사용자와 관심사가 일치하지 않습니다.");
+        }
+
+        userInterestRepository.delete(interestEntity);
     }
+
+    // 레시피 조회 기록 저장
+    @Transactional
+    public void createRecipeView(Long userId, Long recipeId) {
+        UserEntity userEntity = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+        RecipeEntity recipeEntity = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("레시피를 찾을 수 없어요!!!"));
+
+        RecipeViewHistoryEntity history = new RecipeViewHistoryEntity(userEntity, recipeEntity);
+        recipeViewRepository.save(history);
+    }
+
+    // 사용자의 최근 레시피 기록 조회
+    @Transactional
+    public List<RecipeViewDto> readRecentRecipeViews(Long userId, int count) {
+        UserEntity user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+        Pageable pageable = PageRequest.of(0, count, Sort.by(Sort.Direction.DESC, "viewTime"));
+
+        List<RecipeViewHistoryEntity> histories = recipeViewRepository.findByUserEntity(user, pageable);
+
+        return histories.stream()
+                .map(this::convertToViewDto)
+                .collect(Collectors.toList());
+    }
+
+
+
+    private RecipeViewDto convertToViewDto(RecipeViewHistoryEntity history) {
+        return RecipeViewDto.builder()
+                .recipeId(history.getRecipeEntity().getRecipeId())
+                .viewTime(history.getViewTime())
+                .build();
+    }
+
+
 
     private UserInterestDto convertToInterestDto(UserInterestEntity interestEntity) {
         return UserInterestDto.builder()
