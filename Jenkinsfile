@@ -252,6 +252,7 @@ pipeline {
         AWS_CREDENTIALS_SECRET_KEY = credentials('AWS_CREDENTIALS_SECRET_KEY')
         GPT_API_KEY = credentials('GPT_API_KEY')
         API_SERVICE_KEY = credentials('API_SERVICE_KEY')
+        DB_USERNAME = credentials('DB_USERNAME')
     }
 
     stages {
@@ -306,7 +307,13 @@ pipeline {
                             docker tag my-frontend-container ${DOCKER_IMAGE_NAME}/my-frontend-container
                             docker push ${DOCKER_IMAGE_NAME}/my-backend-container
                             docker push ${DOCKER_IMAGE_NAME}/my-frontend-container
-                        """
+
+                            
+                            docker rmi ${DOCKER_IMAGE_NAME}/my-backend-container
+                            docker rmi ${DOCKER_IMAGE_NAME}/my-frontend-container
+                            docker rmi my-backend-container
+                            docker rmi my-frontend-container
+                            """
                     }
                 }
             }

@@ -40,28 +40,29 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("=== 로그인 성공 ===");
         log.info("사용자 이메일: {}", customOAuth2User.getEmail());
 
-
-        // 생성된 refresh_token을 DB에 저장
+        // 사용자 조회
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
 
         Long userId = user.getUserId();
 
-        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 60 * 1000L);
+        // 토큰 생성
+        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 60 * 1000L); // 1시간
         String refreshToken = jwtUtil.createRefreshToken(email, 60*60*60*24*7L); // 7일
-        
+
+        // 리프레시 토큰 DB에 저장
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
         log.info("[Slf4j]accessToken: " + accessToken);
         log.info("[Slf4j]refreshToken: " + refreshToken);
 
-        // HTTP 응답의 본문(body)에 JSON 형태로 포함되어 클라이언트에게 전송
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"accessToken\":\"" + accessToken + "\"}");
+        // HTTP 헤더에 액세스 토큰 추가
+        response.setHeader("Authorization","Bearer "+accessToken);
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        // 프론트엔드 메인 페이지로 리다이렉트
+        String redirectUrl = "http://localhost:5173/";
+        response.sendRedirect(redirectUrl);
     }
 
 }
