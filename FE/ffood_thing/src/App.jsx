@@ -1,6 +1,7 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import { AnimatePresence } from "framer-motion"
+import axios from "axios"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "./App.css"
 import "./styles/base/global.css"
@@ -24,7 +25,26 @@ import NavbarBottom from "./components/base/Navbar-bottom"
 import PageSlide from "./components/base/PageSlide"
 import Sidebar from "./components/base/Sidebar"
 import { UserProvider } from "./contexts/UserContext"
-// import FetchUserSession from "./components/base/FetchUserSession"
+
+const fetchUserInfo = async () => {
+  try {
+    const accessToken = localStorage.getItem("accessToken")
+    if (!accessToken) throw new Error("Access token is missing")
+
+    const response = await axios.get("http://localhost:8080/api/users/read", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+
+    console.log("User Info:", response.data)
+    return response.data
+  } catch (error) {
+    console.error("Error fetching user info:", error.response?.data || error.message)
+    throw error
+  }
+}
+
 const AnimatedRoutes = () => {
   const location = useLocation()
 
@@ -150,13 +170,28 @@ const AnimatedRoutes = () => {
 
 const App = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const userInfo = await fetchUserInfo()
+        setUser(userInfo)
+        sessionStorage.setItem("user", JSON.stringify(userInfo))
+      } catch (error) {
+        console.error("Failed to fetch user info:", error)
+      }
+    }
+
+    getUserInfo()
+  }, [])
+
   const toggleSidebar = () => setIsOpen(!isOpen)
 
   return (
     <UserProvider>
       <Router>
-        {/* <FetchUserSession /> 세션 확인 컴포넌트 추가 */}
-        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
         <AnimatedRoutes />
         <NavbarBottom />
       </Router>
