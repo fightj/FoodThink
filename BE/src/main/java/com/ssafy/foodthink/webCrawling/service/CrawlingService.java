@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,16 +34,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CrawlingService {
 
+    private final CrawlingRecipeRepository crawlingRecipeRepository;
+    private final CrawlingIngredientRepository crawlingIngredientRepository;
+    private final CrawlingProcessRepository crawlingProcessRepository;
+    private final CrawlingProcessImageRepository crawlingProcessImageRepository;
+    private final UserRepository userRepository;
+
     @Autowired
-    private CrawlingRecipeRepository crawlingRecipeRepository;
-    @Autowired
-    private CrawlingIngredientRepository crawlingIngredientRepository;
-    @Autowired
-    private CrawlingProcessRepository crawlingProcessRepository;
-    @Autowired
-    private CrawlingProcessImageRepository crawlingProcessImageRepository;
-    @Autowired
-    private UserRepository userRepository;
+    public CrawlingService(
+            CrawlingRecipeRepository crawlingRecipeRepository,
+            CrawlingIngredientRepository crawlingIngredientRepository,
+            CrawlingProcessRepository crawlingProcessRepository,
+            CrawlingProcessImageRepository crawlingProcessImageRepository,
+            UserRepository userRepository
+    ) {
+        this.crawlingRecipeRepository = crawlingRecipeRepository;
+        this.crawlingIngredientRepository = crawlingIngredientRepository;
+        this.crawlingProcessRepository = crawlingProcessRepository;
+        this.crawlingProcessImageRepository = crawlingProcessImageRepository;
+        this.userRepository = userRepository;
+    }
 
 
     //크롤링할 웹 사이트의 앞부분 URL
@@ -51,20 +62,21 @@ public class CrawlingService {
     //카테고리별 조합의 데이터 개수 제한
     private final int MAX_RECIPES_COMBO = 5;
     //cat3 + cat4 조합별 크롤링된 레시피 개수 저장용
-    private final Map<String, Integer> recipeCountMap = new HashMap<>();
+    //HashMap -> ConcurrentHashMapk 동시성 문제 해결
+    private final Map<String, Integer> recipeCountMap = new ConcurrentHashMap<>();
 
     //배치 스케줄러 : 이전 실행 종료 후 1시간마다 1번씩
-//    @Scheduled(fixedRate = 3600000)
-//    public void crawlRecipesPeriodically() {
-//        try {
-//            System.out.println("배치 크롤링 작업 시작");
-//            crawlRecipes();
-//            System.out.println("배치 크롤링 완료");
-//        } catch(Exception e) {
-//            System.out.println("크롤링 오류 발생 : " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
+    @Scheduled(fixedRate = 3600000)
+    public void crawlRecipesPeriodically() {
+        try {
+            System.out.println("배치 크롤링 작업 시작");
+            crawlRecipes();
+            System.out.println("배치 크롤링 완료");
+        } catch(Exception e) {
+            System.out.println("크롤링 오류 발생 : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     //만개의레시피 웹 사이트 크롤링
     //종류별 카테고리(cat4)와 재료별 카테고리(cat3)를 하나씩 선택하여 해당 조합의 목록별로 데이터를 크롤링한다.
