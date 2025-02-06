@@ -13,6 +13,7 @@
   width: 95%; /* 수평 공간 전체를 차지 */
   padding: 20px 0; /* 상하 패딩을 늘려서 높이를 증가 */
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  flex-direction: column; /* 자식 요소를 세로로 정렬 */
   justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
   border-radius: 50px; /* 아래 두 꼭지점만 둥글게 설정 */
   height: auto; /* 높이를 패딩에 따라 유동적으로 설정 */

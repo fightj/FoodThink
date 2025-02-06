@@ -1,4 +1,4 @@
-.back-button {
+.back-button1 {
   display: flex;
   align-items: center;
   font-size: 2rem;
@@ -296,21 +296,20 @@ hr {
 .linked-recipe-area {
   padding: 20px;
 }
-  .linked-recipe {
-    flex-direction: column;
-  }
-  
-.recipe-image-sns{
+.linked-recipe {
+  flex-direction: column;
+}
+
+.recipe-image-sns {
   width: 100%;
   border-radius: 8px; /* 모서리 둥글게 */
-
 }
 .recipe-title1 {
   white-space: normal; /* 기본 값, 줄 바꿈 허용 */
   text-overflow: clip; /* 텍스트 자르기 */
   font-size: 2rem;
 }
-.recipe-info{
+.recipe-info {
   width: 100%;
-  padding-right: 20PX;
+  padding-right: 20px;
 }
