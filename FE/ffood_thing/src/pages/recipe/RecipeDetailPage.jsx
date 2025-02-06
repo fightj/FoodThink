@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import RecipeComponent from "../../components/recipe/RecipeComponent"
+import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 import SearchBar from "../../components/base/SearchBar"
 import { Recipe } from "./recipe_data"
 import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
-import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 
 const RecipeDetailPage = () => {
   const { id } = useParams()
@@ -13,7 +13,6 @@ const RecipeDetailPage = () => {
   const [showModal, setShowModal] = useState(false)
   const [activeSection, setActiveSection] = useState("ingredients")
   const [isBookmarked, setIsBookmarked] = useState(false)
-  const [currentStep, setCurrentStep] = useState(0)
 
   const recipe = Recipe.find((item) => item.recipeId === parseInt(id))
 
@@ -99,14 +98,6 @@ const RecipeDetailPage = () => {
     document.getElementById(section).scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleNextStep = () => {
-    setCurrentStep((prevStep) => Math.min(prevStep + 1, recipe.processes.length - 1))
-  }
-
-  const handlePrevStep = () => {
-    setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))
-  }
-
   return (
     <div className="base-div">
       <SearchBar />
@@ -161,12 +152,20 @@ const RecipeDetailPage = () => {
             </div>
 
             {showModal && (
-              <div className="modal-overlay3">
-                <div className="modal-content3">
-                  <button className="close-button3" onClick={() => setShowModal(false)}>
+              <div className="modal-overlay">
+                <div className="modal-content">
+                  <button className="close-button" onClick={() => setShowModal(false)}>
                     X
                   </button>
-                  <HandPoseComponent currentStep={currentStep} onNextStep={handleNextStep} onPrevStep={handlePrevStep} />
+                  <HandPoseComponent
+                    onNextPage={() => {
+                      /* 다음 페이지로 이동하는 로직 구현 */
+                    }}
+                    onPrevPage={() => {
+                      /* 이전 페이지로 이동하는 로직 구현 */
+                    }}
+                  />
+                  <RecipeComponent pages={recipe.processes} />
                 </div>
               </div>
             )}
@@ -227,7 +226,7 @@ const RecipeDetailPage = () => {
           <div className="steps">
             {recipe.processes.map((process, index) => (
               <div key={index} className="process-item">
-                <h2 className="steps-h2">
+                <h2>
                   {process.processOrder}. {process.processExplain}
                 </h2>
                 {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
