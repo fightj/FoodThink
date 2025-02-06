@@ -260,6 +260,14 @@
   color: black;
 }
 
+.process-image {
+  width: 80%;
+  height: 80%;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  object-fit: cover; /* Ensure the image covers the entire area */
+}
+
 .section-title {
   position: absolute;
   left: 10%;

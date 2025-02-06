@@ -167,9 +167,9 @@ const RecipeDetailPage = () => {
             </div>
 
             {showModal && (
-              <div className="modal-overlay">
-                <div className="modal-content">
-                  <button className="close-button" onClick={() => setShowModal(false)}>
+              <div className="modal-overlay3">
+                <div className="modal-content3">
+                  <button className="close-button3" onClick={() => setShowModal(false)}>
                     X
                   </button>
                   <HandPoseComponent

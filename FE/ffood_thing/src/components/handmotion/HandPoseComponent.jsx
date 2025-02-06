@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react"
 import { Holistic } from "@mediapipe/holistic"
 import { Camera } from "@mediapipe/camera_utils"
+import "../../styles/recipe/RecipeComponent.css"
 
 const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
   const videoRef = useRef(null)
