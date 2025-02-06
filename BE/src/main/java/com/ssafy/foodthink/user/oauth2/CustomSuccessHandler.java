@@ -55,11 +55,21 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
-        log.info("[Slf4j]accessToken: " + accessToken);
-        log.info("[Slf4j]refreshToken: " + refreshToken);
+        log.info("accessToken: " + accessToken);
+        log.info("refreshToken: " + refreshToken);
+
+        // 쿠키에 액세스 토큰 저장
+        Cookie accessCookie = new Cookie("access_token", accessToken);
+        accessCookie.setHttpOnly(true); // HttpOnly 쿠키 사용 -> JS 접근 제한 (쿠키를 요청에 포함하면 백엔드로 토큰 전송 가능)
+        //accessCookie.setSecure(true); // HTTPS 환경에서만 사용
+        accessCookie.setPath("/");
+        accessCookie.setMaxAge(60 * 60); // 1시간 유효
+        response.addCookie(accessCookie);
+
+        log.info("액세스 토큰이 쿠키에 저장되었습니다.");
 
         // 프론트엔드 메인 페이지 URL로 리다이렉트
-        String redirectUrl = "http://localhost:5173/?accessToken=" + accessToken;
+        String redirectUrl = "http://localhost:5173/";
         response.sendRedirect(redirectUrl);
     }
 
