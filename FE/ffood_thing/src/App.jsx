@@ -33,7 +33,7 @@ const fetchUserInfo = async () => {
     const accessToken = localStorage.getItem("accessToken")
     if (!accessToken) throw new Error("Access token is missing")
 
-    const response = await axios.get("http://localhost:8080/api/users/read", {
+    const response = await axios.get("https://i12e107.p.ssafy.io/api/users/read", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

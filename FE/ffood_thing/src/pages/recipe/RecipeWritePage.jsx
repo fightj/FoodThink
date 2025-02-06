@@ -89,53 +89,67 @@ function RecipeWritePage() {
 
   // 저장 & 저장 후 공개 API 요청
   const saveRecipe = async (isPublic) => {
+    // ✅ token 변수를 함수 내부에서 선언
+  const token = localStorage.getItem("accessToken");
+  
+  if (!token) {
+    alert("로그인이 필요합니다.");
+    navigate("/login"); // 로그인 페이지로 이동
+    return;
+  }
     const formData = new FormData();
-
-    // JSON 데이터 구성
-    const recipeData = {
-      recipeTitle,
-      cateType: category,
-      cateMainIngre: mainIngredient,
-      serving: servings,
-      level: convertDifficultyToNumber(difficulty),
-      requiredTime: cookingTime,
-      isPublic,
-      ingredients: ingredients.map(ingredient => ({
-        ingreName: ingredient.name,  // name -> ingreName
-        amount: ingredient.amount,   // 그대로 유지
-      })),
-      processes: steps.map((step, index) => ({
-        processOrder: index + 1,
-        processExplain: step.processExplain,
-      })),
-    };
-
-    // JSON 데이터 추가
-    formData.append("recipe", new Blob([JSON.stringify(recipeData)], { type: "application/json" }));
-
-    // 대표 이미지 추가
+  
+    // ✅ 1. JSON 데이터를 문자열로 변환해서 추가 (Blob 사용 X)
+    formData.append("recipe", new Blob(
+      [JSON.stringify({
+        recipeTitle,
+        cateType: category,
+        cateMainIngre: mainIngredient,
+        serving: servings,
+        level: convertDifficultyToNumber(difficulty),
+        requiredTime: cookingTime,
+        isPublic,
+        ingredients: ingredients.map(ingredient => ({
+          ingreName: ingredient.name,
+          amount: ingredient.amount,
+        })),
+        processes: steps.map((step, index) => ({
+          processOrder: index + 1,
+          processExplain: step.processExplain,
+        })),
+      })], { type: "application/json" })
+    );
+  
+    // ✅ 2. 대표 이미지 추가 (multipart/form-data)
     if (imageFile) {
       formData.append("imageFile", imageFile);
     }
+  
+    // ✅ 3. 과정 이미지 및 순서 추가 (multipart/form-data)
+    const processOrders = [];
+  steps.forEach((step, index) => {
+    if (step.imageFile) {
+      formData.append("processImages", step.imageFile);
+      processOrders.push(index + 1); // 몇 번째 과정인지 저장
+    }
+  });
 
-    // 과정 이미지 추가
-    steps.forEach((step, index) => {
-      if (step.imageFile) {
-        formData.append("processImages", step.imageFile);
-        formData.append("processOrders", index + 1);
-      }
-    });
-
+  // ✅ 과정 이미지 순서 배열 추가
+  formData.append("processOrders", new Blob([JSON.stringify(processOrders)], { type: "application/json" }));
+  
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/myOwnRecipe/create", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
-
+  
       if (!response.ok) {
-        throw new Error("저장 실패");
+        throw new Error(`저장 실패: ${response.status}`);
       }
-
+  
       alert(isPublic ? "레시피가 공개 저장되었습니다!" : "레시피가 저장되었습니다.");
       navigate(-1);
     } catch (error) {
@@ -143,6 +157,9 @@ function RecipeWritePage() {
       alert("저장 중 문제가 발생했습니다.");
     }
   };
+  
+  
+  
 
   // 취소 버튼 핸들러
   const handleCancel = () => {
