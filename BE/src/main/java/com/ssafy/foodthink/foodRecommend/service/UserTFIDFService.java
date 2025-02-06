@@ -9,8 +9,10 @@ import com.ssafy.foodthink.foodRecommend.repository.RecommendInterestRepository;
 import com.ssafy.foodthink.recipeBookmark.entity.RecipeBookmarkEntity;
 import com.ssafy.foodthink.recipeBookmark.repository.RecipeBookmarkRepository;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
+import com.ssafy.foodthink.user.entity.RecipeViewHistoryEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.entity.UserInterestEntity;
+import com.ssafy.foodthink.user.repository.RecipeViewRepository;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class UserTFIDFService {
     private final RecommendInterestRepository recommendInterestRepository;
     private final UserRepository userRepository;
     private final FeedLikeRepository feedLikeRepository;
+    private final RecipeViewRepository recipeViewRepository;
 
     // 가중치 상수
     private static final double LIKED_WEIGHT = 1.0;
@@ -165,8 +168,9 @@ public class UserTFIDFService {
 
     // 사용자가 조회한 레시피
     //private Map<String, Double> calculateViewedRecipeProfile(Long userId) {
-
-   // }
+    //    List<RecipeViewHistoryEntity> viewedRecipes = recipeViewRepository.findByUserEntity(userId);
+    //
+    //}
 
 
     // L2 정규화
