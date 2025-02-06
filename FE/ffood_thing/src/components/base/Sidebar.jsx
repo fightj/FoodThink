@@ -1,9 +1,17 @@
 import React from "react"
-import { Dropdown } from "react-bootstrap" // react-bootstrap에서 Dropdown 가져오기
+import { Dropdown } from "react-bootstrap"
 import "../../styles/base/Sidebar.css"
 
 function Sidebar({ isOpen, toggleSidebar, userId }) {
   if (!isOpen) return null
+
+  // 로컬스토리지에서 액세스 토큰 확인
+  const accessToken = localStorage.getItem("accessToken")
+  const isLoggedIn = !!accessToken
+
+  // 세션에서 유저 정보 가져오기
+  const userSession = JSON.parse(sessionStorage.getItem("user"))
+  const sessionUserId = userSession ? userSession.userId : null
 
   return (
     <div
@@ -46,7 +54,7 @@ function Sidebar({ isOpen, toggleSidebar, userId }) {
           </a>
         </li>
         <li>
-          <a href={`/profile/${userId}`} className="nav-link text-white">
+          <a href={`/profile/${sessionUserId}`} className="nav-link text-white">
             마이페이지
           </a>
         </li>
@@ -59,11 +67,17 @@ function Sidebar({ isOpen, toggleSidebar, userId }) {
         </Dropdown.Toggle>
 
         <Dropdown.Menu className="dropdown-menu-dark text-small shadow">
-          <Dropdown.Item href={`/profile/${userId}?tab=bookmarks`}>북마크한 레시피</Dropdown.Item>
-          <Dropdown.Item href={`/profile/${userId}?tab=recipes`}>내 레시피</Dropdown.Item>
-          <Dropdown.Item href={`/profile/${userId}?tab=feed`}>내 피드</Dropdown.Item>
+          <Dropdown.Item href={`/profile/${sessionUserId}?tab=bookmarks`}>북마크한 레시피</Dropdown.Item>
+          <Dropdown.Item href={`/profile/${sessionUserId}?tab=recipes`}>내 레시피</Dropdown.Item>
+          <Dropdown.Item href={`/profile/${sessionUserId}?tab=feed`}>내 피드</Dropdown.Item>
           <Dropdown.Divider />
-          <Dropdown.Item href="/">Log Out</Dropdown.Item>
+          {isLoggedIn ? (
+            <Dropdown.Item href="/" onClick={() => localStorage.removeItem("accessToken")}>
+              Log Out
+            </Dropdown.Item>
+          ) : (
+            <Dropdown.Item href="/login">Log In</Dropdown.Item>
+          )}
         </Dropdown.Menu>
       </Dropdown>
     </div>

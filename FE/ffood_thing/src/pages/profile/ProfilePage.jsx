@@ -41,6 +41,7 @@ const ProfilePage = () => {
 
   return (
     <div className="base-div">
+      <div className="parent-container">
       <div className="card-div">
         <div className="profile-container">
         <ProfileHeader 
@@ -74,6 +75,7 @@ const ProfilePage = () => {
         )}
       </div>
     </div>
+  </div>
   </div>
   );
 };

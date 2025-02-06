@@ -1,28 +1,14 @@
-import React from "react"
+import React, { useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import "../../styles/login/LoginPage.css"
 
-async function fetchUserData(token) {
-  try {
-    const response = await fetch("http://localhost:8080/users/read", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    if (response.ok) {
-      const data = await response.json()
-      console.log("User Data:", data)
-    } else {
-      console.log("Failed to fetch user data.")
-    }
-  } catch (error) {
-    console.log("Error fetching user data:", error)
-  }
-}
-
 function LoginPage() {
+  const location = useLocation()
+  // const navigate = useNavigate()
+
   const handleKakaoClick = () => {
-    window.location.href = "https://kauth.kakao.com/oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=http://localhost:5173/callback&response_type=code"
+    console.log("Kakao login button clicked")
+    window.location.href = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=71e6cc593f5444a36af1d3fe5dbb4f30&redirect_uri=http://localhost:8080/oauth2/authorization/kakao"
   }
 
   return (
