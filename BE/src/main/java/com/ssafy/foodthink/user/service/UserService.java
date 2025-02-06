@@ -88,6 +88,7 @@ public class UserService {
 
     private UserInfoDto convertToDto(UserEntity userEntity) {
         return UserInfoDto.builder()
+                .userId(userEntity.getUserId())
                 .email(userEntity.getEmail())
                 .nickname(userEntity.getNickname())
                 .image(userEntity.getImage())
