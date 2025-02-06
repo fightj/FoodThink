@@ -80,22 +80,15 @@ public class UserController {
         return ResponseEntity.ok(interests);
     }
 
-    // 회원 관심사 여러개 추가
-    @PostMapping("/create/interest")
-    public ResponseEntity<List<UserInterestDto>> createUserInterests(@RequestHeader("Authorization") String token, @RequestBody List<UserInterestDto> interestDtos) {
-        String accessToken = token.replace("Bearer ", "");
-        Long userId = jwtUtil.getUserId(accessToken);
-        List<UserInterestDto> newInterests = userService.createUserInterests(userId, interestDtos);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newInterests);
-    }
 
-    // 회원 관심사 삭제
-    @DeleteMapping("/delete/interest/{interestId}")
-    public ResponseEntity<String> deleteUserInterest(@RequestHeader("Authorization") String token, @PathVariable Long interestId) {
+    // 회원 관심사 수정
+    @PostMapping("/update/interest")
+    public ResponseEntity<List<UserInterestDto>> updateUserInterests(@RequestHeader("Authorization") String token, @RequestBody List<UserInterestDto> interestDtos){
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
-        userService.deleteUserInterest(userId, interestId);
-        return ResponseEntity.ok("관심사가 성공적으로 삭제되었습니다.");
+        List<UserInterestDto> newInterests = userService.updateUserInterests(userId, interestDtos);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newInterests);
     }
 
 
