@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import { AnimatePresence } from "framer-motion"
 import axios from "axios"
 import "bootstrap-icons/font/bootstrap-icons.css"
-import "bootstrap/dist/css/bootstrap.min.css"; //bootstrap
-import "bootstrap/dist/js/bootstrap.bundle.min.js";  //bootstrap dropdown
+import "bootstrap/dist/css/bootstrap.min.css" //bootstrap
+import "bootstrap/dist/js/bootstrap.bundle.min.js" //bootstrap dropdown
 import "./App.css"
 import "./styles/base/global.css"
 
@@ -33,7 +33,7 @@ const fetchUserInfo = async () => {
     const accessToken = localStorage.getItem("accessToken")
     if (!accessToken) throw new Error("Access token is missing")
 
-    const response = await axios.get("http://localhost:8080/api/users/read", {
+    const response = await axios.get("https://i12e107.p.ssafy.io/api/users/read", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

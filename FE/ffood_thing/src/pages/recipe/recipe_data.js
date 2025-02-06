@@ -1,7 +1,6 @@
-
 const Recipe = [
   {
-    recipeId: 163,
+    recipeId: 99999,
     recipeTitle: "바삭한 아란치니, 이탈리아 시칠리아 지방 전통음식",
     nickname: "관리자",
     userImage: "https://recipe1.ezmember.co.kr/cache/recipe/2015/09/17/ef602f6d4e33046cc613ca7ed1f50a76_m.jpg",
@@ -293,4 +292,3 @@ const recipes = [
   },
 ]
 export { Recipe, recipes }
-
