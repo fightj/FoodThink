@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import { AnimatePresence } from "framer-motion"
 import "bootstrap-icons/font/bootstrap-icons.css"
+import "bootstrap/dist/css/bootstrap.min.css"; //bootstrap
+import "bootstrap/dist/js/bootstrap.bundle.min.js";  //bootstrap dropdown
 import "./App.css"
 import "./styles/base/global.css"
 
