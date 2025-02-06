@@ -59,7 +59,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("[Slf4j]refreshToken: " + refreshToken);
 
         // 프론트엔드 메인 페이지 URL로 리다이렉트
-        String redirectUrl = "http://localhost:5173/?accessToken=" + accessToken;
+        String redirectUrl = "http://i12e107.p.ssafy.io?accessToken=" + accessToken;
         response.sendRedirect(redirectUrl);
     }
 

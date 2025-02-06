@@ -246,6 +246,43 @@ h3 {
   right: 10px;
 }
 
+.sort-filters2 {
+  display: flex;
+  justify-content: right;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+
+.sort-filter2 {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sort-filter2.selected {
+  background-color: #ff6b42;
+  color: #fff;
+}
+
+.sort-filter2:hover {
+  background-color: #e0e0e0;
+}
+
+.category-onoff-button {
+  background-color: #fdb13f;
+  color: white;
+  border: none;
+  margin-left: 45%;
+  margin-right: 45%;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
 @media (max-width: 768px) {
   .recipe-card2 {
     width: 150px; /* 너비 조정 */
