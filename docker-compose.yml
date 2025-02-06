@@ -22,7 +22,7 @@ services:
       - S3_BUCKET=${S3_BUCKET}
       - DB_USERNAME=${DB_USERNAME}
     depends_on:
-      - elesticsearch
+      - elasticsearch
 
   frontend:
     build:
