@@ -5,8 +5,7 @@ import { Form } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import "../../styles/sns/FeedWrite.css"
-import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe" // 모달 컴포넌트 불러오기
-import profileData from "../../data/ProfileData" // 프로필 데이터 불러오기
+import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
 
 function FeedWrite() {
   const navigate = useNavigate()
@@ -15,7 +14,7 @@ function FeedWrite() {
   const [checkedImages, setCheckedImages] = useState([])
   const [foodName, setFoodName] = useState("")
   const [description, setDescription] = useState("")
-  const [showBookmarkModal, setShowBookmarkModal] = useState(false) // 모달 상태 추가
+  const [showBookmarkModal, setShowBookmarkModal] = useState(false)
   const fileInputRef = useRef()
 
   useEffect(() => {
@@ -25,7 +24,14 @@ function FeedWrite() {
 
     const fetchBookmarkData = async () => {
       try {
-        const response = await axios.post("http://localhost:8080/bookmark/read/list", { userId: sessionUserId })
+        const accessToken = localStorage.getItem("accessToken")
+        if (!accessToken) throw new Error("Access token is missing")
+
+        const response = await axios.get("https://i12e107.p.ssafy.io/api/bookmark/read/list", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
         console.log("Bookmark Data:", response.data)
       } catch (error) {
         console.error("Error fetching bookmark data:", error)
@@ -36,7 +42,7 @@ function FeedWrite() {
       fetchBookmarkData()
     }
 
-    // Check if there are saved changes and prompt the user to load them
+    // 이전에 저장된 임시 데이터를 불러올지 묻기
     const savedFoodName = localStorage.getItem("foodName")
     const savedDescription = localStorage.getItem("description")
     const savedImages = localStorage.getItem("selectedImages")
