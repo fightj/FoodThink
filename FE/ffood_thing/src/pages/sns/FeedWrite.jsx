@@ -15,6 +15,7 @@ function FeedWrite() {
   const [foodName, setFoodName] = useState("")
   const [description, setDescription] = useState("")
   const [showBookmarkModal, setShowBookmarkModal] = useState(false)
+  const [bookmarkData, setBookmarkData] = useState([]) // 북마크 데이터 상태 추가
   const fileInputRef = useRef()
 
   useEffect(() => {
@@ -33,6 +34,7 @@ function FeedWrite() {
           },
         })
         console.log("Bookmark Data:", response.data)
+        setBookmarkData(response.data) // 북마크 데이터 상태에 저장
       } catch (error) {
         console.error("Error fetching bookmark data:", error)
       }
@@ -221,7 +223,7 @@ function FeedWrite() {
         </div>
       </div>
 
-      {showBookmarkModal && <UserBookmarkRecipe closeModal={() => setShowBookmarkModal(false)} bookmarks={profileData[0].bookmarks} />}
+      {showBookmarkModal && <UserBookmarkRecipe closeModal={() => setShowBookmarkModal(false)} bookmarks={bookmarkData} />}
     </div>
   )
 }
