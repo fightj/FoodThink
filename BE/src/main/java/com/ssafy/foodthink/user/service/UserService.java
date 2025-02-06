@@ -159,6 +159,9 @@ public class UserService {
 
         RecipeViewHistoryEntity history = new RecipeViewHistoryEntity(userEntity, recipeEntity);
         recipeViewRepository.save(history);
+
+        recipeEntity.setHits(recipeEntity.getHits()+1);
+        recipeRepository.save(recipeEntity);
     }
 
     // 사용자의 최근 레시피 기록 조회
