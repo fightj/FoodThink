@@ -5,6 +5,7 @@ import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -57,11 +58,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("[Slf4j]accessToken: " + accessToken);
         log.info("[Slf4j]refreshToken: " + refreshToken);
 
-        // HTTP 헤더에 액세스 토큰 추가
-        response.setHeader("Authorization","Bearer "+accessToken);
-
-        // 프론트엔드 메인 페이지로 리다이렉트
-        String redirectUrl = "http://localhost:5173/";
+        // 프론트엔드 메인 페이지 URL로 리다이렉트
+        String redirectUrl = "http://localhost:5173/?accessToken=" + accessToken;
         response.sendRedirect(redirectUrl);
     }
 
