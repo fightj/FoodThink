@@ -7,18 +7,22 @@ import com.ssafy.foodthink.user.service.CustomOAuth2UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -32,34 +36,34 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/login/kakao")
-    public ResponseEntity<?> kakaoLogin(OAuth2AuthenticationToken authenticationToken) {
-        OAuth2User oauth2User = authenticationToken.getPrincipal();
-        String email = oauth2User.getAttribute("email");
-        String role = oauth2User.getAuthorities().iterator().next().getAuthority();
-
-        // 이메일로 사용자 조회
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
-
-        Long userId = user.getUserId();
-
-        String accessToken = jwtUtil.createAccessToken(userId, role, 60 * 60 * 1000L);
-
-        return ResponseEntity.ok().body(accessToken);
-    }
-
+    // 카카오 계정 로그아웃이 아닌 푸띵 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); // 현재 인증된 사용자의 정보를 가져옴
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        try {
+            String accessToken = token.replace("Bearer ", "");
+            Long userId = jwtUtil.getUserId(accessToken);
 
-        // 사용자의 인증 정보를 제거
-        if (auth != null) {
+            // DB에서 사용자 조회
+            UserEntity user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
+
+            // 리프레시 토큰 삭제
+            user.setRefreshToken(null);
+            userRepository.save(user);
+
+            // 인증 정보 제거
             SecurityContextHolder.clearContext();
+
+            log.info("=== 로그아웃 성공 ===");
+
+            return ResponseEntity.ok().body("사용자가 성공적으로 로그아웃되었습니다.");
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 액세스 토큰입니다.");
         }
-        return ResponseEntity.ok().body("사용자가 성공적으로 로그아웃되었습니다.");
     }
-    
+
     // 리프레시 토큰으로 액세스 토큰 재발급
     @PostMapping("/reissue")
     public ResponseEntity<?> reissueAccessToken(@RequestHeader("Authorization") String bearerToken) {
@@ -86,6 +90,8 @@ public class AuthController {
             // 새로운 액세스 토큰 생성
             String newAccessToken = jwtUtil.createAccessToken(user.getUserId(), user.getRole(), 60 * 60 * 1000L); // 1시간
 
+            log.info("=== 액세스 토큰 재발급 성공 ===");
+            
             return ResponseEntity.ok().body(Map.of("accessToken", newAccessToken));
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

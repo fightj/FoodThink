@@ -20,6 +20,7 @@ services:
       - GPT_API_KEY=${GPT_API_KEY}
       - API_SERVICE_KEY=${API_SERVICE_KEY}
       - S3_BUCKET=${S3_BUCKET}
+      - DB_USERNAME=${DB_USERNAME}
 
   frontend:
     build:
