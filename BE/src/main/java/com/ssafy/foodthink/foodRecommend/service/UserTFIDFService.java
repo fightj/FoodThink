@@ -166,11 +166,38 @@ public class UserTFIDFService {
                 ));
     }
 
-    // 사용자가 조회한 레시피
-    //private Map<String, Double> calculateViewedRecipeProfile(Long userId) {
-    //    List<RecipeViewHistoryEntity> viewedRecipes = recipeViewRepository.findByUserEntity(userId);
-    //
-    //}
+    // 사용자가 조회한 레시피 벡터 계산
+    private Map<String, Double> calculateViewedRecipeProfile(Long userId) {
+        
+        // 사용자가 조회한 모든 레시피 조회
+        List<RecipeViewHistoryEntity> viewedRecipes = recipeViewRepository.findByUserEntity(userId);
+
+        // 각 특성(feature)별 TF-IDF 값의 합과 개수를 저장할 맵
+        Map<String, Double> aggregatedValues = new HashMap<>();
+        Map<String, Integer> featureCounts = new HashMap<>();
+
+        // TF-IDF 계산
+        for(RecipeViewHistoryEntity views : viewedRecipes){
+            RecipeEntity recipe = views.getRecipeEntity();
+            List<RecipeTfIdfEntity> tfIdfValues = recipeTfIdfRepository.findByRecipe(recipe);
+
+            for(RecipeTfIdfEntity tfIdf: tfIdfValues){
+                String feature = tfIdf.getFeature();
+                double value = tfIdf.getTfIdfValue();
+
+                aggregatedValues.merge(feature, value, Double::sum);
+                featureCounts.merge(feature, 1, Integer::sum);
+
+            }
+
+        }
+        // 평균 계산
+        return aggregatedValues.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue() / featureCounts.get(e.getKey())
+                ));
+    }
 
 
     // L2 정규화
