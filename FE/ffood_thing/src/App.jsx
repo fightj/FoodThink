@@ -24,7 +24,7 @@ import NavbarBottom from "./components/base/Navbar-bottom"
 import PageSlide from "./components/base/PageSlide"
 import Sidebar from "./components/base/Sidebar"
 import { UserProvider } from "./contexts/UserContext"
-import FetchUserSession from "./components/base/FetchUserSession"
+// import FetchUserSession from "./components/base/FetchUserSession"
 const AnimatedRoutes = () => {
   const location = useLocation()
 
@@ -155,7 +155,7 @@ const App = () => {
   return (
     <UserProvider>
       <Router>
-        <FetchUserSession /> {/* 세션 확인 컴포넌트 추가 */}
+        {/* <FetchUserSession /> 세션 확인 컴포넌트 추가 */}
         <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
         <AnimatedRoutes />
         <NavbarBottom />

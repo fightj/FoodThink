@@ -2,25 +2,25 @@ import React, { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import "../../styles/login/LoginPage.css"
 
-async function fetchAccessToken(code) {
-  try {
-    const response = await fetch(`http://localhost:8080/api/auth/login/kakao?code=${code}`, {
-      method: "GET",
-      credentials: "include",
-    })
+// async function fetchAccessToken(code) {
+//   try {
+//     const response = await fetch(`http://localhost:8080/api/auth/login/kakao?code=${code}`, {
+//       method: "GET",
+//       credentials: "include",
+//     })
 
-    if (response.ok) {
-      const accessToken = await response.text() // response.json() 대신 response.text() 사용
-      return accessToken
-    } else {
-      console.error("Failed to fetch access token.")
-      return null
-    }
-  } catch (error) {
-    console.error("Error fetching access token:", error)
-    return null
-  }
-}
+//     if (response.ok) {
+//       const accessToken = await response.text() // response.json() 대신 response.text() 사용
+//       return accessToken
+//     } else {
+//       console.error("Failed to fetch access token.")
+//       return null
+//     }
+//   } catch (error) {
+//     console.error("Error fetching access token:", error)
+//     return null
+//   }
+// }
 
 function LoginPage() {
   const location = useLocation()
@@ -58,7 +58,8 @@ function LoginPage() {
 
   const handleKakaoClick = () => {
     console.log("Kakao login button clicked")
-    window.location.href = "http://localhost:8080/oauth2/authorization/kakao"
+    window.location.href =
+      "https://accounts.kakao.com/login/?continue=https%3A%2F%2Fkauth.kakao.com%2Foauth%2Fauthorize%3Fresponse_type%3Dcode%26client_id%3D71e6cc593f5444a36af1d3fe5dbb4f30%26redirect_uri%3Dhttp%253A%252F%252Fi12e107.p.ssafy.io%253A8085%252Foauth2%252Fauthorization%252Fkakao%26through_account%3Dtrue#login"
   }
 
   return (
