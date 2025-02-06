@@ -39,6 +39,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - frontend_network
+      - backend_network
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
