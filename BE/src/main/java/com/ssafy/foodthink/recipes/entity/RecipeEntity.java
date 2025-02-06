@@ -44,9 +44,9 @@ public class RecipeEntity {
     @JoinColumn(name = "user_id")     //외래키 컬럼 지정 (recipeId로 생성된다.)
     private UserEntity userEntity;      //사용자ID
 
-    @Transient  //JPA 관리 대상에서 제외
-    @Autowired
-    private transient UserRepository userRepository;
+//    @Transient  //JPA 관리 대상에서 제외
+//    @Autowired
+//    private transient UserRepository userRepository;
 
     @PrePersist
     protected void onCreate() {
