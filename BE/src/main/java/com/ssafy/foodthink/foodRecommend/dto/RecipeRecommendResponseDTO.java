@@ -8,4 +8,5 @@ import lombok.Getter;
 public class RecipeRecommendResponseDTO {
     private Long recipeId;
     private String recipeTitle;
+    private String image;
 }
