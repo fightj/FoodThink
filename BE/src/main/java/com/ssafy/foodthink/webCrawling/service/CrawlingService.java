@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,16 +34,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CrawlingService {
 
+    private final CrawlingRecipeRepository crawlingRecipeRepository;
+    private final CrawlingIngredientRepository crawlingIngredientRepository;
+    private final CrawlingProcessRepository crawlingProcessRepository;
+    private final CrawlingProcessImageRepository crawlingProcessImageRepository;
+    private final UserRepository userRepository;
+
     @Autowired
-    private CrawlingRecipeRepository crawlingRecipeRepository;
-    @Autowired
-    private CrawlingIngredientRepository crawlingIngredientRepository;
-    @Autowired
-    private CrawlingProcessRepository crawlingProcessRepository;
-    @Autowired
-    private CrawlingProcessImageRepository crawlingProcessImageRepository;
-    @Autowired
-    private UserRepository userRepository;
+    public CrawlingService(
+            CrawlingRecipeRepository crawlingRecipeRepository,
+            CrawlingIngredientRepository crawlingIngredientRepository,
+            CrawlingProcessRepository crawlingProcessRepository,
+            CrawlingProcessImageRepository crawlingProcessImageRepository,
+            UserRepository userRepository
+    ) {
+        this.crawlingRecipeRepository = crawlingRecipeRepository;
+        this.crawlingIngredientRepository = crawlingIngredientRepository;
+        this.crawlingProcessRepository = crawlingProcessRepository;
+        this.crawlingProcessImageRepository = crawlingProcessImageRepository;
+        this.userRepository = userRepository;
+    }
 
 
     //크롤링할 웹 사이트의 앞부분 URL
@@ -51,7 +62,8 @@ public class CrawlingService {
     //카테고리별 조합의 데이터 개수 제한
     private final int MAX_RECIPES_COMBO = 5;
     //cat3 + cat4 조합별 크롤링된 레시피 개수 저장용
-    private final Map<String, Integer> recipeCountMap = new HashMap<>();
+    //HashMap -> ConcurrentHashMapk 동시성 문제 해결
+    private final Map<String, Integer> recipeCountMap = new ConcurrentHashMap<>();
 
     //배치 스케줄러 : 이전 실행 종료 후 1시간마다 1번씩
 //    @Scheduled(fixedRate = 3600000)
@@ -306,29 +318,35 @@ public class CrawlingService {
         }
     }
 
-    // 1. 크롤링이 끝난 후 사용자 ID를 랜덤으로 할당
+    //크롤링 종료 후, 사용자 아이디 랜덤 할당
     @Transactional
     public void assignRandomUserToRecipes() {
-        // 모든 레시피 조회
-        List<RecipeEntity> allRecipes = crawlingRecipeRepository.findAll();
+        List<RecipeEntity> allRecipes = crawlingRecipeRepository.findAll(); //모든 레시피 조회
+        List<UserEntity> users = userRepository.findAll();  //사용자 미리 조회
+
+        if(users.isEmpty()) return;
 
         // 1~20 사이의 랜덤 값으로 사용자 ID 할당
         Random random = new Random();
+        allRecipes.forEach(recipe -> {
+            UserEntity randomUser = users.get(random.nextInt(users.size()));
+            recipe.setUserEntity(randomUser);
+        });
 
-        for (RecipeEntity recipe : allRecipes) {
-            // 랜덤 사용자 ID (1~20)
-            Long randomUserId = (long) (random.nextInt(20) + 1);
-
-            // 해당 사용자 ID가 존재하는지 확인
-            Optional<UserEntity> userEntityOptional = userRepository.findById(randomUserId);
-            if (userEntityOptional.isPresent()) {
-                UserEntity randomUser = userEntityOptional.get();
-                recipe.setUserEntity(randomUser); // 사용자 아이디 할당
-            } else {
-                // 해당 사용자 ID가 없다면, 어떤 처리를 할지 결정 (예: 로그 남기기, 기본값 할당 등)
-                System.out.println("사용자 ID " + randomUserId + " 가 존재하지 않음");
-            }
-        }
+//        for (RecipeEntity recipe : allRecipes) {
+//            // 랜덤 사용자 ID (1~20)
+//            Long randomUserId = (long) (random.nextInt(20) + 1);
+//
+//            // 해당 사용자 ID가 존재하는지 확인
+//            Optional<UserEntity> userEntityOptional = userRepository.findById(randomUserId);
+//            if (userEntityOptional.isPresent()) {
+//                UserEntity randomUser = userEntityOptional.get();
+//                recipe.setUserEntity(randomUser); // 사용자 아이디 할당
+//            } else {
+//                // 해당 사용자 ID가 없다면, 어떤 처리를 할지 결정 (예: 로그 남기기, 기본값 할당 등)
+//                System.out.println("사용자 ID " + randomUserId + " 가 존재하지 않음");
+//            }
+//        }
 
         // 업데이트된 레시피 정보 저장
         crawlingRecipeRepository.saveAll(allRecipes);
