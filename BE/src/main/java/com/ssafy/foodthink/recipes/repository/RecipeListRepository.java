@@ -22,6 +22,7 @@ public interface RecipeListRepository extends JpaRepository<RecipeEntity, Long> 
             "LEFT JOIN RecipeBookmarkEntity b ON r.recipeId = b.recipeEntity.recipeId " +
             "WHERE (:cateType IS NULL OR r.cateType = :cateType) " +
             "AND (:cateMainIngre IS NULL OR r.cateMainIngre = :cateMainIngre) " +
+            "AND r.isPublic = true " +
             "GROUP BY r " +
             "ORDER BY " +
             "CASE WHEN :sortType = '조회순' THEN r.hits END DESC, " +
@@ -35,7 +36,7 @@ public interface RecipeListRepository extends JpaRepository<RecipeEntity, Long> 
     );
 
     //캐러셀용 : 레시피 목록 20개를 조회순으로
-    @Query("SELECT r FROM RecipeEntity r ORDER BY r.hits DESC")
+    @Query("SELECT r FROM RecipeEntity r WHERE r.isPublic = true ORDER BY r.hits DESC")
     List<RecipeEntity> findTopRecipesByHits(Pageable pageable);
 
 
