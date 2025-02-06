@@ -14,22 +14,29 @@ function Home() {
     // URLSearchParams를 이용하여 URL의 쿼리 파라미터를 가져옴
     const searchParams = new URLSearchParams(location.search)
     const urlAccessToken = searchParams.get("accessToken")
-
+    console.log(urlAccessToken)
     if (urlAccessToken) {
-      // 액세스 토큰을 콘솔에 출력
-      console.log("Access token from URL:", urlAccessToken)
+      const storedAccessToken = localStorage.getItem("accessToken")
 
-      // 액세스 토큰을 로컬 스토리지에 저장
-      localStorage.setItem("accessToken", urlAccessToken)
+      if (storedAccessToken !== urlAccessToken) {
+        // 액세스 토큰을 콘솔에 출력
+        console.log("New access token from URL:", urlAccessToken)
 
-      // 로그인 성공 메시지 출력
-      console.log("로그인 성공")
+        // 액세스 토큰을 로컬 스토리지에 저장
+        localStorage.setItem("accessToken", urlAccessToken)
+
+        // 로그인 성공 메시지 출력
+        console.log("로그인 성공")
+
+        // 상태 업데이트
+        setAccessToken(urlAccessToken)
+      } else {
+        console.log("Access token matches the stored token.")
+        setAccessToken(storedAccessToken)
+      }
 
       // URL에서 accessToken 제거 (UX를 위해)
       navigate("/", { replace: true })
-
-      // 상태 업데이트
-      setAccessToken(urlAccessToken)
     } else {
       // 로컬 스토리지에 저장된 액세스 토큰을 가져옴
       const storedAccessToken = localStorage.getItem("accessToken")
@@ -38,6 +45,7 @@ function Home() {
         setAccessToken(storedAccessToken)
       } else {
         console.log("Access token is not present")
+        navigate("/login") // 로그인 페이지로 이동
       }
     }
   }, [location, navigate])

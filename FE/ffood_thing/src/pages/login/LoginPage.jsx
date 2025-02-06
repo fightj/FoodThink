@@ -4,29 +4,7 @@ import "../../styles/login/LoginPage.css"
 
 function LoginPage() {
   const location = useLocation()
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    // URLSearchParams를 이용하여 URL의 쿼리 파라미터를 가져옴
-    const searchParams = new URLSearchParams(location.search)
-    const accessToken = searchParams.get("accessToken")
-
-    if (accessToken) {
-      // 액세스 토큰을 콘솔에 출력
-      console.log("Access token from URL:", accessToken)
-
-      // 액세스 토큰을 로컬 스토리지에 저장
-      localStorage.setItem("accessToken", accessToken)
-
-      // 로그인 성공 메시지 출력
-      console.log("로그인 성공")
-
-      // 메인 페이지로 리디렉트
-      navigate("/")
-    } else {
-      console.log("Access token is not present")
-    }
-  }, [location, navigate])
+  // const navigate = useNavigate()
 
   const handleKakaoClick = () => {
     console.log("Kakao login button clicked")
