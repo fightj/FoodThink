@@ -21,6 +21,8 @@ services:
       - API_SERVICE_KEY=${API_SERVICE_KEY}
       - S3_BUCKET=${S3_BUCKET}
       - DB_USERNAME=${DB_USERNAME}
+    depends_on:
+      - elasticsearch
 
   frontend:
     build:
@@ -33,6 +35,24 @@ services:
     volumes:
 #      - ./app:/app # 필요한 경우 추가적인 볼륨 마운트
       - /etc/letsencrypt:/etc/letsencrypt:ro
+
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - backend_network
+    deploy:
+      resources:
+        limits:
+          memory: 4g  # 메모리 제한 설정
+
 
 #  nginx:
 #    build:
