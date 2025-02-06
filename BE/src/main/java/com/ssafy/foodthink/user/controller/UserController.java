@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.user.controller;
 
+import com.ssafy.foodthink.user.dto.RecipeViewDto;
 import com.ssafy.foodthink.user.dto.UserDto;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
 import com.ssafy.foodthink.user.dto.UserInterestDto;
@@ -89,11 +90,36 @@ public class UserController {
     }
 
     // 회원 관심사 삭제
-    @DeleteMapping("/delete/interest")
-    public ResponseEntity<String> deleteUserInterest(@RequestParam Long interestId) {
-        userService.deleteUserInterest(interestId);
+    @DeleteMapping("/delete/interest/{interestId}")
+    public ResponseEntity<String> deleteUserInterest(@RequestHeader("Authorization") String token, @PathVariable Long interestId) {
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+        userService.deleteUserInterest(userId, interestId);
         return ResponseEntity.ok("관심사가 성공적으로 삭제되었습니다.");
     }
+
+
+    // 사용자의 레시피 조회 기록 저장
+    @PostMapping("/create/recipe/view/{recipeId}")
+    public ResponseEntity<String> createRecipeView(@RequestHeader("Authorization") String token, @PathVariable Long recipeId){
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+        userService.createRecipeView(userId, recipeId);
+        return ResponseEntity.ok("레시피 조회 기록이 저장되었습니다.");
+    }
+
+    // 사용자의 최근 본 레시피 10개 조회
+    @GetMapping("/read/recipe/view")
+    public ResponseEntity<List<RecipeViewDto>> readRecentRecipeViews(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "10") int count) {
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        List<RecipeViewDto> recentViews = userService.readRecentRecipeViews(userId, count);
+        return ResponseEntity.ok(recentViews);
+    }
+
+
+
 
 
 }
