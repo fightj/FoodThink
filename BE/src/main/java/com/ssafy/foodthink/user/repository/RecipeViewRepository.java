@@ -13,6 +13,8 @@ public interface RecipeViewRepository extends JpaRepository<RecipeViewHistoryEnt
 
     List<RecipeViewHistoryEntity> findByUserEntity(UserEntity user, Pageable pageable); // 사용자가 최근 본 레시피 조회
 
-    List<RecipeViewHistoryEntity> findByUserEntity(Long userId); // 사용자가 조회한 모든 레시피
+    List<RecipeViewHistoryEntity> findByUserEntity(UserEntity user); // 사용자가 조회한 모든 레시피
+
+    List<RecipeViewHistoryEntity> findByUserEntity_userId(Long userId);
 }
 

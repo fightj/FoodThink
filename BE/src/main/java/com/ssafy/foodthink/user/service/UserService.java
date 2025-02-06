@@ -164,7 +164,10 @@ public class UserService {
     @Transactional
     public List<RecipeViewDto> readAllRecipeViews(Long userId){
 
-        List<RecipeViewHistoryEntity> histories = recipeViewRepository.findByUserEntity(userId);
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+        List<RecipeViewHistoryEntity> histories = recipeViewRepository.findByUserEntity(user);
 
         return histories.stream()
                 .map(this::convertToViewDto)
