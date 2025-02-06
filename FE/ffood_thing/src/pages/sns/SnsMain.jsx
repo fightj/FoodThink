@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import SearchBar from "../../components/base/SearchBar"
+import Swal from "sweetalert2"
 import "../../styles/sns/SnsMain.css"
 import PageSlide from "../../components/base/PageSlide"
 
@@ -46,6 +47,28 @@ function SnsMain() {
     }
   }
 
+  const handleWriteClick = () => {
+    const accessToken = localStorage.getItem("accessToken")
+    if (accessToken) {
+      navigate("/feed/write")
+    } else {
+      Swal.fire({
+        title: "로그인이 필요합니다",
+        text: "로그인 페이지로 이동하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "네, 이동합니다",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login")
+        }
+      })
+    }
+  }
+
   return (
     <PageSlide>
       <div className="base-div">
@@ -55,9 +78,7 @@ function SnsMain() {
             <div className="container px-4 py-2" id="custom-cards">
               <div className="d-flex justify-content-between align-items-center mt-0">
                 <h2></h2>
-                <Link to="/feed/write">
-                  <img src="/images/feed_write_button.png" alt="Feed 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
-                </Link>
+                <img src="/images/feed_write_button.png" alt="Feed 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} onClick={handleWriteClick} />
               </div>
 
               <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
