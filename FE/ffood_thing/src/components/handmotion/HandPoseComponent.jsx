@@ -1,9 +1,8 @@
 import React, { useRef, useEffect, useState } from "react"
 import { Holistic } from "@mediapipe/holistic"
-import { Recipe } from "../../pages/recipe/recipe_data"
 import { Camera } from "@mediapipe/camera_utils"
 
-const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep }) => {
+const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const swipeTrackingRef = useRef({
@@ -138,13 +137,17 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep }) => {
     }
   }, [isTimerRunning]) // 타이머 상태를 의존성 배열에 추가
 
-  const currentProcess = Recipe[0].processes[currentStep]
+  if (!pages || pages.length === 0) {
+    return <div>No pages available</div>
+  }
+
+  const currentProcess = pages[currentStep]
 
   return (
     <div className="handpose-container3">
       <video ref={videoRef} style={{ display: "none" }} autoPlay playsInline />
       <canvas ref={canvasRef} className="handpose-canvas" />
-      <div className="card-div3">
+      <div className="card-div7">
         <div className="steps3">
           <div className="process-item3">
             <h2 className="steps-h23">
