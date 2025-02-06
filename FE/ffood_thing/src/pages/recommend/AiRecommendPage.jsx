@@ -1,73 +1,139 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 훅 추가
-import "../../styles/base/global.css"; // 전역 스타일 적용
-import "../../styles/recommend/AiRecommendPage.css"; // 페이지 스타일 적용
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../../styles/base/global.css";
+import "../../styles/recommend/AiRecommendPage.css";
+
+const questionsData = [
+  { question: "어떤 맛을 원하시나요?", options: ["매운 음식", "단 음식", "짠 음식"] },
+  { question: "어떤 종류의 음식을 원하시나요?", options: ["국물요리", "밥종류", "면요리"] },
+  { question: "요리 난이도를 선택해주세요.", options: ["쉬운 요리", "보통 난이도의 요리", "어려운 요리"] },
+  { question: "어떤 식사를 원하시나요?", options: ["아침식사", "점심식사", "저녁식사"] },
+  { question: "요리 스타일을 선택해주세요.", options: ["간단요리", "정통요리", "퓨전요리"] },
+  { question: "어떤 주재료를 원하시나요?", options: ["닭고기", "돼지고기", "소고기"] },
+  { question: "채소를 많이 포함한 요리를 원하시나요?", options: ["채소가 많은 요리", "채소가 적당한 요리", "채소가 거의 없는 요리"] },
+  { question: "특정 국가 요리를 원하시나요?", options: ["한식", "양식", "중식"] },
+  { question: "칼로리를 신경 쓰시나요?", options: ["저칼로리", "보통", "고칼로리"] },
+  { question: "매운 정도를 선택해주세요.", options: ["안 매운", "보통", "아주 매운"] },
+  { question: "예산은 어느 정도인가요?", options: ["저렴한", "보통", "고급요리"] },
+  { question: "시간이 얼마나 걸릴까요?", options: ["시간은 10분 이내", "시간은 30분 이내", "시간은 1시간 이상"] },
+  { question: "채식주의 식단이 필요하신가요?", options: ["비건", "페스코", "고기를 포함해도 괜찮아요"] },
+  { question: "특별한 날을 위한 요리인가요?", options: ["기념일", "일반식사", "파티음식"] },
+  { question: "어떤 조리 방법을 원하시나요?", options: ["볶음", "튀김", "찜"] },
+];
 
 function AiRecommendPage() {
-  const navigate = useNavigate(); // 홈으로 이동하기 위한 함수
+  const navigate = useNavigate();
+  const [questions, setQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [recipes, setRecipes] = useState([]);
 
-  // 질문 및 선택지 관리
-  const [question, setQuestion] = useState("어떤 방법으로 추천받으시겠습니까?");
-  const [options, setOptions] = useState([
-    { text: "기분으로!", image: "/images/mood.jpg", nextQuestion: "지금 기분이 어떤가요? 😊", type: "mood" },
-    { text: "재료로!", image: "/images/ingredients.jpg", nextQuestion: "어떤 재료를 사용하고 싶나요? 🍽️", type: "ingredient" }
-  ]);
+  // 페이지 진입 시 로그인 여부 확인
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    console.log("🔑 로그인 토큰 확인:", token);
 
-  // 선택 시 질문과 선택지 변경
-  const handleChoice = (choice) => {
-    if (choice === "mood") {
-      setQuestion("지금 기분이 어떤가요? 😊");
-      setOptions([
-        { text: "기분 최고! 😆", image: "/images/happy.jpg", nextQuestion: "이런 음식은 어때요? 🍔", type: "result" },
-        { text: "건강한 음식! 🥗", image: "/images/healthy.jpg", nextQuestion: "이런 음식은 어때요? 🥗", type: "result" }
-      ]);
-    } else if (choice === "ingredient") {
-      setQuestion("어떤 재료를 사용하고 싶나요? 🍽️");
-      setOptions([
-        { text: "고기 🥩", image: "/images/meat.jpg", nextQuestion: "이런 음식은 어때요? 🍖", type: "result" },
-        { text: "채소 🥦", image: "/images/veggie.jpg", nextQuestion: "이런 음식은 어때요? 🥗", type: "result" }
-      ]);
-    } else if (choice === "result") {
-      setQuestion(options.find(opt => opt.type === "result").nextQuestion);
-      setOptions([]); // 최종 결과에서는 선택지 제거
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+    } else {
+      const shuffled = [...questionsData].sort(() => 0.5 - Math.random()).slice(0, 5);
+      setQuestions(shuffled);
     }
+  }, [navigate]);
+
+  // 사용자의 답변 저장 후 다음 질문
+  const handleChoice = (answer) => {
+    console.log(`✅ 선택한 답변: ${answer}`);
+
+    setAnswers((prev) => {
+      const updatedAnswers = [...prev, answer];
+      console.log("📌 현재까지의 답변 리스트:", updatedAnswers);
+
+      if (updatedAnswers.length === 5) {
+        sendToBackend(updatedAnswers);
+      } else {
+        setCurrentIndex(currentIndex + 1);
+      }
+      return updatedAnswers;
+    });
   };
 
+  // 백엔드로 데이터 전송 후 추천 레시피 받기
+  const sendToBackend = async (userAnswers) => {
+    setLoading(true);
+  
+    const API_URL = "https://i12e107.p.ssafy.io/api/recommend/final-recommend"; // ✅ 백엔드에서 제공한 URL인지 확인
+    const requestData = { answers: userAnswers };
+
+    console.log("📌 API 요청 시작:", JSON.stringify(requestData));
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestData),
+      });
+  
+      console.log("📌 서버 응답 상태 코드:", response.status);
+  
+      if (!response.ok) {
+        throw new Error(`서버 응답 오류: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log("📌 백엔드 응답 데이터:", data);
+  
+      setRecipes(data);  // ✅ 상태 업데이트
+    } catch (error) {
+      console.error("❌ 추천 요청 실패:", error);
+      alert("추천된 레시피를 불러오지 못했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   return (
     <div className="base-div">
       <div className="parent-container">
-      <div className="card-div">
-        <div className="ai-recommend-container">
+        <div className="card-div">
+          <div className="ai-recommend-container">
+            <div className="speech-bubble">
+              {recipes.length > 0 ? "🍽 추천된 레시피 🍽" : questions[currentIndex]?.question}
+            </div>
 
-          {/* AI 캐릭터와 말풍선 (고정) */}
-          <div className="speech-bubble">{question}</div>
-          <div className="ai-content">
-            {/* 왼쪽 선택지 */}
-            {options.length > 0 && (
-              <div className="choice-card left">
-                <img src={options[0].image} alt={options[0].text} className="choice-image" />
-                <button className="choice-btn" onClick={() => handleChoice(options[0].type)}>
-                  {options[0].text}
-                </button>
-              </div>
-            )} 
+            <div className="ai-content">
+              {recipes.length === 0 ? (
+                questions[currentIndex]?.options.map((option, index) => (
+                  <div className="choice-card" key={index}>
+                    <button className="choice-btn" onClick={() => handleChoice(option)}>
+                      {option}
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="recipe-list">
+                  {recipes.map((recipe) => (
+                    <div key={recipe.recipeId} className="recipe-card" onClick={() => navigate(`/recipe/${recipe.recipeId}`)}>
+                      <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />
+                      <p className="recipe-title">{recipe.recipeTitle}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            {/* AI 캐릭터 (중앙) */}
-            <img src="/images/ai.jpg" alt="AI 캐릭터" className="ai-image" />
+            {loading && <div className="loading-text">추천받는 중...</div>}
 
-            {/* 오른쪽 선택지 */}
-            {options.length > 1 && (
-              <div className="choice-card right">
-                <img src={options[1].image} alt={options[1].text} className="choice-image" />
-                <button className="choice-btn" onClick={() => handleChoice(options[1].type)}>
-                  {options[1].text}
-                </button>
-              </div>
+            {recipes.length > 0 && (
+              <button className="btn btn-primary" onClick={() => navigate("/")}>
+                홈으로 돌아가기
+              </button>
             )}
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }
