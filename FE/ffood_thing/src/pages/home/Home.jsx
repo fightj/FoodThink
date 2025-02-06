@@ -45,7 +45,7 @@ function Home() {
         setAccessToken(storedAccessToken)
       } else {
         console.log("Access token is not present")
-        navigate("/login") // 로그인 페이지로 이동
+        // navigate("/login") // 로그인 페이지로 이동
       }
     }
   }, [location, navigate])
