@@ -52,6 +52,15 @@ public class FeedController {
         return ResponseEntity.ok(feedService.readFeedById(id, userId));
     }
 
+    //마이페이지 로그인한 사용자 피드 조회
+    @GetMapping("/read/login")
+    public ResponseEntity<?> readFeedByLoginedId(@RequestHeader(value = "Authorization", required = false) String token){
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        return ResponseEntity.ok(feedService.readSummaryFeedsOrderByWriteTime(userId));
+    }
+
     //피드 유저별 조회(최신순)
     @GetMapping("/read/user/{id}")
     public ResponseEntity<?> readFeedsByUserId(@PathVariable Long id, @RequestHeader(value = "Authorization", required = false) String token){

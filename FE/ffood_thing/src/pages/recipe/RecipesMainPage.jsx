@@ -135,7 +135,6 @@ const RecipesMainPage = () => {
       }
       return 0
     })
-
   console.log("Filtered and Sorted Recipes: ", filteredAndSortedRecipes)
 
   return (
@@ -145,7 +144,9 @@ const RecipesMainPage = () => {
         <div className="recipe-card-div">
           <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
             <h2></h2>
-            <img src="/images/feed_write_button.png" alt="Recipe 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
+            <button href="/recipes/write" className="write-recipe-button" onClick={() => navigate("/recipes/write")}>
+              <img src="/images/feed_write_button.png" alt="Recipe 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
+            </button>
           </div>
 
           {isCategoryListVisible && (
@@ -182,14 +183,14 @@ const RecipesMainPage = () => {
                 <div className="carousel2" ref={carouselRef1}>
                   {sortRecipes(top20Recipes, "북마크순").map((recipe) => (
                     <div key={recipe.recipeId} className="recipe-card2" onClick={() => handleDetailClick(recipe.recipeId)}>
-                      <div className="image-container">
+                      <div className="image-container2">
                         <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
                         <div className="bookmark-count2">{recipe.bookMarkCount}</div>
                       </div>
                       <div className="recipe-info2">
                         <h2>{recipe.recipeTitle}</h2>
                         <div className="profile-info">
-                          <img src={recipe.userImage} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
+                          <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
                           <p>{recipe.nickname}</p>
                         </div>
                       </div>
@@ -199,17 +200,17 @@ const RecipesMainPage = () => {
               </div>
               <div className="carousel-wrapper2">
                 <h3>맞춤 추천</h3>
-                <div className="carousel2" ref={carouselRef2}>
+                <div className="carousel2" ref={carouselRef1}>
                   {sortRecipes(top20Recipes, "북마크순").map((recipe) => (
                     <div key={recipe.recipeId} className="recipe-card2" onClick={() => handleDetailClick(recipe.recipeId)}>
-                      <div className="image-container">
+                      <div className="image-container2">
                         <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
                         <div className="bookmark-count2">{recipe.bookMarkCount}</div>
                       </div>
                       <div className="recipe-info2">
                         <h2>{recipe.recipeTitle}</h2>
                         <div className="profile-info">
-                          <img src={recipe.userImage} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
+                          <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
                           <p>{recipe.nickname}</p>
                         </div>
                       </div>
@@ -239,7 +240,7 @@ const RecipesMainPage = () => {
                   <div className="recipe-info2">
                     <h2>{recipe.recipeTitle}</h2>
                     <div className="profile-info">
-                      <img src={recipe.userImage} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
+                      <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
                       <p>{recipe.nickname}</p>
                     </div>
                   </div>
