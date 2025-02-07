@@ -30,7 +30,7 @@ const RecipeDetailPage = () => {
     const fetchRecipe = async () => {
       try {
         console.log("Fetching recipe with ID:", id) // ID 값 확인 로그
-        const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${id}`, {
+        const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/${id}`, {
           headers: accessToken
             ? {
                 Authorization: `Bearer ${accessToken}`,
@@ -103,7 +103,7 @@ const RecipeDetailPage = () => {
     return <div>Loading...</div>
   }
 
-  const handleBookmarkClick = () => {
+  const handleBookmarkClick = async () => {
     if (!isLoggedIn) {
       Swal.fire({
         title: "로그인 필요!",
@@ -112,26 +112,54 @@ const RecipeDetailPage = () => {
       })
       return
     }
+    try {
+      if (isBookmarked) {
+        // 북마크 취소 요청
+        const response = await axios.delete(`https://i12e107.p.ssafy.io/api/bookmarks/delete/${id}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
 
-    if (isBookmarked) {
+        if (response.status === 200) {
+          Swal.fire({
+            title: "북마크 취소!",
+            text: "북마크에서 제거했어요.",
+            icon: "error",
+          }).then(() => {
+            setIsBookmarked(false)
+          })
+        }
+      } else {
+        // 북마크 추가 요청
+        const response = await axios.post(
+          `https://i12e107.p.ssafy.io/api/bookmarks/create/${id}`,
+          {
+            recipeId: id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+
+        if (response.status === 201) {
+          Swal.fire({
+            title: "북마크 완료!",
+            text: "북마크에 추가했어요.",
+            icon: "success",
+          }).then(() => {
+            setIsBookmarked(true)
+          })
+        }
+      }
+    } catch (error) {
+      console.error("북마크 오류 발생:", error)
       Swal.fire({
-        title: "북마크 취소!",
-        text: "북마크에서 제거했어요.",
+        title: "북마크 실패",
+        text: "북마크 처리 중 문제가 발생했습니다.",
         icon: "error",
-      }).then(() => {
-        setIsBookmarked(false)
-      })
-    } else {
-      Swal.fire({
-        title: "북마크완료!",
-        text: "북마크에 추가했어요",
-        imageUrl: "/images/mainlogo.jpg",
-        imageWidth: 350,
-        imageHeight: 300,
-        imageAlt: "Custom image",
-        icon: "success",
-      }).then(() => {
-        setIsBookmarked(true)
       })
     }
   }
