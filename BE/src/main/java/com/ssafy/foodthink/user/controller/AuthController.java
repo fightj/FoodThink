@@ -38,36 +38,6 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
-    // 쿠키에 토큰이 제대로 저장되었는지 확인
-    @GetMapping("/token")
-    public ResponseEntity<?> getAccessToken(HttpServletRequest request){
-        Cookie[] cookies = request.getCookies();
-        if(cookies == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "쿠키에서 토큰을 찾을 수 없어요"));
-        }
-        for(Cookie cookie : cookies){
-            if("access_token".equals(cookie.getName())){
-                String accessToken = cookie.getValue();
-                try{
-                    Long userId = jwtUtil.getUserId(accessToken);
-                    String role = jwtUtil.getRole(accessToken);
-
-                    return ResponseEntity.ok()
-                            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
-                            .body(Map.of(
-                                    "message", "토큰 교환 성공",
-                                    "userId", userId,
-                                    "role", role
-                            ));
-                } catch (ExpiredJwtException e) {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                            .body(Map.of("message", "토큰이 만료되었습니다"));
-                }
-            }
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message","유효한 액세스 토큰이 없어요"));
-    }
-
     // 카카오 계정 로그아웃이 아닌 푸띵 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
@@ -127,18 +97,17 @@ public class AuthController {
 
             log.info("=== 액세스 토큰 재발급 성공 ===");
 
-            // 새 액세스 토큰을 쿠키에 저장
-            Cookie newAccessCookie = new Cookie("access_token", newAccessToken); // 기존의 액세스 토큰을 새 액세스 토큰으로 대체
-            newAccessCookie.setHttpOnly(true);
-            //newAccessCookie.setSecure(true); // HTTPS 환경에서만 사용
-            newAccessCookie.setPath("/");
-            newAccessCookie.setMaxAge(60 * 60); // 1시간
-            response.addCookie(newAccessCookie);
+            // Authorization 헤더에 새 액세스 토큰 추가
+            response.setHeader("Authorization", "Bearer "+newAccessToken);
 
-            return ResponseEntity.ok().body(Map.of("message", "액세스 토큰이 성공적으로 재발급되었어요."));
+            return ResponseEntity.ok().body(Map.of("message", "액세스 토큰이 성공적으로 발급되었어요.",
+                    "accessToken", newAccessToken));
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "토큰이 만료되었습니다."));
+                    .body(Map.of("message", "토큰이 만료되었어요."));
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "토큰 재발급에 실패했어요."));
         }
 
     }
