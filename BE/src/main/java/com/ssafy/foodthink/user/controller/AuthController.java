@@ -40,7 +40,7 @@ public class AuthController {
 
     // 카카오 계정 로그아웃이 아닌 푸띵 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token, HttpServletResponse response) {
         try {
             String accessToken = token.replace("Bearer ", "");
             Long userId = jwtUtil.getUserId(accessToken);
@@ -52,6 +52,14 @@ public class AuthController {
             // 리프레시 토큰 삭제
             user.setRefreshToken(null);
             userRepository.save(user);
+
+            // HttpOnly 액세스 토큰 쿠키 삭제
+            Cookie accessCookie = new Cookie("access_token", null);
+            //accessCookie.setHttpOnly(true); // HttpOnly 설정
+            //accessCookie.setSecure(true);  // HTTPS 환경에서만 전송
+            accessCookie.setPath("/");
+            accessCookie.setMaxAge(0); // 즉시 만료
+            response.addCookie(accessCookie);
 
             // 인증 정보 제거
             SecurityContextHolder.clearContext();
@@ -98,7 +106,15 @@ public class AuthController {
             log.info("=== 액세스 토큰 재발급 성공 ===");
 
             // Authorization 헤더에 새 액세스 토큰 추가
-            response.setHeader("Authorization", "Bearer "+newAccessToken);
+            //response.setHeader("Authorization", "Bearer "+newAccessToken);
+
+            // 새로 발급된 액세스 토큰을 HttpOnly 쿠키에 저장
+            Cookie accessCookie = new Cookie("access_token", newAccessToken);
+            //accessCookie.setHttpOnly(true);
+            //accessCookie.setSecure(true);
+            accessCookie.setPath("/");
+            accessCookie.setMaxAge(60 * 60);
+            response.addCookie(accessCookie);
 
             return ResponseEntity.ok().body(Map.of("message", "액세스 토큰이 성공적으로 발급되었어요.",
                     "accessToken", newAccessToken));

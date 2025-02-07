@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 @Slf4j
 public class JWTFilter extends OncePerRequestFilter {
@@ -39,7 +40,12 @@ public class JWTFilter extends OncePerRequestFilter {
                 userDTO.setRole(role);
                 userDTO.setSocialType("KAKAO");
 
-                CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDTO);
+                // CustomOAuth2User 생성
+                CustomOAuth2User customOAuth2User = new CustomOAuth2User(
+                        userDTO,
+                        false, // JWT를 통해 인증된 사용자는 신규 사용자가 아님
+                        new HashMap<>()
+                );
 
                 Authentication auth = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(auth);
