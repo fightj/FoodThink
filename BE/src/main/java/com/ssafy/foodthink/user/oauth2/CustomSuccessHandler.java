@@ -37,9 +37,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String email = customOAuth2User.getEmail();
         String role = customOAuth2User.getAuthorities().iterator().next().getAuthority();
+        boolean isNewUser = customOAuth2User.isNewUser();
 
         log.info("=== 로그인 성공 ===");
         log.info("사용자 이메일: {}", customOAuth2User.getEmail());
+        log.info("신규 사용자 여부: {}", isNewUser);
 
         // 사용자 조회
         UserEntity user = userRepository.findByEmail(email)
@@ -59,9 +61,28 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("refreshToken: " + refreshToken);
 
         // Authorization 헤더에 액세스 토큰 추가
-        response.setHeader("Authorization", "Bearer " + accessToken);
+        //response.setHeader("Authorization", "Bearer " + accessToken);
+        
+        // HttpOnly 쿠키에 액세스 토큰 저장
+        Cookie accessCookie = new Cookie("access_token", accessToken);
+        //accessCookie.setHttpOnly(true); // JS 접근 불가
+        //accessCookie.setSecure(true); // HTTPS 환경에서만 전송
+        accessCookie.setPath("/");
+        accessCookie.setMaxAge(60*60); // 1시간 유효
+        response.addCookie(accessCookie);
 
-        log.info("==액세스 토큰이 Authorization 헤더에 저장되었습니다.==");
+        log.info("==액세스 토큰이 쿠키에 저장되었습니다.==");
+
+        // 신규/기존 사용자 상태를 쿠키에 추가
+        Cookie statusCookie = new Cookie("user_status", isNewUser ? "NEW" : "EXISTING");
+        statusCookie.setHttpOnly(false); // JS에서 접근 가능
+        statusCookie.setPath("/");
+        statusCookie.setMaxAge(60 * 60);
+        response.addCookie(statusCookie);
+
+        log.info("==사용자의 상태가 쿠키에 저장되었습니다.==");
+
+        //response.setHeader("USER-STATUS", isNewUser ? "NEW" : "EXISTING");
 
         // 프론트엔드 메인 페이지 URL로 리다이렉트
         String redirectUrl = "http://localhost:5173/";
