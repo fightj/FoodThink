@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react"
 import { Holistic } from "@mediapipe/holistic"
+import PropTypes from "prop-types"
 import { Camera } from "@mediapipe/camera_utils"
 import "../../styles/recipe/RecipeComponent.css"
 
@@ -46,6 +47,66 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     }
   }
 
+  const changePage = (direction) => {
+    if (direction === "다음 페이지") {
+      if (currentStep < pages.length - 1) {
+        onNextStep()
+      } else {
+        setSwipeMessage("마지막 페이지 입니다")
+      }
+    } else if (direction === "이전 페이지") {
+      if (currentStep > 0) {
+        onPrevStep()
+      } else {
+        setSwipeMessage("첫 페이지 입니다")
+      }
+    }
+
+    swipeTrackingRef.current.isTracking = false
+    swipeTrackingRef.current.lastSwipeTimestamp = Date.now()
+    swipeTrackingRef.current.lastPositions = []
+    setTimeout(() => setSwipeMessage(""), 1000)
+  }
+
+  // 터치 이벤트 처리 함수
+  const handleTouchStart = (e) => {
+    const touch = e.touches[0]
+    swipeTrackingRef.current.startX = touch.clientX
+    swipeTrackingRef.current.isTracking = true
+  }
+
+  const handleTouchMove = (e) => {
+    if (!swipeTrackingRef.current.isTracking) return
+
+    const touch = e.touches[0]
+    const distance = touch.clientX - swipeTrackingRef.current.startX
+
+    if (Math.abs(distance) > 50) {
+      // 감지 거리 임계값
+      const screenWidth = window.innerWidth
+      const touchStartX = swipeTrackingRef.current.startX
+
+      if (touchStartX > screenWidth / 2 && distance < 0) {
+        if (currentStep < pages.length - 1) {
+          setSwipeMessage("다음 페이지")
+          changePage("다음 페이지")
+        } else {
+          setSwipeMessage("마지막 페이지 입니다")
+        }
+      } else if (touchStartX < screenWidth / 2 && distance > 0) {
+        setSwipeMessage("이전 페이지")
+        changePage("이전 페이지")
+      }
+
+      swipeTrackingRef.current.isTracking = false
+      setTimeout(() => setSwipeMessage(""), 1000)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    swipeTrackingRef.current.isTracking = false
+  }
+
   useEffect(() => {
     const holistic = new Holistic({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
@@ -62,14 +123,19 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
 
     const camera = new Camera(videoRef.current, {
       onFrame: async () => {
-        await holistic.send({ image: videoRef.current })
+        if (videoRef.current) {
+          await holistic.send({ image: videoRef.current })
+        }
       },
       width: 640,
       height: 480,
     })
-    camera.start()
+    if (videoRef.current) {
+      camera.start()
+    }
 
     function onResults(results) {
+      if (!canvasRef.current) return
       const ctx = canvasRef.current.getContext("2d")
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
 
@@ -109,23 +175,11 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
         // 스와이프 방향 및 거리 계산
         const distance = avgX - swipeTrackingRef.current.startX
 
-        // 감지 거리 임계값을 증가시킴
         if (Math.abs(distance) > 0.2) {
-          // 기존 0.1에서 0.2로 증가
           const direction = distance > 0 ? "다음 페이지" : "이전 페이지"
           setSwipeMessage(direction)
 
-          if (direction === "다음 페이지") {
-            onNextStep()
-          } else {
-            onPrevStep()
-          }
-
-          // 쿨다운 및 초기화
-          swipeTrackingRef.current.isTracking = false
-          swipeTrackingRef.current.lastSwipeTimestamp = currentTime
-          swipeTrackingRef.current.lastPositions = []
-          setTimeout(() => setSwipeMessage(""), 1000)
+          changePage(direction)
         }
       }
 
@@ -134,7 +188,9 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     }
 
     return () => {
-      camera.stop()
+      if (camera) {
+        camera.stop()
+      }
     }
   }, [isTimerRunning]) // 타이머 상태를 의존성 배열에 추가
 
@@ -142,10 +198,18 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     return <div>No pages available</div>
   }
 
+  if (!pages[currentStep]) {
+    return (
+      <div className="endding-comment" onClick={() => window.location.reload()}>
+        레시피 화면으로
+      </div>
+    )
+  }
+
   const currentProcess = pages[currentStep]
 
   return (
-    <div className="handpose-container3">
+    <div className="handpose-container3" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
       <video ref={videoRef} style={{ display: "none" }} autoPlay playsInline />
       <canvas ref={canvasRef} className="handpose-canvas" />
       <div className="card-div7">
@@ -167,8 +231,16 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
         <img className="timer-image3" src="/images/timerequired.png" alt="Time Required" />
         {Math.floor(timer / 60)}분 {timer % 60}초
       </div>
+      {currentStep === pages.length - 1 && <div className="end-message">마지막 페이지 입니다</div>}
     </div>
   )
+}
+
+HandPoseComponent.propTypes = {
+  currentStep: PropTypes.number.isRequired,
+  onNextStep: PropTypes.func.isRequired,
+  onPrevStep: PropTypes.func.isRequired,
+  pages: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 export default HandPoseComponent

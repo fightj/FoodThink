@@ -125,7 +125,7 @@ const RecipeDetailPage = () => {
             </button>
 
             <div style={{ display: "flex", gap: "2rem", marginBottom: "100px" }}>
-              <div style={{ flex: "0 0 60%", position: "relative" }}>
+              <div className="recipe-main-images" style={{ flex: "0 0 60%", position: "relative" }}>
                 <img src={recipe.image} alt="Recipe Image" className="recipe-image1" />
                 <button className="bookmark-icon-btn" onClick={handleBookmarkClick}>
                   <img src={isBookmarked ? "/images/do-Bookmark.png" : "/images/undo-Bookmark.png"} alt="북마크 아이콘" className="bookmark-icon" />

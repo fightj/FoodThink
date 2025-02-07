@@ -23,9 +23,11 @@
 }
 
 /* 뒤로가기 버튼 (왼쪽 정렬) */
-.back-button {
+.back-button5 {
   position: absolute;
   left: -15px;
+  background-color: transparent;
+  border: none;
 }
 
 /* 레시피 등록 제목 (중앙 정렬) */
@@ -172,7 +174,8 @@
 
 /*    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    */
 /* 📌 카테고리 선택 컨테이너 */
-.category-container, .cooking-info-container {
+.category-container,
+.cooking-info-container {
   display: flex; /* 가로 정렬 */
   align-items: center;
   gap: 15px; /* 요소 간격 추가 */
@@ -211,8 +214,8 @@
   padding: 8px;
 }
 
-
-.ingredients-container, .steps-container {
+.ingredients-container,
+.steps-container {
   margin-bottom: 20px;
   border-radius: 10px;
 }
@@ -240,8 +243,6 @@
   border-radius: 6px;
   display: block;
 }
-
-
 
 /* 📌 요리 순서 입력 그룹 */
 .step-input-group {
@@ -287,7 +288,6 @@
   border-radius: 10px;
 }
 
-
 /* 📌 이미지 삭제 버튼 */
 .remove-step-image-btn {
   position: absolute;
@@ -307,8 +307,6 @@
   transition: background 0.2s ease-in-out;
 }
 
-
-
 /* 버튼 그룹 */
 .button-group {
   display: flex;
@@ -321,4 +319,3 @@
   justify-content: center; /* 중앙 정렬 */
   margin-top: 10px; /* 위쪽 여백 추가 */
 }
-
