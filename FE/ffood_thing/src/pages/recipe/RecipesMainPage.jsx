@@ -135,7 +135,6 @@ const RecipesMainPage = () => {
       }
       return 0
     })
-
   console.log("Filtered and Sorted Recipes: ", filteredAndSortedRecipes)
 
   return (
@@ -145,7 +144,9 @@ const RecipesMainPage = () => {
         <div className="recipe-card-div">
           <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
             <h2></h2>
-            <img src="/images/feed_write_button.png" alt="Recipe 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
+            <button href="/recipes/write" className="write-recipe-button" onClick={() => navigate("/recipes/write")}>
+              <img src="/images/feed_write_button.png" alt="Recipe 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
+            </button>
           </div>
 
           {isCategoryListVisible && (
