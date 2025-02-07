@@ -55,11 +55,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
-        log.info("[Slf4j]accessToken: " + accessToken);
-        log.info("[Slf4j]refreshToken: " + refreshToken);
+        log.info("accessToken: " + accessToken);
+        log.info("refreshToken: " + refreshToken);
+
+        // Authorization 헤더에 액세스 토큰 추가
+        response.setHeader("Authorization", "Bearer " + accessToken);
+
+        log.info("==액세스 토큰이 Authorization 헤더에 저장되었습니다.==");
 
         // 프론트엔드 메인 페이지 URL로 리다이렉트
-        String redirectUrl = "http://localhost:5173/?accessToken=" + accessToken;
+        String redirectUrl = "http://localhost:5173/";
         response.sendRedirect(redirectUrl);
     }
 
