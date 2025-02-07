@@ -1,10 +1,9 @@
-import React, { useEffect } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import React from "react"
+import { useLocation } from "react-router-dom"
 import "../../styles/login/LoginPage.css"
 
 function LoginPage() {
   const location = useLocation()
-  // const navigate = useNavigate()
 
   const handleKakaoClick = () => {
     console.log("Kakao login button clicked")

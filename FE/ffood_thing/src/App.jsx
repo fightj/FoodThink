@@ -28,6 +28,7 @@ import PageSlide from "./components/base/PageSlide"
 import Sidebar from "./components/base/Sidebar"
 import { UserProvider } from "./contexts/UserContext"
 
+// Function to fetch user info
 const fetchUserInfo = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken")
@@ -47,6 +48,72 @@ const fetchUserInfo = async () => {
   }
 }
 
+// Function to get access token from cookies
+const getAccessTokenFromCookies = () => {
+  const cookies = document.cookie.split("; ")
+  for (let cookie of cookies) {
+    const [name, value] = cookie.split("=")
+    if (name === "access_token") {
+      return value
+    }
+  }
+  return null
+}
+
+// Main App component
+const App = () => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [user, setUser] = useState(null)
+  const [tokenLoaded, setTokenLoaded] = useState(false)
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        // Get access token from cookies and log it to the console
+        const accessToken = getAccessTokenFromCookies()
+        console.log("Access Token from Cookies:", accessToken)
+
+        if (accessToken) {
+          localStorage.setItem("accessToken", accessToken)
+          setTokenLoaded(true)
+        }
+      } catch (error) {
+        console.error("Failed to load access token:", error)
+      }
+    }
+
+    initializeApp()
+  }, [])
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        if (!tokenLoaded) return
+        const userInfo = await fetchUserInfo()
+        setUser(userInfo)
+        sessionStorage.setItem("user", JSON.stringify(userInfo))
+      } catch (error) {
+        console.error("Failed to fetch user info:", error)
+      }
+    }
+
+    getUserInfo()
+  }, [tokenLoaded])
+
+  const toggleSidebar = () => setIsOpen(!isOpen)
+
+  return (
+    <UserProvider>
+      <Router>
+        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
+        <AnimatedRoutes userInfo={user} />
+        <NavbarBottom />
+      </Router>
+    </UserProvider>
+  )
+}
+
+// Animated Routes component
 const AnimatedRoutes = ({ userInfo }) => {
   const location = useLocation()
 
@@ -167,37 +234,6 @@ const AnimatedRoutes = ({ userInfo }) => {
         />
       </Routes>
     </AnimatePresence>
-  )
-}
-
-const App = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [user, setUser] = useState(null)
-
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const userInfo = await fetchUserInfo()
-        setUser(userInfo)
-        sessionStorage.setItem("user", JSON.stringify(userInfo))
-      } catch (error) {
-        console.error("Failed to fetch user info:", error)
-      }
-    }
-
-    getUserInfo()
-  }, [])
-
-  const toggleSidebar = () => setIsOpen(!isOpen)
-
-  return (
-    <UserProvider>
-      <Router>
-        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
-        <AnimatedRoutes userInfo={user} />
-        <NavbarBottom />
-      </Router>
-    </UserProvider>
   )
 }
 
