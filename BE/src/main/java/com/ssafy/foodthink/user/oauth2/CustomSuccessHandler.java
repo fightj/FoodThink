@@ -64,8 +64,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("==액세스 토큰이 Authorization 헤더에 저장되었습니다.==");
 
         // 프론트엔드 메인 페이지 URL로 리다이렉트
-        String redirectUrl = "http://localhost:5173/";
-        response.sendRedirect(redirectUrl);
+//        String redirectUrl = "http://localhost:5173/";
+//        response.sendRedirect(redirectUrl);
     }
 
 }
