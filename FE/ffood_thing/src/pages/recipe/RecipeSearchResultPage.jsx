@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { recipes as exampleRecipes } from "./recipe_data" // 레시피 데이터 가져오기
+import axios from "axios"
 import SearchBarRecipe from "../../components/base/SearchBarRecipe"
 import "../../styles/recipe/RecipesMainPage.css"
 
@@ -11,7 +11,30 @@ function useQuery() {
 const RecipeSearchResultPage = () => {
   const query = useQuery().get("query")
   const navigate = useNavigate()
-  const filteredRecipes = exampleRecipes.filter((recipe) => recipe.recipeTitle.toLowerCase().includes(query.toLowerCase()))
+  const [filteredRecipes, setFilteredRecipes] = useState([])
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/recipeList?cateType=&cateMainIngre=&sortType=&page=0&size=1000`, {
+          params: {
+            page: 0,
+            size: 100,
+          },
+        })
+        // 검색어가 recipeTitle에 포함된 레시피 필터링
+        const recipes = response.data.recipes.filter((recipe) => recipe.recipeTitle?.toLowerCase().includes(query.toLowerCase()))
+        setFilteredRecipes(recipes)
+      } catch (error) {
+        console.error("Error fetching recipes", error)
+        setFilteredRecipes([])
+      }
+    }
+
+    if (query) {
+      fetchRecipes()
+    }
+  }, [query])
 
   const handleDetailClick = (id) => {
     navigate(`/recipes/${id}`)
@@ -27,7 +50,7 @@ const RecipeSearchResultPage = () => {
       <div className="recipe-parent-div">
         <div className="recipe-card-div">
           <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
-            <button onClick={() => navigate(-1)} className="back-button">
+            <button onClick={() => navigate(-1)} className="back-button1">
               <img src="/images/previous_button.png" alt="Previous" className="icon" />
               이전
             </button>

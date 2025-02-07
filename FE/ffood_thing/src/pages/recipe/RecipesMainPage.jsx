@@ -183,7 +183,7 @@ const RecipesMainPage = () => {
                 <div className="carousel2" ref={carouselRef1}>
                   {sortRecipes(top20Recipes, "북마크순").map((recipe) => (
                     <div key={recipe.recipeId} className="recipe-card2" onClick={() => handleDetailClick(recipe.recipeId)}>
-                      <div className="image-container">
+                      <div className="image-container2">
                         <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
                         <div className="bookmark-count2">{recipe.bookMarkCount}</div>
                       </div>
@@ -200,10 +200,10 @@ const RecipesMainPage = () => {
               </div>
               <div className="carousel-wrapper2">
                 <h3>맞춤 추천</h3>
-                <div className="carousel2" ref={carouselRef2}>
+                <div className="carousel2" ref={carouselRef1}>
                   {sortRecipes(top20Recipes, "북마크순").map((recipe) => (
                     <div key={recipe.recipeId} className="recipe-card2" onClick={() => handleDetailClick(recipe.recipeId)}>
-                      <div className="image-container">
+                      <div className="image-container2">
                         <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
                         <div className="bookmark-count2">{recipe.bookMarkCount}</div>
                       </div>
