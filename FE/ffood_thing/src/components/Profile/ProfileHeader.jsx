@@ -1,94 +1,108 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/profile/ProfileHeader.css";
+import Swal from "sweetalert2"; // ✅ SweetAlert 알림 추가
 
 const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
-  const [profileData, setProfileData] = useState(null);
+  const [profileData, setProfileData] = useState({});
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isImageEditing, setIsImageEditing] = useState(false); // 이미지 수정 모달
-  const [selectedImage, setSelectedImage] = useState(null); // 선택한 이미지
-  const [season, setSeason] = useState("spring"); // 기본 테마: 봄
-  const [fallingElements, setFallingElements] = useState([]); // 떨어지는 요소 리스트
+  const [isImageEditing, setIsImageEditing] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [season, setSeason] = useState("spring");
+  const [fallingElements, setFallingElements] = useState([]);
 
-  // 계절별 배경색 & 애니메이션 클래스
   const seasonStyles = {
-    spring: { background: "#FFEBE9", effectClass: "falling-cherry-blossom", emoji: "🌸" },
-    summer: { background: "#B3E5FC", effectClass: "falling-rain", emoji: "💧" },
-    autumn: { background: "#FFD180", effectClass: "falling-leaves", emoji: "🍂" },
-    winter: { background: "#E3F2FD", effectClass: "falling-snow", emoji: "❄" }
+    spring: { background: "#FFEBE9", emoji: "🌸" },
+    summer: { background: "#B3E5FC", emoji: "💧" },
+    autumn: { background: "#FFD180", emoji: "🍂" },
+    winter: { background: "#E3F2FD", emoji: "❄" }
   };
 
-  // ✅ 프로필 데이터 불러오기
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        console.error("🚨 Access Token 없음");
-        return;
+  // ✅ 랜덤한 떨어지는 요소 생성 함수
+  const generateFallingElements = (currentSeason) => {
+    const elements = Array.from({ length: 15 }).map((_, i) => ({
+      id: i,
+      emoji: seasonStyles[currentSeason].emoji,
+      left: `${Math.random() * 100}%`,
+      animationDuration: `${Math.random() * 3 + 3}s`
+    }));
+    setFallingElements(elements);
+  };
+
+  // ✅ 프로필 데이터 불러오는 함수
+  const fetchProfileData = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("🚨 Access Token 없음");
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://i12e107.p.ssafy.io/api/users/read`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`프로필 데이터를 불러오는 데 실패했습니다. 상태 코드: ${response.status}`);
       }
+      const data = await response.json();
+      setProfileData((prev) => ({ ...prev, ...data }));
+    } catch (error) {
+      console.error("❌ 프로필 불러오기 실패:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      try {
-        const response = await fetch(`https://i12e107.p.ssafy.io/api/users/read`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`프로필 데이터를 불러오는 데 실패했습니다. 상태 코드: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("📌 불러온 프로필 데이터:", data);
-        setProfileData(data);
-      } catch (error) {
-        console.error("❌ 프로필 불러오기 실패:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfileData();
-  }, []);
-
+  // ✅ 닉네임 변경 요청
   const handleNicknameChange = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
       setErrorMessage("로그인이 필요합니다.");
       return;
     }
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/nickname", {
         method: "PUT",
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   Authorization: `Bearer ${token}`,
-        // },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ nickname: newNickname }),
       });
-      const data = await response.json();
-      if (response.ok) {
-        setProfileData((prev) => ({ ...prev, nickname: data.nickname }));
-        setIsEditing(false);
-        setErrorMessage("");
-      } else {
-        setErrorMessage(data.message || "닉네임 변경에 실패했습니다.");
+
+      if (!response.ok) {
+        throw new Error("닉네임 변경에 실패했습니다.");
       }
+
+      const data = await response.json();
+      setProfileData((prev) => ({ ...prev, nickname: data.nickname }));
+      setIsEditing(false);
+      setNewNickname(""); // ✅ 입력 필드 초기화
+      setErrorMessage("");
+
+      Swal.fire("닉네임 변경 완료!", "닉네임이 성공적으로 변경되었습니다.", "success");
     } catch (error) {
       setErrorMessage("서버 오류가 발생했습니다.");
+      Swal.fire("오류", "닉네임 변경 중 문제가 발생했습니다.", "error");
     }
   };
 
-  // ✅ 프로필 이미지 변경 핸들러
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedImage(file);
-    }
-  };
+// ✅ 프로필 이미지 변경 핸들러
+const handleImageUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    setSelectedImage(file);
+  }
+};
+
 
   // ✅ 프로필 이미지 업로드 요청
   const uploadProfileImage = async () => {
@@ -112,25 +126,69 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
         body: formData,
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        setProfileData((prev) => ({ ...prev, profileImage: data.image }));
-        setIsImageEditing(false);
-        setSelectedImage(null);
-      } else {
-        setErrorMessage(data.message || "프로필 이미지 변경에 실패했습니다.");
+      if (!response.ok) {
+        throw new Error("프로필 이미지 변경에 실패했습니다.");
       }
+
+      const data = await response.json();
+      setProfileData((prev) => ({ ...prev, profileImage: data.image }));
+      setIsImageEditing(false);
+      setSelectedImage(null);
+
+      Swal.fire("프로필 이미지 변경 완료!", "새로운 프로필 이미지가 적용되었습니다.", "success");
     } catch (error) {
       setErrorMessage("서버 오류가 발생했습니다.");
+      Swal.fire("오류", "프로필 이미지 변경 중 문제가 발생했습니다.", "error");
     }
   };
 
+
+  // ✅ useEffect 내부에서 실행
+  useEffect(() => {
+    fetchProfileData();
+    generateFallingElements(season);
+  }, [userId, season]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     await fetchProfileData();
+  //     generateFallingElements(season);
+  //   };
+
+  //   if (userId) fetchData();
+  // }, [userId, season]);
 
   if (loading) return <div className="profile-header">🔄 프로필 로딩 중...</div>;
 
 
 
-
+  // const handleNicknameChange = async () => {
+  //   const token = localStorage.getItem("accessToken");
+  //   if (!token) {
+  //     setErrorMessage("로그인이 필요합니다.");
+  //     return;
+  //   }
+  //   try {
+  //     const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/nickname", {
+  //       method: "PUT",
+  //       // headers: {
+  //       //   "Content-Type": "application/json",
+  //       //   Authorization: `Bearer ${token}`,
+  //       // },
+  //       body: JSON.stringify({ nickname: newNickname }),
+  //     });
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       setProfileData((prev) => ({ ...prev, nickname: data.nickname }));
+  //       setIsEditing(false);
+  //       setErrorMessage("");
+  //     } else {
+  //       setErrorMessage(data.message || "닉네임 변경에 실패했습니다.");
+  //     }
+  //   } catch (error) {
+  //     setErrorMessage("서버 오류가 발생했습니다.");
+  //   }
+  // };
 
 
   // 계절 변경 함수
@@ -139,21 +197,6 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
     generateFallingElements(newSeason);
   };
 
-  // 랜덤한 떨어지는 요소 생성
-  const generateFallingElements = (currentSeason) => {
-    const elements = Array.from({ length: 15 }).map((_, i) => ({
-      id: i,
-      emoji: seasonStyles[currentSeason].emoji,
-      left: `${Math.random() * 100}%`,
-      animationDuration: `${Math.random() * 3 + 3}s` // 3~6초 사이의 랜덤 지속시간
-    }));
-    setFallingElements(elements);
-  };
-
-  // 초기 로딩 시 떨어지는 요소 생성
-  useEffect(() => {
-    generateFallingElements(season);
-  }, []);
 
 
   return (
