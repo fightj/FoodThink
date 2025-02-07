@@ -118,10 +118,25 @@ function FeedWrite() {
     navigate(path)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const imagesToUpload = selectedImages.filter((img) => checkedImages.includes(img.id))
     console.log("업로드할 이미지:", imagesToUpload)
+
+    const formData = new FormData()
+    imagesToUpload.forEach((img) => formData.append("images", img.file))
+    const feedRequestDto = {
+      foodName: foodName,
+      content: description,
+      userId: JSON.parse(sessionStorage.getItem("user")).userId, // Fetch userId from session storage
+      recipeId: 1, // Replace with actual recipe ID
+    }
+    formData.append("feedRequestDto", new Blob([JSON.stringify(feedRequestDto)], { type: "application/json" }))
+
+    // Log the formData to see what's being sent
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value)
+    }
 
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -139,24 +154,42 @@ function FeedWrite() {
         confirmButtonText: "작성완료!",
         cancelButtonText: "취소!",
       })
-      .then((result) => {
+      .then(async (result) => {
         if (result.isConfirmed) {
-          // 폼 제출 후 localStorage 비우기
-          localStorage.removeItem("selectedImages")
-          localStorage.removeItem("checkedImages")
-          localStorage.removeItem("foodName")
-          localStorage.removeItem("description")
-          swalWithBootstrapButtons
-            .fire({
-              title: "작성완료!",
-              text: "성공적으로 피드가 작성됐어요.",
-              imageUrl: "/images/mainlogo.jpg",
-              imageWidth: 350,
-              imageHeight: 300,
-              imageAlt: "Custom image",
-              icon: "success",
+          try {
+            const accessToken = localStorage.getItem("accessToken")
+            if (!accessToken) throw new Error("Access token is missing")
+
+            await axios.post("https://i12e107.p.ssafy.io/api/feed/create", formData, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
             })
-            .then(() => navigate(-1))
+
+            // 폼 제출 후 localStorage 비우기
+            localStorage.removeItem("selectedImages")
+            localStorage.removeItem("checkedImages")
+            localStorage.removeItem("foodName")
+            localStorage.removeItem("description")
+            swalWithBootstrapButtons
+              .fire({
+                title: "작성완료!",
+                text: "성공적으로 피드가 작성됐어요.",
+                imageUrl: "/images/mainlogo.jpg",
+                imageWidth: 350,
+                imageHeight: 300,
+                imageAlt: "Custom image",
+                icon: "success",
+              })
+              .then(() => navigate(-1))
+          } catch (error) {
+            console.error("Error uploading images:", error)
+            swalWithBootstrapButtons.fire({
+              title: "오류 발생!",
+              text: "이미지 업로드 중 오류가 발생했습니다.",
+              icon: "error",
+            })
+          }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire({
             title: "작성 취소!",
@@ -170,7 +203,7 @@ function FeedWrite() {
   return (
     <div className="base-div">
       <div className="parent-container">
-        <div className="card-div">
+        <div className="card-div-write">
           <div className="div-80">
             <button onClick={handleBack} className="back-button1">
               <img src="/images/previous_button.png" alt="Previous" className="icon" />

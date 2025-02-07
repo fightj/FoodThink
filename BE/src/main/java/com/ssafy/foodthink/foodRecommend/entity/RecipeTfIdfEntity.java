@@ -6,26 +6,23 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "recipe_tfidf")
-@Getter
-@Setter
-public class RecipeTfIdf {
-
+public class RecipeTfIdfEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="tfidf_Id")
+    @Column(name = "tfidf_Id")
     private Long tfidfId;
 
     @ManyToOne
-    @JoinColumn(name = "recipe_id", unique = true)
+    @JoinColumn(name = "recipe_id", nullable = false)
     private RecipeEntity recipe;
 
-    @Column(name="feature")
-    private String feature; // 레시피의 종류별, 주재료, 개별재료명
+    @Column(name = "feature", nullable = false)
+    private String feature; // 레시피의 종류별, 개별재료
 
-    @Column(name="tfidf_value")
+    @Column(name = "tfidf_value")
     private Double tfIdfValue; // 해당 feature에 대한 계산된 TF-IDF 값
-
-
-
 }
+
+

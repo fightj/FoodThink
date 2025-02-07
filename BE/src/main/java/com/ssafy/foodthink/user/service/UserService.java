@@ -155,7 +155,21 @@ public class UserService {
         recipeRepository.save(recipeEntity);
     }
 
-    // 사용자의 최근 레시피 기록 조회
+    // 사용자가 조회한 모든 레시피
+    @Transactional
+    public List<RecipeViewDto> readAllRecipeViews(Long userId){
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+        List<RecipeViewHistoryEntity> histories = recipeViewRepository.findByUserEntity(user);
+
+        return histories.stream()
+                .map(this::convertToViewDto)
+                .collect(Collectors.toList());
+    }
+
+    // 사용자의 최근 조회한 레시피
     @Transactional
     public List<RecipeViewDto> readRecentRecipeViews(Long userId, int count) {
         UserEntity user = userRepository.findByUserId(userId)
