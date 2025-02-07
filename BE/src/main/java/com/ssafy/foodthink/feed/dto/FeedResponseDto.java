@@ -19,6 +19,7 @@ public class FeedResponseDto {
     private LocalDateTime writeTime;
     private Long userId;
     private String username;
+    private String userImage;
     private Long recipeId;
     private List<String> images;
     private boolean isLike;

@@ -18,6 +18,7 @@ public interface FeedService {
     void deleteFeed(Long feedId, Long userId);   //피드 삭제
     void updateFeed(Long feedId, Long userId, FeedRequestDto feedRequestDto, List<MultipartFile> images);  //피드 수정
     CustomPageResponseDto<FeedSummaryResponseDto> readFeedsOrderByWriteTime(int page, int size);
+    List<FeedSummaryResponseDto> readSummaryFeedsOrderByWriteTime(Long userId);
     void createFeedLikeByFeedId(Long feedId, Long userId);  //피드 좋아요 추가
     void deleteFeedLikeByFeedId(Long feedId, Long userId);  //피드 좋아요 삭제
     void createFeedCommentByFeedId(Long feedId, FeedCommentRequestDto feedCommentRequestDto);  //피드 댓글 추가
