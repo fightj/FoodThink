@@ -65,7 +65,7 @@ const RecipeSearchResultPage = () => {
                 <div className="recipe-info2">
                   <h2>{recipe.recipeTitle}</h2>
                   <div className="profile-info">
-                    <img src={recipe.userImage} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
+                    <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
                     <p>{recipe.nickname}</p>
                   </div>
                 </div>
