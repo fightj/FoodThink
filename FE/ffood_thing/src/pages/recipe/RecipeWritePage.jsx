@@ -99,10 +99,9 @@ function RecipeWritePage() {
 
   // 저장 & 저장 후 공개 API 요청
   const saveRecipe = async (isPublic) => {
-  const token = localStorage.getItem("accessToken");
-  
+    const token = localStorage.getItem("accessToken");
     const formData = new FormData();
-  
+
     // ✅ 1. JSON 데이터를 문자열로 변환해서 추가 (Blob 사용 X)
     formData.append("recipe", new Blob(
       [JSON.stringify({
@@ -123,24 +122,24 @@ function RecipeWritePage() {
         })),
       })], { type: "application/json" })
     );
-  
+
     // ✅ 2. 대표 이미지 추가 (multipart/form-data)
     if (imageFile) {
       formData.append("imageFile", imageFile);
     }
-  
+
     // ✅ 3. 과정 이미지 및 순서 추가 (multipart/form-data)
     const processOrders = [];
-  steps.forEach((step, index) => {
-    if (step.imageFile) {
-      formData.append("processImages", step.imageFile);
-      processOrders.push(index + 1); // 몇 번째 과정인지 저장
-    }
-  });
+    steps.forEach((step, index) => {
+      if (step.imageFile) {
+        formData.append("processImages", step.imageFile);
+        processOrders.push(index + 1); // 몇 번째 과정인지 저장
+      }
+    });
 
-  // ✅ 과정 이미지 순서 배열 추가
-  formData.append("processOrders", new Blob([JSON.stringify(processOrders)], { type: "application/json" }));
-  
+    // ✅ 과정 이미지 순서 배열 추가
+    formData.append("processOrders", new Blob([JSON.stringify(processOrders)], { type: "application/json" }));
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/myOwnRecipe/create", {
         method: "POST",
@@ -150,32 +149,32 @@ function RecipeWritePage() {
         body: formData,
       });
 
-
-
-
-
       const responseText = await response.text(); // ✅ 응답을 text로 받아옴
+      console.log("📌 [RESPONSE TEXT]:", responseText); // 응답 데이터 원본 출력
 
       if (!response.ok) {
         throw new Error(`저장 실패: ${response.status}, 메시지: ${responseText}`);
       }
-  
+
       let recipeId = null;
-  
+
       // ✅ 응답이 JSON인지 확인
-      try {
-        const responseData = JSON.parse(responseText);
-        recipeId = responseData.recipeId;
-      } catch (error) {
-        console.warn("⚠️ 응답이 JSON이 아님:", responseText);
-      }
-  
+      // try {
+      //   const responseData = JSON.parse(responseText);
+      //   console.log("📌 [PARSED RESPONSE]:", responseData); // JSON 변환된 응답 데이터
+      //   recipeId = responseData.recipeId;
+      // } catch (error) {
+      //   onsole.warn("⚠️ [JSON PARSE ERROR] 응답이 JSON 형식이 아님:", responseText);
+      // }
+
       alert(isPublic ? "레시피가 공개 저장되었습니다!" : "레시피가 저장되었습니다.");
-  
+
       // ✅ recipeId가 있으면 상세 페이지로 이동
-      if (recipeId) {
-        navigate(`/recipe/${recipeId}`);
+      if (responseText) {
+        console.log(`✅ [SUCCESS] 상세 페이지 이동: /recipe/${responseText}`);
+        navigate(`/recipes/${responseText}`);
       } else {
+        console.warn("⚠️ [NO RECIPE ID] recipeId를 받지 못함, 이전 페이지로 이동");
         navigate(-1); // 이전 페이지로 이동
       }
     } catch (error) {
@@ -183,7 +182,7 @@ function RecipeWritePage() {
       alert("저장 중 문제가 발생했습니다.");
     }
   };
-  
+
 
   // 취소 버튼 핸들러
   const handleCancel = () => {
