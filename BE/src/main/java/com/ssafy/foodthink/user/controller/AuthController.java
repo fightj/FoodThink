@@ -53,13 +53,13 @@ public class AuthController {
             user.setRefreshToken(null);
             userRepository.save(user);
 
-            // HttpOnly 액세스 토큰 쿠키 삭제
-            Cookie accessCookie = new Cookie("access_token", null);
-            //accessCookie.setHttpOnly(true); // HttpOnly 설정
-            //accessCookie.setSecure(true);  // HTTPS 환경에서만 전송
-            accessCookie.setPath("/");
-            accessCookie.setMaxAge(0); // 즉시 만료
-            response.addCookie(accessCookie);
+//            // HttpOnly 액세스 토큰 쿠키 삭제
+//            Cookie accessCookie = new Cookie("access_token", null);
+//            //accessCookie.setHttpOnly(true); // HttpOnly 설정
+//            //accessCookie.setSecure(true);  // HTTPS 환경에서만 전송
+//            accessCookie.setPath("/");
+//            accessCookie.setMaxAge(0); // 즉시 만료
+//            response.addCookie(accessCookie);
 
             // 인증 정보 제거
             SecurityContextHolder.clearContext();
@@ -109,15 +109,19 @@ public class AuthController {
             //response.setHeader("Authorization", "Bearer "+newAccessToken);
 
             // 새로 발급된 액세스 토큰을 HttpOnly 쿠키에 저장
-            Cookie accessCookie = new Cookie("access_token", newAccessToken);
-            //accessCookie.setHttpOnly(true);
-            //accessCookie.setSecure(true);
-            accessCookie.setPath("/");
-            accessCookie.setMaxAge(60 * 60);
-            response.addCookie(accessCookie);
+//            Cookie accessCookie = new Cookie("access_token", newAccessToken);
+//            //accessCookie.setHttpOnly(true);
+//            //accessCookie.setSecure(true);
+//            accessCookie.setPath("/");
+//            accessCookie.setMaxAge(60 * 60);
+//            response.addCookie(accessCookie);
 
-            return ResponseEntity.ok().body(Map.of("message", "액세스 토큰이 성공적으로 발급되었어요.",
-                    "accessToken", newAccessToken));
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + newAccessToken); // Authorization 헤더에 추가
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(Map.of("message", "액세스 토큰이 성공적으로 발급되었습니다."));
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "토큰이 만료되었어요."));
