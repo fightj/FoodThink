@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/recipe/RecipeWritePage.css";
 
@@ -14,6 +14,16 @@ function RecipeWritePage() {
   const [difficulty, setDifficulty] = useState("");
   const [recipeTitle, setRecipeTitle] = useState("");
   const [recipeDescription, setRecipeDescription] = useState("");
+
+  // ✅ 페이지 진입 시 로그인 체크
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login"); // ✅ 로그인 페이지로 이동
+    }
+  }, [navigate]);
 
   // 대표 사진 업로드
   const handleImageUpload = (event) => {
@@ -89,16 +99,9 @@ function RecipeWritePage() {
 
   // 저장 & 저장 후 공개 API 요청
   const saveRecipe = async (isPublic) => {
-    // ✅ token 변수를 함수 내부에서 선언
-  const token = localStorage.getItem("accessToken");
-  
-  if (!token) {
-    alert("로그인이 필요합니다.");
-    navigate("/login"); // 로그인 페이지로 이동
-    return;
-  }
+    const token = localStorage.getItem("accessToken");
     const formData = new FormData();
-  
+
     // ✅ 1. JSON 데이터를 문자열로 변환해서 추가 (Blob 사용 X)
     formData.append("recipe", new Blob(
       [JSON.stringify({
@@ -119,24 +122,24 @@ function RecipeWritePage() {
         })),
       })], { type: "application/json" })
     );
-  
+
     // ✅ 2. 대표 이미지 추가 (multipart/form-data)
     if (imageFile) {
       formData.append("imageFile", imageFile);
     }
-  
+
     // ✅ 3. 과정 이미지 및 순서 추가 (multipart/form-data)
     const processOrders = [];
-  steps.forEach((step, index) => {
-    if (step.imageFile) {
-      formData.append("processImages", step.imageFile);
-      processOrders.push(index + 1); // 몇 번째 과정인지 저장
-    }
-  });
+    steps.forEach((step, index) => {
+      if (step.imageFile) {
+        formData.append("processImages", step.imageFile);
+        processOrders.push(index + 1); // 몇 번째 과정인지 저장
+      }
+    });
 
-  // ✅ 과정 이미지 순서 배열 추가
-  formData.append("processOrders", new Blob([JSON.stringify(processOrders)], { type: "application/json" }));
-  
+    // ✅ 과정 이미지 순서 배열 추가
+    formData.append("processOrders", new Blob([JSON.stringify(processOrders)], { type: "application/json" }));
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/myOwnRecipe/create", {
         method: "POST",
@@ -145,21 +148,41 @@ function RecipeWritePage() {
         },
         body: formData,
       });
-  
+
+      const responseText = await response.text(); // ✅ 응답을 text로 받아옴
+      console.log("📌 [RESPONSE TEXT]:", responseText); // 응답 데이터 원본 출력
+
       if (!response.ok) {
-        throw new Error(`저장 실패: ${response.status}`);
+        throw new Error(`저장 실패: ${response.status}, 메시지: ${responseText}`);
       }
-  
+
+      let recipeId = null;
+
+      // ✅ 응답이 JSON인지 확인
+      // try {
+      //   const responseData = JSON.parse(responseText);
+      //   console.log("📌 [PARSED RESPONSE]:", responseData); // JSON 변환된 응답 데이터
+      //   recipeId = responseData.recipeId;
+      // } catch (error) {
+      //   onsole.warn("⚠️ [JSON PARSE ERROR] 응답이 JSON 형식이 아님:", responseText);
+      // }
+
       alert(isPublic ? "레시피가 공개 저장되었습니다!" : "레시피가 저장되었습니다.");
-      navigate(-1);
+
+      // ✅ recipeId가 있으면 상세 페이지로 이동
+      if (responseText) {
+        console.log(`✅ [SUCCESS] 상세 페이지 이동: /recipe/${responseText}`);
+        navigate(`/recipes/${responseText}`);
+      } else {
+        console.warn("⚠️ [NO RECIPE ID] recipeId를 받지 못함, 이전 페이지로 이동");
+        navigate(-1); // 이전 페이지로 이동
+      }
     } catch (error) {
       console.error("레시피 저장 중 오류 발생:", error);
       alert("저장 중 문제가 발생했습니다.");
     }
   };
-  
-  
-  
+
 
   // 취소 버튼 핸들러
   const handleCancel = () => {
