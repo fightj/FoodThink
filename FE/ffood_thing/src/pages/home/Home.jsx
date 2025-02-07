@@ -11,44 +11,23 @@ function Home() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // URLSearchParams를 이용하여 URL의 쿼리 파라미터를 가져옴
-    const searchParams = new URLSearchParams(location.search)
-    const urlAccessToken = searchParams.get("accessToken")
-    console.log(urlAccessToken)
-    if (urlAccessToken) {
-      const storedAccessToken = localStorage.getItem("accessToken")
+    const urlParams = new URLSearchParams(location.search)
+    const token = urlParams.get("accessToken")
+    const isNewUser = urlParams.get("isNewUser")
 
-      if (storedAccessToken !== urlAccessToken) {
-        // 액세스 토큰을 콘솔에 출력
-        console.log("New access token from URL:", urlAccessToken)
+    if (token && !accessToken) {
+      console.log("Access Token:", token)
+      localStorage.setItem("accessToken", token)
+      setAccessToken(token)
 
-        // 액세스 토큰을 로컬 스토리지에 저장
-        localStorage.setItem("accessToken", urlAccessToken)
-
-        // 로그인 성공 메시지 출력
-        console.log("로그인 성공")
-
-        // 상태 업데이트
-        setAccessToken(urlAccessToken)
-      } else {
-        console.log("Access token matches the stored token.")
-        setAccessToken(storedAccessToken)
-      }
-
-      // URL에서 accessToken 제거 (UX를 위해)
+      // URL 파라미터를 삭제하여 무한 루프 방지
       navigate("/", { replace: true })
-    } else {
-      // 로컬 스토리지에 저장된 액세스 토큰을 가져옴
-      const storedAccessToken = localStorage.getItem("accessToken")
-      if (storedAccessToken) {
-        console.log("현재 로그인한 유저:", storedAccessToken)
-        setAccessToken(storedAccessToken)
-      } else {
-        console.log("Access token is not present")
-        // navigate("/login") // 로그인 페이지로 이동
-      }
     }
-  }, [location, navigate])
+
+    if (isNewUser) {
+      console.log("Is New User:", isNewUser)
+    }
+  }, [location, navigate, accessToken])
 
   return (
     <PageSlide>

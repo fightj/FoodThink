@@ -1,14 +1,11 @@
-import React, { useEffect } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import React from "react"
 import "../../styles/login/LoginPage.css"
 
 function LoginPage() {
-  const location = useLocation()
-  // const navigate = useNavigate()
-
   const handleKakaoClick = () => {
+    const kakaoClientId = import.meta.env.VITE_KAKAO_CLIENT_ID
     console.log("Kakao login button clicked")
-    window.location.href =   "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=71e6cc593f5444a36af1d3fe5dbb4f30&redirect_uri=http://i12e107.p.ssafy.io:8085/oauth2/authorization/kakao"
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=http://i12e107.p.ssafy.io:8085/oauth2/authorization/kakao`
   }
 
   return (
