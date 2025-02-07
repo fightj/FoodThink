@@ -6,6 +6,7 @@ import com.ssafy.foodthink.user.jwt.JWTUtil;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import com.ssafy.foodthink.user.service.CustomOAuth2UserService;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +68,7 @@ public class AuthController {
 
     // 리프레시 토큰으로 액세스 토큰 재발급
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissueAccessToken(@RequestHeader("Authorization") String bearerToken) {
+    public ResponseEntity<?> reissueAccessToken(@RequestHeader("Authorization") String bearerToken, HttpServletResponse response) {
 
         try {
             // "Bearer " 제거
@@ -82,6 +83,9 @@ public class AuthController {
 
             // DB에 저장된 리프레시 토큰 조회
             String refreshToken = user.getRefreshToken();
+            if (refreshToken == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("리프레시 토큰이 존재하지 않아요");
+            }
 
             // 리프레시 토큰 유효성 검사
             if (!jwtUtil.validateToken(refreshToken)) {
@@ -92,11 +96,18 @@ public class AuthController {
             String newAccessToken = jwtUtil.createAccessToken(user.getUserId(), user.getRole(), 60 * 60 * 1000L); // 1시간
 
             log.info("=== 액세스 토큰 재발급 성공 ===");
-            
-            return ResponseEntity.ok().body(Map.of("accessToken", newAccessToken));
+
+            // Authorization 헤더에 새 액세스 토큰 추가
+            response.setHeader("Authorization", "Bearer "+newAccessToken);
+
+            return ResponseEntity.ok().body(Map.of("message", "액세스 토큰이 성공적으로 발급되었어요.",
+                    "accessToken", newAccessToken));
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "토큰이 만료되었습니다."));
+                    .body(Map.of("message", "토큰이 만료되었어요."));
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "토큰 재발급에 실패했어요."));
         }
 
     }
