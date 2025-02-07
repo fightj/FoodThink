@@ -23,22 +23,26 @@ function UserBookmarkRecipe({ closeModal, bookmarks }) {
         <Modal.Title>내 북마크 레시피</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Carousel>
-          {cardGroups.map((group, index) => (
-            <Carousel.Item key={index}>
-              <div className="bookmark-card-container d-flex justify-content-around">
-                {group.map((bookmark, idx) => (
-                  <div key={idx} className="bookmark-card mx-2">
-                    <img className="d-block w-100" src={bookmark.image} alt={bookmark.title} />
-                    <Carousel.Caption>
-                      <h5>{bookmark.title}</h5>
-                    </Carousel.Caption>
-                  </div>
-                ))}
-              </div>
-            </Carousel.Item>
-          ))}
-        </Carousel>
+        {bookmarks.length === 0 ? (
+          <p>비어있습니다.</p>
+        ) : (
+          <Carousel>
+            {cardGroups.map((group, index) => (
+              <Carousel.Item key={index}>
+                <div className="bookmark-card-container d-flex justify-content-around">
+                  {group.map((bookmark, idx) => (
+                    <div key={idx} className="bookmark-card mx-2">
+                      <img className="d-block w-100" src={bookmark.image} alt={bookmark.title} />
+                      <Carousel.Caption>
+                        <h5>{bookmark.title}</h5>
+                      </Carousel.Caption>
+                    </div>
+                  ))}
+                </div>
+              </Carousel.Item>
+            ))}
+          </Carousel>
+        )}
       </Modal.Body>
     </Modal>
   )
