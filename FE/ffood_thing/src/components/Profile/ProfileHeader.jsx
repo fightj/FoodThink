@@ -20,113 +20,113 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
     winter: { background: "#E3F2FD", effectClass: "falling-snow", emoji: "❄" }
   };
 
-// ✅ 프로필 데이터 불러오기
-useEffect(() => {
-  const fetchProfileData = async () => {
+  // ✅ 프로필 데이터 불러오기
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        console.error("🚨 Access Token 없음");
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://i12e107.p.ssafy.io/api/users/read`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`프로필 데이터를 불러오는 데 실패했습니다. 상태 코드: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("📌 불러온 프로필 데이터:", data);
+        setProfileData(data);
+      } catch (error) {
+        console.error("❌ 프로필 불러오기 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
+  const handleNicknameChange = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
-      console.error("🚨 Access Token 없음");
+      setErrorMessage("로그인이 필요합니다.");
       return;
     }
-
     try {
-      const response = await fetch(`https://i12e107.p.ssafy.io/api/users/read`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
+      const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/nickname", {
+        method: "PUT",
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   Authorization: `Bearer ${token}`,
+        // },
+        body: JSON.stringify({ nickname: newNickname }),
       });
-
-      if (!response.ok) {
-        throw new Error(`프로필 데이터를 불러오는 데 실패했습니다. 상태 코드: ${response.status}`);
-      }
       const data = await response.json();
-      console.log("📌 불러온 프로필 데이터:", data);
-      setProfileData(data);
+      if (response.ok) {
+        setProfileData((prev) => ({ ...prev, nickname: data.nickname }));
+        setIsEditing(false);
+        setErrorMessage("");
+      } else {
+        setErrorMessage(data.message || "닉네임 변경에 실패했습니다.");
+      }
     } catch (error) {
-      console.error("❌ 프로필 불러오기 실패:", error);
-    } finally {
-      setLoading(false);
+      setErrorMessage("서버 오류가 발생했습니다.");
     }
   };
 
-  fetchProfileData();
-}, []);
-
-const handleNicknameChange = async () => {
-  const token = localStorage.getItem("accessToken");
-  if (!token) {
-    setErrorMessage("로그인이 필요합니다.");
-    return;
-  }
-  try {
-    const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/nickname", {
-      method: "PUT",
-      // headers: {
-      //   "Content-Type": "application/json",
-      //   Authorization: `Bearer ${token}`,
-      // },
-      body: JSON.stringify({ nickname: newNickname }),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      setProfileData((prev) => ({ ...prev, nickname: data.nickname }));
-      setIsEditing(false);
-      setErrorMessage("");
-    } else {
-      setErrorMessage(data.message || "닉네임 변경에 실패했습니다.");
+  // ✅ 프로필 이미지 변경 핸들러
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedImage(file);
     }
-  } catch (error) {
-    setErrorMessage("서버 오류가 발생했습니다.");
-  }
-};
+  };
 
-// ✅ 프로필 이미지 변경 핸들러
-const handleImageUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    setSelectedImage(file);
-  }
-};
+  // ✅ 프로필 이미지 업로드 요청
+  const uploadProfileImage = async () => {
+    if (!selectedImage) return;
 
-// ✅ 프로필 이미지 업로드 요청
-const uploadProfileImage = async () => {
-  if (!selectedImage) return;
-
-  const token = localStorage.getItem("accessToken");
-  if (!token) {
-    setErrorMessage("로그인이 필요합니다.");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("image", selectedImage);
-
-  try {
-    const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/image", {
-      method: "PIT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      setProfileData((prev) => ({ ...prev, profileImage: data.image }));
-      setIsImageEditing(false);
-      setSelectedImage(null);
-    } else {
-      setErrorMessage(data.message || "프로필 이미지 변경에 실패했습니다.");
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setErrorMessage("로그인이 필요합니다.");
+      return;
     }
-  } catch (error) {
-    setErrorMessage("서버 오류가 발생했습니다.");
-  }
-};
+
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+
+    try {
+      const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/image", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setProfileData((prev) => ({ ...prev, profileImage: data.image }));
+        setIsImageEditing(false);
+        setSelectedImage(null);
+      } else {
+        setErrorMessage(data.message || "프로필 이미지 변경에 실패했습니다.");
+      }
+    } catch (error) {
+      setErrorMessage("서버 오류가 발생했습니다.");
+    }
+  };
 
 
-if (loading) return <div className="profile-header">🔄 프로필 로딩 중...</div>;
+  if (loading) return <div className="profile-header">🔄 프로필 로딩 중...</div>;
 
 
 
@@ -184,23 +184,23 @@ if (loading) return <div className="profile-header">🔄 프로필 로딩 중...
 
       {/* 🟡 프로필 정보 */}
       <div className="profile-content">
-      {/* 프로필 이미지 */}
+        {/* 프로필 이미지 */}
         <div className="profile-avatar-container">
           <img src={profileData?.profileImage || "/default_profile.png"} alt="프로필" className="profile-avatar" />
           {isOwnProfile && (
-            <button className="edit-icon" onClick={() => setIsImageEditing(true)}>📷</button>
+            <button className="edit-icon" onClick={() => setIsImageEditing(true)}>✏️</button>
           )}
         </div>
         <div className="profile-details">
           <div className="profile-username">
             {profileData?.nickname}
             {isOwnProfile && (
-              <button className="edit-icon" onClick={() => setIsEditing(true)}>✏</button>
+              <button className="edit-icon" onClick={() => setIsEditing(true)}>✏️</button>
             )}
-            </div>
+          </div>
           <div className="profile-info">
-          <span>구독자수: <strong>{profileData?.subscribers || 0}</strong></span>
-          <span>게시물: <strong>{profileData?.posts || 0}</strong></span>
+            <span>구독자수: <strong>{profileData?.subscribers || 0}</strong></span>
+            <span>게시물: <strong>{profileData?.posts || 0}</strong></span>
             {/* <span>구독자수: <strong>{subscribers}</strong></span>
             <span>게시물: <strong>{posts}</strong></span> */}
           </div>
