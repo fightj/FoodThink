@@ -1,82 +1,104 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ProfileHeader from "../../components/Profile/ProfileHeader";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import RecipeList from "../../components/Profile/RecipeList";
 import BookmarkList from "../../components/Profile/BookmarkList";
 import FeedList from "../../components/Profile/FeedList";
-import Preference from "../../components/Profile/Preference";
-import profileData from "../../data/ProfileData"; // 더미 데이터 불러오기
 import "../../styles/profile/ProfilePage.css";
 
 const ProfilePage = () => {
-  const { id } = useParams(); // URL에서 userId 가져오기
-  const location = useLocation(); // 현재 URL을 가져오는 hook
-  const user = profileData.find(user => user.id === id); // ID에 맞는 사용자 찾기
+  const { id } = useParams(); 
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("recipes");
-  const [showPreference, setShowPreference] = useState(false); // 음식선호도 모달 상태 추가
+  const [userId, setUserId] = useState(null);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // 음식 선호도 상태를 ProfilePage에서 관리 (더미 데이터에서 불러옴)
-  const [preferences, setPreferences] = useState(user ? user.preferences : []);
-
-  // 음식 선호도 변경 함수 (더미 데이터 수정 효과, 근데 새로고침하면 초기화됨)
-  const handlePreferenceChange = (newPreferences) => {
-    setPreferences(newPreferences); // UI 업데이트
-    user.preferences = newPreferences; // 더미 데이터 변경 (실제 저장은 안 됨;;)
-  };
-
-  // 존재하지 않는 ID일 경우 예외 처리
-  if (!user) {
-    return <div className="profile-container">해당 사용자를 찾을 수 없습니다.</div>;
-  }
-
-  // URL의 쿼리 파라미터로 activeTab을 설정
+  // ✅ 로그인 여부 확인 및 userId 복구
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const tab = queryParams.get("tab");
-    if (tab) {
-      setActiveTab(tab);
+    const token = localStorage.getItem("accessToken");
+    let storedUserId = localStorage.getItem("userId");
+
+    console.log("🔑 현재 로그인된 userId:", storedUserId);
+    console.log("🔑 저장된 accessToken:", token);
+
+    // ✅ Access Token 없으면 로그인 페이지로 강제 이동
+    if (!token) {
+      console.error("🚨 Access Token 없음 → 로그인 필요");
+      alert("로그인이 필요합니다.");
+      localStorage.clear(); // 🛑 불필요한 값 제거
+      navigate("/login");
+      return;
     }
-  }, [location.search]);
+
+    // ✅ userId가 없는 경우, JWT 토큰에서 복구 시도
+    if (!storedUserId) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1])); // JWT 디코딩
+        console.log("📌 디코딩된 JWT:", decodedToken);
+
+        if (decodedToken.userId) {
+          storedUserId = decodedToken.userId;
+          localStorage.setItem("userId", storedUserId);
+        } else if (decodedToken.sub) {
+          storedUserId = decodedToken.sub;
+          localStorage.setItem("userId", storedUserId);
+        } else {
+          throw new Error("❌ JWT에서 userId를 찾을 수 없음");
+        }
+
+        console.log("✅ 복구된 userId:", storedUserId);
+      } catch (error) {
+        console.error("❌ JWT 디코딩 실패:", error);
+        localStorage.clear(); // 🛑 불필요한 값 제거 후 로그인 페이지로 이동
+        navigate("/login");
+        return;
+      }
+    }
+
+    if (!storedUserId) {
+      console.error("🚨 userId 없음 → 로그인 필요");
+      alert("로그인이 필요합니다.");
+      localStorage.clear();
+      navigate("/login");
+      return;
+    }
+
+    setUserId(storedUserId);
+    setIsOwnProfile(id === storedUserId);
+    setLoading(false);
+  }, [id, navigate]);
+
+  if (loading) {
+    return <div className="loading-text">🔄 로그인 확인 중...</div>;
+  }
 
   return (
     <div className="base-div">
       <div className="parent-container">
-      <div className="card-div">
-        <div className="profile-container">
-        <ProfileHeader 
-          id={user.id} 
-          nickname={user.nickname} 
-          profileImage={user.profileImage}
-          subscribers={user.subscribers} 
-          posts={user.posts}
-          preferences={preferences} 
-          onOpenPreference={() => setShowPreference(true)} // 음식선호도 버튼 클릭 이벤트 전달
-        />
-        
-        <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        <div className="card-div">
+          <div className="profile-container">
+            <ProfileHeader userId={id} isOwnProfile={isOwnProfile} />
 
-        <div className="tab-content">
-          {activeTab === "recipes" && <RecipeList recipes={user.recipes} />}
-          {activeTab === "bookmarks" && <BookmarkList bookmarks={user.bookmarks} />}
-          {activeTab === "feed" && <FeedList feeds={user.feeds} />}
+            {isOwnProfile && (
+              <div className="profile-actions"> 
+                {/* <button className="btn btn-edit">프로필 수정</button>
+                <button className="btn btn-danger">계정 삭제</button> */}
+              </div>
+            )}
+
+            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} userId={id} />
+
+            <div className="tab-content">
+              {activeTab === "recipes" && <RecipeList userId={id} />}
+              {activeTab === "bookmarks" && <BookmarkList userId={id} />}
+              {activeTab === "feed" && <FeedList userId={id} />}
+            </div>
+          </div>
         </div>
-
-        {/* 음식선호도 설정 모달 + 배경 블러 처리 */}
-        {showPreference && (
-          <>
-            <div className="modal-backdrop" onClick={() => setShowPreference(false)}></div>
-            <Preference 
-              preferences={preferences} 
-              onClose={() => setShowPreference(false)}
-              onSave={handlePreferenceChange}
-            />
-          </>
-        )}
       </div>
     </div>
-  </div>
-  </div>
   );
 };
 
