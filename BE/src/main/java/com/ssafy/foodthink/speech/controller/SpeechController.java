@@ -19,8 +19,8 @@ public class SpeechController {
     }
 
     // 📝 녹음된 파일을 Whisper API로 전송하여 텍스트 변환
-    @PostMapping("/transcribe")
-    public ResponseEntity<String> transcribeAudio(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/process")
+    public ResponseEntity<String> processSpeech(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("❌ 파일이 비어 있습니다!");
         }
@@ -31,7 +31,11 @@ public class SpeechController {
             file.transferTo(tempFile);
 
             // Whisper API로 전송
-            String transcript = whisperService.transcribeAudio(tempFile);
+            String transcript = whisperService.processAudio(tempFile);
+
+            if (transcript == null || transcript.isEmpty()) {
+                return ResponseEntity.status(500).body("❌ 텍스트 변환 실패! Whisper API에서 반환된 텍스트가 비어있습니다.");
+            }
 
             // 임시 파일 삭제
             tempFile.delete();
@@ -39,7 +43,11 @@ public class SpeechController {
             return ResponseEntity.ok(transcript);
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("❌ 오류 발생!");
+            return ResponseEntity.internalServerError().body("파일 처리 중 오류 발생!");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("❌ 오류 발생! : " + e.getMessage());
         }
     }
 

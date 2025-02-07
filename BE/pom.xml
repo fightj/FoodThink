@@ -148,6 +148,18 @@
 			<artifactId>httpclient5</artifactId>
 			<version>5.2</version>
 		</dependency>
+		<!-- Dialogflow API -->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-dialogflow</artifactId>
+			<version>4.38.0</version>
+		</dependency>
+		<!-- Google Authentication (Service Account 사용) -->
+		<dependency>
+			<groupId>com.google.auth</groupId>
+			<artifactId>google-auth-library-oauth2-http</artifactId>
+			<version>1.17.0</version>
+		</dependency>
 	</dependencies>
 	<!--JitPack 저장소 추가 -->
 	<repositories>
