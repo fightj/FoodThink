@@ -4,8 +4,10 @@ import com.ssafy.foodthink.feed.entity.FeedEntity;
 import com.ssafy.foodthink.feed.entity.FeedLikeEntity;
 import com.ssafy.foodthink.feed.repository.FeedLikeRepository;
 import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdfEntity;
+import com.ssafy.foodthink.foodRecommend.entity.UserTfIdfEntity;
 import com.ssafy.foodthink.foodRecommend.repository.RecipeTfIdfRepository;
 import com.ssafy.foodthink.foodRecommend.repository.RecommendInterestRepository;
+import com.ssafy.foodthink.foodRecommend.repository.UserTfIdfRepository;
 import com.ssafy.foodthink.recipeBookmark.entity.RecipeBookmarkEntity;
 import com.ssafy.foodthink.recipeBookmark.repository.RecipeBookmarkRepository;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
@@ -14,12 +16,14 @@ import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.entity.UserInterestEntity;
 import com.ssafy.foodthink.user.repository.RecipeViewRepository;
 import com.ssafy.foodthink.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +36,7 @@ public class UserTFIDFService {
     private final UserRepository userRepository;
     private final FeedLikeRepository feedLikeRepository;
     private final RecipeViewRepository recipeViewRepository;
+    private final UserTfIdfRepository userTfIdfRepository;
 
     // 가중치 상수
     private static final double LIKED_WEIGHT = 1.0;
@@ -209,6 +214,56 @@ public class UserTFIDFService {
 
         return profile.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey,e -> e.getValue() / norm));
+    }
+
+    // 사용자 TF-IDF 업데이트
+    // 선호/기피 재료는 삭제 후 새로 삽입
+    // 나머지 재료는 병합
+    @Transactional
+    public void updateUserTfidf(Long userId, Map<String, Double> likedIngredients, Map<String, Double> dislikedIngredients, Map<String, Double> otherFeatures){
+
+        //  선호/기피 재료 삭제
+        userTfIdfRepository.deleteFeaturesByPrefix(userId,"liked_");
+        userTfIdfRepository.deleteFeaturesByPrefix(userId, "disliked_");
+
+        // flush 호출로 삭제 작업 즉시 반영
+        userTfIdfRepository.flush();
+
+        // 선호 재료 삽입
+        likedIngredients.forEach((ingredient, tfidfValue) -> {
+            UserTfIdfEntity entity = new UserTfIdfEntity();
+            entity.setUserId(userId);
+            entity.setFeature("liked_" + ingredient); // prefix 추가
+            entity.setTfIdfValue(tfidfValue);
+            userTfIdfRepository.save(entity);
+        });
+
+        // 기피 재료 삽입
+        dislikedIngredients.forEach((ingredient, tfidfValue) -> {
+            UserTfIdfEntity entity = new UserTfIdfEntity();
+            entity.setUserId(userId);
+            entity.setFeature("disliked_" + ingredient); // prefix 추가
+            entity.setTfIdfValue(tfidfValue);
+            userTfIdfRepository.save(entity);
+        });
+
+        // 나머지 feature 업데이트 (병합 처리)
+        otherFeatures.forEach((feature, tfidfValue) ->{
+            Optional<UserTfIdfEntity> existingRecord = userTfIdfRepository.findByUserIdAndFeature(userId, feature);
+
+            if(existingRecord.isPresent()){
+                UserTfIdfEntity entity = existingRecord.get();
+                entity.setTfIdfValue(tfidfValue);
+                userTfIdfRepository.save(entity);
+            }else{
+                UserTfIdfEntity newEntity = new UserTfIdfEntity();
+                newEntity.setUserId(userId);
+                newEntity.setFeature(feature);
+                newEntity.setTfIdfValue(tfidfValue);
+                userTfIdfRepository.save(newEntity);
+            }
+        });
+
     }
 
 }

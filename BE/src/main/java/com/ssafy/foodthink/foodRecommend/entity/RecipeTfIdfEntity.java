@@ -11,8 +11,8 @@ import lombok.Setter;
 public class RecipeTfIdfEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tfidf_Id")
-    private Long tfidfId;
+    @Column(name = "recipe_tfidf_Id")
+    private Long recipeTfidfId;
 
     @ManyToOne
     @JoinColumn(name = "recipe_id", nullable = false)
