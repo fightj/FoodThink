@@ -18,11 +18,12 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
   const [fallingElements, setFallingElements] = useState([]);
 
   const seasonStyles = {
-    spring: { background: "#FFEBE9", emoji: "🌸" },
-    summer: { background: "#B3E5FC", emoji: "💧" },
-    autumn: { background: "#FFD180", emoji: "🍂" },
-    winter: { background: "#E3F2FD", emoji: "❄" }
+    spring: { background: "#FFEBE9", effectClass: "falling-cherry-blossom", emoji: "🌸" },
+    summer: { background: "#B3E5FC", effectClass: "falling-rain", emoji: "💧" },
+    autumn: { background: "#FFD180", effectClass: "falling-leaves", emoji: "🍂" },
+    winter: { background: "#E3F2FD", effectClass: "falling-snow", emoji: "❄" }
   };
+
 
   // ✅ 떨어지는 요소 생성
   const generateFallingElements = (currentSeason) => {
@@ -88,11 +89,6 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
       if (!response.ok) {
         throw new Error("닉네임 변경에 실패했습니다.");
       }
-
-      // const data = await response.json();
-      // setProfileData((prev) => ({ ...prev, nickname: data.nickname })); // ✅ 기존 프로필 상태 업데이트
-      // setUser((prevUser) => ({ ...prevUser, nickname: data.nickname })); // ✅ UserContext 업데이트
-      // setErrorMessage("");
 
       Swal.fire("닉네임 변경 성공~!", `이제부터는 '${newNickname}' 님이라고 불러드릴게요. 😎`, "success");
       setIsEditing(false);
@@ -215,12 +211,6 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
     useEffect(() => {
       generateFallingElements(season);
     }, [season]); // ✅ season 변경 시만 실행
-
-  // ✅ useEffect 내부에서 실행
-  // useEffect(() => {
-  //   fetchProfileData();
-  //   generateFallingElements(season);
-  // }, [userId, season]);
 
   if (loading) return <div className="profile-header">🔄 프로필 로딩 중...</div>;
 
