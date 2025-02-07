@@ -11,14 +11,17 @@ import com.ssafy.foodthink.foodRecommend.service.UserTFIDFService;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/recommend")
 @PreAuthorize("hasRole('USER')")
@@ -50,20 +53,11 @@ public class RecommendController {
         return ResponseEntity.ok(keywords);
     }
 
-//    @GetMapping("/recipe")
-//    public ResponseEntity<String> getRecipeRecommendation(@RequestHeader("Authorization") String token) {
-//        String accessToken = token.replace("Bearer ", "");
-//        Long userId = jwtUtil.getUserId(accessToken);
-//
-//        String recommendation = recommendInterestService.getRecipeRecommendation(userId);
-//
-//        return ResponseEntity.ok(recommendation);
-//    }
-
     // 모든 레시피 TF-IDF 계산
     @PostMapping("/create/recipe")
     public ResponseEntity<String> calculateTfIdf() {
         tfidfService.calculateAndSaveAllTfIdf();
+        log.info("==TF-IDF 계산 및 DB에 저장 완료==");
         return ResponseEntity.ok("TF-IDF 계산 및 DB에 저장 완료 ");
     }
 
@@ -83,31 +77,46 @@ public class RecommendController {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
 
-        List<RecipeRecommendDto> recommendations =
-                recipeRecommendService.getRecommendedRecipes(userId, limit);
+        List<RecipeRecommendDto> recommendations = recipeRecommendService.getRecommendedRecipes(userId, limit);
 
         return ResponseEntity.ok(recommendations);
     }
 
     // apt api로 2차 필터링
-    @PostMapping("/final-recommend") // GET → POST 변경
-    public ResponseEntity<List<RecipeRecommendResponseDTO>> getFinalRecommendation(@RequestHeader("Authorization") String token,@RequestBody UserLikedInputDto userInput) {
+    @PostMapping("/final-recommend")
+    public ResponseEntity<List<RecipeRecommendResponseDTO>> getFinalRecommendation(@RequestHeader("Authorization") String token, @RequestBody UserLikedInputDto userInput) {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
 
+        // CBF 기반 1차 필터링 (레시피 10개 선정)
+        List<RecipeRecommendDto> recommendations = recipeRecommendService.getRecommendedRecipes(userId, 10);
+        log.info("== CBF 기반 1차 필터링 완료 ==");
+        // GPT 기반 2차 필터링 (레시피 3개 선정)
+        List<Long> recommendedIds = gptService.getRecipeRecommendation(recommendations, userInput);
+        log.info("== GPT 기반 2차 필터링 완료 ==");
 
-        // 코사인 유사도 기반 추천(1차 필터링)
-        List<RecipeRecommendDto> recommendations =
-                recipeRecommendService.getRecommendedRecipes(userId, 10);
-
-        // GPT API로 2차 필터링
-        String gptResponse = gptService.getRecipeRecommendation(recommendations, userInput);
-
-        List<RecipeRecommendResponseDTO> response = recommendations.stream()
-                .filter(rec -> gptResponse.contains(rec.getRecipeTitle()))
-                .map(rec -> new RecipeRecommendResponseDTO(rec.getRecipeId(), rec.getRecipeTitle()))
+        List<RecipeRecommendResponseDTO> response = recommendedIds.stream()
+                .map(id -> recipeRepository.findById(id))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(recipe -> new RecipeRecommendResponseDTO(
+                        recipe.getRecipeId(),
+                        recipe.getRecipeTitle(),
+                        recipe.getImage()
+                ))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(response); // 레시피 ID, 레시피 제목, 레시피 메인 사진
     }
+
+
+    // 날씨 API 테스트
+    @GetMapping("/weather")
+    public ResponseEntity<String> testWeatherApi(@RequestParam(defaultValue = "Seoul") String city) {
+        String weatherInfo = gptService.getWeatherInfo(city);
+        return ResponseEntity.ok(weatherInfo);
+    }
+
+
 
 }

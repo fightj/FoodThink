@@ -2,17 +2,14 @@ package com.ssafy.foodthink.foodRecommend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 @Getter
-@AllArgsConstructor
+@Setter
 public class UserLikedInputDto {
-    private String firstAnswer;
-    private String secondAnswer;
-    private String thirdAnswer;
-    private String fourthAnswer;
-    private String fifthAnswer;
-
+    private List<String> answers;
 }
