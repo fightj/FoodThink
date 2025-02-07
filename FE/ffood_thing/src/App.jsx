@@ -47,7 +47,7 @@ const fetchUserInfo = async () => {
   }
 }
 
-const AnimatedRoutes = () => {
+const AnimatedRoutes = ({ userInfo }) => {
   const location = useLocation()
 
   return (
@@ -89,7 +89,7 @@ const AnimatedRoutes = () => {
           path="/feed/write"
           element={
             <PageSlide>
-              <FeedWrite />
+              <FeedWrite userInfo={userInfo} />
             </PageSlide>
           }
         />
@@ -194,7 +194,7 @@ const App = () => {
     <UserProvider>
       <Router>
         <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
-        <AnimatedRoutes />
+        <AnimatedRoutes userInfo={user} />
         <NavbarBottom />
       </Router>
     </UserProvider>
