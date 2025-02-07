@@ -1,0 +1,19 @@
+.bookmark-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bookmark-card {
+  width: 200px;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bookmark-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react"
+import axios from "axios"
 import imageIcon from "../../assets/image.svg"
 import { Form } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import "../../styles/sns/FeedWrite.css"
+import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
 
 function FeedWrite() {
   const navigate = useNavigate()
@@ -12,10 +14,37 @@ function FeedWrite() {
   const [checkedImages, setCheckedImages] = useState([])
   const [foodName, setFoodName] = useState("")
   const [description, setDescription] = useState("")
+  const [showBookmarkModal, setShowBookmarkModal] = useState(false)
+  const [bookmarkData, setBookmarkData] = useState([]) // 북마크 데이터 상태 추가
   const fileInputRef = useRef()
 
   useEffect(() => {
-    // Check if there are saved changes and prompt the user to load them
+    // 세션에서 유저 정보 가져오기
+    const userSession = JSON.parse(sessionStorage.getItem("user"))
+    const sessionUserId = userSession ? userSession.userId : null
+
+    const fetchBookmarkData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken")
+        if (!accessToken) throw new Error("Access token is missing")
+
+        const response = await axios.get("https://i12e107.p.ssafy.io/api/bookmark/read/list", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        console.log("Bookmark Data:", response.data)
+        setBookmarkData(response.data) // 북마크 데이터 상태에 저장
+      } catch (error) {
+        console.error("Error fetching bookmark data:", error)
+      }
+    }
+
+    if (sessionUserId) {
+      fetchBookmarkData()
+    }
+
+    // 이전에 저장된 임시 데이터를 불러올지 묻기
     const savedFoodName = localStorage.getItem("foodName")
     const savedDescription = localStorage.getItem("description")
     const savedImages = localStorage.getItem("selectedImages")
@@ -140,57 +169,61 @@ function FeedWrite() {
 
   return (
     <div className="base-div">
-      <div className="card-div">
-        <div className="div-80">
-          <button onClick={handleBack} className="back-button">
-            <img src="/images/previous_button.png" alt="Previous" className="icon" />
-            이전
-          </button>
-          <form onSubmit={handleSubmit}>
-            <div className="preview-container">
-              {selectedImages.map((image) => (
-                <div key={image.id} className="preview-image">
-                  <div className="square">
-                    <img src={image.id} alt="미리보기" />
+      <div className="parent-container">
+        <div className="card-div">
+          <div className="div-80">
+            <button onClick={handleBack} className="back-button1">
+              <img src="/images/previous_button.png" alt="Previous" className="icon" />
+              이전
+            </button>
+            <form onSubmit={handleSubmit}>
+              <div className="preview-container">
+                {selectedImages.map((image) => (
+                  <div key={image.id} className="preview-image">
+                    <div className="square">
+                      <img src={image.id} alt="미리보기" />
+                    </div>
+                    <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
                   </div>
-                  <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
+                ))}
+              </div>
+
+              <div className="file-upload" onClick={() => fileInputRef.current.click()}>
+                <img src={imageIcon} alt="이미지 아이콘" />
+                <p>이미지 선택</p>
+                <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
+              </div>
+
+              <hr className="featurette-divider" />
+
+              <Form.Control size="lg" type="text" placeholder="음식명" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
+              <br />
+              <Form.Control type="text" placeholder="문구 추가..." value={description} onChange={(e) => setDescription(e.target.value)} />
+
+              {/* 참고한 레시피 섹션 */}
+              <div className="recipe-section">
+                <h5>참고한 레시피</h5>
+                <div className="button-container">
+                  <button type="button" className="btn btn-secondary" onClick={() => handleNavigate("/recipes")}>
+                    레시피 검색
+                  </button>
+                  <button type="button" className="btn btn-secondary" onClick={() => setShowBookmarkModal(true)}>
+                    내 북마크에서 찾기
+                  </button>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className="file-upload" onClick={() => fileInputRef.current.click()}>
-              <img src={imageIcon} alt="이미지 아이콘" />
-              <p>이미지 선택</p>
-              <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
-            </div>
-
-            <hr className="featurette-divider" />
-
-            <Form.Control size="lg" type="text" placeholder="음식명" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
-            <br />
-            <Form.Control type="text" placeholder="문구 추가..." value={description} onChange={(e) => setDescription(e.target.value)} />
-
-            {/* 참고한 레시피 섹션 */}
-            <div className="recipe-section">
-              <h5>참고한 레시피</h5>
-              <div className="button-container">
-                <button type="button" className="btn btn-secondary" onClick={() => handleNavigate("/recipes")}>
-                  레시피 검색
-                </button>
-                <button type="button" className="btn btn-secondary" onClick={() => handleNavigate("/profile/1?tab=bookmarks")}>
-                  내 북마크에서 찾기
+              <div className="submit-button">
+                <button type="submit" className="btn btn-primary">
+                  작성 완료
                 </button>
               </div>
-            </div>
-
-            <div className="submit-button">
-              <button type="submit" className="btn btn-primary">
-                작성 완료
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
+
+      {showBookmarkModal && <UserBookmarkRecipe closeModal={() => setShowBookmarkModal(false)} bookmarks={bookmarkData} />}
     </div>
   )
 }

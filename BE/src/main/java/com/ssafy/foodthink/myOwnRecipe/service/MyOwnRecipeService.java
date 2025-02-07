@@ -44,7 +44,7 @@ public class MyOwnRecipeService {
 
     //레시피 등록
     @Transactional
-    public void createRecipe(MyRecipeWriteRequestDto dto, MultipartFile imageFile) {
+    public Long createRecipe(MyRecipeWriteRequestDto dto, MultipartFile imageFile) {
 
         log.info(dto.toString()); // 레시피 저장 요청
 
@@ -119,7 +119,10 @@ public class MyOwnRecipeService {
                 }
             }
 
-            log.info("레시피 저장 완료");
+            log.info("레시피 저장 완료, recipeId: {}", recipeEntity.getRecipeId());
+
+            //생성된 레시피 아이디 반환
+            return recipeEntity.getRecipeId();
         } catch (Exception e) {
             if (recipeImageUrl != null) {
                 s3Service.deleteFileFromS3(recipeImageUrl);     // 실패 시, S3에 업로드된 이미지 삭제

@@ -88,6 +88,7 @@ public class UserService {
 
     private UserInfoDto convertToDto(UserEntity userEntity) {
         return UserInfoDto.builder()
+                .userId(userEntity.getUserId())
                 .email(userEntity.getEmail())
                 .nickname(userEntity.getNickname())
                 .image(userEntity.getImage())
@@ -111,40 +112,31 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    // 회원 관심사 여러개 추가
+
+    // 회원 관심사 수정
     @Transactional
-    public List<UserInterestDto> createUserInterests(Long userId, List<UserInterestDto> interestDtoList) {
-        UserEntity user = userRepository.findByUserId(userId)
+    public List<UserInterestDto> updateUserInterests(Long userId, List<UserInterestDto> interestDtoList){
+
+        UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+        // 회원의 기존 관심사 모두 삭제
+        userInterestRepository.deleteByUserId(userEntity);
 
         List<UserInterestEntity> interests = interestDtoList.stream()
                 .map(dto -> UserInterestEntity.createInterest(
                         dto.getIngredient(),
                         dto.getIsLiked(),
-                        user
+                        userEntity
                 ))
                 .collect(Collectors.toList());
 
-        List<UserInterestEntity> savedInterests = userInterestRepository.saveAll(interests);
-        return savedInterests.stream()
+        // 회원의 새 관심사 저장
+        List<UserInterestEntity> newInterests = userInterestRepository.saveAll(interests);
+
+        return newInterests.stream()
                 .map(this::convertToInterestDto)
                 .collect(Collectors.toList());
-    }
-
-    // 회원 관심사 삭제
-    @Transactional
-    public void deleteUserInterest(Long userId, Long interestId) {
-        UserEntity userEntity = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
-
-        UserInterestEntity interestEntity = userInterestRepository.findById(interestId)
-                .orElseThrow(() -> new RuntimeException("관심사를 찾을 수 없어요!!!"));
-
-        if (!interestEntity.getUserId().getUserId().equals(userId)) {
-            throw new RuntimeException("사용자와 관심사가 일치하지 않습니다.");
-        }
-
-        userInterestRepository.delete(interestEntity);
     }
 
     // 레시피 조회 기록 저장
@@ -158,6 +150,9 @@ public class UserService {
 
         RecipeViewHistoryEntity history = new RecipeViewHistoryEntity(userEntity, recipeEntity);
         recipeViewRepository.save(history);
+
+        recipeEntity.setHits(recipeEntity.getHits()+1);
+        recipeRepository.save(recipeEntity);
     }
 
     // 사용자가 조회한 모든 레시피

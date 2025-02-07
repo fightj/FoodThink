@@ -40,6 +40,8 @@ services:
     networks:
       - frontend_network
       - backend_network
+    depends_on:
+      - backend
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0

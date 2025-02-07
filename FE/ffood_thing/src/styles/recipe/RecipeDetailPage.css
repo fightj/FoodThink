@@ -248,23 +248,22 @@
 .ingredient-name {
   margin-right: 10px;
 }
-
 .steps {
   margin-top: 70px;
 }
 
-.steps-h2 {
+.process-item h2 {
+  white-space: wrap;
   font-size: 1.5rem; /* 글자 크기 설정 */
   margin-top: 10px;
   margin-bottom: 10px;
-  color: rgb(0, 0, 0);
-  white-space: wrap;
+  color: black;
 }
 
-.steps-h2 {
-  font-size: 1.5rem; /* 글자 크기 설정 */
-  margin-top: 10px;
-  margin-bottom: 10px;
-  color: rgb(0, 0, 0);
-  white-space: wrap;
+.section-title {
+  position: absolute;
+  left: 10%;
+  transform: translateX(-50%);
+  z-index: 20;
+  margin-bottom: 30px;
 }

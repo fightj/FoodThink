@@ -14,7 +14,7 @@ const BookmarkList = ({ bookmarks }) => {
             style={{ textDecoration: "none", color: "inherit" }} // 링크 스타일 유지
           >
             <img src={bookmark.image} alt={bookmark.title} className="recipe-image" />
-            <p className="recipe-title">{bookmark.title}</p>
+            <p className="recipe-title1">{bookmark.title}</p>
           </Link>
         ))}
       </div>

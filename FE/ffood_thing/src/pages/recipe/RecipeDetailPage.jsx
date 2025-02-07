@@ -1,26 +1,40 @@
 import React, { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
+import axios from "axios"
 import RecipeComponent from "../../components/recipe/RecipeComponent"
+import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 import SearchBar from "../../components/base/SearchBar"
-import { Recipe } from "./recipe_data"
 import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
-import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 
 const RecipeDetailPage = () => {
-  const { id } = useParams()
+  const { id } = useParams() // URL 파라미터에서 ID를 가져옴
   const navigate = useNavigate()
+  const [recipe, setRecipe] = useState(null)
   const [showModal, setShowModal] = useState(false)
+  const [currentStep, setCurrentStep] = useState(0) // currentStep 상태 추가
   const [activeSection, setActiveSection] = useState("ingredients")
   const [isBookmarked, setIsBookmarked] = useState(false)
-  const [currentStep, setCurrentStep] = useState(0)
-
-  const recipe = Recipe.find((item) => item.recipeId === parseInt(id))
 
   const ingredientsRef = useRef(null)
   const stepsRef = useRef(null)
   const completedRef = useRef(null)
   const feedRef = useRef(null)
+
+  // 서버에서 레시피 데이터를 가져오는 useEffect 훅
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        console.log("Fetching recipe with ID:", id) // ID 값 확인 로그
+        const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${id}`)
+        setRecipe(response.data)
+      } catch (error) {
+        console.error("Error fetching recipe details", error)
+      }
+    }
+
+    fetchRecipe()
+  }, [id])
 
   useEffect(() => {
     const options = {
@@ -54,7 +68,7 @@ const RecipeDetailPage = () => {
   }, [])
 
   if (!recipe) {
-    return <div>Recipe not found</div>
+    return <div>Loading...</div>
   }
 
   const handleBookmarkClick = () => {
@@ -99,21 +113,13 @@ const RecipeDetailPage = () => {
     document.getElementById(section).scrollIntoView({ behavior: "smooth" })
   }
 
-  const handleNextStep = () => {
-    setCurrentStep((prevStep) => Math.min(prevStep + 1, recipe.processes.length - 1))
-  }
-
-  const handlePrevStep = () => {
-    setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))
-  }
-
   return (
     <div className="base-div">
       <SearchBar />
       <div className="parent-container">
         <div className="card-div-topsection">
           <div style={{ width: "90%", margin: "0 auto" }}>
-            <button onClick={() => navigate(-1)} className="back-button">
+            <button onClick={() => navigate(-1)} className="back-button1">
               <img src="/images/previous_button.png" alt="Previous" className="icon" />
               이전
             </button>
@@ -161,12 +167,18 @@ const RecipeDetailPage = () => {
             </div>
 
             {showModal && (
-              <div className="modal-overlay3">
-                <div className="modal-content3">
-                  <button className="close-button3" onClick={() => setShowModal(false)}>
+              <div className="modal-overlay">
+                <div className="modal-content">
+                  <button className="close-button" onClick={() => setShowModal(false)}>
                     X
                   </button>
-                  <HandPoseComponent currentStep={currentStep} onNextStep={handleNextStep} onPrevStep={handlePrevStep} />
+                  <HandPoseComponent
+                    currentStep={currentStep}
+                    onNextStep={() => setCurrentStep((prevStep) => prevStep + 1)}
+                    onPrevStep={() => setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))}
+                    pages={recipe.processes} // 서버에서 가져온 데이터를 HandPoseComponent로 전달
+                  />
+                  <RecipeComponent pages={recipe.processes} />
                 </div>
               </div>
             )}
@@ -227,7 +239,7 @@ const RecipeDetailPage = () => {
           <div className="steps">
             {recipe.processes.map((process, index) => (
               <div key={index} className="process-item">
-                <h2 className="steps-h2">
+                <h2>
                   {process.processOrder}. {process.processExplain}
                 </h2>
                 {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
@@ -241,6 +253,7 @@ const RecipeDetailPage = () => {
       <div className="parent-container">
         <div id="feed" ref={feedRef} className="card-div-section">
           <h1 className="section-title">관련 Feed</h1>
+          {/* Feed 내용 추가 */}
         </div>
       </div>
     </div>
