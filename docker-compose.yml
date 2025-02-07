@@ -21,7 +21,7 @@ services:
       - API_SERVICE_KEY=${API_SERVICE_KEY}
       - S3_BUCKET=${S3_BUCKET}
       - DB_USERNAME=${DB_USERNAME}
-      - WEATHER_API_KEY = ${WEATHER_API_KEY}
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
     depends_on:
       - elasticsearch
     networks:
