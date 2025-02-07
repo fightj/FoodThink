@@ -145,7 +145,20 @@
 			<artifactId>json</artifactId>
 			<version>20231013</version>
 		</dependency>
-
+		<!-- Spring Data Elasticsearch -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>co.elastic.clients</groupId>
+			<artifactId>elasticsearch-java</artifactId>
+			<version>8.14.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-elasticsearch</artifactId>
+		</dependency>
 	</dependencies>
 	<!--JitPack 저장소 추가 -->
 	<repositories>
