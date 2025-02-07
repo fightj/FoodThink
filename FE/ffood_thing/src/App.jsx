@@ -32,7 +32,7 @@ import { UserProvider } from "./contexts/UserContext"
 const fetchUserInfo = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken")
-    if (!accessToken) throw new Error("Access token is missing")
+    if (!accessToken) throw new Error("엑세스 토큰이 없습니다.")
 
     const response = await axios.get("https://i12e107.p.ssafy.io/api/users/read", {
       headers: {
@@ -48,16 +48,10 @@ const fetchUserInfo = async () => {
   }
 }
 
-// Function to get access token from cookies
-const getAccessTokenFromCookies = () => {
-  const cookies = document.cookie.split("; ")
-  for (let cookie of cookies) {
-    const [name, value] = cookie.split("=")
-    if (name === "access_token") {
-      return value
-    }
-  }
-  return null
+// Function to parse URL parameters
+const getUrlParameter = (name) => {
+  const urlParams = new URLSearchParams(window.location.search)
+  return urlParams.get(name)
 }
 
 // Main App component
@@ -69,14 +63,17 @@ const App = () => {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Get access token from cookies and log it to the console
-        const accessToken = getAccessTokenFromCookies()
-        console.log("Access Token from Cookies:", accessToken)
-
+        // Parse accessToken from URL parameters
+        const accessToken = getUrlParameter("accessToken")
         if (accessToken) {
+          console.log("Access Token:", accessToken) // 콘솔에 accessToken 출력
           localStorage.setItem("accessToken", accessToken)
           setTokenLoaded(true)
         }
+
+        // Optional: Parse isNewUser from URL parameters and log it
+        const isNewUser = getUrlParameter("isNewUser")
+        console.log("Is New User:", isNewUser) // 콘솔에 isNewUser 출력
       } catch (error) {
         console.error("Failed to load access token:", error)
       }
@@ -92,6 +89,7 @@ const App = () => {
         const userInfo = await fetchUserInfo()
         setUser(userInfo)
         sessionStorage.setItem("user", JSON.stringify(userInfo))
+        console.log("Current User Info:", userInfo) // 콘솔에 유저 정보 출력
       } catch (error) {
         console.error("Failed to fetch user info:", error)
       }
