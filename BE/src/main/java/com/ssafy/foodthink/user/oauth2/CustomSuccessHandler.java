@@ -88,7 +88,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //String redirectUrl = "http://localhost:5173/";
         //response.sendRedirect(redirectUrl);
 
-        response.sendRedirect("http://localhost:5173/" + accessToken);
+        response.sendRedirect("http://localhost:5173/?accessToken=" + accessToken + "&isNewUser="+isNewUser);
     }
 
 }
