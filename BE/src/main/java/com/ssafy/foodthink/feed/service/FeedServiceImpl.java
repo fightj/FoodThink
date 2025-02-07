@@ -334,6 +334,29 @@ public class FeedServiceImpl implements FeedService {
         return new CustomPageResponseDto<>(feedDtos);
     }
 
+    @Override
+    public List<FeedSummaryResponseDto> readSummaryFeedsOrderByWriteTime(Long userId) {
+        UserEntity UserEntity = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. ID: " + userId));
+
+        List<FeedEntity> feedEntities = feedRepository.findAllByUserEntity_userIdOrderByWriteTime(userId);
+
+        List<FeedSummaryResponseDto> feedSummaryResponseDtos = new ArrayList<>();
+
+        for (FeedEntity feedEntity : feedEntities) {
+            FeedSummaryResponseDto feedSummaryResponseDto = FeedSummaryResponseDto.builder()
+                    .id(feedEntity.getId())
+                    .image(feedEntity.getImages().get(0).getImageUrl())
+                    .imageSize(feedEntity.getImages().size())
+                    .userNickname(feedEntity.getUserEntity().getNickname())
+                    .build();
+
+            feedSummaryResponseDtos.add(feedSummaryResponseDto);
+        }
+
+        return feedSummaryResponseDtos;
+    }
+
 
     @Override
     public List<String> readImageUrlsByFeedId(Long id) {
@@ -354,6 +377,7 @@ public class FeedServiceImpl implements FeedService {
                 .writeTime(feedEntity.getWriteTime())
                 .userId(feedEntity.getUserEntity().getUserId())
                 .username(feedEntity.getUserEntity().getNickname())
+                .userImage(feedEntity.getUserEntity().getImage())
                 .recipeId(feedEntity.getRecipeEntity() != null ? feedEntity.getRecipeEntity().getRecipeId() : null)
                 .images(imageUrls)
                 .build();

@@ -48,11 +48,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Optional<UserEntity> existingUser = userRepository.findByEmail(email);
 
         UserEntity userEntity;
+        boolean isNewUser;
         if (existingUser.isEmpty()) { // 신규사용자인 경우
             userEntity = UserEntity.createUser(socialId, email, nickname);
             userRepository.save(userEntity);
+            isNewUser = true;
         } else { // 기존 사용자인 경우
             userEntity = existingUser.get();
+            isNewUser = false;
         }
 
         // 기존 사용자의 경우 데이터베이스에 저장된 정보를 그대로 사용, 새로운 사용자만 정보가 저장
@@ -63,6 +66,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         userDTO.setSocialId(userEntity.getSocialId());
         userDTO.setSocialType("KAKAO");
 
-        return new CustomOAuth2User(userDTO);
+        return new CustomOAuth2User(
+                userDTO,
+                isNewUser,
+                oAuth2User.getAttributes()
+        );
     }
 }

@@ -21,6 +21,11 @@
   flex-direction: column;
 }
 
+.write-recipe-button {
+  background-color: transparent;
+  border: none;
+}
+
 h1 {
   font-size: 2rem;
   margin-bottom: 2rem;
