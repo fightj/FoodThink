@@ -23,7 +23,7 @@ import java.nio.file.Files;
 @Service
 public class WhisperService {
 
-    @Value("${openai.api.key}")
+    @Value("${gpt.api.key}")
     private String apiKey;
 
     private static final String WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions";
