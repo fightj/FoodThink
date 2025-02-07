@@ -135,6 +135,19 @@
 			<artifactId>commons-text</artifactId>
 			<version>1.10.0</version>
 		</dependency>
+		<!-- 음성인식 관련 -->
+		<!-- MP3 변환을 위한 JLayer (선택 사항) -->
+		<dependency>
+			<groupId>javazoom</groupId>
+			<artifactId>jlayer</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<!-- Apache HttpClient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+			<version>5.2</version>
+		</dependency>
 	</dependencies>
 	<!--JitPack 저장소 추가 -->
 	<repositories>
