@@ -67,6 +67,8 @@ public class RecommendController {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
 
+        userTFIDFService.updateUserTfidf(userId);
+
         Map<String, Double> userProfile = userTFIDFService.generateUserProfile(userId);
         return ResponseEntity.ok(userProfile);
     }

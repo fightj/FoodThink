@@ -356,13 +356,13 @@ public class UserTFIDFService {
         // 선호 재료
         List<String> likedIngredients = getLikedIngredients(userId);
         for (String ingredient : likedIngredients) {
-            userProfile.put("liked_" + ingredient, LIKED_WEIGHT); // Prefix 추가
+            userProfile.put(ingredient, LIKED_WEIGHT); // Prefix 추가
         }
 
         // 기피 재료
         List<String> dislikedIngredients = getDislikedIngredients(userId);
         for (String ingredient : dislikedIngredients) {
-            userProfile.put("disliked_" + ingredient, DISLIKED_WEIGHT); // Prefix 추가
+            userProfile.put(ingredient, DISLIKED_WEIGHT); // Prefix 추가
         }
 
         // 북마크한 레시피의 TF-IDF 벡터 평균 계산
