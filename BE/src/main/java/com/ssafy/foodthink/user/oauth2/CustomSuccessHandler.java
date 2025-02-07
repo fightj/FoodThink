@@ -85,8 +85,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //response.setHeader("USER-STATUS", isNewUser ? "NEW" : "EXISTING");
 
         // 프론트엔드 메인 페이지 URL로 리다이렉트
-        String redirectUrl = "http://localhost:5173/";
-        response.sendRedirect(redirectUrl);
+        //String redirectUrl = "http://localhost:5173/";
+        //response.sendRedirect(redirectUrl);
     }
 
 }
