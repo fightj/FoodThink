@@ -315,7 +315,7 @@ public class UserTFIDFService {
         likedIngredients.forEach((ingredient, tfidfValue) -> {
             UserTfIdfEntity entity = new UserTfIdfEntity();
             entity.setUserId(userId);
-            entity.setFeature("liked_" + ingredient); // Prefix 추가
+            entity.setFeature(removePrefix(ingredient));
             entity.setTfIdfValue(tfidfValue);
             userTfIdfRepository.save(entity);
         });
@@ -324,7 +324,7 @@ public class UserTFIDFService {
         dislikedIngredients.forEach((ingredient, tfidfValue) -> {
             UserTfIdfEntity entity = new UserTfIdfEntity();
             entity.setUserId(userId);
-            entity.setFeature("disliked_" + ingredient); // Prefix 추가
+            entity.setFeature(removePrefix(ingredient));
             entity.setTfIdfValue(tfidfValue);
             userTfIdfRepository.save(entity);
         });
