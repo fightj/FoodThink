@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/base/global.css";
 import "../../styles/recommend/AiRecommendPage.css";
+import LoginCheck from "../../components/base/LoginCheck"; // ✅ 로그인 체크 추가
 
 const questionsData = [
   { question: "어떤 맛을 원하시나요?", options: ["매운 음식", "단 음식", "짠 음식"] },
@@ -29,21 +30,11 @@ function AiRecommendPage() {
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState([]);
 
-  // 페이지 진입 시 로그인 여부 확인
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    console.log("🔑 로그인 토큰 확인:", token);
+    const shuffled = [...questionsData].sort(() => 0.5 - Math.random()).slice(0, 5);
+    setQuestions(shuffled);
+  }, []);
 
-    if (!token) {
-      alert("로그인이 필요합니다.");
-      navigate("/login");
-    } else {
-      const shuffled = [...questionsData].sort(() => 0.5 - Math.random()).slice(0, 5);
-      setQuestions(shuffled);
-    }
-  }, [navigate]);
-
-  // 사용자의 답변 저장 후 다음 질문
   const handleChoice = (answer) => {
     console.log(`✅ 선택한 답변: ${answer}`);
 
@@ -60,11 +51,10 @@ function AiRecommendPage() {
     });
   };
 
-  // 백엔드로 데이터 전송 후 추천 레시피 받기
   const sendToBackend = async (userAnswers) => {
     setLoading(true);
   
-    const API_URL = "https://i12e107.p.ssafy.io/api/recommend/final-recommend"; // ✅ 백엔드에서 제공한 URL인지 확인
+    const API_URL = "https://i12e107.p.ssafy.io/api/recommend/final-recommend";
     const requestData = { answers: userAnswers };
 
     console.log("📌 API 요청 시작:", JSON.stringify(requestData));
@@ -85,7 +75,7 @@ function AiRecommendPage() {
       const data = await response.json();
       console.log("📌 백엔드 응답 데이터:", data);
   
-      setRecipes(data);  // ✅ 상태 업데이트
+      setRecipes(data);
     } catch (error) {
       console.error("❌ 추천 요청 실패:", error);
       alert("추천된 레시피를 불러오지 못했습니다.");
@@ -96,6 +86,8 @@ function AiRecommendPage() {
   
   return (
     <div className="base-div">
+      <LoginCheck /> {/* ✅ 로그인 체크 컴포넌트 추가 */}
+
       <div className="parent-container">
         <div className="card-div">
           <div className="ai-recommend-container">
