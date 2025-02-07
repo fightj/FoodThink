@@ -34,8 +34,8 @@ public class MyOwnRecipeController {
     public ResponseEntity<?> createRecipe(@RequestHeader("Authorization") String token,
                                           @RequestPart("recipe") String recipeJson,
                                           @RequestPart("imageFile") MultipartFile imageFile,
-                                          @RequestPart(value="processImages", required = false) List<MultipartFile> processImages,
-                                          @RequestPart(value="processOrders", required = false) List<Integer> processOrders) {
+                                          @RequestPart(value = "processImages", required = false) List<MultipartFile> processImages,
+                                          @RequestPart(value = "processOrders", required = false) List<Integer> processOrders) {
         try {
             // JSON을 DTO로 변환
             ObjectMapper objectMapper = new ObjectMapper();
@@ -68,10 +68,10 @@ public class MyOwnRecipeController {
                 }
             }
 
-            // 서비스 호출
-            myOwnRecipeService.createRecipe(dto, imageFile);
+            // 서비스 호출 -> 레시피 아이디 반환
+            Long recipeId = myOwnRecipeService.createRecipe(dto, imageFile);
 
-            return ResponseEntity.ok("레시피가 저장되었습니다.");
+            return ResponseEntity.ok(recipeId);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("레시피 저장에 실패했습니다.");
