@@ -18,6 +18,7 @@ import com.ssafy.foodthink.user.repository.RecipeViewRepository;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -267,6 +268,7 @@ import java.util.stream.Collectors;
 //    }
 //
 //}
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserTFIDFService {
@@ -345,6 +347,7 @@ public class UserTFIDFService {
                 userTfIdfRepository.save(newEntity);
             }
         });
+
     }
 
      // 사용자 프로필 생성:
@@ -384,6 +387,13 @@ public class UserTFIDFService {
         recipeViewedProfile.forEach((feature, value) -> {
             userProfile.merge(feature, value * VIEWED_RECIPE_WEIGHT, Double::sum);
         });
+
+        log.debug("User Profile: {}", userProfile);
+
+        log.debug("Bookmark Profile: {}", bookmarkProfile);
+        log.debug("Liked Feed Profile: {}", feedLikedProfile);
+        log.debug("Viewed Recipe Profile: {}", recipeViewedProfile);
+
 
         return normalizeProfile(userProfile); // 정규화 후 반환
     }

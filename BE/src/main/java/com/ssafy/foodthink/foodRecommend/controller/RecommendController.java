@@ -79,7 +79,10 @@ public class RecommendController {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
 
-        List<RecipeRecommendDto> recommendations = recipeRecommendService.getRecommendedRecipes(userId, limit);
+        // 사용자 TF-IDF 계산 및 DB 저장
+        userTFIDFService.updateUserTfidf(userId);
+
+        List<RecipeRecommendDto> recommendations = recipeRecommendService.getRecommendedRecipes(userId, 30);
 
         return ResponseEntity.ok(recommendations);
     }
