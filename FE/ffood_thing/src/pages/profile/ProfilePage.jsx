@@ -1,73 +1,45 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext"; // ✅ UserContext 가져오기
 import ProfileHeader from "../../components/Profile/ProfileHeader";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import RecipeList from "../../components/Profile/RecipeList";
 import BookmarkList from "../../components/Profile/BookmarkList";
 import FeedList from "../../components/Profile/FeedList";
-import LoginCheck from "../../components/base/LoginCheck"; // ✅ LoginCheck 컴포넌트 추가
-import Swal from "sweetalert2";
+import LoginCheck from "../../components/base/LoginCheck"; // ✅ 로그인 체크 추가
 import "../../styles/profile/ProfilePage.css";
 
 const ProfilePage = () => {
-  const { id } = useParams(); 
-  const navigate = useNavigate();
+  const { id } = useParams(); // URL에서 userId 가져오기
+  const { user } = useContext(UserContext); // ✅ UserContext에서 user 가져오기
   const [activeTab, setActiveTab] = useState("recipes");
   const [userId, setUserId] = useState(null);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
-    setUserId(storedUserId);
-    setIsOwnProfile(id === storedUserId);
-    setLoading(false);
-  }, [id]);
+    // ✅ sessionStorage에서 user 정보 가져오기
+    const sessionUser = JSON.parse(sessionStorage.getItem("user"));
+    const sessionUserId = sessionUser ? sessionUser.userId : null;
 
-  // ✅ 회원 탈퇴 함수
-  const handleDeleteAccount = async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      Swal.fire("로그인이 필요합니다.", "", "error");
+    console.log("🌟 UserContext에서 가져온 user:", user);
+    console.log("📌 sessionStorage에서 가져온 userId:", sessionUserId);
+    console.log("🔗 URL에서 받은 userId:", id);
+
+    // ✅ 최종적으로 사용할 userId 결정 (UserContext > sessionStorage > URL userId)
+    const finalUserId = user?.userId || sessionUserId || id;
+    console.log("✅ 최종 userId:", finalUserId);
+
+    if (!finalUserId) {
+      console.error("🚨 사용자 ID를 가져오지 못했습니다.");
+      setLoading(false);
       return;
     }
 
-    Swal.fire({
-      title: "정말 탈퇴하시겠습니까? 😢",
-      text: "탈퇴 후에는 복구가 불가능합니다.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "탈퇴하기",
-      cancelButtonText: "취소",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await fetch("https://i12e107.p.ssafy.io/api/users/delete", {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-          });
-
-          if (!response.ok) {
-            throw new Error(`회원 탈퇴 실패: ${response.status}`);
-          }
-
-          Swal.fire({
-            title: "회원 탈퇴 완료",
-            text: "그동안 이용해주셔서 감사합니다.",
-            icon: "success",
-          }).then(() => {
-            localStorage.clear();
-            navigate("/login");
-          });
-        } catch (error) {
-          console.error("❌ 회원 탈퇴 오류:", error);
-          Swal.fire("회원 탈퇴 중 오류가 발생했습니다.", "", "error");
-        }
-      }
-    });
-  };
+    setUserId(finalUserId);
+    setIsOwnProfile(String(finalUserId) === String(id)); // 문자열 비교로 안전성 확보
+    setLoading(false);
+  }, [user, id]);
 
   if (loading) {
     return <div className="loading-text">🔄 로그인 확인 중...</div>;
@@ -80,22 +52,14 @@ const ProfilePage = () => {
       <div className="parent-container">
         <div className="card-div">
           <div className="profile-container">
-            <ProfileHeader userId={id} isOwnProfile={isOwnProfile} />
+            <ProfileHeader userId={userId} isOwnProfile={isOwnProfile} />
 
-            {isOwnProfile && (
-              <div className="profile-actions">
-                <button className="btn btn-danger" onClick={handleDeleteAccount}>
-                  회원 탈퇴
-                </button>
-              </div>
-            )}
-
-            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} userId={id} />
+            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} userId={userId} />
 
             <div className="tab-content">
-              {activeTab === "recipes" && <RecipeList userId={id} />}
-              {activeTab === "bookmarks" && <BookmarkList userId={id} />}
-              {activeTab === "feed" && <FeedList userId={id} />}
+              {activeTab === "recipes" && <RecipeList userId={userId} />}
+              {activeTab === "bookmarks" && <BookmarkList userId={userId} />}
+              {activeTab === "feed" && <FeedList userId={userId} />}
             </div>
           </div>
         </div>
