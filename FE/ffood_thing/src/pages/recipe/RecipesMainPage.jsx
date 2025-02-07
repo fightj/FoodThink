@@ -183,14 +183,14 @@ const RecipesMainPage = () => {
                 <div className="carousel2" ref={carouselRef1}>
                   {sortRecipes(top20Recipes, "북마크순").map((recipe) => (
                     <div key={recipe.recipeId} className="recipe-card2" onClick={() => handleDetailClick(recipe.recipeId)}>
-                      <div className="image-container">
+                      <div className="image-container2">
                         <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
                         <div className="bookmark-count2">{recipe.bookMarkCount}</div>
                       </div>
                       <div className="recipe-info2">
                         <h2>{recipe.recipeTitle}</h2>
                         <div className="profile-info">
-                          <img src={recipe.userImage} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
+                          <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
                           <p>{recipe.nickname}</p>
                         </div>
                       </div>
@@ -200,17 +200,17 @@ const RecipesMainPage = () => {
               </div>
               <div className="carousel-wrapper2">
                 <h3>맞춤 추천</h3>
-                <div className="carousel2" ref={carouselRef2}>
+                <div className="carousel2" ref={carouselRef1}>
                   {sortRecipes(top20Recipes, "북마크순").map((recipe) => (
                     <div key={recipe.recipeId} className="recipe-card2" onClick={() => handleDetailClick(recipe.recipeId)}>
-                      <div className="image-container">
+                      <div className="image-container2">
                         <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
                         <div className="bookmark-count2">{recipe.bookMarkCount}</div>
                       </div>
                       <div className="recipe-info2">
                         <h2>{recipe.recipeTitle}</h2>
                         <div className="profile-info">
-                          <img src={recipe.userImage} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
+                          <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
                           <p>{recipe.nickname}</p>
                         </div>
                       </div>
@@ -240,7 +240,7 @@ const RecipesMainPage = () => {
                   <div className="recipe-info2">
                     <h2>{recipe.recipeTitle}</h2>
                     <div className="profile-info">
-                      <img src={recipe.userImage} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
+                      <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
                       <p>{recipe.nickname}</p>
                     </div>
                   </div>

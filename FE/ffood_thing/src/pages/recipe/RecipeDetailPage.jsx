@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
 import RecipeComponent from "../../components/recipe/RecipeComponent"
@@ -15,18 +15,28 @@ const RecipeDetailPage = () => {
   const [currentStep, setCurrentStep] = useState(0) // currentStep 상태 추가
   const [activeSection, setActiveSection] = useState("ingredients")
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const [userId, setUserId] = useState(null) // 현재 사용자 ID 상태 추가
+  const [isLoggedIn, setIsLoggedIn] = useState(false) // 로그인 상태 추가
 
   const ingredientsRef = useRef(null)
   const stepsRef = useRef(null)
   const completedRef = useRef(null)
   const feedRef = useRef(null)
 
+  const accessToken = localStorage.getItem("accessToken") // 로컬 저장소에서 AccessToken을 가져옴
+
   // 서버에서 레시피 데이터를 가져오는 useEffect 훅
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
         console.log("Fetching recipe with ID:", id) // ID 값 확인 로그
-        const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${id}`)
+        const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${id}`, {
+          headers: accessToken
+            ? {
+                Authorization: `Bearer ${accessToken}`,
+              }
+            : {},
+        })
         setRecipe(response.data)
       } catch (error) {
         console.error("Error fetching recipe details", error)
@@ -34,7 +44,29 @@ const RecipeDetailPage = () => {
     }
 
     fetchRecipe()
-  }, [id])
+  }, [id, accessToken])
+
+  // 현재 사용자 ID와 로그인 상태를 가져오는 useEffect 훅 (예시)
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("https://i12e107.p.ssafy.io/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        setUserId(response.data.userId)
+        setIsLoggedIn(true) // 로그인 상태 설정
+      } catch (error) {
+        console.error("Error fetching user data", error)
+        setIsLoggedIn(false) // 로그인 상태 설정
+      }
+    }
+
+    if (accessToken) {
+      fetchUser()
+    }
+  }, [accessToken])
 
   useEffect(() => {
     const options = {
@@ -72,6 +104,15 @@ const RecipeDetailPage = () => {
   }
 
   const handleBookmarkClick = () => {
+    if (!isLoggedIn) {
+      Swal.fire({
+        title: "로그인 필요!",
+        text: "북마크를 사용하려면 로그인하세요.",
+        icon: "warning",
+      })
+      return
+    }
+
     if (isBookmarked) {
       Swal.fire({
         title: "북마크 취소!",
@@ -91,6 +132,34 @@ const RecipeDetailPage = () => {
         icon: "success",
       }).then(() => {
         setIsBookmarked(true)
+      })
+    }
+  }
+
+  const handleEditClick = () => {
+    navigate(`/recipes/edit/${id}`)
+  }
+
+  const handleDeleteClick = async () => {
+    try {
+      await axios.delete(`https://i12e107.p.ssafy.io/api/recipes/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      Swal.fire({
+        title: "삭제 완료",
+        text: "레시피가 삭제되었습니다.",
+        icon: "success",
+      }).then(() => {
+        navigate("/recipes")
+      })
+    } catch (error) {
+      console.error("Error deleting recipe", error)
+      Swal.fire({
+        title: "삭제 실패",
+        text: "레시피 삭제에 실패했습니다.",
+        icon: "error",
       })
     }
   }
@@ -256,6 +325,27 @@ const RecipeDetailPage = () => {
           {/* Feed 내용 추가 */}
         </div>
       </div>
+
+      {/* Edit, Delete, and Bookmark Buttons */}
+      {userId === recipe.userId && (
+        <div className="button-container">
+          <button onClick={handleEditClick} className="edit-button">
+            수정
+          </button>
+          <button onClick={handleDeleteClick} className="delete-button">
+            삭제
+          </button>
+        </div>
+      )}
+
+      {!isLoggedIn && (
+        <div className="login-prompt">
+          <p>북마크를 사용하려면 로그인하세요.</p>
+          <button onClick={() => navigate("/login")} className="login-button">
+            로그인
+          </button>
+        </div>
+      )}
     </div>
   )
 }
