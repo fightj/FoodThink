@@ -6,7 +6,7 @@ import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import com.ssafy.foodthink.elasticsearch.dto.ElasticSearchRecipeDto;
 import com.ssafy.foodthink.elasticsearch.entity.RecipeElasticEntity;
-import com.ssafy.foodthink.elasticsearch.repository.ElasticSearchRecipeRepository;
+import com.ssafy.foodthink.elasticsearch.elasticsearchrepository.ElasticSearchRecipeRepository;
 import com.ssafy.foodthink.recipeBookmark.repository.RecipeBookmarkRepository;
 import com.ssafy.foodthink.recipes.dto.RecipeListResponseDto;
 import com.ssafy.foodthink.recipes.entity.IngredientEntity;
@@ -117,18 +117,60 @@ public class ElasticSearchService {
         return recipeIds;
     }
 
-//    public List<RecipeListResponseDto> getSearchedRecipe(List<Long> ids){
-//        List<RecipeEntity> searchedRecipes = recipeRepository.findAllById(ids);
-//        List<RecipeListResponseDto> recipeListResponseDtos = new ArrayList<>();
-//        for (RecipeEntity searchedRecipe : searchedRecipes) {
-//            RecipeListResponseDto recipeListResponseDto = new RecipeListResponseDto(searchedRecipe.getRecipeId(),
-//                    searchedRecipe.getRecipeTitle(),
-//                    searchedRecipe.getImage(),
-//                    searchedRecipe.getUserEntity().getNickname(),
-//                    searchedRecipe.getUserEntity().getImage(),
-//                    searchedRecipe.getHits(),
-//                    searchedRecipe.get)
-//        }
-//
-//    }
+    public List<RecipeListResponseDto> getSearchedRecipe(String searchTerm){
+        List<Long> ids = searchRecipeIds(searchTerm);
+        List<RecipeEntity> searchedRecipes = recipeRepository.findAllByRecipeIdInOrderByWriteTimeDesc(ids);
+        List<RecipeListResponseDto> recipeListResponseDtos = new ArrayList<>();
+        for (RecipeEntity searchedRecipe : searchedRecipes) {
+            RecipeListResponseDto recipeListResponseDto = new RecipeListResponseDto(searchedRecipe.getRecipeId(),
+                    searchedRecipe.getRecipeTitle(),
+                    searchedRecipe.getImage(),
+                    searchedRecipe.getUserEntity().getNickname(),
+                    searchedRecipe.getUserEntity().getImage(),
+                    searchedRecipe.getHits(),
+                    (long) searchedRecipe.getRecipeBookmarkEntities().size()
+                    );
+            recipeListResponseDtos.add(recipeListResponseDto);
+        }
+        logger.info("검색 결과 갯수: " + String.valueOf(recipeListResponseDtos.size()));
+        return  recipeListResponseDtos;
+    }
+
+    //엘라스틱서치와 비교용 테스트
+    public List<RecipeListResponseDto> getSearchedRecipeTest(String searchTerm){
+        List<Long> ids = searchRecipeIds(searchTerm);
+        List<RecipeEntity> searchedRecipes = recipeRepository.findByNameAndIngredientNameContaining(searchTerm, searchTerm);
+        List<RecipeListResponseDto> recipeListResponseDtos = new ArrayList<>();
+        for (RecipeEntity searchedRecipe : searchedRecipes) {
+            RecipeListResponseDto recipeListResponseDto = new RecipeListResponseDto(searchedRecipe.getRecipeId(),
+                    searchedRecipe.getRecipeTitle(),
+                    searchedRecipe.getImage(),
+                    searchedRecipe.getUserEntity().getNickname(),
+                    searchedRecipe.getUserEntity().getImage(),
+                    searchedRecipe.getHits(),
+                    (long) searchedRecipe.getRecipeBookmarkEntities().size()
+            );
+            recipeListResponseDtos.add(recipeListResponseDto);
+        }
+        logger.info("검색 결과 갯수: " + String.valueOf(recipeListResponseDtos.size()));
+        return  recipeListResponseDtos;
+    }
+
+    public void compareSearchPerformance(String searchTerm) {
+        // JPA 검색 시간 측정
+        long jpaStartTime = System.currentTimeMillis();
+        List<RecipeListResponseDto> jpaRecipes = getSearchedRecipe(searchTerm);
+        long jpaEndTime = System.currentTimeMillis();
+        long jpaDuration = jpaEndTime - jpaStartTime;
+        logger.info("JPA 검색 실행 시간: " + jpaDuration + "ms");
+
+        // Elasticsearch 검색 시간 측정
+        long elasticsearchStartTime = System.currentTimeMillis();
+        List<RecipeListResponseDto> elasticsearchRecipes = getSearchedRecipeTest(searchTerm);
+        long elasticsearchEndTime = System.currentTimeMillis();
+        long elasticsearchDuration = elasticsearchEndTime - elasticsearchStartTime;
+        logger.info("Elasticsearch 검색 실행 시간: " + elasticsearchDuration + "ms");
+    }
+
+
 }
