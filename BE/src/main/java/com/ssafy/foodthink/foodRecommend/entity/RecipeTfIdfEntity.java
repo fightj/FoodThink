@@ -4,6 +4,8 @@ import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter @Setter
@@ -16,7 +18,7 @@ public class RecipeTfIdfEntity {
 
     @ManyToOne
     @JoinColumn(name = "recipe_id", nullable = false)
-    private RecipeEntity recipe;
+    private RecipeEntity recipeEntity;
 
     @Column(name = "feature", nullable = false)
     private String feature; // 레시피의 종류별, 개별재료

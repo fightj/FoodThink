@@ -4,8 +4,12 @@ import com.ssafy.foodthink.user.dto.RecipeViewDto;
 import com.ssafy.foodthink.user.dto.UserDto;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
 import com.ssafy.foodthink.user.dto.UserInterestDto;
+import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
+import com.ssafy.foodthink.user.repository.RecipeViewRepository;
+import com.ssafy.foodthink.user.repository.UserRepository;
 import com.ssafy.foodthink.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,17 +22,15 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
     private final JWTUtil jwtUtil;
+    private final RecipeViewRepository recipeViewRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    public UserController(UserService userService, JWTUtil jwtUtil) {
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-    }
     
     // 회원 정보 조회
     @GetMapping("/read")
