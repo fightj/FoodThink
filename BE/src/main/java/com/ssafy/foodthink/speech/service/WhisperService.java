@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /*
     .wav 음성 파일을 텍스트로 변환 후, 바로 Dialogflow API로 전달하여 처리
@@ -31,9 +32,9 @@ public class WhisperService {
 
     private static final String WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions";
 
-    public String processAudio(File audioFile) {
+    public Map<String, Object> processAudio(File audioFile) {
         if (!audioFile.exists() || audioFile.length() == 0) {
-            return "❌ 변환할 오디오 파일이 없습니다.";
+            return Map.of("message", "변환할 오디오 파일이 없습니다.");
         }
 
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
@@ -46,7 +47,7 @@ public class WhisperService {
 
             request.setEntity(entityBuilder.build());
 
-            System.out.println("📤 Whisper API 요청 전송... 파일 크기: " + audioFile.length() + " bytes");
+            System.out.println("Whisper API 요청 전송... 파일 크기: " + audioFile.length() + " bytes");
 
             try (CloseableHttpResponse response = httpClient.execute(request)) {
                 String jsonResponse = new String(response.getEntity().getContent().readAllBytes());
@@ -58,18 +59,17 @@ public class WhisperService {
 
                 if (jsonNode.has("text") && jsonNode.get("text").asText() != null) {
                     String transcript = jsonNode.get("text").asText();
-                    System.out.println("📝 변환된 텍스트: " + transcript);
+                    System.out.println("변환된 텍스트: " + transcript);
 
                     // 변환된 텍스트를 Dialogflow로 보내기
-                    String dialogflowResponse = dialogflowService.detectIntentText(transcript);
-                    return "🎯 최종 응답: " + dialogflowResponse;
+                    return dialogflowService.detectIntentText(transcript);
                 } else {
-                    return "❌ Whisper 응답에 'text' 필드가 없습니다.";
+                    return Map.of("message", "Whisper 응답에 'text' 필드가 없습니다.");
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return "❌ 오류 발생!";
+            return Map.of("message", "오류 발생!");
         }
     }
 }
