@@ -1,4 +1,4 @@
-.gallery-container {
+.feed-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px; /* 사진 사이의 간격 */
@@ -6,7 +6,7 @@
   padding: 10px;
 }
 
-.gallery-image {
+.feed-image {
   width: 350px; /* 이미지 너비 고정 */
   height: 350px; /* 이미지 높이 고정 */
   object-fit: cover; /* 이미지 비율 유지하면서 크롭 */
@@ -15,11 +15,55 @@
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.gallery-image:hover {
+.feed-image:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* 레시피 컨테이너 */
+.feed-container {
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 
+.no-feeds-wrapper {
+  display: flex;
+  flex-direction: column; /* ✅ 세로 정렬 */
+  align-items: center; /* ✅ 중앙 정렬 */
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.no-feeds-text {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 10px; /* ✅ 버튼과 간격 추가 */
+  display: block; /* ✅ 텍스트를 블록 요소로 변경하여 줄바꿈 */
+}
+
+.write-feed-button {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  border: none;
+  border-radius: 25px; /* ✅ 둥근 버튼 */
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.write-feed-button:hover {
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  transform: scale(1.05); /* ✅ 호버 시 살짝 커짐 */
+}
+
+.write-feed-button:active {
+  transform: scale(0.95);
+}
 
 
