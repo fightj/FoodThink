@@ -25,8 +25,8 @@ services:
       - DIALOGFLOW_PROJECT_ID=${DIALOGFLOW_PROJECT_ID}
       - ELASTICSEARCH_URIS=${ELASTICSEARCH_URIS}
     depends_on:
-      - elasticsearch
-    command: /bin/sh -c "sleep 30 && java -jar app.jar"  # 30초 대기 후 실행
+      elasticsearch:
+        condition: service_healthy
     networks:
       - backend_network
       - frontend_network
@@ -59,6 +59,12 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - backend_network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://elasticsearch:9200" ]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 10s
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.14.0
