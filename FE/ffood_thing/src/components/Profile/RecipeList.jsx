@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
-import { UserContext } from "../../contexts/UserContext"; // ✅ UserContext 추가
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
 import "../../styles/profile/RecipeList.css";
 
 const RecipeList = ({ userId }) => {
-  const { user } = useContext(UserContext); // ✅ 현재 로그인한 사용자 정보 가져오기
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const isOwnProfile = user?.userId === userId; // ✅ 본인 프로필 여부 확인
+  const isOwnProfile = user?.userId === userId;
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -21,7 +22,7 @@ const RecipeList = ({ userId }) => {
           return;
         }
 
-        // ✅ API URL 결정 (본인 or 타인)
+        // API URL 결정 (본인 or 타인)
         const apiUrl = isOwnProfile
           ? "https://i12e107.p.ssafy.io/api/myOwnRecipe/read/myRecipeList"
           : `https://i12e107.p.ssafy.io/api/userRecipe/read/${userId}`;
@@ -36,7 +37,7 @@ const RecipeList = ({ userId }) => {
         let data = await response.json();
         console.log("📌 불러온 레시피 데이터:", data);
 
-        // ✅ recipeId 내림차순 정렬 (최신순)
+        // recipeId 내림차순 정렬 (최신순)
         data = data.sort((a, b) => Number(b.recipeId) - Number(a.recipeId));
 
         setRecipes(data);
@@ -48,12 +49,25 @@ const RecipeList = ({ userId }) => {
       }
     };
 
-    if (userId) fetchRecipes(); // ✅ userId가 존재할 때만 API 호출
-  }, [userId, isOwnProfile]); // ✅ userId 또는 isOwnProfile 변경 시 재요청
+    if (userId) fetchRecipes(); // userId가 존재할 때만 API 호출
+  }, [userId, isOwnProfile]); // userId 또는 isOwnProfile 변경 시 재요청
 
   if (loading) return <div className="recipe-container">⏳ 레시피를 불러오는 중...</div>;
   if (error) return <div className="recipe-container">❌ {error}</div>;
-  if (!recipes || recipes.length === 0) return <div className="recipe-container">📌 등록된 레시피가 없습니다.</div>;
+  if (!recipes || recipes.length === 0) {
+    return (
+      <div className="recipe-container">
+        <div className="no-recipes-wrapper">
+        <div className="no-recipes-text">📌 등록된 레시피가 없습니다. 😯</div>
+        {isOwnProfile && (
+          <button className="write-recipe-button" onClick={() => navigate("/recipes/write")}>
+            ➕ 레시피 작성하러 가기
+          </button>
+        )}
+      </div>
+      </div>
+    );
+  }
 
   return (
     <div className="recipe-container">
