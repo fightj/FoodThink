@@ -26,6 +26,7 @@ services:
       - ELASTICSEARCH_URIS=${ELASTICSEARCH_URIS}
     depends_on:
       - elasticsearch
+    command: /bin/sh -c "wait-for-it elasticsearch:9200 -- java -jar app.jar"
     networks:
       - backend_network
       - frontend_network
