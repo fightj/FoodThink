@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import { AnimatePresence } from "framer-motion"
 import axios from "axios"
@@ -26,7 +26,7 @@ import RecipeSearchResultPage from "./pages/recipe/RecipeSearchResultPage"
 import NavbarBottom from "./components/base/Navbar-bottom"
 import PageSlide from "./components/base/PageSlide"
 import Sidebar from "./components/base/Sidebar"
-import { UserProvider } from "./contexts/UserContext"
+import { UserProvider, UserContext } from "./contexts/UserContext" // 올바르게 import
 
 // Function to fetch user info
 const fetchUserInfo = async () => {
@@ -56,8 +56,19 @@ const getUrlParameter = (name) => {
 
 // Main App component
 const App = () => {
+  return (
+    <UserProvider>
+      <Router>
+        <MainApp />
+      </Router>
+    </UserProvider>
+  )
+}
+
+// Separate MainApp component to use context properly
+const MainApp = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [user, setUser] = useState(null)
+  const { user, setUser } = useContext(UserContext) // UserContext를 올바르게 사용
   const [tokenLoaded, setTokenLoaded] = useState(false)
 
   useEffect(() => {
@@ -96,18 +107,16 @@ const App = () => {
     }
 
     getUserInfo()
-  }, [tokenLoaded])
+  }, [tokenLoaded, setUser])
 
   const toggleSidebar = () => setIsOpen(!isOpen)
 
   return (
-    <UserProvider>
-      <Router>
-        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
-        <AnimatedRoutes userInfo={user} />
-        <NavbarBottom />
-      </Router>
-    </UserProvider>
+    <>
+      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
+      <AnimatedRoutes userInfo={user} />
+      <NavbarBottom />
+    </>
   )
 }
 

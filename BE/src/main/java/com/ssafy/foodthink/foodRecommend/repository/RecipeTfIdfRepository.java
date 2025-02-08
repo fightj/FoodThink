@@ -14,10 +14,10 @@ import java.util.List;
 @Repository
 public interface RecipeTfIdfRepository extends JpaRepository<RecipeTfIdfEntity, Long> {
 
-    void deleteByRecipe(RecipeEntity recipe); // 특정 레시피와 관련된 모든 TF-IDF 값을 DB에서 삭제
+    void deleteByRecipeEntity(RecipeEntity recipeEntity); // 특정 레시피와 관련된 모든 TF-IDF 값을 DB에서 삭제
 
     // 특정 레시피에 대한 모든 TF-IDF 값을 조회
-    List<RecipeTfIdfEntity> findByRecipe(RecipeEntity recipe);
+    List<RecipeTfIdfEntity> findByRecipeEntity(RecipeEntity recipe);
 
     // TF-IDF 값을 DB에 삽입하거나 업데이트
     @Modifying

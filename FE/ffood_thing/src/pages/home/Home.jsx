@@ -1,16 +1,22 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import SearchBar from "../../components/base/SearchBar"
 import HomeBigButton from "../../components/home/HomeBigButton"
 import "../../styles/home/Home.css"
 import PageSlide from "../../components/base/PageSlide"
+import { UserContext } from "../../contexts/UserContext"
 
 function Home() {
   const [accessToken, setAccessToken] = useState(null)
   const location = useLocation()
   const navigate = useNavigate()
+  const { user } = useContext(UserContext) // useContext를 사용하여 UserContext에서 user를 가져옴
 
   useEffect(() => {
+    if (user) {
+      console.log("Current User Info in Home:", user) // 콘솔에 사용자 정보 출력
+    }
+
     const urlParams = new URLSearchParams(location.search)
     const token = urlParams.get("accessToken")
     const isNewUser = urlParams.get("isNewUser")
@@ -27,7 +33,7 @@ function Home() {
     if (isNewUser) {
       console.log("Is New User:", isNewUser)
     }
-  }, [location, navigate, accessToken])
+  }, [location, navigate, accessToken, user])
 
   return (
     <PageSlide>
