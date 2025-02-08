@@ -1,9 +1,10 @@
 package com.ssafy.foodthink.user.service;
 
+import com.ssafy.foodthink.foodRecommend.repository.RecipeTfIdfRepository;
 import com.ssafy.foodthink.global.S3Service;
 import com.ssafy.foodthink.global.exception.AleadyExistsException;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
-import com.ssafy.foodthink.recipes.repository.RecipeRepository;
+import com.ssafy.foodthink.recipes.repository.*;
 import com.ssafy.foodthink.user.dto.RecipeViewDto;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
 import com.ssafy.foodthink.user.dto.UserInterestDto;
@@ -37,6 +38,12 @@ public class UserService {
     private final S3Service s3Service;
     private final RecipeViewRepository recipeViewRepository;
     private final RecipeRepository recipeRepository;
+    private final IngredientRepository ingredientRepository;
+    private final ProcessImageRepository processImageRepository;
+    private final ProcessRepository processRepository;
+    private final RecipeListRepository recipeListRepository;
+    private final RecipeTfIdfRepository recipeTfIdfRepository;
+
 
     // userid로 회원 찾기
     public UserInfoDto readUserByUserId(Long userId) {
@@ -79,11 +86,37 @@ public class UserService {
     }
 
     // 회원 탈퇴
+    @Transactional
     public void deleteUser(Long userId) {
         UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
+        deleteRecipesByUser(userId);
+
         userRepository.delete(userEntity);
+    }
+
+    // 사용자와 관련된 데이터  삭제
+    @Transactional
+    public void deleteRecipesByUser(Long userId) {
+        // 사용자 조회
+        UserEntity userEntity = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        recipeViewRepository.deleteByUserEntity(userEntity);
+
+        // 사용자가 작성한 모든 레시피 조회
+        List<RecipeEntity> recipes = recipeRepository.findByUserEntity(userEntity);
+
+        // 각 레시피에 대해 연관 데이터 삭제
+        for (RecipeEntity recipe : recipes) {
+
+            // TF-IDF 데이터 삭제
+            recipeTfIdfRepository.deleteByRecipeEntity(recipe);
+
+            // 레시피 삭제
+            recipeRepository.delete(recipe);
+        }
     }
 
     private UserInfoDto convertToDto(UserEntity userEntity) {

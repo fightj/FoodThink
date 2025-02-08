@@ -27,7 +27,7 @@ public class RecipeRecommendService {
 
         List<RecipeRecommendDto> recommendations = allRecipes.stream()
                 .map(recipe -> {
-                    List<RecipeTfIdfEntity> recipeTfIdfs = recipeTfIdfRepository.findByRecipe(recipe);
+                    List<RecipeTfIdfEntity> recipeTfIdfs = recipeTfIdfRepository.findByRecipeEntity(recipe);
                     Map<String, Double> recipeVector = recipeTfIdfs.stream()
                             .collect(Collectors.toMap(
                                     RecipeTfIdfEntity::getFeature,
