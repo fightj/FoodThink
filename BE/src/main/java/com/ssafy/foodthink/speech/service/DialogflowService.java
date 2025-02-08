@@ -55,13 +55,23 @@ public class DialogflowService {
             System.out.println("confidence score : " + confidence);
 
             //정확도가 낮거나 intent가 비어있을 때 재시도 요청 반환
-            if(confidence < 0.8 || intentName.isEmpty()) {
+            if(confidence < 0.6 || intentName.isEmpty()) {
                 responseMap.put("message", "죄송합니다, 다시 한 번 말해주세요.");
                 responseMap.put("inetent", "");
                 return responseMap;
             }
 
             responseMap.put("intent", intentName);
+
+            System.out.println("파라미터 : " + queryResult.getParameters());
+
+            //intent 처리
+            if("타이머설정".equals(intentName)) {
+                //@sys.duration 엔티티로 타이머 시간 추출
+                String duration = queryResult.getParameters().getFieldsMap()
+                        .get("duration").getStringValue();
+                responseMap.put("duration", duration);
+            }
 
             //파라미터 확인
 //            Struct parameters = queryResult.getParameters(); // 파라미터 값 추출
