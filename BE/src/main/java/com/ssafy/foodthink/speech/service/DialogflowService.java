@@ -10,6 +10,8 @@ import com.google.protobuf.Value;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
     whisper API에서 만든 텍스트에서 자연어 처리
@@ -63,29 +65,32 @@ public class DialogflowService {
 
             responseMap.put("intent", intentName);
 
-            System.out.println("파라미터 : " + queryResult.getParameters());
-
             //intent 처리
-            if("타이머설정".equals(intentName)) {
-                //@sys.duration 엔티티로 타이머 시간 추출
-                String duration = queryResult.getParameters().getFieldsMap()
-                        .get("duration").getStringValue();
-                responseMap.put("duration", duration);
+            if ("타이머설정".equals(intentName)) {
+                int minutes = 0, seconds = 0;
+                if (text != null && !text.isEmpty()) {
+                    //정규식 패턴: "XX분YY초" 또는 "XX분" 또는 "YY초"
+                    Pattern pattern = Pattern.compile("(\\d+)\\s*분(?:\\s*(\\d+)\\s*초)?|(\\d+)\\s*초");
+                    Matcher matcher = pattern.matcher(text.replaceAll("\\s+", "")); // 띄어쓰기 제거
+
+                    if (matcher.find()) {
+                        if (matcher.group(1) != null && !matcher.group(1).isEmpty()) {
+                            minutes = Integer.parseInt(matcher.group(1));
+                        }
+                        if (matcher.group(2) != null && !matcher.group(2).isEmpty()) {
+                            seconds = Integer.parseInt(matcher.group(2));
+                        }
+                        if (matcher.group(3) != null && !matcher.group(3).isEmpty()) {
+                            seconds = Integer.parseInt(matcher.group(3));
+                        }
+                    }
+                }
+
+                //응답 추가
+                responseMap.put("minutes", minutes);
+                responseMap.put("seconds", seconds);
             }
 
-            //파라미터 확인
-//            Struct parameters = queryResult.getParameters(); // 파라미터 값 추출
-//            System.out.println("파라미터 : " + parameters);
-
-            //현재단계읽기
-//            if ("현재단계읽기".equals(intentName)) {
-//                // 파라미터에서 "number" 값을 추출하고, 기본값 설정
-//                Struct parameters = queryResult.getParameters();
-//                int stepNumber = (int) parameters.getFieldsMap()
-//                        .getOrDefault("number", Value.newBuilder().setNumberValue(1).build())
-//                        .getNumberValue();
-//                responseMap.put("stepNumber", stepNumber != -1 ? stepNumber : null);
-//            }
         } catch (IOException e) {
             e.printStackTrace();
             responseMap.put("message", "Dialogflow API 호출 중 오류 발생");
