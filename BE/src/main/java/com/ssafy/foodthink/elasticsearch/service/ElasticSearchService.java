@@ -15,9 +15,11 @@ import com.ssafy.foodthink.recipes.repository.IngredientRepository;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -170,6 +172,42 @@ public class ElasticSearchService {
         long elasticsearchEndTime = System.currentTimeMillis();
         long elasticsearchDuration = elasticsearchEndTime - elasticsearchStartTime;
         logger.info("Elasticsearch 검색 실행 시간: " + elasticsearchDuration + "ms");
+    }
+
+    @Scheduled(cron = "0 0 2 * * ?")  // 크론식으로 작성, 매일 오전 2시에 실행되도록 만들었습니다.
+    public void runBatchUpdate() {
+        // 배치 작업 처리 로직
+        logger.info("배치 작업을 시작합니다.");
+
+        try{
+            // Elasticsearch와 관련된 배치 작업 처리
+            // 1. 하루 전날을 기준으로 레시피를 조회 (하루 전날 이후에 추가된 레시피만)
+            LocalDateTime lastBatchTime = LocalDateTime.now().minusDays(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+
+            // 2. 레시피 추가 시간 이후의 레시피를 DB에서 조회
+            List<RecipeEntity> newRecipes = recipeRepository.findByWriteTimeAfter(lastBatchTime);
+
+            for (RecipeEntity recipeEntity : newRecipes) {
+                try {
+                    // 3. Elasticsearch에 이미 존재하는지 체크
+                    boolean exists = elasticSearchRecipeRepository.existsById(String.valueOf(recipeEntity.getRecipeId()));
+
+                    // 4. Elasticsearch에 존재하지 않으면 인덱싱
+                    if (!exists) {
+                        indexRecipeWithIngredients(recipeEntity);
+                        logger.info("인덱싱 완료: 레시피 ID {}", recipeEntity.getRecipeId());
+                    }
+                } catch (Exception e) {
+                    logger.error("배치 작업 중 오류 발생, 레시피 ID: {}", recipeEntity.getRecipeId(), e);
+                }
+            }
+
+            // 5. 마지막 배치 시간 업데이트
+            logger.info("배치 작업 완료, 마지막 배치 시간: {}", lastBatchTime);
+        }catch (Exception e) {
+            logger.error("배치 작업 중 예기치 않은 오류 발생", e);
+        }
+
     }
 
 

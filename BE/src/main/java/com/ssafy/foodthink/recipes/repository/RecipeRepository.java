@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +20,5 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     List<RecipeEntity> findAllByRecipeIdInOrderByWriteTimeDesc(List<Long> ids);
     @Query("SELECT r FROM RecipeEntity r JOIN r.ingredients i WHERE r.recipeTitle LIKE %:recipeTitle% or i.ingreName LIKE %:ingreName%")
     List<RecipeEntity> findByNameAndIngredientNameContaining(@Param("recipeTitle") String name, @Param("ingreName") String ingredientName);
+    List<RecipeEntity> findByWriteTimeAfter(LocalDateTime twentyFourHoursAgo);
 }

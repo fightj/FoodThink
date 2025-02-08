@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.myOwnRecipe.service;
 
+import com.ssafy.foodthink.elasticsearch.service.ElasticSearchService;
 import com.ssafy.foodthink.global.S3Service;
 import com.ssafy.foodthink.myOwnRecipe.dto.*;
 import com.ssafy.foodthink.myOwnRecipe.repository.MyOwnRecipeListRepository;
@@ -41,6 +42,7 @@ public class MyOwnRecipeService {
 
     private final MyOwnRecipeListRepository myOwnRecipeListRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
+    private final ElasticSearchService elasticSearchService;
 
     //레시피 등록
     @Transactional
@@ -120,6 +122,9 @@ public class MyOwnRecipeService {
             }
 
             log.info("레시피 저장 완료, recipeId: {}", recipeEntity.getRecipeId());
+
+            //사용자 레시피는 엘라스틱 서버에 즉시 반영
+            elasticSearchService.indexRecipeWithIngredients(recipeEntity);
 
             //생성된 레시피 아이디 반환
             return recipeEntity.getRecipeId();
