@@ -1,4 +1,4 @@
-package com.ssafy.foodthink.todayMenu;
+package com.ssafy.foodthink.todayRecipe;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

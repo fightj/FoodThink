@@ -1,4 +1,4 @@
-package com.ssafy.foodthink.todayMenu.dto;
+package com.ssafy.foodthink.todayRecipe.dto;
 
 import lombok.Data;
 
