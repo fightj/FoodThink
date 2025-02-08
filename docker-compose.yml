@@ -23,6 +23,7 @@ services:
       - DB_USERNAME=${DB_USERNAME}
       - WEATHER_API_KEY=${WEATHER_API_KEY}
       - DIALOGFLOW_PROJECT_ID=${DIALOGFLOW_PROJECT_ID}
+      - ELASTICSEARCH_URIS=${ELASTICSEARCH_URIS}
     depends_on:
       - elasticsearch
     networks:

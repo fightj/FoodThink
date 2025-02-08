@@ -255,6 +255,7 @@ pipeline {
         DB_USERNAME = credentials('DB_USERNAME')
         WEATHER_API_KEY = credentials('WEATHER_API_KEY')
         DIALOGFLOW_PROJECT_ID = credentials('DIALOGFLOW_PROJECT_ID')
+        ELASTICSEARCH_URIS = credentials('ELASTICSEARCH_URIS')
     }
 
     stages {
