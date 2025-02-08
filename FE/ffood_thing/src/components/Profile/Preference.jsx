@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import Swal from "sweetalert2";
 import "../../styles/profile/Preference.css";
 
@@ -14,7 +15,8 @@ const AVOID_ITEMS = [
   "고등어", "게", "돼지고기", "복숭아", "토마토", "새우"
 ];
 
-const Preference = ({ onClose }) => {
+const Preference = ({ onClose, userId }) => {
+  const { user } = useContext(UserContext); // ✅ 현재 로그인한 사용자 정보 가져오기
   const [selectedPreferences, setSelectedPreferences] = useState([]); // 선호 음식 리스트
   const [selectedAvoidances, setSelectedAvoidances] = useState([]); // 기피 재료 리스트
   const [loading, setLoading] = useState(true);

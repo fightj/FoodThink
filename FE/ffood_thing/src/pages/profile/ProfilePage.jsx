@@ -22,13 +22,13 @@ const ProfilePage = () => {
     const sessionUser = JSON.parse(sessionStorage.getItem("user"));
     const sessionUserId = sessionUser ? sessionUser.userId : null;
 
-    console.log("🌟 UserContext에서 가져온 user:", user);
-    console.log("📌 sessionStorage에서 가져온 userId:", sessionUserId);
-    console.log("🔗 URL에서 받은 userId:", id);
+    // console.log("🌟 UserContext에서 가져온 user:", user);
+    // console.log("📌 sessionStorage에서 가져온 userId:", sessionUserId);
+    // console.log("🔗 URL에서 받은 userId:", id);
 
     // ✅ 최종적으로 사용할 userId 결정 (UserContext > sessionStorage > URL userId)
     const finalUserId = user?.userId || sessionUserId || id;
-    console.log("✅ 최종 userId:", finalUserId);
+    // console.log("✅ 최종 userId:", finalUserId);
 
     if (!finalUserId) {
       console.error("🚨 사용자 ID를 가져오지 못했습니다.");
@@ -54,7 +54,7 @@ const ProfilePage = () => {
           <div className="profile-container">
             <ProfileHeader userId={userId} isOwnProfile={isOwnProfile} />
 
-            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} userId={userId} />
+            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} isOwnProfile={isOwnProfile} userId={userId} />
 
             <div className="tab-content">
               {activeTab === "recipes" && <RecipeList userId={userId} />}

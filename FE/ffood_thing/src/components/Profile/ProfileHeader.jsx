@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import "../../styles/profile/ProfileHeader.css";
+import Preference from "./Preference";
 import Swal from "sweetalert2";
 
 const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
@@ -16,6 +17,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [season, setSeason] = useState("spring");
   const [fallingElements, setFallingElements] = useState([]);
+  const [showPreference, setShowPreference] = useState(false);
 
   const seasonStyles = {
     spring: { background: "#FFEBE9", effectClass: "falling-cherry-blossom", emoji: "🌸" },
@@ -111,7 +113,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
 
   const uploadProfileImage = async () => {
     if (!selectedImage) {
-      Swal.fire("아뇨!", "이미지를 선택해주세요!", "warning");
+      Swal.fire("엥?", "이미지 업로드를 해주세요!", "warning");
       return;
     }
   
@@ -162,7 +164,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
     }
 
     Swal.fire({
-      title: "정말 탈퇴하시겠습니까? 😢",
+      title: `${profileData.nickname||"회원"}님과의 이별인가요? 😢`,
       text: "탈퇴 후에는 복구가 불가능합니다.",
       icon: "warning",
       showCancelButton: true,
@@ -175,8 +177,12 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
         try {
           const response = await fetch("https://i12e107.p.ssafy.io/api/users/delete", {
             method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-          });
+            headers: {
+              // "Content-Type": "application/json",  // 🔥 추가
+              Authorization: `Bearer ${token}`,
+            },
+          // body: JSON.stringify({ userId }) // 🔥 추가 (필요한 경우)
+        });
 
           if (!response.ok) {
             throw new Error(`회원 탈퇴 실패: ${response.status}`);
@@ -189,7 +195,8 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
           });
         } catch (error) {
           console.error("❌ 회원 탈퇴 오류:", error);
-          Swal.fire("회원 탈퇴 중 오류가 발생했습니다.", "", "error");
+          // Swal.fire("회원 탈퇴 중 오류가 발생했습니다.", "", "error");
+          Swal.fire("히히 못 도망가.", "", "error");
         }
       }
     });
@@ -264,8 +271,14 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
             {/* <span>구독자수: <strong>{subscribers}</strong></span>
             <span>게시물: <strong>{posts}</strong></span> */}
           </div>
-          {/* 선호/기피 버튼 */}
-          <button className="preference-button" onClick={onOpenPreference}>선호/기피</button>
+          {/* ✅ 본인 프로필일 때만 선호/기피 버튼 표시 */}
+          {isOwnProfile && (
+        <button className="preference-button" onClick={() => setShowPreference(true)}>
+          선호/기피
+        </button>
+      )}
+      {/* ✅ 모달 렌더링 */}
+      {showPreference && <Preference onClose={() => setShowPreference(false)} userId={userId} />}
         </div>
         {/* ✅ 회원 탈퇴 버튼 추가 (우측 하단) */}
         {isOwnProfile && (
