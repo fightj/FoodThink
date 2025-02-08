@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, useContext } from "react"
 import axios from "axios"
 import imageIcon from "../../assets/image.svg"
 import { Form } from "react-bootstrap"
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import "../../styles/sns/FeedWrite.css"
 import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
+import { UserContext } from "../../contexts/UserContext"
 
 function FeedWrite() {
   const navigate = useNavigate()
@@ -18,8 +19,14 @@ function FeedWrite() {
   const [bookmarkData, setBookmarkData] = useState([]) // 북마크 데이터 상태 추가
   const fileInputRef = useRef()
 
+  const { user } = useContext(UserContext) // useContext를 사용하여 UserContext에서 user를 가져옴
+
   useEffect(() => {
     // 세션에서 유저 정보 가져오기
+    if (user) {
+      console.log("Current User Info in feed-write-page:", user) // 콘솔에 사용자 정보 출력
+    }
+
     const userSession = JSON.parse(sessionStorage.getItem("user"))
     const sessionUserId = userSession ? userSession.userId : null
 
@@ -135,7 +142,11 @@ function FeedWrite() {
 
     // Log the formData to see what's being sent
     for (let [key, value] of formData.entries()) {
-      console.log(key, value)
+      if (key === "images") {
+        console.log(key, value.name) // 파일 이름만 출력
+      } else {
+        console.log(key, value)
+      }
     }
 
     const swalWithBootstrapButtons = Swal.mixin({
@@ -163,6 +174,7 @@ function FeedWrite() {
             await axios.post("https://i12e107.p.ssafy.io/api/feed/create", formData, {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "multipart/form-data",
               },
             })
 
