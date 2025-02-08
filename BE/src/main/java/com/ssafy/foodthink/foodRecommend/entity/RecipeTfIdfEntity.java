@@ -2,11 +2,16 @@ package com.ssafy.foodthink.foodRecommend.entity;
 
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "recipe_tfidf")
 public class RecipeTfIdfEntity {
     @Id
