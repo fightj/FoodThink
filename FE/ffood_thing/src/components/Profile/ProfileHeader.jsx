@@ -178,10 +178,10 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
           const response = await fetch("https://i12e107.p.ssafy.io/api/users/delete", {
             method: "DELETE",
             headers: {
-              // "Content-Type": "application/json",  // 🔥 추가
+              "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          // body: JSON.stringify({ userId }) // 🔥 추가 (필요한 경우)
+          // body: JSON.stringify({ userId }) // 필요한 경우
         });
 
           if (!response.ok) {
