@@ -107,7 +107,7 @@ function AiRecommendPage() {
               ) : (
                 <div className="recipe-list">
                   {recipes.map((recipe) => (
-                    <div key={recipe.recipeId} className="recipe-card" onClick={() => navigate(`/recipe/${recipe.recipeId}`)}>
+                    <div key={recipe.recipeId} className="recipe-card" onClick={() => navigate(`/recipes/${recipe.recipeId}`)}>
                       <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />
                       <p className="recipe-title">{recipe.recipeTitle}</p>
                     </div>

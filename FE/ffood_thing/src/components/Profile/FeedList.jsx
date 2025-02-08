@@ -69,14 +69,14 @@ const FeedList = ({ userId }) => {
   }
 
   return (
-    <div className="gallery-container">
+    <div className="feed-container">
       {feeds.map((feed) => (
         <Link 
           to={`/feed/${feed.feedId}`} 
           key={feed.feedId} 
           style={{ textDecoration: "none" }} 
         >
-          <img src={feed.image} alt={`Feed ${feed.feedId}`} className="gallery-image" />
+          <img src={feed.image} alt={`Feed ${feed.feedId}`} className="feed-image" />
         </Link>
       ))}
     </div>
