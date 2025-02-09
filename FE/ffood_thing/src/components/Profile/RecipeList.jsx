@@ -16,11 +16,6 @@ const RecipeList = ({ userId }) => {
     const fetchRecipes = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        if (!token) {
-          setError("로그인이 필요합니다.");
-          setLoading(false);
-          return;
-        }
 
         // API URL 결정 (본인 or 타인)
         const apiUrl = isOwnProfile
@@ -58,13 +53,13 @@ const RecipeList = ({ userId }) => {
     return (
       <div className="recipe-container">
         <div className="no-recipes-wrapper">
-        <div className="no-recipes-text">📌 등록된 레시피가 없습니다. 😯</div>
-        {isOwnProfile && (
-          <button className="write-recipe-button" onClick={() => navigate("/recipes/write")}>
-            ➕ 레시피 작성하러 가기
-          </button>
-        )}
-      </div>
+          <div className="no-recipes-text">📌 등록된 레시피가 없습니다. 😯</div>
+          {isOwnProfile && (
+            <button className="write-recipe-button" onClick={() => navigate("/recipes/write")}>
+              ➕ 레시피 작성하러 가기
+            </button>
+          )}
+        </div>
       </div>
     );
   }
@@ -73,9 +68,9 @@ const RecipeList = ({ userId }) => {
     <div className="recipe-container">
       <div className="recipe-grid">
         {recipes.map((recipe) => (
-          <Link 
-            to={`/recipes/${recipe.recipeId}`} 
-            key={recipe.recipeId} 
+          <Link
+            to={`/recipes/${recipe.recipeId}`}
+            key={recipe.recipeId}
             className="recipe-card"
             style={{ textDecoration: "none", color: "inherit" }}
           >

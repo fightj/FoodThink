@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../contexts/UserContext"; // ✅ UserContext import
+import { UserContext } from "../../contexts/UserContext";
 import "../../styles/base/global.css";
 import "../../styles/recommend/AiRecommendPage.css";
-import LoginCheck from "../../components/base/LoginCheck"; // ✅ 로그인 체크 추가
+import LoginCheck from "../../components/base/LoginCheck";
 
 const questionsData = [
   { question: "어떤 맛을 원하시나요?", options: ["매운 음식", "단 음식", "짠 음식"] },
@@ -25,14 +25,14 @@ const questionsData = [
 
 function AiRecommendPage() {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext); // ✅ UserContext에서 user 가져오기
+  const { user } = useContext(UserContext); // UserContext에서 user 가져오기
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState([]);
 
-  // ✅ localStorage에서 accessToken 가져오기
+  // localStorage에서 accessToken 가져오기
   const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
@@ -46,7 +46,7 @@ function AiRecommendPage() {
   }, [user, token]);
 
   const handleChoice = (answer) => {
-    console.log(`✅ 선택한 답변: ${answer}`);
+    console.log(`선택한 답변: ${answer}`);
 
     setAnswers((prev) => {
       const updatedAnswers = [...prev, answer];
@@ -65,7 +65,7 @@ function AiRecommendPage() {
     setLoading(true);
   
     const API_URL = "https://i12e107.p.ssafy.io/api/recommend/final-recommend";
-    const requestData = { answers: userAnswers }; // ✅ JSON 배열 그대로 유지
+    const requestData = { answers: userAnswers }; // JSON 배열 그대로 유지
   
     console.log("📌 API 요청 시작:", JSON.stringify(requestData, null, 2));
     console.log("📌 사용 중인 토큰:", token);
@@ -77,7 +77,7 @@ function AiRecommendPage() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify(requestData), // ✅ JSON 배열 그대로 변환하여 전송
+        body: JSON.stringify(requestData), // JSON 배열 그대로 변환하여 전송
       });
   
       console.log("📌 서버 응답 상태 코드:", response.status);
