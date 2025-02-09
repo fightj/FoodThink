@@ -13,7 +13,14 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-      fetchTodayRecommendations();
+      // 📌 로컬 스토리지에서 기존 추천 데이터를 가져오기
+      const storedRecipes = localStorage.getItem("todaySelectedRecipes");
+      if (storedRecipes) {
+        setSelectedRecipes(JSON.parse(storedRecipes));
+      } else {
+        fetchTodayRecommendations();
+      }
+
       document.body.style.overflow = "hidden"; // 배경 스크롤 방지
     } else {
       document.body.style.overflow = "auto";
@@ -36,6 +43,7 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
 
       if (Array.isArray(data) && data.length === 3) {
         setSelectedRecipes(data);
+        localStorage.setItem("todaySelectedRecipes", JSON.stringify(data)); // 로컬 저장
       } else {
         throw new Error("추천 레시피 데이터가 올바르지 않습니다.");
       }
@@ -48,9 +56,9 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
 
   if (!isOpen || selectedRecipes.length < 3) return null; // 데이터가 준비되지 않았을 때 렌더링 방지
 
-  // 📌 음식 선택 시 검색 결과 페이지로 이동 (중앙 카드 클릭 시)
-  const goToSearchPage = (recipeTitle) => {
-    navigate(`/search?query=${encodeURIComponent(recipeTitle)}`);
+  // 📌 레시피 상세 페이지로 이동 (중앙 카드 클릭 시)
+  const goToRecipeDetail = (recipeId) => {
+    navigate(`/recipes/${recipeId}`);
     onClose();
   };
 
@@ -61,6 +69,12 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
     }
   };
 
+  // 📌 새로고침 버튼 클릭 시, 기존 데이터 삭제 후 새로운 추천 받기
+  const refreshRecommendations = () => {
+    localStorage.removeItem("todaySelectedRecipes"); // 저장된 데이터 삭제
+    fetchTodayRecommendations(); // 새로운 데이터 요청
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="today-recommend-card" onClick={(e) => e.stopPropagation()}>
@@ -68,7 +82,7 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
         <button className="today-close-btn" onClick={onClose}>×</button>
         
         {/* 새로고침 버튼 */}
-        <button className="refresh-btn" onClick={fetchTodayRecommendations} disabled={loading}>
+        <button className="refresh-btn" onClick={refreshRecommendations} disabled={loading}>
           <FaRedo />
         </button>
         
@@ -83,7 +97,7 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
                 <div
                   key={recipe.recipeId}
                   className={`recipe-item ${i === activeIndex ? "active" : ""}`}
-                  onClick={() => (i === activeIndex ? goToSearchPage(recipe.recipeTitle) : moveToCenter(i))}
+                  onClick={() => (i === activeIndex ? goToRecipeDetail(recipe.recipeId) : moveToCenter(i))}
                 >
                   <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />
                   {i === activeIndex && <p className="recipe-title-main">{recipe.recipeTitle}</p>}
