@@ -1,56 +1,40 @@
-import React, { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import SearchBar from "../../components/base/SearchBar"
-import Swal from "sweetalert2"
-import "../../styles/sns/SnsMain.css"
-import PageSlide from "../../components/base/PageSlide"
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import SearchBar from "../../components/base/SearchBar";
+import Swal from "sweetalert2";
+import "../../styles/sns/SnsMain.css";
+import PageSlide from "../../components/base/PageSlide";
 
 function SnsMain() {
-  const [query, setQuery] = useState("")
-  const [feedData, setFeedData] = useState([])
-  const navigate = useNavigate()
+  const [query, setQuery] = useState("");
+  const [feedData, setFeedData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      // 제공된 데이터셋을 가져오기
-      const data = {
-        content: [
-          {
-            id: 2,
-            image: "https://foodthinkawsbucket.s3.amazonaws.com/324a9d5e-c192-4f32-8287-51b30cacac25-쿼카.jpg",
-            userNickname: "ydbqls13@daum.net",
-            userImage: null,
-            imageSize: 1,
-          },
-          {
-            id: 1,
-            image: "https://foodthinkawsbucket.s3.amazonaws.com/44dd11ab-1558-4101-bdcb-c3303a34b256-쿼카.jpg",
-            userNickname: "ydbqls13@daum.net",
-            userImage: null,
-            imageSize: 2,
-          },
-        ],
-        totalPages: 1,
-        totalElements: 2,
-        last: true,
+    const fetchData = async (page = 0, size = 12) => {
+      try {
+        const response = await fetch(`https://i12e107.p.ssafy.io/api/feed/read/latest?page=${page}&size=${size}`);
+        const data = await response.json();
+        setFeedData(data.content);
+      } catch (error) {
+        console.error("Error fetching feed data:", error);
       }
-      setFeedData(data.content)
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const handleSearch = (query) => {
-    setQuery(query)
+    setQuery(query);
     if (query.length > 0) {
-      navigate(`/search-results?query=${query}`)
+      navigate(`/search-results?query=${query}`);
     }
-  }
+  };
 
   const handleWriteClick = () => {
-    const accessToken = localStorage.getItem("accessToken")
+    const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
-      navigate("/feed/write")
+      navigate("/feed/write");
     } else {
       Swal.fire({
         title: "로그인이 필요합니다",
@@ -63,11 +47,11 @@ function SnsMain() {
         cancelButtonText: "취소",
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate("/login")
+          navigate("/login");
         }
-      })
+      });
     }
-  }
+  };
 
   return (
     <PageSlide>
@@ -83,7 +67,7 @@ function SnsMain() {
 
               <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
                 {feedData.map((feedItem) => {
-                  const hasMultipleImages = feedItem.imageSize >= 2
+                  const hasMultipleImages = feedItem.imageSize >= 2;
 
                   return (
                     <div className="col" key={feedItem.id}>
@@ -103,7 +87,7 @@ function SnsMain() {
                         </div>
                       </Link>
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -111,7 +95,7 @@ function SnsMain() {
         </div>
       </div>
     </PageSlide>
-  )
+  );
 }
 
-export default SnsMain
+export default SnsMain;
