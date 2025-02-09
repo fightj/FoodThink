@@ -21,7 +21,10 @@ public class SpeechController {
 
     //음성 반환
     @PostMapping("/process")
-    public ResponseEntity<?> processSpeech(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> processSpeech(
+            @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("recipeId") Long recipeId) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("message", "파일이 비어 있습니다!"));
         }
@@ -32,7 +35,7 @@ public class SpeechController {
             file.transferTo(tempFile);
 
             // Whisper API로 전송
-            Map<String, Object> transcript = whisperService.processAudio(tempFile);
+            Map<String, Object> transcript = whisperService.processAudio(tempFile, token, recipeId);
 
             if (transcript == null || transcript.isEmpty()) {
                 return ResponseEntity.status(500)

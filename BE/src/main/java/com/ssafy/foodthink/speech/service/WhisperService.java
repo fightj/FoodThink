@@ -32,7 +32,7 @@ public class WhisperService {
 
     private static final String WHISPER_API_URL = "https://api.openai.com/v1/audio/transcriptions";
 
-    public Map<String, Object> processAudio(File audioFile) {
+    public Map<String, Object> processAudio(File audioFile, String token, Long recipeId) {
         if (!audioFile.exists() || audioFile.length() == 0) {
             return Map.of("message", "변환할 오디오 파일이 없습니다.");
         }
@@ -62,7 +62,7 @@ public class WhisperService {
                     System.out.println("변환된 텍스트: " + transcript);
 
                     // 변환된 텍스트를 Dialogflow로 보내기
-                    return dialogflowService.detectIntentText(transcript);
+                    return dialogflowService.detectIntentText(transcript, token, recipeId);
                 } else {
                     return Map.of("message", "Whisper 응답에 'text' 필드가 없습니다.");
                 }

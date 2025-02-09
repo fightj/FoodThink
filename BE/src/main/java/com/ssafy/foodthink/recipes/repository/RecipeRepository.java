@@ -21,4 +21,5 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     @Query("SELECT r FROM RecipeEntity r JOIN r.ingredients i WHERE r.recipeTitle LIKE %:recipeTitle% or i.ingreName LIKE %:ingreName%")
     List<RecipeEntity> findByNameAndIngredientNameContaining(@Param("recipeTitle") String name, @Param("ingreName") String ingredientName);
     List<RecipeEntity> findByWriteTimeAfter(LocalDateTime twentyFourHoursAgo);
+    RecipeEntity findByRecipeId(Long recipeId);
 }
