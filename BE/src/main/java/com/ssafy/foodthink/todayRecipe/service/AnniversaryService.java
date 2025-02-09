@@ -126,8 +126,7 @@ public class AnniversaryService {
 //        String encodedSolMonth = URLEncoder.encode(solMonth, StandardCharsets.UTF_8);
 //        String encodedSolDay = URLEncoder.encode(solDay, StandardCharsets.UTF_8);
 //
-//        String url = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo?serviceKey=V%2Bz9bNU6awpkSJo7kcx5%2F0EEKzwujYr1Rc3i4T8QI0nDLS90XQWgFBJ%2FiWIY9uWUcnehvJeuNp%2F1LaY6HCWPZQ%3D%3D&solYear=2025&solMonth=02&solDay=09";
-//
+//        String url =
 //        log.info("Request URL: " + url);
 //
 //        URI uri = new URI(url);
@@ -180,7 +179,7 @@ public class AnniversaryService {
         //String today = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String today = "20250101";
         StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getHoliDeInfo"); /*URL*/
-        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=V%2Bz9bNU6awpkSJo7kcx5%2F0EEKzwujYr1Rc3i4T8QI0nDLS90XQWgFBJ%2FiWIY9uWUcnehvJeuNp%2F1LaY6HCWPZQ%3D%3D"); /*Service Key*/
+        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + apiKey); /*Service Key*/
         urlBuilder.append("&" + URLEncoder.encode("_type","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("solYear","UTF-8") + "=" + URLEncoder.encode(today.substring(0, 4), "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("solMonth","UTF-8") + "=" + URLEncoder.encode(today.substring(4, 6), "UTF-8"));
