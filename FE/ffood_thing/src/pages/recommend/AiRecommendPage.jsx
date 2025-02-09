@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext"; // ✅ UserContext import
 import "../../styles/base/global.css";
 import "../../styles/recommend/AiRecommendPage.css";
 import LoginCheck from "../../components/base/LoginCheck"; // ✅ 로그인 체크 추가
@@ -24,16 +25,25 @@ const questionsData = [
 
 function AiRecommendPage() {
   const navigate = useNavigate();
+  const { user } = useContext(UserContext); // ✅ UserContext에서 user 가져오기
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState([]);
 
+  // ✅ localStorage에서 accessToken 가져오기
+  const token = localStorage.getItem("accessToken");
+
   useEffect(() => {
     const shuffled = [...questionsData].sort(() => 0.5 - Math.random()).slice(0, 5);
     setQuestions(shuffled);
   }, []);
+
+  useEffect(() => {
+    console.log("🔥 UserContext에서 가져온 user:", user);
+    console.log("📌 LocalStorage에서 가져온 token:", token);
+  }, [user, token]);
 
   const handleChoice = (answer) => {
     console.log(`✅ 선택한 답변: ${answer}`);
@@ -45,7 +55,7 @@ function AiRecommendPage() {
       if (updatedAnswers.length === 5) {
         sendToBackend(updatedAnswers);
       } else {
-        setCurrentIndex(currentIndex + 1);
+        setCurrentIndex((prevIndex) => prevIndex + 1);
       }
       return updatedAnswers;
     });
@@ -55,25 +65,40 @@ function AiRecommendPage() {
     setLoading(true);
   
     const API_URL = "https://i12e107.p.ssafy.io/api/recommend/final-recommend";
-    const requestData = { answers: userAnswers };
-
-    console.log("📌 API 요청 시작:", JSON.stringify(requestData));
-
+    const requestData = { answers: userAnswers }; // ✅ JSON 배열 그대로 유지
+  
+    console.log("📌 API 요청 시작:", JSON.stringify(requestData, null, 2));
+    console.log("📌 사용 중인 토큰:", token);
+  
     try {
       const response = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestData),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestData), // ✅ JSON 배열 그대로 변환하여 전송
       });
   
       console.log("📌 서버 응답 상태 코드:", response.status);
   
-      if (!response.ok) {
-        throw new Error(`서버 응답 오류: ${response.status}`);
+      const responseText = await response.text();
+      console.log("📌 서버 응답 원문:", responseText);
+  
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (error) {
+        console.error("❌ JSON 파싱 오류. 응답이 JSON이 아닐 가능성 있음:", responseText);
+        throw new Error("서버에서 올바른 JSON을 반환하지 않았습니다.");
       }
   
-      const data = await response.json();
-      console.log("📌 백엔드 응답 데이터:", data);
+      console.log("📌 백엔드 응답 데이터 (JSON):", data);
+  
+      if (!Array.isArray(data)) {
+        console.error("❌ 추천 데이터가 배열 형식이 아닙니다. 서버 응답:", data);
+        throw new Error("추천된 레시피가 없습니다.");
+      }
   
       setRecipes(data);
     } catch (error) {
@@ -84,9 +109,10 @@ function AiRecommendPage() {
     }
   };
   
+
   return (
     <div className="base-div">
-      <LoginCheck /> {/* ✅ 로그인 체크 컴포넌트 추가 */}
+      <LoginCheck />
 
       <div className="parent-container">
         <div className="card-div">
@@ -94,7 +120,6 @@ function AiRecommendPage() {
             <div className="speech-bubble">
               {recipes.length > 0 ? "🍽 추천된 레시피 🍽" : questions[currentIndex]?.question}
             </div>
-
             <div className="ai-content">
               {recipes.length === 0 ? (
                 questions[currentIndex]?.options.map((option, index) => (
@@ -109,7 +134,7 @@ function AiRecommendPage() {
                   {recipes.map((recipe) => (
                     <div key={recipe.recipeId} className="recipe-card" onClick={() => navigate(`/recipes/${recipe.recipeId}`)}>
                       <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />
-                      <p className="recipe-title">{recipe.recipeTitle}</p>
+                      <div className="recipe-title">{recipe.recipeTitle}</div>
                     </div>
                   ))}
                 </div>
