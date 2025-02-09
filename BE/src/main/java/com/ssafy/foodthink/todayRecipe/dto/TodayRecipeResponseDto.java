@@ -1,10 +1,12 @@
 package com.ssafy.foodthink.todayRecipe.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Setter
 public class TodayRecipeResponseDto {
 
     private Long recipeId;

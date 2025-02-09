@@ -38,7 +38,7 @@ public class TodayRecipeService {
         }
 
         if(recipes.isEmpty()){
-            throw new RuntimeException("무작위 레시피 검색 실패");
+            throw new RuntimeException("랜덤 레시피 검색 실패");
         }
         return recipes;
     }
