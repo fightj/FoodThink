@@ -8,6 +8,7 @@
   margin-bottom: 20px;
   color: #000;
   border-radius: 8px;
+  margin-left: 40px;
 }
 
 .icon {
@@ -251,7 +252,7 @@ hr {
   font-size: 2rem; /* 사용자 이름 글자 크기 */
   font-weight: bold; /* 사용자 이름 굵게 */
 }
-.edit-button {
+.edit-button1 {
   width: 40px; /* 버튼 너비 조정 */
   height: 40px; /* 버튼 높이 조정 */
   background: none; /* 배경 색상 제거 */
@@ -263,7 +264,7 @@ hr {
   justify-content: center; /* 아이콘 가운데 정렬 */
 }
 
-.edit-button img {
+.edit-button1 img {
   width: 100%; /* 이미지 너비를 버튼 크기에 맞춤 */
   height: 100%; /* 이미지 높이를 버튼 크기에 맞춤 */
   object-fit: contain; /* 이미지 비율을 유지하면서 크기 조정 */

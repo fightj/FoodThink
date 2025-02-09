@@ -137,6 +137,7 @@ function RecipeWritePage() {
 
     // ✅ API 요청
     try {
+      console.log(formData)
       const response = await fetch("https://i12e107.p.ssafy.io/api/myOwnRecipe/create", {
         method: "POST",
         headers: {

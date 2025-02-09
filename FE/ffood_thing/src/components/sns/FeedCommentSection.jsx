@@ -1,80 +1,197 @@
-import React, { useState } from "react"
-import "../../styles/sns/FeedCommentSection.css"
+import React, { useState, useEffect } from "react";
+import "../../styles/sns/FeedCommentSection.css";
+import Swal from "sweetalert2";
 
-// 주어진 데이터를 사용하여 댓글 섹션 구성
-const feedData = {
-  id: 7,
-  foodName: "음식이름7",
-  content: "피드내용7",
-  writeTime: "2025-01-28T00:47:07.905327",
-  userId: 2,
-  username: "닉네임2",
-  userRecipeId: 1,
-  crawlingRecipeId: null,
-  images: [
-    "https://foodthinkawsbucket.s3.amazonaws.com/3cd0bc20-e8db-47c1-b49a-380ee3ab7825-짜장면.jpeg",
-    "https://foodthinkawsbucket.s3.amazonaws.com/db7f95aa-e358-4f8a-bd75-742e5e5695fe-떡볶이.jpeg",
-  ],
-  feedCommentResponseDtos: [
-    {
-      id: 2,
-      content: "수정된 댓글입니다.",
-      username: "닉네임",
-      writeTime: "2025-02-02T15:24:36.99946",
-    },
-    {
-      id: 3,
-      content: "참 맛있어보여요!",
-      username: "닉네임3",
-      writeTime: "2025-02-02T15:32:14.684305",
-    },
-    {
-      id: 4,
-      content: "추가한 댓글이에요!",
-      username: "닉네임",
-      writeTime: "2025-02-02T15:32:31.031496",
-    },
-  ],
-  like: false,
-}
+const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
+  const [newComment, setNewComment] = useState("");
+  const [localComments, setLocalComments] = useState(comments);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingCommentContent, setEditingCommentContent] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
 
-const FeedCommentSection = ({ feedId, onClose, onAddComment, currentUserId }) => {
-  // feedId에 해당하는 댓글 필터링
-  const comments = feedData.feedCommentResponseDtos
-
-  // 댓글 입력을 위한 상태
-  const [newComment, setNewComment] = useState("")
-
-  // 댓글 입력 처리 함수
-  const handleCommentChange = (e) => {
-    setNewComment(e.target.value)
-  }
-
-  // 댓글 추가 처리 함수
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      onAddComment(newComment)
-      setNewComment("") // 댓글 추가 후 입력란 비우기
+  useEffect(() => {
+    // Retrieve user information from session storage
+    const storedUser = sessionStorage.getItem("user");
+    console.log(storedUser)
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
     }
-  }
+  }, []);
 
-  // 로그인한 유저의 프로필 이미지 가져오기
-  const currentUser = { user_id: currentUserId, image: null, nickname: "Current User" } // 임시 데이터
-  const profileImage = currentUser.image || "/images/default_profile.png" // 기본 이미지
+  const handleCommentChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
+  const handleEditCommentChange = (e) => {
+    setEditingCommentContent(e.target.value);
+  };
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) {
+      return;
+    }
+
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      Swal.fire({
+        title: "로그인이 필요합니다",
+        text: "로그인 페이지로 이동하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "네, 이동합니다",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://i12e107.p.ssafy.io/api/feed/comment/create/${feedId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content: newComment }),
+      });
+
+      if (response.ok) {
+        window.location.reload(); // Automatically refresh the page after adding a comment
+      } else {
+        console.error("Error adding comment");
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+  const handleEditComment = (commentId, content) => {
+    setEditingCommentId(commentId);
+    setEditingCommentContent(content);
+  };
+
+  const handleUpdateComment = async (commentId) => {
+    if (!editingCommentContent.trim()) {
+      return;
+    }
+
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      Swal.fire({
+        title: "로그인이 필요합니다",
+        text: "로그인 페이지로 이동하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "네, 이동합니다",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://i12e107.p.ssafy.io/api/feed/comment/update/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content: editingCommentContent }),
+      });
+
+      if (response.ok) {
+        window.location.reload(); // Automatically refresh the page after updating a comment
+      } else {
+        console.error("Error updating comment");
+      }
+    } catch (error) {
+      console.error("Error updating comment:", error);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      Swal.fire({
+        title: "로그인이 필요합니다",
+        text: "로그인 페이지로 이동하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "네, 이동합니다",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://i12e107.p.ssafy.io/api/feed/comment/delete/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        window.location.reload(); // Automatically refresh the page after deleting a comment
+      } else {
+        console.error("Error deleting comment");
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
 
   return (
     <div className="comment-div">
       <h3>댓글</h3>
 
-      {/* 댓글 목록 출력 */}
-      {comments.length > 0 ? (
-        comments.map((comment) => (
+      {localComments.length > 0 ? (
+        localComments.map((comment) => (
           <div key={comment.id} className="comment">
-            <img src="/images/default_profile.png" alt={comment.username || "User"} className="profile-image-com" />
+            <img src={comment.userImage || "/images/default_profile.png"} alt={comment.username || "User"} className="profile-image-com" />
             <div className="comment-content-wrapper">
-              <span className="comment-author-name">{comment.username || "Unknown User"}</span>
-              <p className="comment-content">{comment.content}</p>
-              <span className="comment-time">{comment.writeTime}</span>
+              {editingCommentId === comment.id ? (
+                <div>
+                  <input
+                    type="text"
+                    value={editingCommentContent}
+                    onChange={handleEditCommentChange}
+                  />
+                  <button onClick={() => handleUpdateComment(comment.id)}>Update</button>
+                  <button onClick={() => setEditingCommentId(null)}>Cancel</button>
+                </div>
+              ) : (
+                <div>
+                  <span className="comment-author-name">{comment.username || "Unknown User"}</span>
+                  <p className="comment-content">{comment.content}</p>
+                  <span className="comment-time">{comment.writeTime}</span>
+                  {currentUser && comment.userId === currentUser.userId && (
+                    <div className="comment-actions">
+                      <button onClick={() => handleEditComment(comment.id, comment.content)}>Edit</button>
+                      <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         ))
@@ -82,18 +199,17 @@ const FeedCommentSection = ({ feedId, onClose, onAddComment, currentUserId }) =>
         <p className="no-comments">댓글이 없습니다.</p>
       )}
 
-      {/* 댓글 작성 폼 */}
       <div className="comment-input-wrapper">
-        {/* 프로필 이미지 추가 */}
-        <img
-          src={profileImage}
-          alt="프로필 이미지"
-          className="profile-image-com" // 스타일을 동일하게 적용
+        <input
+          type="text"
+          className="comment-input"
+          value={newComment}
+          onChange={handleCommentChange}
+          placeholder="댓글을 입력하세요..."
         />
-        <input type="text" className="comment-input" value={newComment} onChange={handleCommentChange} placeholder="댓글을 입력하세요..." />
         <div className="btn-background">
           <img
-            src="/images/up-arrow.png" // 원하는 이미지 경로
+            src="/images/up-arrow.png"
             alt="댓글 추가"
             className="add-comment-btn-image"
             onClick={handleAddComment}
@@ -101,10 +217,9 @@ const FeedCommentSection = ({ feedId, onClose, onAddComment, currentUserId }) =>
         </div>
       </div>
 
-      {/* 닫기 버튼 */}
       <img src="/images/exit-btn.png" alt="닫기 버튼" className="close-button-image" onClick={onClose} />
     </div>
-  )
-}
+  );
+};
 
-export default FeedCommentSection
+export default FeedCommentSection;

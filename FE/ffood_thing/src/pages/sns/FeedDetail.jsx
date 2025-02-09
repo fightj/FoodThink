@@ -1,108 +1,76 @@
-import React, { useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import FeedCommentSection from "../../components/sns/FeedCommentSection"
-import SearchBar from "../../components/base/SearchBar"
-import "../../styles/sns/FeedDetail.css"
-import { motion, AnimatePresence } from "framer-motion"
-import Swal from "sweetalert2"
-
-// 새로운 데이터 정의
-const feedData = {
-  id: 7,
-  foodName: "음식이름7",
-  content: "피드내용7",
-  writeTime: "2025-01-28T00:47:07.905327",
-  userId: 2,
-  username: "닉네임2",
-  userRecipeId: 417,
-  crawlingRecipeId: null,
-  images: [
-    "https://foodthinkawsbucket.s3.amazonaws.com/3cd0bc20-e8db-47c1-b49a-380ee3ab7825-짜장면.jpeg",
-    "https://foodthinkawsbucket.s3.amazonaws.com/db7f95aa-e358-4f8a-bd75-742e5e5695fe-떡볶이.jpeg",
-  ],
-  feedCommentResponseDtos: [
-    {
-      id: 2,
-      content: "수정된 댓글입니다.",
-      username: "닉네임",
-      writeTime: "2025-02-02T15:24:36.99946",
-    },
-    {
-      id: 3,
-      content: "참 맛있어보여요!",
-      username: "닉네임3",
-      writeTime: "2025-02-02T15:32:14.684305",
-    },
-    {
-      id: 4,
-      content: "추가한 댓글이에요!",
-      username: "닉네임",
-      writeTime: "2025-02-02T15:32:31.031496",
-    },
-  ],
-  like: false,
-}
-
-// 임시 레시피 데이터
-const recipes = [
-  {
-    recipeId: 417,
-    recipeTitle: "카라멜을 이용한 쌀강정 만들기~",
-    image: "https://recipe1.ezmember.co.kr/cache/recipe/2021/02/14/f7d498c21af6664a0dc6cd39a6ef17871_m.jpg",
-    nickname: "파토스",
-    userImage: null,
-    hits: 294,
-    bookMarkCount: 0,
-  },
-  {
-    recipeId: 352,
-    recipeTitle: "#술안주_간식 #가래떡간장구이_만들기 #단짠단짠한 간장을 발라서 구워 준 가래떡간장구이",
-    image: "https://recipe1.ezmember.co.kr/cache/recipe/2018/02/07/0763cc655016921d1bb5c456de8f322f1_m.jpg",
-    nickname: "스폰지밥",
-    userImage: null,
-    hits: 246,
-    bookMarkCount: 0,
-  },
-]
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import FeedCommentSection from "../../components/sns/FeedCommentSection";
+import SearchBar from "../../components/base/SearchBar";
+import "../../styles/sns/FeedDetail.css";
+import { motion, AnimatePresence } from "framer-motion";
+import Swal from "sweetalert2";
 
 function FeedDetail() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [showComments, setShowComments] = useState(false)
-  const [showDropdown, setShowDropdown] = useState(false)
-  const [isLiked, setIsLiked] = useState(feedData.like) // 'like' 상태 추가
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showComments, setShowComments] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [currentFeed, setCurrentFeed] = useState(null);
+  const [linkedRecipe, setLinkedRecipe] = useState(null);
+  const [sessionUserId, setSessionUserId] = useState(null);
 
-  // 현재 피드 데이터
-  const currentFeed = feedData // 기존 데이터를 사용하는 대신 새 데이터를 사용
+  useEffect(() => {
+    const fetchFeedData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await fetch(`https://i12e107.p.ssafy.io/api/feed/read/id/${id}`, { headers });
+        const data = await response.json();
+        setCurrentFeed(data);
+        setIsLiked(data.like);
+
+        if (data.userRecipeId) {
+          const recipeResponse = await fetch(`https://i12e107.p.ssafy.io/api/recipe/${data.userRecipeId}`);
+          const recipeData = await recipeResponse.json();
+          setLinkedRecipe(recipeData);
+        }
+      } catch (error) {
+        console.error("Error fetching feed data:", error);
+      }
+    };
+
+    // Fetch user ID from session storage
+    const storedUser = sessionStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setSessionUserId(user.userId);
+    }
+
+    fetchFeedData();
+  }, [id]);
+
   if (!currentFeed) {
-    return <div>Post not found</div>
+    return <div>Post not found</div>;
   }
 
-  // 피드 이미지, 작성자, 좋아요 수, 댓글
-  const images = currentFeed.images
-  const author = { username: currentFeed.username, image: null } // 사용자 데이터를 직접 설정
-  const likesCount = isLiked ? 1 : 0 // 좋아요 수 (임의로 설정)
-  const comments = currentFeed.feedCommentResponseDtos
-
-  // 연동된 레시피 데이터 가져오기
-  const linkedRecipe = recipes.find((recipe) => recipe.recipeId === currentFeed.userRecipeId)
+  const images = currentFeed.images;
+  const author = { username: currentFeed.username, image: currentFeed.userImage };
+  const likesCount = isLiked ? 1 : 0;
+  const comments = currentFeed.feedCommentResponseDtos;
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-  }
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
-  }
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
 
   const toggleComments = () => {
-    setShowComments(!showComments)
-  }
+    setShowComments(!showComments);
+  };
 
   const toggleDropdown = () => {
-    setShowDropdown(!showDropdown)
-  }
+    setShowDropdown(!showDropdown);
+  };
 
   const handleDelete = () => {
     Swal.fire({
@@ -113,26 +81,94 @@ function FeedDetail() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Delete!",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        // 삭제 로직 추가
-        console.log("Feed deleted")
-        Swal.fire({
-          title: "삭제!",
-          text: "피드가 삭제되었습니다.",
-          icon: "success",
-        })
+        try {
+          const token = localStorage.getItem("accessToken");
+
+          const response = await fetch(`https://i12e107.p.ssafy.io/api/feed/delete/${id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            Swal.fire({
+              title: "삭제!",
+              text: "피드가 삭제되었습니다.",
+              icon: "success",
+            }).then(() => {
+              navigate("/sns"); // Redirect to home or another page after deletion
+            });
+          } else {
+            console.error("Error deleting feed");
+            Swal.fire({
+              title: "Error!",
+              text: "피드 삭제 중 오류가 발생했습니다.",
+              icon: "error",
+            });
+          }
+        } catch (error) {
+          console.error("Error deleting feed:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "피드 삭제 중 오류가 발생했습니다.",
+            icon: "error",
+          });
+        }
       }
-    })
-  }
+    });
+  };
 
   const handleEdit = () => {
-    navigate(`/feed/${id}/update`)
-  }
+    navigate(`/feed/${id}/update`);
+  };
 
-  const handleLikeToggle = () => {
-    setIsLiked(!isLiked) // 'like' 상태 토글
-  }
+  const handleLikeToggle = async () => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      Swal.fire({
+        title: "로그인이 필요합니다",
+        text: "로그인 페이지로 이동하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "네, 이동합니다",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login");
+        }
+      });
+      return;
+    }
+
+    try {
+      const url = isLiked ? `https://i12e107.p.ssafy.io/api/feed/like/delete/${id}` : `https://i12e107.p.ssafy.io/api/feed/like/create/${id}`;
+      const response = await fetch(url, {
+        method: isLiked ? "DELETE" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setIsLiked(!isLiked);
+      } else {
+        console.error(`Error ${isLiked ? "unliking" : "liking"} the feed`);
+      }
+    } catch (error) {
+      console.error(`Error ${isLiked ? "unliking" : "liking"} the feed:`, error);
+    }
+  };
+
+  const handleAddComment = (newComment) => {
+    // Add the new comment to the local state or send it to the server
+    console.log("New comment added:", newComment);
+  };
 
   return (
     <div className="base-div">
@@ -151,21 +187,23 @@ function FeedDetail() {
                 </div>
                 <span className="username">{author.username || "Unknown User"}</span>
               </div>
-              <div className="edit-container" style={{ position: "relative" }}>
-                <button className="edit-button" onClick={toggleDropdown}>
-                  <img src="/images/etc-btn.png" alt="Edit Options" />
-                </button>
-                {showDropdown && (
-                  <div className="dropdown-menu">
-                    <button className="dropdown-item" onClick={handleEdit}>
-                      feed 수정
-                    </button>
-                    <button className="dropdown-item" onClick={handleDelete}>
-                      feed 삭제
-                    </button>
-                  </div>
-                )}
-              </div>
+              {sessionUserId === currentFeed.userId && (
+                <div className="edit-container" style={{ position: "relative" }}>
+                  <button className="edit-button1" onClick={toggleDropdown}>
+                    <img src="/images/etc-btn.png" alt="Edit Options1" />
+                  </button>
+                  {showDropdown && (
+                    <div className="dropdown-menu">
+                      <button className="dropdown-item" onClick={handleEdit}>
+                        feed 수정
+                      </button>
+                      <button className="dropdown-item" onClick={handleDelete}>
+                        feed 삭제
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* 이미지 Carousel */}
@@ -179,7 +217,7 @@ function FeedDetail() {
                       </button>
                       <button className="next-button" onClick={handleNext}>
                         ❯
-                      </button>
+                        </button>
                     </>
                   )}
                   <img src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="carousel-image" />
@@ -203,12 +241,11 @@ function FeedDetail() {
                 <img
                   src={isLiked ? "/images/feed_like_do.png" : "/images/feed_like_undo.png"}
                   alt="Like Icon"
-                  onClick={handleLikeToggle} // 'like' 상태 토글
+                  onClick={handleLikeToggle}
                   style={{ cursor: "pointer" }}
                 />
                 <span>{likesCount}</span>
 
-                {/* 댓글 아이콘 버튼 */}
                 <button className="comment-button" onClick={toggleComments}>
                   <img src="/images/feed_comment.png" alt="Comment Icon" />
                 </button>
@@ -223,7 +260,6 @@ function FeedDetail() {
               </p>
             </div>
 
-            {/* sns관련 연동된 레시피 */}
             {currentFeed.userRecipeId && linkedRecipe ? (
               <div className="linked-recipe-area" style={{ display: "flex", flexDirection: "column" }}>
                 <div className="link-recipe" style={{ marginBottom: "20px" }}>
@@ -264,13 +300,13 @@ function FeedDetail() {
               }}
               className="comment-slide"
             >
-              <FeedCommentSection feedId={currentFeed.id} onClose={toggleComments} />
+              <FeedCommentSection comments={comments} onClose={toggleComments} onAddComment={handleAddComment} feedId={id} />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
     </div>
-  )
+  );
 }
 
-export default FeedDetail
+export default FeedDetail;
