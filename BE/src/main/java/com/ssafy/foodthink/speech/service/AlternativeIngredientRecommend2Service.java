@@ -14,10 +14,7 @@ import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -43,7 +40,7 @@ public class AlternativeIngredientRecommend2Service {
         //레시피 ID에 해당하는 RecipeEntity 조회
         RecipeEntity recipeEntity = recipeRepository.findByRecipeId(recipeId);
 //                .orElseThrow(() -> new RuntimeException("Recipe not found"));
-        
+
         String recipeTitle = recipeEntity.getRecipeTitle(); //레시피 제목
 
         //레시피 ID에 해당하는 재료 목록 조회
@@ -141,6 +138,10 @@ public class AlternativeIngredientRecommend2Service {
             Map<String, Object> result = new HashMap<>();
             result.put("alternativeIngredients", alternativeIngredients != null ? alternativeIngredients : new ArrayList<>());
             result.put("message", message != null ? message : "알 수 없음");
+
+            //중복 재료 제거
+            Set<String> uniqueIngredients = new LinkedHashSet<>(alternativeIngredients);
+            result.put("alternativeIngredients", new ArrayList<>(uniqueIngredients));
 
             return result;
         } catch (Exception e) {

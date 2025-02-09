@@ -22,7 +22,7 @@ public class SpeechController {
     //음성 반환
     @PostMapping("/process")
     public ResponseEntity<?> processSpeech(
-            @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestHeader(value = "Authorization", required = false) String token, //로그인 해도 되고, 안 해도 되고
             @RequestParam("file") MultipartFile file,
             @RequestParam("recipeId") Long recipeId) {
         if (file.isEmpty()) {

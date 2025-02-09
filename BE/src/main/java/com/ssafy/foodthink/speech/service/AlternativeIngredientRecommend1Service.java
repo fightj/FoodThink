@@ -42,7 +42,7 @@ public class AlternativeIngredientRecommend1Service {
         //레시피 ID에 해당하는 RecipeEntity 조회
         RecipeEntity recipeEntity = recipeRepository.findByRecipeId(recipeId);
 //                .orElseThrow(() -> new RuntimeException("Recipe not found"));
-        
+
         String recipeTitle = recipeEntity.getRecipeTitle(); //레시피 제목
 
         //레시피 ID에 해당하는 재료 목록 조회
@@ -112,16 +112,13 @@ public class AlternativeIngredientRecommend1Service {
     }
 
     private List<String> parseAlternativeIngredients(String gptResponse) {
-        // GPT 응답을 분석하여 대체 재료 목록을 파싱하는 로직 필요
-        // 예: JSON 파싱 후 "alternative_ingredients" 값 반환
-        // 여기선 단순히 예시로 리스트를 반환한다고 가정
-        // 실제로는 JSON을 파싱해야 합니다.
-
+        //GPT 응답을 분석하여 대체 재료 목록을 파싱하는 로직 필요
+        //JSON 파싱 후 "alternative_ingredients" 값 반환
         try {
             // 불필요한 백틱 제거
-            String jsonResponse = gptResponse.replaceAll("(?s)^.*```json\\s*\\n", "");  // '```json' 이후의 공백 제거
-            jsonResponse = jsonResponse.replaceAll("\\n```.*$", "");  // '```' 이전의 모든 부분 제거
-            jsonResponse = jsonResponse.replaceAll("^(###|\\*\\*|\\*|\\n)+", "");
+            String jsonResponse = gptResponse.replaceAll("(?s)```json\\s*", "") // ```json 제거
+                    .replaceAll("```", "") // 마지막 ``` 제거
+                    .trim(); // 앞뒤 공백 제거
             // JSON 형식으로 응답을 파싱
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> responseMap = objectMapper.readValue(gptResponse, Map.class);
