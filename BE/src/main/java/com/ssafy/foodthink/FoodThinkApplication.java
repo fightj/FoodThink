@@ -3,10 +3,12 @@ package com.ssafy.foodthink;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.client.RestTemplate;
 
 @EnableScheduling
 @SpringBootApplication(exclude = ReactiveElasticsearchRepositoriesAutoConfiguration.class)
@@ -17,6 +19,10 @@ public class FoodThinkApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FoodThinkApplication.class, args);
+	}
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 
 }
