@@ -24,4 +24,11 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     @Query("SELECT r FROM RecipeEntity r JOIN r.ingredients i WHERE r.recipeTitle LIKE %:recipeTitle% or i.ingreName LIKE %:ingreName%")
     List<RecipeEntity> findByNameAndIngredientNameContaining(@Param("recipeTitle") String name, @Param("ingreName") String ingredientName);
     List<RecipeEntity> findByWriteTimeAfter(LocalDateTime twentyFourHoursAgo);
+    // 조회순 정렬
+    @Query("SELECT r FROM RecipeEntity r WHERE r.recipeId IN :ids ORDER BY r.hits DESC")
+    Page<RecipeEntity> findAllByRecipeIdInOrderByHitsDesc(@Param("ids") List<Long> ids, Pageable pageable);
+    // 북마크 개수순 정렬 (JPQL로 직접 조회)
+    @Query("SELECT r FROM RecipeEntity r LEFT JOIN r.recipeBookmarkEntities rb " +
+            "WHERE r.recipeId IN :ids GROUP BY r ORDER BY COUNT(rb) DESC")
+    Page<RecipeEntity> findAllByRecipeIdInOrderByBookmarkCountDesc(@Param("ids") List<Long> ids, Pageable pageable);
 }
