@@ -24,6 +24,9 @@ services:
       - WEATHER_API_KEY=${WEATHER_API_KEY}
       - DIALOGFLOW_PROJECT_ID=${DIALOGFLOW_PROJECT_ID}
       - ELASTICSEARCH_URIS=${ELASTICSEARCH_URIS}
+      - TZ=Asia/Seoul
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       elasticsearch:
         condition: service_healthy
