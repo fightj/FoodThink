@@ -35,6 +35,7 @@ public interface RecipeListRepository extends JpaRepository<RecipeEntity, Long> 
             Pageable pageable
     );
 
+
     //캐러셀용 : 레시피 목록 20개를 조회순으로
     @Query("SELECT r FROM RecipeEntity r WHERE r.isPublic = true ORDER BY r.hits DESC")
     List<RecipeEntity> findTopRecipesByHits(Pageable pageable);

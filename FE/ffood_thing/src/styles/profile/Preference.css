@@ -1,4 +1,4 @@
-/* 모달 배경 (어두운 효과) */
+/* ✅ 모달 배경 (어두운 효과) */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -9,7 +9,7 @@
   z-index: 999;
 }
 
-/* 음식 선호도 모달 */
+/* ✅ 음식 선호도 모달 */
 .preference-container {
   position: fixed;
   top: 50%; /* 화면 중앙 */
@@ -26,20 +26,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 80vh;
+  max-height: calc(100vh - 40px); /* ✅ 화면 크기에 맞게 동적 조절 */
   overflow-y: auto;
 }
 
-/* 닫기 버튼 */
+/* ✅ 닫기 버튼 */
 .close-btn {
   position: absolute;
-  top: 10px; /* 버튼 위치 조정 */
-  right: 10px; /* 버튼 위치 조정 */
+  top: 10px;
+  right: 10px;
   background: none;
   border: none;
-  font-size: 20px; /* 크기를 줄이려면 이 값을 변경 */
-  width: 40px; /* 📌 버튼 크기 조정 */
-  height: 40px; /* 📌 버튼 크기 조정 */
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   color: #777;
   z-index: 1001;
@@ -51,15 +51,10 @@
 
 .close-btn:hover {
   color: #000;
-  transform: scale(1.1); /* 📌 마우스 오버 시 약간 확대 */
+  transform: scale(1.1);
 }
 
-
-.close-btn:hover {
-  color: #000;
-}
-
-/* 선호 음식 & 기피 재료 컨테이너 */
+/* ✅ 선호 음식 & 기피 재료 컨테이너 */
 .preference-wrapper {
   display: flex;
   justify-content: space-between;
@@ -70,7 +65,7 @@
   flex-grow: 1;
 }
 
-/* 선호 음식 & 기피 재료 개별 컨테이너 */
+/* ✅ 선호 음식 & 기피 재료 개별 컨테이너 */
 .preference-section,
 .avoidance-section {
   flex: 1;
@@ -81,7 +76,7 @@
   align-items: center;
 }
 
-/* 선호 음식 영역을 기피 재료보다 더 크게 설정 */
+/* ✅ 선호 음식 영역을 기피 재료보다 더 크게 설정 */
 .preference-section {
   flex: 2;
 }
@@ -90,7 +85,7 @@
   flex: 1;
 }
 
-/* 리스트 스타일 */
+/* ✅ 리스트 스타일 */
 .preference-list,
 .avoidance-list {
   display: flex;
@@ -100,7 +95,7 @@
   flex-grow: 1;
 }
 
-/* 버튼 스타일 */
+/* ✅ 버튼 스타일 */
 .preference-btn,
 .avoidance-btn {
   padding: 10px 15px;
@@ -114,19 +109,19 @@
   min-width: 70px;
 }
 
-/* 선호 음식 버튼 선택 시 색 변경 */
+/* ✅ 선호 음식 버튼 선택 시 색 변경 */
 .preference-btn.selected {
   background-color: #4caf50;
   color: white;
 }
 
-/* 기피 재료 버튼 선택 시 색 변경 */
+/* ✅ 기피 재료 버튼 선택 시 색 변경 */
 .avoidance-btn.selected {
   background-color: #ff4d4d;
   color: white;
 }
 
-/* 저장 버튼 */
+/* ✅ 저장 버튼 */
 .save-btn {
   display: block;
   margin-top: 20px;
@@ -137,7 +132,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 100px;
+  min-width: 120px; /* ✅ 가변 크기 적용 */
   text-align: center;
 }
 
@@ -145,19 +140,17 @@
   background-color: #0056b3;
 }
 
-/* 📌 반응형: 모바일에서는 세로 정렬 */
+/* ✅ 반응형: 모바일에서는 세로 정렬 */
 @media (max-width: 768px) {
   .preference-container {
     width: 90%;
-    top: 50%;
-    bottom: auto;
     padding: 15px;
-    max-height: 80vh; /* 📌 세로 화면에서도 스크롤 가능하도록 */
+    max-height: calc(100vh - 40px);
     overflow-y: auto;
   }
 
   .preference-wrapper {
-    flex-direction: column; /* 📌 세로 정렬 */
+    flex-direction: column;
     align-items: center;
     gap: 15px;
   }
@@ -183,16 +176,14 @@
   .save-btn {
     font-size: 14px;
     padding: 10px 20px;
-    /* width: 50%; */
   }
 }
 
-/* 📌 작은 모바일 화면 (480px 이하) */
+/* ✅ 작은 모바일 화면 (480px 이하) */
 @media (max-width: 480px) {
   .preference-container {
     width: 95%;
     padding: 10px;
-    max-height: 80vh;
   }
 
   .preference-btn,
@@ -205,6 +196,5 @@
   .save-btn {
     font-size: 12px;
     padding: 8px 16px;
-    /* width: 70%; */
   }
 }

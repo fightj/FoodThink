@@ -1,5 +1,7 @@
 package com.ssafy.foodthink.user.repository;
 
+import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdfEntity;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.user.entity.RecipeViewHistoryEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +18,7 @@ public interface RecipeViewRepository extends JpaRepository<RecipeViewHistoryEnt
     List<RecipeViewHistoryEntity> findByUserEntity(UserEntity user); // 사용자가 조회한 모든 레시피
 
     List<RecipeViewHistoryEntity> findByUserEntity_userId(Long userId);
+
+    void deleteByUserEntity(UserEntity userEntity);
 }
 
