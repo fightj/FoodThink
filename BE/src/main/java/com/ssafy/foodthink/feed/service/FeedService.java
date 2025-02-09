@@ -32,4 +32,6 @@ public interface FeedService {
 
     //특정 레시피아이디를 가진 피드 조회
 //    List<FeedInRecipeResponseDto> getTop6FeedsByRecipeId(Long recipeId);
+    List<FeedSummaryResponseDto> getTop6FeedsByRecipeId(Long recipeId);
+
 }
