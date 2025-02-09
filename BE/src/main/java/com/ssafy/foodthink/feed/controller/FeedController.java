@@ -135,7 +135,9 @@ public class FeedController {
 
     //피드 댓글 삭제 기능
     @DeleteMapping("/comment/delete/{feedCommentId}")
-    public ResponseEntity<Void> deleteFeedCommentByFeedCommentId(@PathVariable Long feedCommentId){
+    public ResponseEntity<Void> deleteFeedCommentByFeedCommentId(@PathVariable Long feedCommentId, @RequestHeader("Authorization") String token){
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
         feedService.deleteFeedCommentByFeedCommentId(feedCommentId);
         return ResponseEntity.noContent().build();
     }
