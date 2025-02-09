@@ -50,10 +50,10 @@ public class ElasticController {
     }
 
     @GetMapping("/search/pagenation")
-    public ResponseEntity<Page<RecipeListResponseDto>> searchRecipes(@RequestParam String searchTerm,
+    public ResponseEntity<Page<RecipeListResponseDto>> searchRecipes(@RequestParam String query,
                                                                      @RequestParam(defaultValue = "0") int page,
                                                                      @RequestParam(defaultValue = "10") int size) {
-        Page<RecipeListResponseDto> result = elasticSearchService.getSearchedRecipe(searchTerm, page, size);
+        Page<RecipeListResponseDto> result = elasticSearchService.getSearchedRecipe(query, page, size);
         return ResponseEntity.ok(result);
     }
 
