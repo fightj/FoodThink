@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/speech")
@@ -18,11 +19,11 @@ public class SpeechController {
         this.whisperService = whisperService;
     }
 
-    // 📝 녹음된 파일을 Whisper API로 전송하여 텍스트 변환
+    //음성 반환
     @PostMapping("/process")
-    public ResponseEntity<String> processSpeech(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> processSpeech(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("❌ 파일이 비어 있습니다!");
+            return ResponseEntity.badRequest().body(Map.of("message", "파일이 비어 있습니다!"));
         }
 
         try {
@@ -31,10 +32,11 @@ public class SpeechController {
             file.transferTo(tempFile);
 
             // Whisper API로 전송
-            String transcript = whisperService.processAudio(tempFile);
+            Map<String, Object> transcript = whisperService.processAudio(tempFile);
 
             if (transcript == null || transcript.isEmpty()) {
-                return ResponseEntity.status(500).body("❌ 텍스트 변환 실패! Whisper API에서 반환된 텍스트가 비어있습니다.");
+                return ResponseEntity.status(500)
+                        .body(Map.of("message", "텍스트 변환 실패! Whisper API에서 반환된 텍스트가 비어있습니다."));
             }
 
             // 임시 파일 삭제
@@ -43,11 +45,13 @@ public class SpeechController {
             return ResponseEntity.ok(transcript);
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("파일 처리 중 오류 발생!");
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("message", "파일 처리 중 오류 발생!"));
         }
         catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("❌ 오류 발생! : " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("message", "오류 발생! : " + e.getMessage()));
         }
     }
 

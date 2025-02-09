@@ -145,6 +145,11 @@
 			<artifactId>json</artifactId>
 			<version>20231013</version>
 		</dependency>
+		<!-- Spring Data Elasticsearch -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+		</dependency>
 
 		<!-- 음성인식 관련 -->
 		<!-- MP3 변환을 위한 JLayer (선택 사항) -->

@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.recipes.entity;
 
+import com.ssafy.foodthink.recipeBookmark.entity.RecipeBookmarkEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import jakarta.persistence.*;
@@ -61,5 +62,7 @@ public class RecipeEntity {
     private List<IngredientEntity> ingredients = new ArrayList<>();
     @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProcessEntity> processes = new ArrayList<>();
+    @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<RecipeBookmarkEntity> recipeBookmarkEntities = new ArrayList<>();
 
 }

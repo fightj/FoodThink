@@ -7,7 +7,7 @@ const LoginCheck = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    console.log("🔑 로그인 토큰 확인:", token);
+    // console.log("🔑 로그인 토큰 확인:", token);
 
     if (!token) {
       Swal.fire({
