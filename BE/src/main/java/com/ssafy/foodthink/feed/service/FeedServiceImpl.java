@@ -383,6 +383,28 @@ public class FeedServiceImpl implements FeedService {
                 .build();
     }
 
+    @Override
+    public List<FeedSummaryResponseDto> getTop6FeedsByRecipeId(Long recipeId) {
+
+        Pageable pageable = PageRequest.of(0, 6);  // 페이지 크기를 6으로 설정
+        List<FeedEntity> feedEntities =  feedRepository.findTop6ByRecipeEntity_RecipeIdOrderByLikesDesc(recipeId, pageable);
+
+        List<FeedSummaryResponseDto> feedSummaryResponseDtos = new ArrayList<>();
+
+        for (FeedEntity feedEntity : feedEntities) {
+            FeedSummaryResponseDto feedSummaryResponseDto = FeedSummaryResponseDto.builder()
+                    .id(feedEntity.getId())
+                    .image(feedEntity.getImages().get(0).getImageUrl())
+                    .imageSize(feedEntity.getImages().size())
+                    .userNickname(feedEntity.getUserEntity().getNickname())
+                    .build();
+
+            feedSummaryResponseDtos.add(feedSummaryResponseDto);
+        }
+
+        return  feedSummaryResponseDtos;
+    }
+
 //    @Transactional(readOnly = true)
 //    @Override
 //    public List<FeedInRecipeResponseDto> getTop6FeedsByRecipeId(Long recipeId) {

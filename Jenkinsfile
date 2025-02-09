@@ -256,6 +256,7 @@ pipeline {
         WEATHER_API_KEY = credentials('WEATHER_API_KEY')
         DIALOGFLOW_PROJECT_ID = credentials('DIALOGFLOW_PROJECT_ID')
         ELASTICSEARCH_URIS = credentials('ELASTICSEARCH_URIS')
+        DIALOGFLOW_KEY_PATH = 'BE/src/main/resources/dialogflow-key.json'
     }
 
     stages {
@@ -266,6 +267,18 @@ pipeline {
                 }
             }
         }
+
+        stage('Retrieve Secret File') {
+                    steps {
+                        script {
+                            // Jenkins의 Secret File을 사용하여 `dialogflow-key.json` 파일을 가져오기
+                            withCredentials([file(credentialsId: 'GOOGLE_APPLICATION_CREDENTIALS', variable: 'DIALOGFLOW_KEY_PATH')]) {
+                                // Secret File을 `src/main/resources`로 복사
+                                sh "cp ${DIALOGFLOW_KEY_PATH} BE/src/main/resources/"
+                            }
+                        }
+                    }
+                }
 
         stage('Backend Build') {
             steps {
