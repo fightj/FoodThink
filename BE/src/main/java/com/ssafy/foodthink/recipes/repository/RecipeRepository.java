@@ -2,6 +2,8 @@ package com.ssafy.foodthink.recipes.repository;
 
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +20,7 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
     List<RecipeEntity> findByUserEntity(UserEntity userEntity);
     List<RecipeEntity> findAllByRecipeIdInOrderByWriteTimeDesc(List<Long> ids);
+    Page<RecipeEntity> findAllByRecipeIdInOrderByWriteTimeDesc(List<Long> ids, Pageable pageable);
     @Query("SELECT r FROM RecipeEntity r JOIN r.ingredients i WHERE r.recipeTitle LIKE %:recipeTitle% or i.ingreName LIKE %:ingreName%")
     List<RecipeEntity> findByNameAndIngredientNameContaining(@Param("recipeTitle") String name, @Param("ingreName") String ingredientName);
     List<RecipeEntity> findByWriteTimeAfter(LocalDateTime twentyFourHoursAgo);
