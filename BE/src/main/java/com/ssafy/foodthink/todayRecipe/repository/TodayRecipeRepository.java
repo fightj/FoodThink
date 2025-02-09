@@ -11,7 +11,8 @@ import java.util.Optional;
 @Repository
 public interface TodayRecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
-    TodayRecipeResponseDto findTodayRecipeResponseDtoByRecipeId(Long recipeId);
+
+    RecipeEntity findByRecipeId(Long recipeId);
 
     @Query("SELECT MAX(r.recipeId) FROM RecipeEntity r")
     Long findMaxRecipeId();

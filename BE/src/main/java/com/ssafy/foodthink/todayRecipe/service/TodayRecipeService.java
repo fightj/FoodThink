@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.todayRecipe.service;
 
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.todayRecipe.dto.TodayRecipeResponseDto;
 import com.ssafy.foodthink.todayRecipe.repository.TodayRecipeRepository;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -16,31 +18,40 @@ public class TodayRecipeService {
     private final TodayRecipeRepository todayRecipeRepository;
     private final Random random = new Random();
 
-    public List<TodayRecipeResponseDto> getRandomRecipes(int count){
+    public List<TodayRecipeResponseDto> getRandomRecipes(int count) {
         Long maxId = todayRecipeRepository.findMaxRecipeId();
-        if(maxId == null) throw new RuntimeException("레시피를 찾을 수 없어요.");
+        if (maxId == null) throw new RuntimeException("레시피를 찾을 수 없어요.");
 
-        // 랜덤으로 레시피 3개 선정
         List<TodayRecipeResponseDto> recipes = new ArrayList<>();
-        int attempts = 0; // 시도 횟수
-        int maxAttempts = maxId.intValue() * 2; // 최대 시도 횟수
+        int attempts = 0;
+        int maxAttempts = maxId.intValue() * 2;
 
-        while(recipes.size() < count && attempts < maxAttempts){
+        while (recipes.size() < count && attempts < maxAttempts) {
             Long select = random.nextLong(maxId) + 1;
-            if(todayRecipeRepository.existsByRecipeId(select)){ // 선택한 레시피가 존재하는 경우
-                TodayRecipeResponseDto recipe = todayRecipeRepository.findTodayRecipeResponseDtoByRecipeId(select);
-
-                if(recipe != null && !recipes.contains(recipe)){ // 이미 선택한 리스트에 포함하지 않는 경우
-                    recipes.add(recipe);
+            RecipeEntity recipeEntity = todayRecipeRepository.findByRecipeId(select);
+            if (recipeEntity != null) {
+                TodayRecipeResponseDto dto = mapToDto(recipeEntity);
+                if (!recipes.contains(dto)) {
+                    recipes.add(dto);
                 }
             }
+
             attempts++;
         }
 
-        if(recipes.isEmpty()){
+        if (recipes.isEmpty()) {
             throw new RuntimeException("랜덤 레시피 검색 실패");
         }
         return recipes;
+    }
+
+
+    private TodayRecipeResponseDto mapToDto(RecipeEntity recipeEntity) {
+        return TodayRecipeResponseDto.builder()
+                .recipeId(recipeEntity.getRecipeId())
+                .recipeTitle(recipeEntity.getRecipeTitle())
+                .image(recipeEntity.getImage())
+                .build();
     }
 
 
