@@ -68,7 +68,7 @@ public class AlternativeIngredientRecommend1Service {
                         "4. 대체재는 1~3가지 추천해줘.\n" +
                         "5. 가급적 같은 용도로 사용할 수 있는 재료를 추천해.\n\n" +
                         "### **결과 형식**\n" +
-                        "JSON 형식으로 반환해.\n" +
+                        "JSON 형식으로 반환해. JSON 이외의 설명을 절대 포함하지 마!\n" +
                         "```json\n" +
                         "{\n" +
                         "  \"alternative_ingredients\": [\"대체재1\", \"대체재2\", \"대체재3\"]\n" +
@@ -115,19 +115,29 @@ public class AlternativeIngredientRecommend1Service {
         //GPT 응답을 분석하여 대체 재료 목록을 파싱하는 로직 필요
         //JSON 파싱 후 "alternative_ingredients" 값 반환
         try {
-            // 불필요한 백틱 제거
-            String jsonResponse = gptResponse.replaceAll("(?s)```json\\s*", "") // ```json 제거
-                    .replaceAll("```", "") // 마지막 ``` 제거
-                    .trim(); // 앞뒤 공백 제거
-            // JSON 형식으로 응답을 파싱
+            // JSON 시작 위치 찾기
+            int jsonStartIndex = gptResponse.indexOf("{");
+            int jsonEndIndex = gptResponse.lastIndexOf("}");
+
+            if (jsonStartIndex == -1 || jsonEndIndex == -1) {
+                System.err.println("JSON 데이터가 올바르지 않습니다: " + gptResponse);
+                return new ArrayList<>();
+            }
+
+            // JSON 부분만 추출
+            String jsonResponse = gptResponse.substring(jsonStartIndex, jsonEndIndex + 1).trim();
+
+            // JSON 파싱
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> responseMap = objectMapper.readValue(gptResponse, Map.class);
+            Map<String, Object> responseMap = objectMapper.readValue(jsonResponse, Map.class);
 
             List<String> alternativeIngredients = (List<String>) responseMap.get("alternative_ingredients");
 
             return alternativeIngredients != null ? alternativeIngredients : new ArrayList<>();
+
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("JSON 파싱 실패 : " + gptResponse);
             return new ArrayList<>();
         }
     }
