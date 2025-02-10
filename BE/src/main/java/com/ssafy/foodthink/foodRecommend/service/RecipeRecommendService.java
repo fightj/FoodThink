@@ -20,7 +20,7 @@ public class RecipeRecommendService {
 
     public List<RecipeRecommendDto> getRecommendedRecipes(Long userId, int limit) {
         // 사용자 프로필 벡터
-        Map<String, Double> userProfile = userTFIDFService.generateUserProfile(userId);
+        Map<String, Double> userProfile = userTFIDFService.getUserTfIdfProfile(userId);
 
         // 모든 레시피의 TF-IDF 벡터
         List<RecipeEntity> allRecipes = recipeRepository.findAll();
