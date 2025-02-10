@@ -72,9 +72,13 @@ function Sidebar({ isOpen, toggleSidebar, userId }) {
           <Dropdown.Item href={`/profile/${sessionUserId}?tab=feed`}>내 피드</Dropdown.Item>
           <Dropdown.Divider />
           {isLoggedIn ? (
-            <Dropdown.Item href="/" onClick={() => localStorage.removeItem("accessToken")}>
+            <Dropdown.Item href="/" onClick={() => {
+              localStorage.removeItem("accessToken");
+              sessionStorage.removeItem("user");
+            }}>
               Log Out
             </Dropdown.Item>
+            
           ) : (
             <Dropdown.Item href="/login">Log In</Dropdown.Item>
           )}

@@ -1,54 +1,40 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import SearchBar from "../../components/base/SearchBar"
 import HomeBigButton from "../../components/home/HomeBigButton"
 import "../../styles/home/Home.css"
 import PageSlide from "../../components/base/PageSlide"
+import { UserContext } from "../../contexts/UserContext"
 
 function Home() {
   const [accessToken, setAccessToken] = useState(null)
   const location = useLocation()
   const navigate = useNavigate()
+  const { user } = useContext(UserContext) // useContext를 사용하여 UserContext에서 user를 가져옴
 
   useEffect(() => {
-    // URLSearchParams를 이용하여 URL의 쿼리 파라미터를 가져옴
-    const searchParams = new URLSearchParams(location.search)
-    const urlAccessToken = searchParams.get("accessToken")
-    console.log(urlAccessToken)
-    if (urlAccessToken) {
-      const storedAccessToken = localStorage.getItem("accessToken")
-
-      if (storedAccessToken !== urlAccessToken) {
-        // 액세스 토큰을 콘솔에 출력
-        console.log("New access token from URL:", urlAccessToken)
-
-        // 액세스 토큰을 로컬 스토리지에 저장
-        localStorage.setItem("accessToken", urlAccessToken)
-
-        // 로그인 성공 메시지 출력
-        console.log("로그인 성공")
-
-        // 상태 업데이트
-        setAccessToken(urlAccessToken)
-      } else {
-        console.log("Access token matches the stored token.")
-        setAccessToken(storedAccessToken)
-      }
-
-      // URL에서 accessToken 제거 (UX를 위해)
-      navigate("/", { replace: true })
-    } else {
-      // 로컬 스토리지에 저장된 액세스 토큰을 가져옴
-      const storedAccessToken = localStorage.getItem("accessToken")
-      if (storedAccessToken) {
-        console.log("현재 로그인한 유저:", storedAccessToken)
-        setAccessToken(storedAccessToken)
-      } else {
-        console.log("Access token is not present")
-        // navigate("/login") // 로그인 페이지로 이동
-      }
+    if (user) {
+      console.log("Current User Info in Home:", user) // 콘솔에 사용자 정보 출력
+      
     }
-  }, [location, navigate])
+
+    const urlParams = new URLSearchParams(location.search)
+    const token = urlParams.get("accessToken")
+    const isNewUser = urlParams.get("isNewUser")
+
+    if (token && !accessToken) {
+      console.log("Access Token:", token)
+      localStorage.setItem("accessToken", token)
+      setAccessToken(token)
+
+      // URL 파라미터를 삭제하여 무한 루프 방지
+      navigate("/", { replace: true })
+    }
+
+    if (isNewUser) {
+      console.log("Is New User:", isNewUser)
+    }
+  }, [location, navigate, accessToken, user])
 
   return (
     <PageSlide>

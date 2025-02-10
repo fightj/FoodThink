@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, useContext } from "react"
 import axios from "axios"
 import imageIcon from "../../assets/image.svg"
 import { Form } from "react-bootstrap"
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import "../../styles/sns/FeedWrite.css"
 import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
+import { UserContext } from "../../contexts/UserContext"
 
 function FeedWrite() {
   const navigate = useNavigate()
@@ -15,11 +16,16 @@ function FeedWrite() {
   const [foodName, setFoodName] = useState("")
   const [description, setDescription] = useState("")
   const [showBookmarkModal, setShowBookmarkModal] = useState(false)
-  const [bookmarkData, setBookmarkData] = useState([]) // 북마크 데이터 상태 추가
+  const [bookmarkData, setBookmarkData] = useState([])
   const fileInputRef = useRef()
 
+  const { user } = useContext(UserContext)
+
   useEffect(() => {
-    // 세션에서 유저 정보 가져오기
+    if (user) {
+      console.log("Current User Info in feed-write-page:", user)
+    }
+
     const userSession = JSON.parse(sessionStorage.getItem("user"))
     const sessionUserId = userSession ? userSession.userId : null
 
@@ -34,17 +40,14 @@ function FeedWrite() {
           },
         })
         console.log("Bookmark Data:", response.data)
-        setBookmarkData(response.data) // 북마크 데이터 상태에 저장
+        setBookmarkData(response.data)
       } catch (error) {
         console.error("Error fetching bookmark data:", error)
       }
     }
 
-    if (sessionUserId) {
-      fetchBookmarkData()
-    }
+    if (sessionUserId) fetchBookmarkData()
 
-    // 이전에 저장된 임시 데이터를 불러올지 묻기
     const savedFoodName = localStorage.getItem("foodName")
     const savedDescription = localStorage.getItem("description")
     const savedImages = localStorage.getItem("selectedImages")
@@ -113,23 +116,21 @@ function FeedWrite() {
     })
   }
 
-  const handleNavigate = (path) => {
-    temporarySave()
-    navigate(path)
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     const imagesToUpload = selectedImages.filter((img) => checkedImages.includes(img.id))
     console.log("업로드할 이미지:", imagesToUpload)
+    const accessToken = localStorage.getItem("accessToken")
+    console.log(accessToken)
 
     const formData = new FormData()
-    imagesToUpload.forEach((img) => formData.append("images", img.file))
+    imagesToUpload.forEach((img) => formData.append("images", img.file, img.file.name)) // 파일 추가 시 파일 이름도 포함
+
     const feedRequestDto = {
       foodName: foodName,
       content: description,
       userId: JSON.parse(sessionStorage.getItem("user")).userId, // Fetch userId from session storage
-      recipeId: 1, // Replace with actual recipe ID
+      recipeId: 375, // Replace with actual recipe ID
     }
     formData.append("feedRequestDto", new Blob([JSON.stringify(feedRequestDto)], { type: "application/json" }))
 
@@ -157,12 +158,12 @@ function FeedWrite() {
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
-            const accessToken = localStorage.getItem("accessToken")
             if (!accessToken) throw new Error("Access token is missing")
 
             await axios.post("https://i12e107.p.ssafy.io/api/feed/create", formData, {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "multipart/form-data",
               },
             })
 
@@ -206,8 +207,7 @@ function FeedWrite() {
         <div className="card-div-write">
           <div className="div-80">
             <button onClick={handleBack} className="back-button1">
-              <img src="/images/previous_button.png" alt="Previous" className="icon" />
-              이전
+              <img src="/images/previous_button.png" alt="Previous" className="icon" /> 이전
             </button>
             <form onSubmit={handleSubmit}>
               <div className="preview-container">

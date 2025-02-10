@@ -149,7 +149,7 @@ public class UserTFIDFService {
         // 북마크한 모든 레시피의 재료 TF-IDF 값 합산
         for (RecipeBookmarkEntity bookmark : bookmarkedRecipes) {
             RecipeEntity recipe = bookmark.getRecipeEntity();
-            List<RecipeTfIdfEntity> tfIdfValues = recipeTfIdfRepository.findByRecipe(recipe);
+            List<RecipeTfIdfEntity> tfIdfValues = recipeTfIdfRepository.findByRecipeEntity(recipe);
 
             for (RecipeTfIdfEntity tfIdf : tfIdfValues) {
                 String feature = tfIdf.getFeature();
@@ -184,7 +184,7 @@ public class UserTFIDFService {
 
             // 사용자가 좋아요한 피드에 레시피 정보가 있는 경우만
             if (recipe != null) {
-                List<RecipeTfIdfEntity> tfIdfValues = recipeTfIdfRepository.findByRecipe(recipe);
+                List<RecipeTfIdfEntity> tfIdfValues = recipeTfIdfRepository.findByRecipeEntity(recipe);
 
                 for (RecipeTfIdfEntity tfIdf : tfIdfValues) {
                     String feature = tfIdf.getFeature();
@@ -217,7 +217,7 @@ public class UserTFIDFService {
         // TF-IDF 계산
         for(RecipeViewHistoryEntity views : viewedRecipes){
             RecipeEntity recipe = views.getRecipeEntity();
-            List<RecipeTfIdfEntity> tfIdfValues = recipeTfIdfRepository.findByRecipe(recipe);
+            List<RecipeTfIdfEntity> tfIdfValues = recipeTfIdfRepository.findByRecipeEntity(recipe);
 
             for(RecipeTfIdfEntity tfIdf: tfIdfValues){
                 String feature = tfIdf.getFeature();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import { AnimatePresence } from "framer-motion"
 import axios from "axios"
@@ -26,12 +26,13 @@ import RecipeSearchResultPage from "./pages/recipe/RecipeSearchResultPage"
 import NavbarBottom from "./components/base/Navbar-bottom"
 import PageSlide from "./components/base/PageSlide"
 import Sidebar from "./components/base/Sidebar"
-import { UserProvider } from "./contexts/UserContext"
+import { UserProvider, UserContext } from "./contexts/UserContext" // 올바르게 import
 
+// Function to fetch user info
 const fetchUserInfo = async () => {
   try {
     const accessToken = localStorage.getItem("accessToken")
-    if (!accessToken) throw new Error("Access token is missing")
+    if (!accessToken) throw new Error("엑세스 토큰이 없습니다.")
 
     const response = await axios.get("https://i12e107.p.ssafy.io/api/users/read", {
       headers: {
@@ -47,6 +48,79 @@ const fetchUserInfo = async () => {
   }
 }
 
+// Function to parse URL parameters
+const getUrlParameter = (name) => {
+  const urlParams = new URLSearchParams(window.location.search)
+  return urlParams.get(name)
+}
+
+// Main App component
+const App = () => {
+  return (
+    <UserProvider>
+      <Router>
+        <MainApp />
+      </Router>
+    </UserProvider>
+  )
+}
+
+// Separate MainApp component to use context properly
+const MainApp = () => {
+  const [isOpen, setIsOpen] = useState(false)
+  const { user, setUser } = useContext(UserContext) // UserContext를 올바르게 사용
+  const [tokenLoaded, setTokenLoaded] = useState(false)
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        // Parse accessToken from URL parameters
+        const accessToken = getUrlParameter("accessToken")
+        if (accessToken) {
+          console.log("Access Token:", accessToken) // 콘솔에 accessToken 출력
+          localStorage.setItem("accessToken", accessToken)
+          setTokenLoaded(true)
+        }
+
+        // Optional: Parse isNewUser from URL parameters and log it
+        const isNewUser = getUrlParameter("isNewUser")
+        console.log("Is New User:", isNewUser) // 콘솔에 isNewUser 출력
+      } catch (error) {
+        console.error("Failed to load access token:", error)
+      }
+    }
+
+    initializeApp()
+  }, [])
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        if (!tokenLoaded) return
+        const userInfo = await fetchUserInfo()
+        setUser(userInfo)
+        sessionStorage.setItem("user", JSON.stringify(userInfo))
+        console.log("Current User Info:", userInfo) // 콘솔에 유저 정보 출력
+      } catch (error) {
+        console.error("Failed to fetch user info:", error)
+      }
+    }
+
+    getUserInfo()
+  }, [tokenLoaded, setUser])
+
+  const toggleSidebar = () => setIsOpen(!isOpen)
+
+  return (
+    <>
+      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
+      <AnimatedRoutes userInfo={user} />
+      <NavbarBottom />
+    </>
+  )
+}
+
+// Animated Routes component
 const AnimatedRoutes = ({ userInfo }) => {
   const location = useLocation()
 
@@ -167,37 +241,6 @@ const AnimatedRoutes = ({ userInfo }) => {
         />
       </Routes>
     </AnimatePresence>
-  )
-}
-
-const App = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [user, setUser] = useState(null)
-
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const userInfo = await fetchUserInfo()
-        setUser(userInfo)
-        sessionStorage.setItem("user", JSON.stringify(userInfo))
-      } catch (error) {
-        console.error("Failed to fetch user info:", error)
-      }
-    }
-
-    getUserInfo()
-  }, [])
-
-  const toggleSidebar = () => setIsOpen(!isOpen)
-
-  return (
-    <UserProvider>
-      <Router>
-        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
-        <AnimatedRoutes userInfo={user} />
-        <NavbarBottom />
-      </Router>
-    </UserProvider>
   )
 }
 
