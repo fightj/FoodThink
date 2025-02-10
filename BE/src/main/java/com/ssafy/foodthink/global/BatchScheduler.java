@@ -24,8 +24,8 @@ public class BatchScheduler {
         log.info("레시피 TF-IDF 계산 배치 완료");
     }
 
-    // 1분 간격으로 모든 사용자의 TF-IDF 계산
-    @Scheduled(cron = "0 * * * * *", zone = "Asia/Seoul")
+    // 1시간 간격으로 모든 사용자의 TF-IDF 계산
+    @Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
     public void scheduleUserProfileUpdate() {
         log.info("사용자 프로필 업데이트 배치 시작");
         userRepository.findAll().forEach(user ->
