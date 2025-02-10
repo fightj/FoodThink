@@ -2,18 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/profile/FeedList.css";
 
-const FeedList = ({ userId }) => {
+const FeedList = () => {
   const navigate = useNavigate();
   const [feeds, setFeeds] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchFeeds = async () => {
       try {
         const token = localStorage.getItem("accessToken");
 
-        const response = await fetch(`https://i12e107.p.ssafy.io/api/feed/read/user/${userId}`, {
+        const response = await fetch(`https://i12e107.p.ssafy.io/api/feed/read/login`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -33,11 +32,10 @@ const FeedList = ({ userId }) => {
       }
     };
 
-    if (userId) fetchFeeds();
-  }, [userId]);
+    fetchFeeds();
+  }, []);
 
   if (loading) return <div className="feed-container">⏳ 피드를 불러오는 중...🤔</div>;
-  if (error) return <div className="feed-container">❌ {error}</div>;
 
   if (!feeds.length) {
     return (

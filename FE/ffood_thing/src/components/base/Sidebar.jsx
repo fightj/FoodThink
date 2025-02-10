@@ -2,7 +2,7 @@ import React from "react"
 import { Dropdown } from "react-bootstrap"
 import "../../styles/base/Sidebar.css"
 
-function Sidebar({ isOpen, toggleSidebar, userId }) {
+function Sidebar({ isOpen, toggleSidebar }) {
   if (!isOpen) return null
 
   // 로컬스토리지에서 액세스 토큰 확인
@@ -11,7 +11,7 @@ function Sidebar({ isOpen, toggleSidebar, userId }) {
 
   // 세션에서 유저 정보 가져오기
   const userSession = JSON.parse(sessionStorage.getItem("user"))
-  const sessionUserId = userSession ? userSession.userId : null
+  const sessionUserNickname = userSession ? userSession.nickname : null
 
   return (
     <div
@@ -53,24 +53,31 @@ function Sidebar({ isOpen, toggleSidebar, userId }) {
             AI 추천받기
           </a>
         </li>
-        <li>
-          <a href={`/profile/${sessionUserId}`} className="nav-link text-white">
-            마이페이지
-          </a>
-        </li>
+        {/* ✅ 닉네임 기반 마이페이지 링크 */}
+        {sessionUserNickname && (
+          <li>
+            <a href={`/profile/${sessionUserNickname}`} className="nav-link text-white">
+              마이페이지
+            </a>
+          </li>
+        )}
       </ul>
       <hr />
       <Dropdown className="dropdown">
         <Dropdown.Toggle variant="link" id="user-dropdown" className="d-flex align-items-center text-white text-decoration-none">
           <img src="https://github.com/mdo.png" alt="" width="32" height="32" className="rounded-circle me-2" />
-          <strong>User</strong>
+          <strong>{sessionUserNickname || "User"}</strong>
         </Dropdown.Toggle>
 
         <Dropdown.Menu className="dropdown-menu-dark text-small shadow">
-          <Dropdown.Item href={`/profile/${sessionUserId}?tab=bookmarks`}>북마크한 레시피</Dropdown.Item>
-          <Dropdown.Item href={`/profile/${sessionUserId}?tab=recipes`}>내 레시피</Dropdown.Item>
-          <Dropdown.Item href={`/profile/${sessionUserId}?tab=feed`}>내 피드</Dropdown.Item>
+        {sessionUserNickname && (
+            <>
+          <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=bookmarks`}>북마크한 레시피</Dropdown.Item>
+          <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=recipes`}>내 레시피</Dropdown.Item>
+          <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=feed`}>내 피드</Dropdown.Item>
           <Dropdown.Divider />
+          </>
+          )}
           {isLoggedIn ? (
             <Dropdown.Item href="/" onClick={() => {
               localStorage.removeItem("accessToken");
