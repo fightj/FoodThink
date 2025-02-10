@@ -61,4 +61,8 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
             Pageable pageable
     );
     RecipeEntity findByRecipeId(Long recipeId);
+    
+    //닉네임으로 사용자 아이디 찾기 : 어떤 사용자가 작성한 레시피 목록 조회 (마이페이지)
+    List<RecipeEntity> findByUserEntity_NickName(String nickName);
+
 }

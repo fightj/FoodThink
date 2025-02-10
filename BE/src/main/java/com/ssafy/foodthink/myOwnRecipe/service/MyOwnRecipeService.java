@@ -302,8 +302,27 @@ public class MyOwnRecipeService {
     }
 
 
+    //다른 사용자가 작성한 래시피 목록 조회
+    //다른 사용자의 마이페이지
+    //닉네임으로 해당 사용자의 레시피 목록 조회
+    public List<MyOwnRecipeListResponseDto> getRecipeByNickName(String nickName) {
+        List<RecipeEntity> recipes = recipeRepository.findByUserEntity_NickName(nickName);
+
+        return recipes.stream()
+                .map(recipe -> new MyOwnRecipeListResponseDto(
+                        recipe.getRecipeId(),
+                        recipe.getRecipeTitle(),
+                        recipe.getImage(),
+                        recipe.getHits(),
+                        recipe.getRecipeBookmarkEntities().size()   //북마크 개수
+                )).collect(Collectors.toList());
+    }
+
+
+
     public RecipeEntity getRecipeByIdAndUserId(Long recipeId, Long userId) {
         return recipeRepository.findByRecipeIdAndUserEntity_UserId(recipeId, userId)
                 .orElseThrow(() -> new RuntimeException("이 레시피는 해당 사용자가 작성한 것이 아닙니다."));
     }
+
 }
