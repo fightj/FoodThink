@@ -191,7 +191,7 @@ public class MyOwnRecipeController {
 
     //다른 사용자가 작성한 래시피 목록 조회
     //다른 사용자의 마이페이지
-    @GetMapping("/read/diffUserRecipeList/{nickname}")
+    @GetMapping("/read/diffUserRecipeList/{nickName}")
     public ResponseEntity<List<MyOwnRecipeListResponseDto>> getDiffUserRecipeList(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable("nickName") String nickName) {
