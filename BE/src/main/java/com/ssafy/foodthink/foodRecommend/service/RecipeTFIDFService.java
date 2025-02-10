@@ -22,7 +22,7 @@ public class RecipeTFIDFService {
 
     // 모든 레시피에 대한 TF-IDF 벡터 계산
     @Transactional
-    public void calculateAndSaveAllTfIdf(){
+    public void calculateAndSaveAllTfIdf() {
         List<RecipeEntity> recipes = recipeRepository.findAll();
         List<List<String>> documents = recipes.stream()
                 .map(this::getRecipeFeatures)
@@ -33,7 +33,7 @@ public class RecipeTFIDFService {
         recipes.forEach(recipe -> {
             List<String> features = getRecipeFeatures(recipe); // 특성 추출
             Map<String, Double> tfidfVector = calculateTfIdfVector(features, documents, idfValues); // TF-IDF 계산
-            saveTfIdfVector(recipe, tfidfVector); // DB에 저장
+            saveTfIdfVector(recipe, tfidfVector);// DB에 저장
         });
     }
 
@@ -84,9 +84,12 @@ public class RecipeTFIDFService {
     }
 
     // 각 레시피의 모든 특성에 대한 TF-IDF 값 저장
-    private void saveTfIdfVector(RecipeEntity recipe, Map<String, Double> tfidfVector) {
+    @Transactional // 모든 레시피의 모든 재료의 TF-IDF 값을 저장하기 위해 필수
+    protected void saveTfIdfVector(RecipeEntity recipe, Map<String, Double> tfidfVector) {
+        recipeTfIdfRepository.deleteByRecipeEntity(recipe); // 기존 데이터 삭제
+
         tfidfVector.forEach((feature, value) -> {
-            recipeTfIdfRepository.upsertTfIdf( // 해당 레코드가 존재하면 업데이트하고, 존재하지 않으면 새로 삽입
+            recipeTfIdfRepository.upsertTfIdf(// 해당 레코드가 존재하면 업데이트하고, 존재하지 않으면 새로 삽입
                     recipe.getRecipeId(),
                     feature,
                     value

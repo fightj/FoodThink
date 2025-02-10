@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Pageable;
@@ -45,15 +46,27 @@ public class UserService {
     private final RecipeTfIdfRepository recipeTfIdfRepository;
 
 
-    // userid로 회원 찾기
-    public UserInfoDto readUserByUserId(Long userId) {
-        UserEntity userEntity = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+    // nickname으로 다른 사용자 정보 조회
+    @Transactional
+    public UserInfoDto readUserByUserNickname(String nickname) {
+        Optional<UserEntity> userEntityOptional = userRepository.findByNickname(nickname);
+
+        UserEntity userEntity = userEntityOptional.orElseThrow(() ->
+                new NoSuchElementException("해당 닉네임을 가진 사용자를 찾을 수 없습니다: " + nickname));
 
         return convertToDto(userEntity);
     }
 
-    // 회원 닉네임 수정
+    // token으로 사용자 정보 조회
+    public UserInfoDto readUserByUserId(Long userId) {
+        UserEntity userEntity = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+            return convertToDto(userEntity);
+        }
+
+
+        // 회원 닉네임 수정
     public UserInfoDto updateUserNickname(Long userId, String nickname) {
         UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));

@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import { Camera } from "@mediapipe/camera_utils"
 import "../../styles/recipe/RecipeComponent.css"
 
-const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
+const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeId }) => {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const swipeTrackingRef = useRef({
@@ -18,18 +18,56 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
   const [handDetected, setHandDetected] = useState(false)
   const [timer, setTimer] = useState(0) // 타이머 상태 추가
   const [isTimerRunning, setIsTimerRunning] = useState(false) // 타이머 실행 여부 상태 추가
+  const [isRecording, setIsRecording] = useState(false) // 녹음 상태 추가
+  const [lastServerResponse, setLastServerResponse] = useState(null) // 서버 응답 상태 추가
+  const [isAlarmPlaying, setIsAlarmPlaying] = useState(false) // 알람 재생 상태 추가
+  const [isRecordingModalVisible, setIsRecordingModalVisible] = useState(false) // 녹음 모달 상태 추가
+  const alarmAudioRef = useRef(new Audio("/sound/Alarm.wav")) // 알람 소리 파일 경로 설정
+
+  const currentProcess = pages[currentStep]
+
+  // 효과음 재생
+  const playSound = (url) => {
+    const audio = new Audio(url)
+    audio.play()
+  }
+
+  // 타이머 알람 재생 함수
+  const playAlarm = () => {
+    alarmAudioRef.current.currentTime = 0
+    alarmAudioRef.current.play()
+    setIsAlarmPlaying(true) // 알람 재생 상태를 true로 설정
+  }
+
+  // 타이머 알람 멈추기 함수
+  const stopAlarm = () => {
+    alarmAudioRef.current.pause()
+    alarmAudioRef.current.currentTime = 0
+    setIsAlarmPlaying(false) // 알람 재생 상태를 false로 설정
+  }
+
+  // 음성인식 필요 데이터
+  const token = localStorage.getItem("accessToken")
 
   useEffect(() => {
     let timerInterval = null
     if (isTimerRunning) {
       timerInterval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer + 1)
+        setTimer((prevTimer) => {
+          if (prevTimer <= 3 && prevTimer > 1) {
+            console.log(prevTimer) // 타이머가 3초 이하로 남았을 때 로그 출력
+          }
+          if (prevTimer === 1 && !isAlarmPlaying) {
+            playAlarm() // 타이머가 1이 될 때 알람 소리 재생
+          }
+          return prevTimer > 0 ? prevTimer - 1 : 0 // 타이머 감소
+        })
       }, 1000)
     } else {
       clearInterval(timerInterval)
     }
     return () => clearInterval(timerInterval)
-  }, [isTimerRunning])
+  }, [isTimerRunning, isAlarmPlaying])
 
   // 손 위치 변화에 따른 타이머 제어 함수
   const handleTimerGesture = (handLandmarks) => {
@@ -66,6 +104,81 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     swipeTrackingRef.current.lastSwipeTimestamp = Date.now()
     swipeTrackingRef.current.lastPositions = []
     setTimeout(() => setSwipeMessage(""), 1000)
+  }
+
+  // 텍스트를 음성으로 읽어주는 함수
+  const speakText = (text) => {
+    const synth = window.speechSynthesis
+    const utterance = new SpeechSynthesisUtterance(text)
+    synth.speak(utterance)
+  }
+
+  const handleResponse = (data) => {
+    const { intent, data: responseData } = data
+
+    if (!intent) {
+      const errorMessage = responseData.message
+      console.log("에러 메시지:", errorMessage)
+      speakText(errorMessage)
+      return
+    }
+
+    switch (intent) {
+      case "현재단계읽기":
+        const currentText = `${currentProcess.processOrder}. ${currentProcess.processExplain}`
+        console.log("읽을 텍스트:", currentText) // 콘솔에 출력
+        speakText(currentText)
+        break
+      case "이전단계돌아가기":
+        if (currentStep > 0) {
+          onPrevStep()
+          setSwipeMessage("이전 페이지")
+        } else {
+          setSwipeMessage("첫 페이지 입니다")
+        }
+        break
+      case "다음단계넘어가기":
+        if (currentStep < pages.length - 1) {
+          onNextStep()
+          setSwipeMessage("다음 페이지")
+        } else {
+          setSwipeMessage("마지막 페이지 입니다")
+        }
+        break
+      case "종료하기":
+        console.log("종료합니다.")
+        break
+      case "타이머중지":
+        setIsTimerRunning(false)
+        setTimer(0) // 타이머를 0으로 초기화
+        stopAlarm() // 알람 소리 멈추기
+        console.log("타이머 중지 및 초기화")
+        break
+      case "타이머설정":
+        const { seconds, minutes } = responseData
+        const totalSeconds = minutes * 60 + seconds
+        setTimer(totalSeconds)
+        setIsTimerRunning(true)
+        console.log(`타이머 설정: ${minutes}분 ${seconds}초`)
+        break
+      case "대체재료추천1":
+        const alternatives1 = responseData.alternativeIngredients.join(", ")
+        const recommendation1 = `다음 재료를 추천합니다: ${alternatives1}`
+        console.log(recommendation1)
+        speakText(recommendation1)
+        break
+      case "대체재료추천2":
+        const alternatives2 = responseData.alternativeIngredients.join(", ")
+        const recommendation2 = `다음 재료를 추천합니다: ${alternatives2}. ${responseData.message}`
+        console.log(recommendation2)
+        speakText(recommendation2)
+        break
+      default:
+        console.log("알 수 없는 intent:", intent)
+    }
+
+    // 최신 서버 응답을 상태로 업데이트
+    setLastServerResponse(data)
   }
 
   // 터치 이벤트 처리 함수
@@ -192,7 +305,7 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
         camera.stop()
       }
     }
-  }, [isTimerRunning]) // 타이머 상태를 의존성 배열에 추가
+  }, [isTimerRunning, isAlarmPlaying]) // 타이머 상태와 알람 재생 상태를 의존성 배열에 추가
 
   if (!pages || pages.length === 0) {
     return <div>No pages available</div>
@@ -206,7 +319,86 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     )
   }
 
-  const currentProcess = pages[currentStep]
+  // 음성 인식 및 녹음 코드
+  useEffect(() => {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
+    recognition.continuous = true
+    recognition.interimResults = false
+
+    recognition.onresult = (event) => {
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          const transcript = event.results[i][0].transcript.trim()
+          console.log("인식된 텍스트:", transcript) // 텍스트 콘솔 출력
+          if (transcript.toLowerCase().includes("안녕 푸딩")) {
+            console.log("안녕 푸딩 인식")
+            setIsRecording(true) // 녹음 상태 변경
+            setIsRecordingModalVisible(true) // 녹음 모달을 보이도록 설정
+            startRecording()
+          }
+          if (transcript.toLowerCase().includes("알람 꺼")) {
+            console.log("알람 꺼 인식")
+            stopAlarm() // 알람 소리 멈추기
+          }
+        }
+      }
+    }
+
+    recognition.start()
+
+    let mediaRecorder
+    let audioChunks = []
+
+    const startRecording = () => {
+      console.log("녹음 시작")
+      audioChunks = [] // 새로운 녹음 파일 생성을 위해 초기화
+      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        mediaRecorder = new MediaRecorder(stream)
+        mediaRecorder.start()
+
+        mediaRecorder.ondataavailable = (event) => {
+          audioChunks.push(event.data)
+        }
+
+        mediaRecorder.onstop = () => {
+          setIsRecording(false) // 녹음 상태 변경
+          setIsRecordingModalVisible(false) // 녹음 모달을 숨기도록 설정
+          const audioBlob = new Blob(audioChunks, { type: "audio/wav" })
+          sendAudioToServer(audioBlob)
+        }
+
+        setTimeout(() => {
+          mediaRecorder.stop()
+        }, 5000) // 5초 녹음
+      })
+    }
+
+    const sendAudioToServer = (audioBlob) => {
+      const formData = new FormData()
+      formData.append("file", audioBlob, "음성.wav") // 파일 이름을 지정하여 업로드
+      formData.append("recipeId", recipeId) // 현재 레시피 아이디 전송
+
+      fetch("https://i12e107.p.ssafy.io/api/speech/process", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: token,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("서버 응답 데이터:", data) // 서버 응답 데이터 콘솔 출력
+          handleResponse(data) // 서버 응답 데이터 처리
+        })
+        .catch((error) => {
+          console.error("오류:", error)
+        })
+    }
+
+    return () => {
+      recognition.stop()
+    }
+  }, []) // 빈 의존성 배열로 첫 렌더링 시에만 실행
 
   return (
     <div className="handpose-container3" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
@@ -232,6 +424,12 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
         {Math.floor(timer / 60)}분 {timer % 60}초
       </div>
       {currentStep === pages.length - 1 && <div className="end-message">마지막 페이지 입니다</div>}
+
+      {isRecordingModalVisible && (
+        <div className="recording-modal">
+          <img className="recording-gif" src="/images/record.gif" alt="Recording..." />
+        </div>
+      )}
     </div>
   )
 }
