@@ -15,6 +15,7 @@ function Home() {
   useEffect(() => {
     if (user) {
       console.log("Current User Info in Home:", user) // 콘솔에 사용자 정보 출력
+      
     }
 
     const urlParams = new URLSearchParams(location.search)

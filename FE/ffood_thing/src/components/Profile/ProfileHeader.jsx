@@ -5,7 +5,7 @@ import "../../styles/profile/ProfileHeader.css";
 import Preference from "./Preference";
 import Swal from "sweetalert2";
 
-const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
+const ProfileHeader = ({ userId, isOwnProfile }) => {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
   const [profileData, setProfileData] = useState({});
@@ -18,6 +18,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
   const [season, setSeason] = useState("spring");
   const [fallingElements, setFallingElements] = useState([]);
   const [showPreference, setShowPreference] = useState(false);
+  const [postCount, setPostCount] = useState(0); // 게시물 개수 상태 추가
 
   const seasonStyles = {
     spring: { background: "#FFEBE9", effectClass: "falling-cherry-blossom", emoji: "🌸" },
@@ -27,7 +28,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
   };
 
 
-  // ✅ 떨어지는 요소 생성
+  // 떨어지는 요소 생성
   const generateFallingElements = (currentSeason) => {
     const elements = Array.from({ length: 15 }).map((_, i) => ({
       id: i,
@@ -38,7 +39,37 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
     setFallingElements(elements);
   };
 
-  // ✅ 프로필 데이터 불러오는 함수
+  // 게시물 리스트를 가져와서 개수를 계산하는 함수
+  const fetchPostCount = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("🚨 Access Token 없음");
+      return;
+    }
+
+    try {
+      const response = await fetch("https://i12e107.p.ssafy.io/api/myOwnRecipe/read/myRecipeList", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`게시물 개수 조회 실패: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("📌 내가 작성한 레시피 리스트 데이터:", data);
+
+      setPostCount(data.length); // 리스트 길이를 게시물 개수로 설정
+    } catch (error) {
+      console.error("❌ 게시물 개수 불러오기 실패:", error);
+    }
+  };
+
+  // 프로필 데이터 불러오는 함수
   const fetchProfileData = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -70,7 +101,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
 
 
 
-  // ✅ 닉네임 변경 요청
+  // 닉네임 변경 요청
   const handleNicknameChange = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -102,7 +133,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
     }
   };
 
-  // ✅ 프로필 이미지 변경 핸들러
+  // 프로필 이미지 변경 핸들러
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -140,10 +171,10 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
     }
 
     const data = await response.json();
-    const newImageUrl = `${data.image}?timestamp=${new Date().getTime()}`; // ✅ `image` 필드 사용
+    const newImageUrl = `${data.image}?timestamp=${new Date().getTime()}`; // `image` 필드 사용
 
     setProfileData((prev) => ({ ...prev, image: newImageUrl })); 
-    setUser((prevUser) => ({ ...prevUser, image: newImageUrl })); // ✅ UserContext 업데이트
+    setUser((prevUser) => ({ ...prevUser, image: newImageUrl })); // UserContext 업데이트
 
     setIsImageEditing(false);
     setSelectedImage(null);
@@ -155,7 +186,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
   }
 };
 
-  // ✅ 회원 탈퇴 함수
+  // 회원 탈퇴 함수
   const handleDeleteAccount = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -209,12 +240,13 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
     generateFallingElements(newSeason);
   };
 
-  // ✅ useEffect (프로필 데이터 갱신)
+  // useEffect (프로필 데이터 갱신)
   useEffect(() => {
     fetchProfileData();
-  }, [userId]); // ✅ userId가 변경될 때만 실행
+    fetchPostCount(); // 게시물 개수도 가져오기
+  }, [userId]); // userId가 변경될 때만 실행
 
-    // ✅ useEffect (배경 애니메이션 분리)
+    // useEffect (배경 애니메이션 분리)
     useEffect(() => {
       generateFallingElements(season);
     }, [season]); // ✅ season 변경 시만 실행
@@ -249,7 +281,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
         <button className="winter-btn" onClick={() => changeSeason("winter")}>❄</button>
       </div>
 
-      {/* 🟡 프로필 정보 */}
+      {/* 프로필 정보 */}
       <div className="profile-content">
         {/* 프로필 이미지 */}
         <div className="profile-avatar-container">
@@ -266,21 +298,19 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
             )}
           </div>
           <div className="profile-info">
-            <span>구독자수: <strong>{profileData?.subscribers || 0}</strong></span>
-            <span>게시물: <strong>{profileData?.posts || 0}</strong></span>
-            {/* <span>구독자수: <strong>{subscribers}</strong></span>
-            <span>게시물: <strong>{posts}</strong></span> */}
+            <span>구독자 수: <strong>{profileData?.subscribers || 0}</strong></span>
+            <span>게시물 수: <strong>{postCount}</strong></span> {/* 게시물 수 추가 */}
           </div>
-          {/* ✅ 본인 프로필일 때만 선호/기피 버튼 표시 */}
+          {/* 본인 프로필일 때만 선호/기피 버튼 표시 */}
           {isOwnProfile && (
         <button className="preference-button" onClick={() => setShowPreference(true)}>
           선호/기피
         </button>
       )}
-      {/* ✅ 모달 렌더링 */}
+      {/* 모달 렌더링 */}
       {showPreference && <Preference onClose={() => setShowPreference(false)} userId={userId} />}
         </div>
-        {/* ✅ 회원 탈퇴 버튼 추가 (우측 하단) */}
+        {/* 회원 탈퇴 버튼 추가 (우측 하단) */}
         {isOwnProfile && (
           <div className="profile-actions">
             <button className="btn btn-danger delete-btn" onClick={handleDeleteAccount}>
@@ -289,7 +319,7 @@ const ProfileHeader = ({ userId, isOwnProfile, onOpenPreference }) => {
           </div>
         )}
       </div>
-      {/* 🟡 닉네임 수정 모달 */}
+      {/* 닉네임 수정 모달 */}
       {isEditing && (
         <div className="nickname-modal-overlay">
           <div className="nickname-modal">

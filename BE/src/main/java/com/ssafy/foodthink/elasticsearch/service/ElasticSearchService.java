@@ -15,6 +15,7 @@ import com.ssafy.foodthink.recipes.repository.IngredientRepository;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -209,6 +210,49 @@ public class ElasticSearchService {
         }
 
     }
+
+    //작성순 페이지네이션 처리
+    public Page<RecipeListResponseDto> getSearchedRecipe(String searchTerm, int page, int size, String orderBy) {
+        List<Long> ids = searchRecipeIds(searchTerm);
+
+        // Pageable 설정
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("writeTime")));
+
+        // 페이지네이션 처리
+        Page<RecipeEntity> pageResult;
+
+        // 정렬 방식에 따라 적절한 Repository 메서드 호출
+        switch (orderBy.toLowerCase()) {
+            case "hits": // 조회순
+                pageResult = recipeRepository.findAllByRecipeIdInOrderByHitsDesc(ids, pageable);
+                break;
+            case "bookmarks": // 북마크 개수순
+                pageResult = recipeRepository.findAllByRecipeIdInOrderByBookmarkCountDesc(ids, pageable);
+                break;
+            default: // 기본값 (작성 시간순)
+                pageResult = recipeRepository.findAllByRecipeIdInOrderByWriteTimeDesc(ids, pageable);
+                break;
+        }
+
+        // Page를 RecipeListResponseDto로 변환
+        List<RecipeListResponseDto> recipeListResponseDtos = pageResult.stream()
+                .map(searchedRecipe -> new RecipeListResponseDto(
+                        searchedRecipe.getRecipeId(),
+                        searchedRecipe.getRecipeTitle(),
+                        searchedRecipe.getImage(),
+                        searchedRecipe.getUserEntity().getNickname(),
+                        searchedRecipe.getUserEntity().getImage(),
+                        searchedRecipe.getHits(),
+                        (long) searchedRecipe.getRecipeBookmarkEntities().size()
+                ))
+                .collect(Collectors.toList());
+
+        logger.info("검색 결과 갯수: " + recipeListResponseDtos.size());
+
+        // Page로 결과 반환 (페이지 번호, 페이지 크기, 전체 아이템 수 등을 함께 반환)
+        return new PageImpl<>(recipeListResponseDtos, pageable, pageResult.getTotalElements());
+    }
+
 
 
 }

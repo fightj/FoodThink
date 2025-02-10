@@ -5,6 +5,8 @@ import co.elastic.clients.elasticsearch.core.InfoResponse;
 import com.ssafy.foodthink.elasticsearch.dto.ElasticSearchRecipeDto;
 import com.ssafy.foodthink.elasticsearch.entity.RecipeElasticEntity;
 import com.ssafy.foodthink.elasticsearch.service.ElasticSearchService;
+import com.ssafy.foodthink.recipes.dto.RecipeListResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +47,15 @@ public class ElasticController {
     @GetMapping("/search")
     public ResponseEntity<?> searchRecipesTest(@RequestParam String query){
         return ResponseEntity.ok(elasticSearchService.getSearchedRecipe(query));
+    }
+
+    @GetMapping("/search/pagenation")
+    public ResponseEntity<Page<RecipeListResponseDto>> searchRecipes(@RequestParam String query,
+                                                                     @RequestParam(defaultValue = "0") int page,
+                                                                     @RequestParam(defaultValue = "10") int size,
+                                                                     @RequestParam(defaultValue = "writeTime") String orderBy) {
+        Page<RecipeListResponseDto> result = elasticSearchService.getSearchedRecipe(query, page, size, orderBy);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/search/db")
