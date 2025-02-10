@@ -68,7 +68,7 @@ public class AlternativeIngredientRecommend1Service {
                         "4. 대체재는 1~3가지 추천해줘.\n" +
                         "5. 가급적 같은 용도로 사용할 수 있는 재료를 추천해.\n\n" +
                         "### **결과 형식**\n" +
-                        "JSON 형식으로 반환해. JSON 이외의 설명을 절대 포함하지 마!\n" +
+                        "JSON 형식으로 반환해. JSON 이외의 설명을 절대 포함 하지 마!\n" +
                         "```json\n" +
                         "{\n" +
                         "  \"alternative_ingredients\": [\"대체재1\", \"대체재2\", \"대체재3\"]\n" +
