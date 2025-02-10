@@ -33,15 +33,14 @@ public class UserController {
 
     
     // 회원 정보 조회
-    @GetMapping("/read")
-    public ResponseEntity<UserInfoDto> readCurrentUser(@RequestHeader("Authorization") String token) {
-        String accessToken = token.replace("Bearer ", "");
-        Long userId = jwtUtil.getUserId(accessToken);
-        UserInfoDto userInfoDto = userService.readUserByUserId(userId);
+    @GetMapping("/read/{nickname}")
+    public ResponseEntity<UserInfoDto> readCurrentUser(@PathVariable String nickname) {
+        UserInfoDto userInfoDto = userService.readUserByUserNickname(nickname);
         return ResponseEntity.ok(userInfoDto);
     }
 
     // 회원 닉네임 수정
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/update/nickname")
     public ResponseEntity<UserInfoDto> updateUserNickname(@RequestHeader("Authorization") String token, @RequestBody UserInfoDto updatedInfo) {
         String accessToken = token.replace("Bearer ", "");
@@ -52,6 +51,7 @@ public class UserController {
     }
 
     // 회원 프로필 사진 수정
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/update/image")
     public ResponseEntity<UserInfoDto> updateUserImage(@RequestHeader("Authorization") String token, @RequestPart("image") MultipartFile image) {
         String accessToken = token.replace("Bearer ", "");
@@ -63,6 +63,7 @@ public class UserController {
     }
 
     // 회원 탈퇴
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String token) {
         String accessToken = token.replace("Bearer ", "");
@@ -74,6 +75,7 @@ public class UserController {
     }
 
     // 회원 관심사 조회
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/read/interest")
     public ResponseEntity<List<UserInterestDto>> readUserInterest(@RequestHeader("Authorization") String token) {
         String accessToken = token.replace("Bearer ", "");
@@ -84,6 +86,7 @@ public class UserController {
 
 
     // 회원 관심사 수정
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/update/interest")
     public ResponseEntity<List<UserInterestDto>> updateUserInterests(@RequestHeader("Authorization") String token, @RequestBody List<UserInterestDto> interestDtos){
         String accessToken = token.replace("Bearer ", "");
@@ -95,6 +98,7 @@ public class UserController {
 
 
     // 사용자의 레시피 조회 기록 저장
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/create/recipe/view/{recipeId}")
     public ResponseEntity<String> createRecipeView(@RequestHeader("Authorization") String token, @PathVariable Long recipeId){
         String accessToken = token.replace("Bearer ", "");
@@ -104,6 +108,7 @@ public class UserController {
     }
 
     // 사용자의 최근 본 레시피 10개 조회
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/read/recipe/view")
     public ResponseEntity<List<RecipeViewDto>> readRecentRecipeViews(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "10") int count) {
         String accessToken = token.replace("Bearer ", "");
