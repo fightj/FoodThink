@@ -191,18 +191,23 @@ public class MyOwnRecipeController {
 
     //다른 사용자가 작성한 래시피 목록 조회
     //다른 사용자의 마이페이지
-    @GetMapping("/read/diffUserRecipeList/{nickName}")
+    @GetMapping("/read/diffUserRecipeList/{nickname}")
     public ResponseEntity<List<MyOwnRecipeListResponseDto>> getDiffUserRecipeList(
             @RequestHeader(value = "Authorization", required = false) String token,
             @PathVariable("nickName") String nickName) {
-        // JWT에서 userId 호출
-        String accessToken = token.replace("Bearer ", "");
-        Long userId = jwtUtil.getUserId(accessToken);
 
-        UserEntity userEntity = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = null;
 
-        List<MyOwnRecipeListResponseDto> recipeList = myOwnRecipeService.getRecipeByNickName(nickName);
+        if(token != null && token.startsWith("Bearer ")) {
+            try {
+                String accessToken = token.replace("Bearer ", "");
+                userId = jwtUtil.getUserId(accessToken);
+            } catch (Exception e) {
+                userId = null;
+            }
+        }
+
+        List<MyOwnRecipeListResponseDto> recipeList = myOwnRecipeService.getRecipesByNickname(nickName);
 
         return ResponseEntity.ok(recipeList);
 

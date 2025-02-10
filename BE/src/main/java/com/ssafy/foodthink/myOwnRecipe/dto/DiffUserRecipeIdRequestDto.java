@@ -15,5 +15,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DiffUserRecipeIdRequestDto {
-    private String nickName;
+    private String nickname;
 }
