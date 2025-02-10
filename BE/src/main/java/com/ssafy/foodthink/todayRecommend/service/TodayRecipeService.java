@@ -1,14 +1,13 @@
-package com.ssafy.foodthink.todayRecipe.service;
+package com.ssafy.foodthink.todayRecommend.service;
 
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
-import com.ssafy.foodthink.todayRecipe.dto.TodayRecipeResponseDto;
-import com.ssafy.foodthink.todayRecipe.repository.TodayRecipeRepository;
+import com.ssafy.foodthink.todayRecommend.dto.TodayRecipeResponseDto;
+import com.ssafy.foodthink.todayRecommend.repository.TodayRecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
