@@ -31,4 +31,5 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     @Query("SELECT r FROM RecipeEntity r LEFT JOIN r.recipeBookmarkEntities rb " +
             "WHERE r.recipeId IN :ids GROUP BY r ORDER BY COUNT(rb) DESC")
     Page<RecipeEntity> findAllByRecipeIdInOrderByBookmarkCountDesc(@Param("ids") List<Long> ids, Pageable pageable);
+    RecipeEntity findByRecipeId(Long recipeId);
 }

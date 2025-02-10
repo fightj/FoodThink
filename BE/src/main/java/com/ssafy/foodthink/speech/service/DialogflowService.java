@@ -4,11 +4,11 @@ import com.google.auth.oauth2.GoogleCredentials;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import com.google.cloud.dialogflow.v2.*;
-import com.google.protobuf.Struct;
-import com.google.protobuf.Value;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,8 +24,18 @@ public class DialogflowService {
     @org.springframework.beans.factory.annotation.Value("${dialogflow.project-id}")
     private String projectId;
 
-    public Map<String, Object> detectIntentText(String text) {
+    private final AlternativeIngredientRecommend1Service alternativeIngredientRecommend1Service;    //대체재료 추천1
+    private final AlternativeIngredientRecommend2Service alternativeIngredientRecommend2Service;    //대체재료 추천2
+
+    public DialogflowService(AlternativeIngredientRecommend1Service alternativeIngredientRecommend1Service,
+                             AlternativeIngredientRecommend2Service alternativeIngredientRecommend2Service) {
+        this.alternativeIngredientRecommend1Service = alternativeIngredientRecommend1Service;
+        this.alternativeIngredientRecommend2Service = alternativeIngredientRecommend2Service;
+    }
+
+    public Map<String, Object> detectIntentText(String text, String token, Long recipeId) {
         Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("data", new HashMap<>());
 
         try {
             //세션 클라이언트 생성
@@ -56,17 +66,18 @@ public class DialogflowService {
             System.out.println("감지된 intent : " + intentName);
             System.out.println("confidence score : " + confidence);
 
-            //정확도가 낮거나 intent가 비어있을 때 재시도 요청 반환
-            if(confidence < 0.6 || intentName.isEmpty()) {
-                responseMap.put("message", "죄송합니다, 다시 한 번 말해주세요.");
-                responseMap.put("inetent", "");
-                return responseMap;
-            }
-
             responseMap.put("intent", intentName);
 
-            //intent 처리
-            if ("타이머설정".equals(intentName)) {
+            if("대체재료추천1".equals(intentName)) {
+                //OO 대신 다른 재료 추천해줘.
+                List<String> alternativeIngredients = alternativeIngredientRecommend1Service.recommendAlternativeIngredients(token, recipeId, text);
+                responseMap.put("data", Map.of("alternativeIngredients", alternativeIngredients));
+            } else if("대체재료추천2".equals(intentName)) {
+                //OO대신 XX 어때?
+                // 대체 재료 추천 처리
+                Map<String, Object> alternativeIngredients = alternativeIngredientRecommend2Service.recommendAlternativeIngredients(token, recipeId, text);
+                responseMap.put("data", alternativeIngredients);
+            } else if ("타이머설정".equals(intentName)) {
                 int minutes = 0, seconds = 0;
                 if (text != null && !text.isEmpty()) {
                     //정규식 패턴: "XX분YY초" 또는 "XX분" 또는 "YY초"
@@ -86,9 +97,14 @@ public class DialogflowService {
                     }
                 }
 
-                //응답 추가
-                responseMap.put("minutes", minutes);
-                responseMap.put("seconds", seconds);
+                responseMap.put("data", Map.of("minutes", minutes, "seconds", seconds));
+            } else if(List.of("현대단계읽기", "다음단계넘어가기", "이전단계돌아가기", "타이머중지", "종료하기").contains(intentName)) {
+                responseMap.put("data", Map.of());
+            } else {
+                //정확도가 낮거나 intent가 비어있을 때 재시도 요청 반환
+                if(confidence < 0.6 || intentName.isEmpty()) {
+                    responseMap.put("data", Map.of("message", "죄송합니다, 다시 한 번 말하거나 다른 방식을 시도해주세요."));
+                }
             }
 
         } catch (IOException e) {
