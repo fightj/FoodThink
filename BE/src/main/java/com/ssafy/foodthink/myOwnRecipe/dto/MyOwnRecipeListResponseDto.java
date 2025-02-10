@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /*
-    내가 작성한 레시피 목록 조회
-    (마이페이지 사용?)
+    내가 작성한 레시피 목록 조회 + 다른 사용자가 작성한 레시피 목록 조회
+    (마이페이지 사용)
  */
 
 @Getter

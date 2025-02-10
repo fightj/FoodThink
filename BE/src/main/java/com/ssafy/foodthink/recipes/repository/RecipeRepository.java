@@ -19,11 +19,16 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     Optional<RecipeEntity> findByRecipeIdAndUserEntity_UserId(Long recipeId, Long userId);
 
     List<RecipeEntity> findByUserEntity(UserEntity userEntity);
+
     List<RecipeEntity> findAllByRecipeIdInOrderByWriteTimeDesc(List<Long> ids);
+
     Page<RecipeEntity> findAllByRecipeIdInOrderByWriteTimeDesc(List<Long> ids, Pageable pageable);
+
     @Query("SELECT r FROM RecipeEntity r JOIN r.ingredients i WHERE r.recipeTitle LIKE %:recipeTitle% or i.ingreName LIKE %:ingreName%")
     List<RecipeEntity> findByNameAndIngredientNameContaining(@Param("recipeTitle") String name, @Param("ingreName") String ingredientName);
+
     List<RecipeEntity> findByWriteTimeAfter(LocalDateTime twentyFourHoursAgo);
+
     // 조회순 정렬 (hits 기준) + 카테고리 필터링 (선택하지 않으면 전체 검색)
     @Query("SELECT r FROM RecipeEntity r WHERE r.recipeId IN :ids " +
             "AND (:cateType IS NULL OR :cateType = '' OR r.cateType = :cateType) " +
@@ -60,5 +65,10 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
             @Param("cateMainIngre") String cateMainIngre,
             Pageable pageable
     );
+
     RecipeEntity findByRecipeId(Long recipeId);
+
+    //닉네임으로 사용자 아이디 찾기 : 어떤 사용자가 작성한 레시피 목록 조회 최신순 (마이페이지)
+    List<RecipeEntity> findByUserEntity_UserIdOrderByWriteTimeDesc(Long userId);
+
 }

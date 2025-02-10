@@ -302,8 +302,35 @@ public class MyOwnRecipeService {
     }
 
 
+    //다른 사용자가 작성한 래시피 목록 조회
+    //다른 사용자의 마이페이지
+    //닉네임으로 사용자아이디를 찾고 해당 사용자의 레시피 목록 조회
+    public List<MyOwnRecipeListResponseDto> getRecipesByNickname(String nickname) {
+        // nickname으로 userId 조회
+        UserEntity userEntity = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + nickname));
+
+        Long userId = userEntity.getUserId();
+
+        // 해당 유저의 레시피 최신순 조회
+        List<RecipeEntity> recipes = recipeRepository.findByUserEntity_UserIdOrderByWriteTimeDesc(userId);
+
+        return recipes.stream()
+                .map(recipe -> new MyOwnRecipeListResponseDto(
+                        recipe.getRecipeId(),
+                        recipe.getRecipeTitle(),
+                        recipe.getImage(),
+                        recipe.getHits(),
+                        recipe.getRecipeBookmarkEntities().size() // 북마크 개수 가져오기
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+
     public RecipeEntity getRecipeByIdAndUserId(Long recipeId, Long userId) {
         return recipeRepository.findByRecipeIdAndUserEntity_UserId(recipeId, userId)
                 .orElseThrow(() -> new RuntimeException("이 레시피는 해당 사용자가 작성한 것이 아닙니다."));
     }
+
 }
