@@ -1,5 +1,8 @@
 package com.ssafy.foodthink.subscribe.service;
 
+import com.ssafy.foodthink.recipes.dto.RecipeListTop20ResponseDto;
+import com.ssafy.foodthink.recipes.entity.RecipeEntity;
+import com.ssafy.foodthink.recipes.repository.RecipeRepository;
 import com.ssafy.foodthink.subscribe.entity.SubscribeEntity;
 import com.ssafy.foodthink.subscribe.repository.SubscribeRepository;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
@@ -15,10 +18,12 @@ import java.util.Optional;
 public class SubscribeServiceImpl implements SubscribeService{
     private final UserRepository userRepository;
     private final SubscribeRepository subscribeRepository;
+    private final RecipeRepository recipeRepository;
 
-    public SubscribeServiceImpl(UserRepository userRepository, SubscribeRepository subscribeRepository) {
+    public SubscribeServiceImpl(UserRepository userRepository, SubscribeRepository subscribeRepository, RecipeRepository recipeRepository) {
         this.userRepository = userRepository;
         this.subscribeRepository = subscribeRepository;
+        this.recipeRepository = recipeRepository;
     }
 
     @Override
@@ -103,5 +108,18 @@ public class SubscribeServiceImpl implements SubscribeService{
                 .orElseThrow(() -> new RuntimeException("구독자(현재 로그인한 사용자)를 찾을 수 없습니다."));
 
         return subscribeRepository.countBySubscriber(subscriber);
+    }
+
+    @Override
+    public List<RecipeListTop20ResponseDto> readRecipesBySubscribe(Long id) {
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("로그인한 사용자를 찾을 수 없습니다."));
+
+        //구독한 사용자들
+//        List<UserEntity> userEntities = subscribeRepository.findSubscribedUserBySubscriber(userEntity);
+
+        //해당 사용자들 레시피 조회
+        List<RecipeEntity> recipeEntities = recipeRepository.findSubscribedRecipes(id);
+        return List.of();
     }
 }

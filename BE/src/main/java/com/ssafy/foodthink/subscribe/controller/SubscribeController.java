@@ -79,4 +79,10 @@ public class SubscribeController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/read/recipes")
+    public ResponseEntity<?> readRecipesBySubscribe(){
+        subscribeService.readRecipesBySubscribe(21L);
+        return ResponseEntity.ok("");
+    }
 }
