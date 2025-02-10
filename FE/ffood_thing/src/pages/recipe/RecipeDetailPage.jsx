@@ -39,7 +39,9 @@ const RecipeDetailPage = () => {
           const bookmarkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
           })
-          setIsBookmarked(bookmarkResponse.data.isBookmarked)
+          const isBookmarked = bookmarkResponse.data.isBookmarked
+          setIsBookmarked(isBookmarked)
+          localStorage.setItem(`bookmark_${id}`, isBookmarked.toString())
         }
       } catch (error) {
         console.error("Error fetching recipe details", error)
@@ -53,6 +55,11 @@ const RecipeDetailPage = () => {
           })
         }
       }
+    }
+
+    const bookmarkStatus = localStorage.getItem(`bookmark_${id}`)
+    if (bookmarkStatus !== null) {
+      setIsBookmarked(bookmarkStatus === "true")
     }
 
     fetchRecipe()
@@ -99,7 +106,6 @@ const RecipeDetailPage = () => {
         text: "북마크를 사용하려면 로그인하세요.",
         icon: "warning",
       }).then(() => {
-        // 로그인 페이지로 이동
         navigate("/login")
       })
       return
@@ -143,7 +149,9 @@ const RecipeDetailPage = () => {
         }
       }
 
-      setIsBookmarked(!isBookmarked)
+      const newBookmarkStatus = !isBookmarked
+      setIsBookmarked(newBookmarkStatus)
+      localStorage.setItem(`bookmark_${id}`, newBookmarkStatus.toString()) // 로컬 스토리지에 북마크 상태 저장
       Swal.fire({
         title: isBookmarked ? "북마크 취소!" : "북마크 완료!",
         text: isBookmarked ? "북마크에서 제거했어요." : "북마크에 추가했어요.",
