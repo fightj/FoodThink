@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
+import { UserContext } from "../../contexts/UserContext"
 import RecipeComponent from "../../components/recipe/RecipeComponent"
 import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 import SearchBar from "../../components/base/SearchBar"
@@ -10,63 +11,55 @@ import "../../styles/recipe/RecipeDetailPage.css"
 const RecipeDetailPage = () => {
   const { id } = useParams() // URL 파라미터에서 ID를 가져옴
   const navigate = useNavigate()
+  const { user, setUser } = useContext(UserContext) // UserContext 사용
   const [recipe, setRecipe] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [currentStep, setCurrentStep] = useState(0) // currentStep 상태 추가
   const [activeSection, setActiveSection] = useState("ingredients")
   const [isBookmarked, setIsBookmarked] = useState(false)
-  const [userId, setUserId] = useState(null) // 현재 사용자 ID 상태 추가
-  const [isLoggedIn, setIsLoggedIn] = useState(false) // 로그인 상태 추가
 
   const ingredientsRef = useRef(null)
   const stepsRef = useRef(null)
   const completedRef = useRef(null)
   const feedRef = useRef(null)
 
-  const accessToken = localStorage.getItem("accessToken") // 로컬 저장소에서 AccessToken을 가져옴
-
   // 서버에서 레시피 데이터를 가져오는 useEffect 훅
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        console.log("Fetching recipe with ID:", id) // ID 값 확인 로그
+        console.log("Fetching recipe with ID:", id)
         const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${id}`, {
-          headers: accessToken
+          headers: user
             ? {
-                Authorization: `Bearer ${accessToken}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
               }
             : {},
         })
         setRecipe(response.data)
+
+        // 🔹 북마크 상태 확인 API 호출
+        if (user) {
+          const bookmarkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+          })
+          setIsBookmarked(bookmarkResponse.data.isBookmarked) // 서버에서 받은 북마크 상태 반영
+        }
       } catch (error) {
         console.error("Error fetching recipe details", error)
+        if (error.response && error.response.status === 401) {
+          Swal.fire({
+            title: "인증 오류!",
+            text: "로그인이 필요합니다.",
+            icon: "error",
+          }).then(() => {
+            navigate("/login")
+          })
+        }
       }
     }
 
     fetchRecipe()
-  }, [id, accessToken])
-
-  // 현재 사용자 ID와 로그인 상태를 가져오는 useEffect 훅 (예시)
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get("https://i12e107.p.ssafy.io/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-        setUserId(response.data.userId)
-        setIsLoggedIn(true) // 로그인 상태 설정
-      } catch (error) {
-        console.error("Error fetching user data", error)
-        setIsLoggedIn(false) // 로그인 상태 설정
-      }
-    }
-
-    if (accessToken) {
-      fetchUser()
-    }
-  }, [accessToken])
+  }, [id, navigate, user])
 
   useEffect(() => {
     const options = {
@@ -103,8 +96,8 @@ const RecipeDetailPage = () => {
     return <div>Loading...</div>
   }
 
-  const handleBookmarkClick = () => {
-    if (!isLoggedIn) {
+  const handleBookmarkClick = async () => {
+    if (!user) {
       Swal.fire({
         title: "로그인 필요!",
         text: "북마크를 사용하려면 로그인하세요.",
@@ -113,25 +106,66 @@ const RecipeDetailPage = () => {
       return
     }
 
-    if (isBookmarked) {
+    const accessToken = localStorage.getItem("accessToken")
+    if (!accessToken) {
       Swal.fire({
-        title: "북마크 취소!",
-        text: "북마크에서 제거했어요.",
+        title: "인증 오류!",
+        text: "로그인이 필요합니다.",
         icon: "error",
-      }).then(() => {
-        setIsBookmarked(false)
       })
-    } else {
+      return
+    }
+
+    try {
+      // 북마크 상태 확인
+      const checkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+
+      const isBookmarked = checkResponse.data // true 또는 false
+
+      let response
+
+      if (isBookmarked) {
+        // 북마크 삭제
+        response = await axios.delete(`https://i12e107.p.ssafy.io/api/bookmark/delete/${id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        if (response.status !== 200) throw new Error("북마크 삭제 실패")
+      } else {
+        // 북마크 추가
+        response = await axios.post(
+          `https://i12e107.p.ssafy.io/api/bookmark/create/${id}`,
+          {}, // 추가할 데이터가 필요하다면 여기 적어야 합니다.
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        )
+
+        // 상태 코드와 응답 확인
+        if (![200, 201].includes(response.status)) {
+          throw new Error(`북마크 추가 실패. 상태 코드: ${response.status}`)
+        }
+      }
+
+      // 성공적으로 요청이 처리되었을 때 상태 업데이트
+      setIsBookmarked(!isBookmarked) // 상태 변경
       Swal.fire({
-        title: "북마크완료!",
-        text: "북마크에 추가했어요",
-        imageUrl: "/images/mainlogo.jpg",
-        imageWidth: 350,
-        imageHeight: 300,
-        imageAlt: "Custom image",
+        title: isBookmarked ? "북마크 취소!" : "북마크 완료!",
+        text: isBookmarked ? "북마크에서 제거했어요." : "북마크에 추가했어요.",
         icon: "success",
-      }).then(() => {
-        setIsBookmarked(true)
+      })
+    } catch (error) {
+      console.error("북마크 처리 중 오류 발생", error)
+      // error.response에서 더 구체적인 정보를 확인
+      if (error.response) {
+        console.error("응답 에러 상태 코드:", error.response.status)
+        console.error("응답 에러 데이터:", error.response.data)
+      }
+      Swal.fire({
+        title: "오류 발생",
+        text: error.response ? `상태 코드: ${error.response.status}` : "북마크 상태를 업데이트하는 데 실패했습니다.",
+        icon: "error",
       })
     }
   }
@@ -144,7 +178,7 @@ const RecipeDetailPage = () => {
     try {
       await axios.delete(`https://i12e107.p.ssafy.io/api/recipes/delete/${id}`, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       })
       Swal.fire({
@@ -192,7 +226,6 @@ const RecipeDetailPage = () => {
               <img src="/images/previous_button.png" alt="Previous" className="icon" />
               이전
             </button>
-
             <div style={{ display: "flex", gap: "2rem", marginBottom: "100px" }}>
               <div className="recipe-main-images" style={{ flex: "0 0 60%", position: "relative" }}>
                 <img src={recipe.image} alt="Recipe Image" className="recipe-image1" />
@@ -263,7 +296,6 @@ const RecipeDetailPage = () => {
         <button className={activeSection === "steps" ? "active" : ""} onClick={() => scrollToSection("steps")}>
           조리순서
         </button>
-
         <button className={activeSection === "feed" ? "active" : ""} onClick={() => scrollToSection("feed")}>
           FEED
         </button>
@@ -327,22 +359,13 @@ const RecipeDetailPage = () => {
       </div>
 
       {/* Edit, Delete, and Bookmark Buttons */}
-      {userId === recipe.userId && (
+      {user && user.id === recipe.userId && (
         <div className="button-container">
           <button onClick={handleEditClick} className="edit-button">
             수정
           </button>
           <button onClick={handleDeleteClick} className="delete-button">
             삭제
-          </button>
-        </div>
-      )}
-
-      {!isLoggedIn && (
-        <div className="login-prompt">
-          <p>북마크를 사용하려면 로그인하세요.</p>
-          <button onClick={() => navigate("/login")} className="login-button">
-            로그인
           </button>
         </div>
       )}
