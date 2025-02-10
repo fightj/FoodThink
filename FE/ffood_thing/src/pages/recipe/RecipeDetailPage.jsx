@@ -281,6 +281,7 @@ const RecipeDetailPage = () => {
                     onNextStep={() => setCurrentStep((prevStep) => prevStep + 1)}
                     onPrevStep={() => setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))}
                     pages={recipe.processes}
+                    recipeId={recipe.recipeId}
                   />
                   <RecipeComponent pages={recipe.processes} />
                 </div>

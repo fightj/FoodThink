@@ -4,7 +4,7 @@ import PropTypes from "prop-types"
 import { Camera } from "@mediapipe/camera_utils"
 import "../../styles/recipe/RecipeComponent.css"
 
-const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
+const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeId }) => {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const swipeTrackingRef = useRef({
@@ -21,7 +21,10 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
   const [isRecording, setIsRecording] = useState(false) // 녹음 상태 추가
   const [lastServerResponse, setLastServerResponse] = useState(null) // 서버 응답 상태 추가
   const [isAlarmPlaying, setIsAlarmPlaying] = useState(false) // 알람 재생 상태 추가
+  const [isRecordingModalVisible, setIsRecordingModalVisible] = useState(false) // 녹음 모달 상태 추가
   const alarmAudioRef = useRef(new Audio("/sound/Alarm.wav")) // 알람 소리 파일 경로 설정
+
+  const currentProcess = pages[currentStep]
 
   // 효과음 재생
   const playSound = (url) => {
@@ -31,6 +34,7 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
 
   // 타이머 알람 재생 함수
   const playAlarm = () => {
+    alarmAudioRef.current.currentTime = 0
     alarmAudioRef.current.play()
     setIsAlarmPlaying(true) // 알람 재생 상태를 true로 설정
   }
@@ -38,33 +42,23 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
   // 타이머 알람 멈추기 함수
   const stopAlarm = () => {
     alarmAudioRef.current.pause()
-    alarmAudioRef.current.currentTime = 11
+    alarmAudioRef.current.currentTime = 0
     setIsAlarmPlaying(false) // 알람 재생 상태를 false로 설정
   }
 
   // 음성인식 필요 데이터
   const token = localStorage.getItem("accessToken")
-  // 현재 URL에서 recipeId 추출
-  const getRecipeIdFromURL = () => {
-    const url = window.location.href // 현재 URL 가져오기
-    const match = url.match(/\/recipes\/(\d+)/) // 정규 표현식으로 숫자 추출
-    return match ? match[1] : null // 매칭된 값이 있으면 recipeId 반환, 없으면 null 반환
-  }
-
-  // 사용 예시
-  const recipeId = getRecipeIdFromURL()
-  // console.log("추출된 recipeId:", recipeId)
 
   useEffect(() => {
     let timerInterval = null
     if (isTimerRunning) {
       timerInterval = setInterval(() => {
         setTimer((prevTimer) => {
-          if (prevTimer <= 3 && prevTimer > 0) {
+          if (prevTimer <= 3 && prevTimer > 1) {
             console.log(prevTimer) // 타이머가 3초 이하로 남았을 때 로그 출력
           }
-          if (prevTimer === 0 && !isAlarmPlaying) {
-            playAlarm() // 타이머가 0이 될 때 알람 소리 재생
+          if (prevTimer === 1 && !isAlarmPlaying) {
+            playAlarm() // 타이머가 1이 될 때 알람 소리 재생
           }
           return prevTimer > 0 ? prevTimer - 1 : 0 // 타이머 감소
         })
@@ -325,8 +319,6 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     )
   }
 
-  const currentProcess = pages[currentStep]
-
   // 음성 인식 및 녹음 코드
   useEffect(() => {
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
@@ -341,6 +333,7 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
           if (transcript.toLowerCase().includes("안녕 푸딩")) {
             console.log("안녕 푸딩 인식")
             setIsRecording(true) // 녹음 상태 변경
+            setIsRecordingModalVisible(true) // 녹음 모달을 보이도록 설정
             startRecording()
           }
           if (transcript.toLowerCase().includes("알람 꺼")) {
@@ -368,6 +361,8 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
         }
 
         mediaRecorder.onstop = () => {
+          setIsRecording(false) // 녹음 상태 변경
+          setIsRecordingModalVisible(false) // 녹음 모달을 숨기도록 설정
           const audioBlob = new Blob(audioChunks, { type: "audio/wav" })
           sendAudioToServer(audioBlob)
         }
@@ -429,6 +424,12 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
         {Math.floor(timer / 60)}분 {timer % 60}초
       </div>
       {currentStep === pages.length - 1 && <div className="end-message">마지막 페이지 입니다</div>}
+
+      {isRecordingModalVisible && (
+        <div className="recording-modal">
+          <img className="recording-gif" src="/images/record.gif" alt="Recording..." />
+        </div>
+      )}
     </div>
   )
 }
