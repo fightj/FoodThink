@@ -1,17 +1,26 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Dropdown } from "react-bootstrap"
+import { UserContext } from "../../contexts/UserContext"
 import "../../styles/base/Sidebar.css"
 
 function Sidebar({ isOpen, toggleSidebar }) {
   if (!isOpen) return null
 
-  // 로컬스토리지에서 액세스 토큰 확인
-  const accessToken = localStorage.getItem("accessToken")
-  const isLoggedIn = !!accessToken
 
-  // 세션에서 유저 정보 가져오기
-  const userSession = JSON.parse(sessionStorage.getItem("user"))
-  const sessionUserNickname = userSession ? userSession.nickname : null
+  // ✅ UserContext에서 최신 유저 정보 가져오기
+  const { user, setUser } = useContext(UserContext);
+  
+  // ✅ 세션 스토리지에서도 유저 정보를 가져와 닉네임을 최신 상태로 유지
+  const sessionUser = JSON.parse(sessionStorage.getItem("user"));
+  const sessionUserNickname = user?.nickname || sessionUser?.nickname || "User";
+
+  // ✅ 로그아웃 핸들러 (sessionStorage와 localStorage 초기화)
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    sessionStorage.removeItem("user");
+    setUser(null);
+    window.location.reload(); // 로그아웃 후 새로고침 (새로운 상태 반영)
+  };
 
   return (
     <div
@@ -34,7 +43,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
         <svg className="bi pe-none me-2" width="40" height="32">
           <use xlinkHref="#bootstrap" />
         </svg>
-        <span className="fs-4">홈 아이콘</span>
+        <span className="fs-4">홈</span>
       </a>
       <hr />
       <ul className="nav nav-pills flex-column mb-auto">
@@ -56,36 +65,28 @@ function Sidebar({ isOpen, toggleSidebar }) {
         {/* ✅ 닉네임 기반 마이페이지 링크 */}
         {sessionUserNickname && (
           <li>
-            <a href={`/profile/${sessionUserNickname}`} className="nav-link text-white">
-              마이페이지
-            </a>
+            <a href={`/profile/${sessionUserNickname}`} className="nav-link text-white">마이페이지</a>
           </li>
         )}
       </ul>
       <hr />
       <Dropdown className="dropdown">
         <Dropdown.Toggle variant="link" id="user-dropdown" className="d-flex align-items-center text-white text-decoration-none">
-          <img src="https://github.com/mdo.png" alt="" width="32" height="32" className="rounded-circle me-2" />
+          <img src={`${user?.image}?timestamp=${new Date().getTime()}` || "/default_profile.png"} alt="" width="32" height="32" className="rounded-circle me-2" />
           <strong>{sessionUserNickname || "User"}</strong>
         </Dropdown.Toggle>
 
         <Dropdown.Menu className="dropdown-menu-dark text-small shadow">
         {sessionUserNickname && (
             <>
-          <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=bookmarks`}>북마크한 레시피</Dropdown.Item>
-          <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=recipes`}>내 레시피</Dropdown.Item>
-          <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=feed`}>내 피드</Dropdown.Item>
-          <Dropdown.Divider />
-          </>
+              <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=bookmarks`}>북마크한 레시피</Dropdown.Item>
+              <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=recipes`}>내 레시피</Dropdown.Item>
+              <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=feed`}>내 피드</Dropdown.Item>
+              <Dropdown.Divider />
+            </>
           )}
-          {isLoggedIn ? (
-            <Dropdown.Item href="/" onClick={() => {
-              localStorage.removeItem("accessToken");
-              sessionStorage.removeItem("user");
-            }}>
-              Log Out
-            </Dropdown.Item>
-            
+          {user ? (
+            <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
           ) : (
             <Dropdown.Item href="/login">Log In</Dropdown.Item>
           )}

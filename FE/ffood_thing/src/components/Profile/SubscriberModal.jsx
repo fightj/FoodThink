@@ -16,12 +16,16 @@ const SubscriberModal = ({ subscribers, onClose }) => {
         <h4>🔖 구독 리스트</h4>
         <button className="close-btn" onClick={onClose}>×</button>
         <ul className="subscriber-list">
-          {subscribers.length > 0 ? (
-            subscribers.map((subscriber) => (
-              <li key={subscriber.id} className="subscriber-item">
+          {/* {subscribers.length > 0 ? (
+            subscribers.map(subscriber => (
+              <li key={index} className="subscriber-item">
                 <img src={subscriber.profileImg} alt={subscriber.nickname} className="subscriber-avatar" />
                 <span className="subscriber-nickname">{subscriber.nickname}</span>
               </li>
+            )) */}
+          {subscribers && subscribers.length > 0 ? (
+            subscribers.map(subscriber => (
+              <div key={subscriber.id}>{subscriber.name}</div>
             ))
           ) : (
             <div className="no-subscriber-text">아직 구독자가 없습니다. 😢</div>
