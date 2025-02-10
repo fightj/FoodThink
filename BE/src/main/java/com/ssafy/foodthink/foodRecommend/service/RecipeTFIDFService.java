@@ -86,7 +86,7 @@ public class RecipeTFIDFService {
     // 각 레시피의 모든 특성에 대한 TF-IDF 값 저장
     @Transactional // 모든 레시피의 모든 재료의 TF-IDF 값을 저장하기 위해 필수
     protected void saveTfIdfVector(RecipeEntity recipe, Map<String, Double> tfidfVector) {
-        recipeTfIdfRepository.deleteByRecipe(recipe); // 기존 데이터 삭제
+        recipeTfIdfRepository.deleteByRecipeEntity(recipe); // 기존 데이터 삭제
 
         tfidfVector.forEach((feature, value) -> {
             recipeTfIdfRepository.upsertTfIdf(// 해당 레코드가 존재하면 업데이트하고, 존재하지 않으면 새로 삽입
