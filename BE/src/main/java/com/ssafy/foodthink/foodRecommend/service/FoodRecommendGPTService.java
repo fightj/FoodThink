@@ -43,7 +43,7 @@ public class FoodRecommendGPTService {
         String prompt = String.format(
                 "### 현재 날씨 ###\n%s\n\n"
                         + "### 사용자 취향 분석 ###\n"
-                        + "1. %s\n2. %s\n3. %s\n4. %s\n5. %s\n\n"
+                        + "%s\n"
                         + "### 추천 후보 목록 ###\n%s\n\n"
                         + "### 요청 사항 ###\n"
                         + "- 추천 후보 목록 중에서 현재 날씨와 사용자 취향 분석을 반영한 상위 3개 요리 선정\n"
@@ -103,7 +103,7 @@ public class FoodRecommendGPTService {
     // 날씨 API 사용하여 날씨 정보 가져옴
     public String getWeatherInfo(String city) {
         OkHttpClient client = new OkHttpClient(); // HTTP 요청을 보내기 위한 클라이언트 생성
-        String url = String.format(weatherApiUrl, city, weatherApiKey);
+        String url = String.format("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric", city, weatherApiKey);
 
         Request request = new Request.Builder().url(url).build(); // HTTP GET 요청 생성
 

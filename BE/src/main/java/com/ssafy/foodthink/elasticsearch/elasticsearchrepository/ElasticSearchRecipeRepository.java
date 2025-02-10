@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ElasticSearchRecipeRepository extends ElasticsearchRepository<RecipeElasticEntity, String> {
     List<RecipeElasticEntity> findByRecipeTitleContainingIgnoreCaseOrIngredientsContainingIgnoreCase(String recipeTitle, String ingredients);
+    @Override
+    List<RecipeElasticEntity> findAll();
 }

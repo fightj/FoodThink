@@ -58,7 +58,7 @@ public class SecurityConfig {
                            //     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                           //      .requestMatchers("/api/auth/**").permitAll()
                           //      .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/users/**").hasRole("USER")
+                         //       .requestMatchers("/api/users/**").hasRole("USER")
                          //       .requestMatchers("/recommend/**").hasRole("USER")
                                 .anyRequest().permitAll() // @PreAuthrization을 사용하여 경로에 대한 접근 권한 설정
                 );
