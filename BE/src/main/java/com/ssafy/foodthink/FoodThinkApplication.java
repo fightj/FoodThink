@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
-//@EnableScheduling
+@EnableScheduling
 @SpringBootApplication(exclude = ReactiveElasticsearchRepositoriesAutoConfiguration.class)
 @EnableJpaAuditing // 엔티티의 생성일자, 수정일자, 생성자, 수정자 등 자동 관리
 @EnableElasticsearchRepositories(basePackages = "com.ssafy.foodthink.elasticsearch.elasticsearchrepository")
