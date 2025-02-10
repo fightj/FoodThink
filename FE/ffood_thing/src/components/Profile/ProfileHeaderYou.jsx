@@ -30,11 +30,36 @@ const ProfileHeaderYou = ({ nickname }) => {
     };
 
     fetchProfileData();
+    fetchSubscriptionStatus(); // ✅ 구독 상태 체크 추가
   }, [nickname]);
+
+  // ✅ 구독 상태 확인
+  const fetchSubscriptionStatus = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
+
+    try {
+      const response = await fetch(`https://i12e107.p.ssafy.io/api/subscription/status/${nickname}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) throw new Error("구독 상태 확인 실패");
+      const data = await response.json();
+      setIsSubscribed(data.isSubscribed);
+    } catch (error) {
+      console.error("❌ 구독 상태 확인 실패:", error);
+    }
+  };
 
   // ✅ 구독하기 / 구독 취소
   const handleSubscribeToggle = async () => {
     const token = localStorage.getItem("accessToken");
+    if (!token) {
+      Swal.fire("로그인 필요", "구독하려면 로그인해주세요.", "warning");
+      return;
+    }
+
     const url = isSubscribed
       ? `https://i12e107.p.ssafy.io/api/subscription/cancel/${nickname}`
       : `https://i12e107.p.ssafy.io/api/subscription/add/${nickname}`;
@@ -55,14 +80,28 @@ const ProfileHeaderYou = ({ nickname }) => {
   if (loading) return <div className="profile-header">🔄 프로필 로딩 중...</div>;
 
   return (
-    <div className="profile-header" style={{ background }}> {/* ✅ 배경색 적용 */}
+    <div className="profile-header" style={{ background }}>
       {/* 배경 이펙트 추가 */}
       <BackgroundEffect season={season} setSeason={setSeason} setBackground={setBackground} />
 
       <div className="profile-content">
-        <img src={profileData.image || "/default_profile.png"} alt="프로필" className="profile-avatar" />
-        <div className="profile-username">{profileData.nickname}</div>
-        <button onClick={handleSubscribeToggle}>{isSubscribed ? "구독 중" : "구독하기"}</button>
+        {/* 프로필 이미지 */}
+        <div className="profile-avatar-container">
+          <img src={profileData.image || "/default_profile.png"} alt="프로필" className="profile-avatar" />
+        </div>
+
+        {/* 닉네임 */}
+        <div className="profile-details">
+          <div className="profile-username">{profileData.nickname}</div>
+
+          {/* 구독 버튼 */}
+          <button
+            className={`subscriber-button ${isSubscribed ? "subscribed" : ""}`}
+            onClick={handleSubscribeToggle}
+          >
+            {isSubscribed ? "구독 중" : "구독하기"}
+          </button>
+        </div>
       </div>
     </div>
   );
