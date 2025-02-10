@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/profile/RecipeList.css";
 
@@ -6,7 +6,7 @@ const BookmarkList = () => {
   const navigate = useNavigate();
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
 
   useEffect(() => {
     const fetchBookmarks = async () => {
@@ -26,7 +26,6 @@ const BookmarkList = () => {
         setBookmarks(data);
       } catch (error) {
         console.error("❌ 북마크 불러오기 실패:", error);
-        setError("북마크된 레시피를 불러오는 중 문제가 발생했습니다.");
       } finally {
         setLoading(false);
       }
@@ -36,7 +35,6 @@ const BookmarkList = () => {
   }, []);
 
   if (loading) return <div className="recipe-container">⏳ 북마크를 불러오는 중...</div>;
-  if (error) return <div className="recipe-container">❌ {error}</div>;
   if (!bookmarks || bookmarks.length === 0) {
     return (
       <div className="recipe-container">

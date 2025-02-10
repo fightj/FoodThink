@@ -1,65 +1,73 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { UserContext } from "../../contexts/UserContext"; // ✅ UserContext 가져오기
-import ProfileHeader from "../../components/Profile/ProfileHeader";
+import { UserContext } from "../../contexts/UserContext";
+import ProfileHeaderMe from "../../components/Profile/ProfileHeaderMe";
+import ProfileHeaderYou from "../../components/Profile/ProfileHeaderYou";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import RecipeList from "../../components/Profile/RecipeList";
 import BookmarkList from "../../components/Profile/BookmarkList";
 import FeedList from "../../components/Profile/FeedList";
-import LoginCheck from "../../components/base/LoginCheck"; // ✅ 로그인 체크 추가
+import LoginCheck from "../../components/base/LoginCheck";
 import "../../styles/profile/ProfilePage.css";
 
 const ProfilePage = () => {
-  const { id } = useParams(); // URL에서 userId 가져오기
-  const { user } = useContext(UserContext); // ✅ UserContext에서 user 가져오기
+  const { nickname } = useParams(); // ✅ URL에서 닉네임 가져오기
+  const { user } = useContext(UserContext); // ✅ 현재 로그인한 유저 정보 가져오기
   const [activeTab, setActiveTab] = useState("recipes");
-  const [userId, setUserId] = useState(null);
-  const [isOwnProfile, setIsOwnProfile] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const isOwnProfile = user?.nickname === nickname; // ✅ 본인 프로필 여부 판별
+  const [profileData, setProfileData] = useState(isOwnProfile ? user : null);
+  const [loading, setLoading] = useState(!isOwnProfile); // 본인 프로필이면 API 호출 불필요
 
   useEffect(() => {
-    // ✅ sessionStorage에서 user 정보 가져오기
-    const sessionUser = JSON.parse(sessionStorage.getItem("user"));
-    const sessionUserId = sessionUser ? sessionUser.userId : null;
-
-    // console.log("🌟 UserContext에서 가져온 user:", user);
-    // console.log("📌 sessionStorage에서 가져온 userId:", sessionUserId);
-    // console.log("🔗 URL에서 받은 userId:", id);
-
-    // ✅ 최종적으로 사용할 userId 결정 (UserContext > sessionStorage > URL userId)
-    const finalUserId = user?.userId || sessionUserId || id;
-    // console.log("✅ 최종 userId:", finalUserId);
-
-    if (!finalUserId) {
-      console.error("🚨 사용자 ID를 가져오지 못했습니다.");
-      setLoading(false);
+    if (isOwnProfile) {
+      setProfileData(user);
       return;
     }
 
-    setUserId(finalUserId);
-    setIsOwnProfile(String(finalUserId) === String(id)); // 문자열 비교로 안전성 확보
-    setLoading(false);
-  }, [user, id]);
+    // ✅ 타인의 프로필을 조회할 경우 API 호출
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch(`https://i12e107.p.ssafy.io/api/users/read/another-info/${nickname}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) throw new Error("유저 정보 조회 실패");
+
+        const data = await response.json();
+        setProfileData(data);
+      } catch (error) {
+        console.error("❌ 유저 정보 불러오기 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserInfo();
+  }, [nickname, isOwnProfile, user]);
 
   if (loading) {
-    return <div className="loading-text">🔄 로그인 확인 중...</div>;
+    return <div className="loading-text">🔄 프로필 불러오는 중...</div>;
+  }
+
+  if (!profileData) {
+    return <div className="error-text">😢 해당 유저를 찾을 수 없습니다.</div>;
   }
 
   return (
     <div className="base-div">
       <LoginCheck />
-
       <div className="parent-container">
         <div className="card-div">
           <div className="profile-container">
-            <ProfileHeader userId={userId} isOwnProfile={isOwnProfile} />
+            {/* ✅ 본인 프로필이면 ProfileHeaderMe, 타인 프로필이면 ProfileHeaderYou */}
+            {isOwnProfile ? <ProfileHeaderMe /> : <ProfileHeaderYou nickname={nickname} />}
 
-            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} isOwnProfile={isOwnProfile} userId={userId} />
-
+            <ProfileTabs activeTab={activeTab} setActiveTab={setActiveTab} isOwnProfile={isOwnProfile} />
             <div className="tab-content">
-              {activeTab === "recipes" && <RecipeList userId={userId} />}
-              {activeTab === "bookmarks" && <BookmarkList userId={userId} />}
-              {activeTab === "feed" && <FeedList userId={userId} />}
+              {activeTab === "recipes" && <RecipeList nickname={nickname} />}
+              {activeTab === "bookmarks" && <BookmarkList nickname={nickname} />}
+              {activeTab === "feed" && <FeedList nickname={nickname} />}
             </div>
           </div>
         </div>
