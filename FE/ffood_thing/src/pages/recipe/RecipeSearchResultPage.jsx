@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
 import SearchBarRecipe from "../../components/base/SearchBarRecipe"
@@ -12,37 +12,71 @@ const RecipeSearchResultPage = () => {
   const query = useQuery().get("query")
   const navigate = useNavigate()
   const [filteredRecipes, setFilteredRecipes] = useState([])
+  const [page, setPage] = useState(0)
+  const [size, setSize] = useState(10)
+  const [totalPages, setTotalPages] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const observer = useRef()
+
+  const debounce = (func, delay) => {
+    let debounceTimer
+    return function (...args) {
+      const context = this
+      clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(() => func.apply(context, args), delay)
+    }
+  }
+
+  const fetchRecipes = async (query, page, size) => {
+    setLoading(true)
+    try {
+      const params = {
+        query,
+        page,
+        size,
+        orderBy: "createdDate", // 기본값: 작성시간순
+      }
+
+      const response = await axios.get(`https://i12e107.p.ssafy.io/api/elasticsearch/search/pagenation`, { params })
+
+      setFilteredRecipes((prev) => (page === 0 ? response.data.content : [...prev, ...response.data.content]))
+      setTotalPages(response.data.totalPages)
+    } catch (error) {
+      console.error("Error fetching recipes", error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/recipeList?cateType=&cateMainIngre=&sortType=&page=0&size=1000`, {
-          params: {
-            page: 0,
-            size: 100,
-          },
-        })
-        // 검색어가 recipeTitle에 포함된 레시피 필터링
-        const recipes = response.data.recipes.filter((recipe) => recipe.recipeTitle?.toLowerCase().includes(query.toLowerCase()))
-        setFilteredRecipes(recipes)
-      } catch (error) {
-        console.error("Error fetching recipes", error)
-        setFilteredRecipes([])
-      }
-    }
-
     if (query) {
-      fetchRecipes()
+      fetchRecipes(query, page, size)
     }
-  }, [query])
+  }, [query, page, size])
 
   const handleDetailClick = (id) => {
     navigate(`/recipes/${id}`)
   }
 
-  const handleSearch = (query) => {
-    navigate(`/search?query=${query}`)
-  }
+  const handleSearch = debounce((query) => {
+    setFilteredRecipes([])
+    setPage(0)
+    fetchRecipes(query, 0, size)
+  }, 300)
+
+  const lastRecipeElementRef = useCallback(
+    (node) => {
+      if (loading) return
+      if (observer.current) observer.current.disconnect()
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && page < totalPages - 1) {
+          setPage((prevPage) => prevPage + 1)
+        }
+      })
+      if (node) observer.current.observe(node)
+    },
+    [loading, page, totalPages]
+  )
 
   return (
     <div className="base-div">
@@ -59,8 +93,13 @@ const RecipeSearchResultPage = () => {
             </h3>
           </div>
           <div className="recipe-list2">
-            {filteredRecipes.map((recipe) => (
-              <div key={recipe.recipeId} className="recipe-card2 recipe-card2-small" onClick={() => handleDetailClick(recipe.recipeId)}>
+            {filteredRecipes.map((recipe, index) => (
+              <div
+                key={recipe.recipeId}
+                ref={filteredRecipes.length === index + 1 ? lastRecipeElementRef : null}
+                className="recipe-card2 recipe-card2-small"
+                onClick={() => handleDetailClick(recipe.recipeId)}
+              >
                 <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
                 <div className="recipe-info2">
                   <h2>{recipe.recipeTitle}</h2>
@@ -71,7 +110,8 @@ const RecipeSearchResultPage = () => {
                 </div>
               </div>
             ))}
-            {filteredRecipes.length === 0 && <p>검색 결과가 없습니다.</p>}
+            {loading && <p>로딩 중...</p>}
+            {filteredRecipes.length === 0 && !loading && <p>검색 결과가 없습니다.</p>}
           </div>
         </div>
       </div>

@@ -2,12 +2,13 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "../../styles/base/SearchBar.css"
 
-function SearchBarRecipe({ initialQuery }) {
+function SearchBarRecipe({ initialQuery, onSearch }) {
   const [query, setQuery] = useState(initialQuery || "")
   const navigate = useNavigate()
 
   const handleInputChange = (event) => {
     setQuery(event.target.value)
+    onSearch(event.target.value) // 입력값이 변경될 때마다 onSearch 호출
   }
 
   const handleKeyPress = (event) => {
