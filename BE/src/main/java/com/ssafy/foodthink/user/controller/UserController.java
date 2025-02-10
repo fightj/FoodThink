@@ -32,12 +32,22 @@ public class UserController {
     private final UserRepository userRepository;
 
     
-    // 회원 정보 조회
-    @GetMapping("/read/{nickname}")
-    public ResponseEntity<UserInfoDto> readCurrentUser(@PathVariable String nickname) {
+    // 회원 정보 조회(닉네임)
+    @GetMapping("/read/another-info/{nickname}")
+    public ResponseEntity<UserInfoDto> readAnotherUser(@PathVariable String nickname) {
         UserInfoDto userInfoDto = userService.readUserByUserNickname(nickname);
         return ResponseEntity.ok(userInfoDto);
     }
+
+    // 회원 정보 조회(토큰)
+    @GetMapping("/read/my-info")
+    public ResponseEntity<UserInfoDto> readCurrentUser(@RequestHeader("Authorization") String token) {
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+        UserInfoDto userInfoDto = userService.readUserByUserId(userId);
+        return ResponseEntity.ok(userInfoDto);
+    }
+
 
     // 회원 닉네임 수정
     @PreAuthorize("hasRole('ROLE_USER')")
