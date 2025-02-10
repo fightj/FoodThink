@@ -24,7 +24,19 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
   const [isRecordingModalVisible, setIsRecordingModalVisible] = useState(false) // 녹음 모달 상태 추가
   const alarmAudioRef = useRef(new Audio("/sound/Alarm.wav")) // 알람 소리 파일 경로 설정
 
-  const currentProcess = pages[currentStep]
+  // 현재 단계 텍스트 상태
+  const [currentProcessText, setCurrentProcessText] = useState("")
+  const currentProcessRef = useRef(pages[currentStep]) // useRef로 currentProcess 참조
+
+  useEffect(() => {
+    // currentStep이 변경될 때마다 currentProcess 텍스트 업데이트
+    if (pages[currentStep]) {
+      const newCurrentProcess = pages[currentStep]
+      const newCurrentProcessText = `${newCurrentProcess.processOrder}. ${newCurrentProcess.processExplain}`
+      setCurrentProcessText(newCurrentProcessText)
+      currentProcessRef.current = newCurrentProcess // useRef로 최신 currentProcess 유지
+    }
+  }, [currentStep, pages])
 
   // 효과음 재생
   const playSound = (url) => {
@@ -125,7 +137,8 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
 
     switch (intent) {
       case "현재단계읽기":
-        const currentText = `${currentProcess.processOrder}. ${currentProcess.processExplain}`
+        console.log(currentProcessRef.current.processExplain) // 최신 currentProcess 참조
+        const currentText = `${currentProcessRef.current.processOrder}. ${currentProcessRef.current.processExplain}`
         console.log("읽을 텍스트:", currentText) // 콘솔에 출력
         speakText(currentText)
         break
@@ -184,131 +197,131 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
   // 터치 이벤트 처리 함수
   const handleTouchStart = (e) => {
     const touch = e.touches[0]
-    swipeTrackingRef.current.startX = touch.clientX
-    swipeTrackingRef.current.isTracking = true
-  }
+    swipeTrackingRef.current.startX = touch.clientX;
+    swipeTrackingRef.current.isTracking = true;
+  };
 
   const handleTouchMove = (e) => {
-    if (!swipeTrackingRef.current.isTracking) return
+    if (!swipeTrackingRef.current.isTracking) return;
 
-    const touch = e.touches[0]
-    const distance = touch.clientX - swipeTrackingRef.current.startX
+    const touch = e.touches[0];
+    const distance = touch.clientX - swipeTrackingRef.current.startX;
 
     if (Math.abs(distance) > 50) {
       // 감지 거리 임계값
-      const screenWidth = window.innerWidth
-      const touchStartX = swipeTrackingRef.current.startX
+      const screenWidth = window.innerWidth;
+      const touchStartX = swipeTrackingRef.current.startX;
 
       if (touchStartX > screenWidth / 2 && distance < 0) {
         if (currentStep < pages.length - 1) {
-          setSwipeMessage("다음 페이지")
-          changePage("다음 페이지")
+          setSwipeMessage("다음 페이지");
+          changePage("다음 페이지");
         } else {
-          setSwipeMessage("마지막 페이지 입니다")
+          setSwipeMessage("마지막 페이지 입니다");
         }
       } else if (touchStartX < screenWidth / 2 && distance > 0) {
-        setSwipeMessage("이전 페이지")
-        changePage("이전 페이지")
+        setSwipeMessage("이전 페이지");
+        changePage("이전 페이지");
       }
 
-      swipeTrackingRef.current.isTracking = false
-      setTimeout(() => setSwipeMessage(""), 1000)
+      swipeTrackingRef.current.isTracking = false;
+      setTimeout(() => setSwipeMessage(""), 1000);
     }
-  }
+  };
 
   const handleTouchEnd = () => {
-    swipeTrackingRef.current.isTracking = false
-  }
+    swipeTrackingRef.current.isTracking = false;
+  };
 
   useEffect(() => {
     const holistic = new Holistic({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`,
-    })
+    });
 
     holistic.setOptions({
       modelComplexity: 1,
       smoothLandmarks: true,
       minDetectionConfidence: 0.7, // 신뢰도 상향
       minTrackingConfidence: 0.7,
-    })
+    });
 
-    holistic.onResults(onResults)
+    holistic.onResults(onResults);
 
     const camera = new Camera(videoRef.current, {
       onFrame: async () => {
         if (videoRef.current) {
-          await holistic.send({ image: videoRef.current })
+          await holistic.send({ image: videoRef.current });
         }
       },
       width: 640,
       height: 480,
-    })
+    });
     if (videoRef.current) {
-      camera.start()
+      camera.start();
     }
 
     function onResults(results) {
-      if (!canvasRef.current) return
-      const ctx = canvasRef.current.getContext("2d")
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+      if (!canvasRef.current) return;
+      const ctx = canvasRef.current.getContext("2d");
+      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-      const handLandmarks = results.leftHandLandmarks || results.rightHandLandmarks
+      const handLandmarks = results.leftHandLandmarks || results.rightHandLandmarks;
 
-      const currentTime = Date.now()
+      const currentTime = Date.now();
 
       if (!handLandmarks) {
         // 손이 인식되지 않으면 초기화
-        swipeTrackingRef.current.isTracking = false
-        swipeTrackingRef.current.lastPositions = []
-        setHandDetected(false)
-        return
+        swipeTrackingRef.current.isTracking = false;
+        swipeTrackingRef.current.lastPositions = [];
+        setHandDetected(false);
+        return;
       }
 
-      setHandDetected(true)
+      setHandDetected(true);
 
       // 쿨다운 체크
       if (currentTime - swipeTrackingRef.current.lastSwipeTimestamp < swipeTrackingRef.current.cooldownPeriod) {
-        return
+        return;
       }
 
-      const palmX = handLandmarks[9].x
+      const palmX = handLandmarks[9].x;
 
       // 이동 평균 필터 적용
-      swipeTrackingRef.current.lastPositions.push(palmX)
+      swipeTrackingRef.current.lastPositions.push(palmX);
       if (swipeTrackingRef.current.lastPositions.length > 5) {
-        swipeTrackingRef.current.lastPositions.shift() // 최근 5개의 데이터만 유지
+        swipeTrackingRef.current.lastPositions.shift(); // 최근 5개의 데이터만 유지
       }
-      const avgX = swipeTrackingRef.current.lastPositions.reduce((sum, x) => sum + x, 0) / swipeTrackingRef.current.lastPositions.length
+      const avgX = swipeTrackingRef.current.lastPositions.reduce((sum, x) => sum + x, 0) / swipeTrackingRef.current.lastPositions.length;
 
       // 스와이프 시작 감지
       if (!swipeTrackingRef.current.isTracking) {
-        swipeTrackingRef.current.startX = avgX
-        swipeTrackingRef.current.isTracking = true
+        swipeTrackingRef.current.startX = avgX;
+        swipeTrackingRef.current.isTracking = true;
       } else {
         // 스와이프 방향 및 거리 계산
-        const distance = avgX - swipeTrackingRef.current.startX
+        const distance = avgX - swipeTrackingRef.current.startX;
 
         if (Math.abs(distance) > 0.2) {
-          const direction = distance > 0 ? "다음 페이지" : "이전 페이지"
-          setSwipeMessage(direction)
+          const direction = distance > 0 ? "다음 페이지" : "이전 페이지";
+          setSwipeMessage(direction);
 
-          changePage(direction)
+          changePage(direction);
         }
       }
 
       // 타이머 제어 함수 호출
-      handleTimerGesture(handLandmarks)
+      handleTimerGesture(handLandmarks);
     }
 
     return () => {
       if (camera) {
-        camera.stop()
+        camera.stop();
       }
-    }
-  }, [isTimerRunning, isAlarmPlaying]) // 타이머 상태와 알람 재생 상태를 의존성 배열에 추가
+    };
+  }, [isTimerRunning, isAlarmPlaying]); // 타이머 상태와 알람 재생 상태를 의존성 배열에 추가
 
   if (!pages || pages.length === 0) {
-    return <div>No pages available</div>
+    return <div>No pages available</div>;
   }
 
   if (!pages[currentStep]) {
@@ -316,67 +329,71 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
       <div className="endding-comment" onClick={() => window.location.reload()}>
         레시피 화면으로
       </div>
-    )
+    );
   }
 
   // 음성 인식 및 녹음 코드
   useEffect(() => {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
-    recognition.continuous = true
-    recognition.interimResults = false
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.continuous = true;
+    recognition.interimResults = false;
+
+    const callFooding = ["하이푸딩", "하이, 푸딩", "푸딩", "하이 푸딩.", "하이 푸딩", "하이퍼딩"];
 
     recognition.onresult = (event) => {
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
-          const transcript = event.results[i][0].transcript.trim()
-          console.log("인식된 텍스트:", transcript) // 텍스트 콘솔 출력
-          if (transcript.toLowerCase().includes("안녕 푸딩")) {
-            console.log("안녕 푸딩 인식")
-            setIsRecording(true) // 녹음 상태 변경
-            setIsRecordingModalVisible(true) // 녹음 모달을 보이도록 설정
-            startRecording()
+          const transcript = event.results[i][0].transcript.trim();
+          console.log("인식된 텍스트:", transcript); // 텍스트 콘솔 출력
+
+          if (callFooding.some(phrase => transcript.toLowerCase().includes(phrase.toLowerCase()))) {
+            console.log("하이 푸딩 인식");
+            setIsRecording(true); // 녹음 상태 변경
+            setIsRecordingModalVisible(true); // 녹음 모달을 보이도록 설정
+            startRecording();
           }
+
           if (transcript.toLowerCase().includes("알람 꺼")) {
-            console.log("알람 꺼 인식")
-            stopAlarm() // 알람 소리 멈추기
+            console.log("알람 꺼 인식");
+            stopAlarm(); // 알람 소리 멈추기
           }
         }
       }
-    }
+    };
 
-    recognition.start()
+    recognition.start();
 
-    let mediaRecorder
-    let audioChunks = []
+    let mediaRecorder;
+    let audioChunks = [];
 
     const startRecording = () => {
-      console.log("녹음 시작")
-      audioChunks = [] // 새로운 녹음 파일 생성을 위해 초기화
+      console.log("녹음 시작");
+      audioChunks = []; // 새로운 녹음 파일 생성을 위해 초기화
       navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-        mediaRecorder = new MediaRecorder(stream)
-        mediaRecorder.start()
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
 
         mediaRecorder.ondataavailable = (event) => {
-          audioChunks.push(event.data)
-        }
+          audioChunks.push(event.data);
+        };
 
         mediaRecorder.onstop = () => {
-          setIsRecording(false) // 녹음 상태 변경
-          setIsRecordingModalVisible(false) // 녹음 모달을 숨기도록 설정
-          const audioBlob = new Blob(audioChunks, { type: "audio/wav" })
-          sendAudioToServer(audioBlob)
-        }
+          setIsRecording(false); // 녹음 상태 변경
+          setIsRecordingModalVisible(false); // 녹음 모달을 숨기도록 설정
+          const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+          sendAudioToServer(audioBlob);
+        };
 
         setTimeout(() => {
-          mediaRecorder.stop()
-        }, 5000) // 5초 녹음
-      })
-    }
+          mediaRecorder.stop();
+        }, 5000); // 5초 녹음
+      });
+    };
 
     const sendAudioToServer = (audioBlob) => {
-      const formData = new FormData()
-      formData.append("file", audioBlob, "음성.wav") // 파일 이름을 지정하여 업로드
-      formData.append("recipeId", recipeId) // 현재 레시피 아이디 전송
+      const formData = new FormData();
+      formData.append("file", audioBlob, "음성.wav"); // 파일 이름을 지정하여 업로드
+      formData.append("recipeId", recipeId); // 현재 레시피 아이디 전송
 
       fetch("https://i12e107.p.ssafy.io/api/speech/process", {
         method: "POST",
@@ -387,18 +404,18 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("서버 응답 데이터:", data) // 서버 응답 데이터 콘솔 출력
-          handleResponse(data) // 서버 응답 데이터 처리
+          console.log("서버 응답 데이터:", data); // 서버 응답 데이터 콘솔 출력
+          handleResponse(data); // 서버 응답 데이터 처리
         })
         .catch((error) => {
-          console.error("오류:", error)
-        })
-    }
+          console.error("오류:", error);
+        });
+    };
 
     return () => {
-      recognition.stop()
-    }
-  }, []) // 빈 의존성 배열로 첫 렌더링 시에만 실행
+      recognition.stop();
+    };
+  }, []); // 빈 의존성 배열로 첫 렌더링 시에만 실행
 
   return (
     <div className="handpose-container3" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
@@ -408,12 +425,14 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
         <div className="steps3">
           <div className="process-item3">
             <h2 className="steps-h23">
-              {currentProcess.processOrder}. {currentProcess.processExplain}
+              {currentProcessRef.current.processOrder}. {currentProcessRef.current.processExplain}
             </h2>
           </div>
           <div className="process-image-container3">
-            {currentProcess.images &&
-              currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
+            {currentProcessRef.current.images &&
+              currentProcessRef.current.images.map((image, imgIndex) => (
+                <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcessRef.current.processOrder}`} className="process-image3" />
+              ))}
           </div>
           <hr />
         </div>
@@ -431,14 +450,15 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 HandPoseComponent.propTypes = {
   currentStep: PropTypes.number.isRequired,
   onNextStep: PropTypes.func.isRequired,
   onPrevStep: PropTypes.func.isRequired,
   pages: PropTypes.arrayOf(PropTypes.object).isRequired,
-}
+  recipeId: PropTypes.string.isRequired, // recipeId prop 유형 추가
+};
 
-export default HandPoseComponent
+export default HandPoseComponent;
