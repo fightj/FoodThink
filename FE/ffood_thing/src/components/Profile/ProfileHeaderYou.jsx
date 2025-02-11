@@ -105,7 +105,7 @@ const handleSubscribeToggle = async () => {
   const url = isSubscribed
     ? `https://i12e107.p.ssafy.io/api/subscription/delete/${nickname}`
     : `https://i12e107.p.ssafy.io/api/subscription/create/${nickname}`;
-
+console.log(nickname)
   try {
     await fetch(url, {
       method: isSubscribed ? "DELETE" : "POST",

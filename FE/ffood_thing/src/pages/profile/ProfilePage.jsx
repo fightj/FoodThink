@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import ProfileHeaderMe from "../../components/Profile/ProfileHeaderMe";
 import ProfileHeaderYou from "../../components/Profile/ProfileHeaderYou";
@@ -13,10 +13,24 @@ import "../../styles/profile/ProfilePage.css";
 const ProfilePage = () => {
   const { nickname } = useParams(); // ✅ URL에서 닉네임 가져오기
   const { user } = useContext(UserContext); // ✅ 현재 로그인한 유저 정보 가져오기
-  const [activeTab, setActiveTab] = useState("recipes");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+// ✅ URL에서 tab 값을 읽어 초기 상태 설정
+const getTabFromURL = () => {
+  const params = new URLSearchParams(location.search);
+  return params.get("tab") || "recipes"; // 기본값: recipes
+};
+
+  const [activeTab, setActiveTab] = useState("getTabFromURL()");
   const isOwnProfile = user?.nickname === nickname; // ✅ 본인 프로필 여부 판별
   const [profileData, setProfileData] = useState(isOwnProfile ? user : null);
   const [loading, setLoading] = useState(!isOwnProfile); // 본인 프로필이면 API 호출 불필요
+
+  useEffect(() => {
+    // ✅ URL이 변경될 때마다 activeTab 업데이트
+    setActiveTab(getTabFromURL());
+  }, [location.search]);
 
   useEffect(() => {
     if (isOwnProfile) {
@@ -45,6 +59,12 @@ const ProfilePage = () => {
 
     fetchUserInfo();
   }, [nickname, isOwnProfile, user]);
+
+// ✅ 탭 변경 시 URL을 업데이트하여 새로고침해도 유지됨
+const handleTabChange = (newTab) => {
+  navigate(`/profile/${nickname}?tab=${newTab}`);
+};
+
 
   if (loading) {
     return <div className="loading-text">🔄 프로필 불러오는 중...</div>;
