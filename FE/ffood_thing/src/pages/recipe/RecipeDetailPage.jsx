@@ -282,6 +282,7 @@ const RecipeDetailPage = () => {
                     onPrevStep={() => setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))}
                     pages={recipe.processes}
                     recipeId={recipe.recipeId}
+                    onClose={() => setShowModal(false)} // onClose 함수를 전달
                   />
                   <RecipeComponent pages={recipe.processes} />
                 </div>
