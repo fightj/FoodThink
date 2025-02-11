@@ -1,17 +1,16 @@
-package com.ssafy.foodthink.todayRecipe.controller;
+package com.ssafy.foodthink.todayRecommend.controller;
 
-import com.ssafy.foodthink.todayRecipe.dto.SpecialDayDto;
-import com.ssafy.foodthink.todayRecipe.dto.TodayRecipeResponseDto;
-import com.ssafy.foodthink.todayRecipe.service.AnniversaryService;
-import com.ssafy.foodthink.todayRecipe.service.TodayRecipeService;
+import com.ssafy.foodthink.todayRecommend.dto.AnniversaryDto;
+import com.ssafy.foodthink.todayRecommend.dto.TodayRecipeResponseDto;
+import com.ssafy.foodthink.todayRecommend.entity.AnniversaryEntity;
+import com.ssafy.foodthink.todayRecommend.service.AnniversaryService;
+import com.ssafy.foodthink.todayRecommend.service.TodayRecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,8 +33,8 @@ public class TodayMenuController {
 
     // 기념일 api로 레시피 추천
     @GetMapping("/anniversary")
-    public String getAnniversaryInfo() throws IOException {
-        return anniversaryService.getAnniversaryInfo();
+    public ResponseEntity<AnniversaryDto> getAnniversaryInfo() throws IOException {
+        return ResponseEntity.ok(anniversaryService.getAnniversaryDetails());
     }
 }
 

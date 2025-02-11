@@ -1,4 +1,4 @@
-package com.ssafy.foodthink.todayRecipe.dto;
+package com.ssafy.foodthink.todayRecommend.dto;
 
 import lombok.*;
 
