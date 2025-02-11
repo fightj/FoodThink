@@ -105,7 +105,6 @@ public class FeedServiceImpl implements FeedService {
 
         List<String> imageUrls = readImageUrlsByFeedId(feedEntity.getId());
 
-        log.info(feedEntity.getRecipeEntity().getRecipeTitle());
 
         FeedResponseDto feedResponseDto = FeedResponseDto.builder()
                 .id(feedEntity.getId())
@@ -115,14 +114,14 @@ public class FeedServiceImpl implements FeedService {
                 .userId(feedEntity.getUserEntity().getUserId())
                 .username(feedEntity.getUserEntity().getNickname())
                 .userImage(feedEntity.getUserEntity().getImage())
-                .recipeListResponseDto(feedEntity.getRecipeEntity() != null ?
-                        RecipeListResponseDto.builder()
-                                .recipeId(feedEntity.getRecipeEntity().getRecipeId())
-                                .recipeTitle(feedEntity.getRecipeEntity().getRecipeTitle())
-                                .image(feedEntity.getRecipeEntity().getImage())
-                                .nickname(feedEntity.getRecipeEntity().getUserEntity().getNickname())
-                                .build()
-                        : null)
+                .recipeListResponseDto(Optional.ofNullable(feedEntity.getRecipeEntity())
+                        .map(recipe -> RecipeListResponseDto.builder()
+                                .recipeId(recipe.getRecipeId())
+                                .recipeTitle(recipe.getRecipeTitle())
+                                .image(recipe.getImage())
+                                .nickname(Optional.ofNullable(recipe.getUserEntity()).map(UserEntity::getNickname).orElse(null))
+                                .build())
+                        .orElse(null))  // ✅ 레시피가 없으면 null 반환
                 .images(imageUrls)
                 .build();
 
