@@ -185,7 +185,7 @@ const RecipeDetailPage = () => {
   }
 
   const handleEditClick = () => {
-    navigate(`/recipes/edit/${id}`)
+    navigate(`/recipes/update/${id}`)
   }
 
   const handleDeleteClick = async () => {
