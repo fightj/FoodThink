@@ -66,7 +66,7 @@ const ProfileHeaderMe = () => {
         throw new Error("닉네임 변경 실패");
       }
 
-      Swal.fire("닉네임 변경 성공!", `'${newNickname}' 님으로 변경되었습니다!`, "success").then(() => {
+      Swal.fire("닉네임 변경 성공!", `이제부터는 '${newNickname}' 님이라고 불러드릴게요. 😎`, "success").then(() => {
         setIsEditing(false);
         const updatedUser = { ...user, nickname: newNickname };
         setUser(updatedUser);
@@ -77,7 +77,7 @@ const ProfileHeaderMe = () => {
         navigate(`/profile/${newNickname}`);
       });
     } catch (error) {
-      Swal.fire("앗!", "닉네임이 중복되었습니다!", "error");
+      Swal.fire("앗!", "고민하는 사이에 다른 유저가 닉네임을 가져갔어요!", "error");
     }
   };
 
@@ -139,7 +139,7 @@ const ProfileHeaderMe = () => {
     if (!token) return;
 
     Swal.fire({
-      title: "정말 탈퇴하시겠습니까?",
+      title: `${user.nickname || "회원"}님과의 이별인가요? 😢`,
       text: "탈퇴 후에는 복구가 불가능합니다.",
       icon: "warning",
       showCancelButton: true,
@@ -197,29 +197,39 @@ const ProfileHeaderMe = () => {
 
   // ✅ 구독자 리스트 가져오기 (로그인 상태에서만 실행)
   const fetchSubscribersList = async () => {
-    const token = localStorage.getItem("accessToken"); // ✅ 토큰 가져오기
+    const token = localStorage.getItem("accessToken");
     if (!token) return;
-
+  
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/subscribe/read", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, // ✅ 로그인 필요 시 인증 추가
+          "Authorization": `Bearer ${token}`,
         },
       });
-
+  
       if (!response.ok) {
         throw new Error("구독자 리스트 조회 실패");
       }
-
+  
       const data = await response.json();
-      setSubscribersList(data.subscribers);
+      console.log("✅ 서버에서 받은 구독 리스트:", data);
+  
+      // ✅ 서버 응답이 배열이 아닐 경우 배열로 변환
+      // if (Array.isArray(data.subscribers)) {
+      //   setSubscribersList(data.subscribers);
+      // } else {
+      //   setSubscribersList([data.subscribers]); // 배열이 아닐 경우 배열로 변환
+      // }
+      setSubscribersList(Array.isArray(data) ? data : [data]);
+
       setIsSubscriberModalOpen(true); // ✅ 모달 열기
     } catch (error) {
       console.error("❌ 구독자 리스트 불러오기 실패:", error);
     }
   };
+  
 
   // ✅ useEffect (닉네임 변경 시 게시물 개수 & 구독자 수 갱신)
   useEffect(() => {
@@ -300,6 +310,7 @@ const ProfileHeaderMe = () => {
 
       {/* ✅ 구독자 리스트 모달 */}
       {isSubscriberModalOpen && (
+     
         <SubscriberModal
           subscribers={subscribersList}
           onClose={() => setIsSubscriberModalOpen(false)}
