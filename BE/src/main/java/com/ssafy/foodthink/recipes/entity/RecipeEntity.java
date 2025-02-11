@@ -40,7 +40,8 @@ public class RecipeEntity {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isPublic = true;           //공개여부
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
 //    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")     //외래키 컬럼 지정 (recipeId로 생성된다.)
     private UserEntity userEntity;      //사용자ID
