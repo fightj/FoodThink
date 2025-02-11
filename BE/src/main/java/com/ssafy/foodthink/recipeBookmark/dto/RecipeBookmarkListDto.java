@@ -10,4 +10,8 @@ import lombok.*;
 public class RecipeBookmarkListDto {
 
     private Long recipeId;
+    private String recipeTitle;
+    private String image;
+    private String nickname;
+    private String userImage;
 }
