@@ -1,10 +1,13 @@
 package com.ssafy.foodthink.user.controller;
 
 import com.ssafy.foodthink.user.dto.CustomOAuth2User;
+import com.ssafy.foodthink.user.dto.KakaoTokenResponse;
+import com.ssafy.foodthink.user.dto.KakaoUserInfo;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.jwt.JWTUtil;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import com.ssafy.foodthink.user.service.CustomOAuth2UserService;
+import com.ssafy.foodthink.user.service.KakaoService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,21 +25,109 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
     @Autowired
     private JWTUtil jwtUtil;
-
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
-
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private KakaoService kakaoService;
+
+    private boolean isNewUser;
+
+    /*
+    1. 카카오 로그인 요청 후 발급된 인가 코드를 받는다.
+    4. 사용자 정보로 회원 확인
+    5. 액세스 토큰 생성
+    6. "액세스 토큰, 이메일, 신규사용자 여부"를 반환
+     */
+    @PostMapping("/kakao")
+    public ResponseEntity<?> kakaoLogin(@RequestParam("code") String code) {
+        log.info("==controller 인가코드:{}==",code);
+        try {
+            // 인가 코드로 액세스 토큰 요청
+            KakaoTokenResponse tokenResponse = kakaoService.getKakaoAccessToken(code);
+            log.info("==인카코드로 액세스 토큰 요청:{}==",tokenResponse);
+
+            // 액세스 토큰으로 사용자 정보 요청
+            KakaoUserInfo userInfo = kakaoService.getKakaoUserInfo(tokenResponse.getAccess_token());
+            log.info("==액세스 토큰으로 사용자 정보 요청:{}==",userInfo);
+
+            // 회원 확인 및 처리
+            UserEntity user = userRepository.findByEmail(userInfo.getEmail())
+                    .orElseGet(() -> {
+                        UserEntity newUser = new UserEntity();
+                        newUser.setEmail(userInfo.getEmail());
+                        newUser.setNickname(userInfo.getNickname());
+                        newUser.setSocialId(userInfo.getId());
+                        newUser.setSocialType("KAKAO");
+                        newUser.setRole("ROLE_USER");
+                        isNewUser = true;
+                        return userRepository.save(newUser);
+                    });
+
+            log.info("==회원 확인 및 처리:{}==",user.getSocialId());
+
+            // JWT 생성
+            String accessToken = jwtUtil.createAccessToken(user.getUserId(), user.getRole(), 60 * 60 * 1000L);
+
+            // 액세스 토큰은 헤더로 이메일,신규사용자 여부는 body로
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + accessToken);
+
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("email", user.getEmail());
+            responseBody.put("isNewUser", isNewUser);
+
+            log.info("==로그인 성공!!!!!==");
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(responseBody);
+
+            // 전부 쿠키로 전달
+              // 액세스 토큰을 쿠키에 저장
+//            Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+//            accessTokenCookie.setHttpOnly(true);
+//            accessTokenCookie.setSecure(true); // HTTPS에서만 사용
+//            accessTokenCookie.setMaxAge(3600); // 1시간
+//            accessTokenCookie.setPath("/");
+//            response.addCookie(accessTokenCookie);
+//
+              // 사용자 정보를 쿠키에 저장
+//            Cookie emailCookie = new Cookie("email", user.getEmail());
+//            emailCookie.setMaxAge(3600);
+//            emailCookie.setPath("/");
+//            response.addCookie(emailCookie);
+              //
+//            Cookie isNewUserCookie = new Cookie("isNewUser", String.valueOf(isNewUser));
+//            isNewUserCookie.setMaxAge(3600);
+//            isNewUserCookie.setPath("/");
+//            response.addCookie(isNewUserCookie);
+//
+//            return ResponseEntity.ok().body("로그인 성공");
+
+            // 전부 헤더로 전달
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.add("Authorization", "Bearer " + accessToken);
+//            headers.add("email", user.getEmail());
+//            headers.add("isNewUser", String.valueOf(isNewUser));
+//
+//            log.info("로그인 성공!!!!!");
+//            return ResponseEntity.ok().headers(headers).build();
+
+        } catch (Exception e) {
+            log.error("==카카오 로그인 실패==", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("카카오 로그인 실패");
+        }
+    }
 
     // 카카오 계정 로그아웃이 아닌 푸띵 로그아웃
     @PostMapping("/logout")
