@@ -163,6 +163,7 @@ const ProfileHeaderMe = () => {
         sessionStorage.setItem("user", JSON.stringify(updatedUser));
 
         navigate(`/profile/${newNickname}`);
+        window.location.reload();
       });
     } catch (error) {
       Swal.fire("앗!", "고민하는 사이에 다른 유저가 닉네임을 가져갔어요!", "error");
