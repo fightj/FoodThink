@@ -34,6 +34,8 @@ public class UserEntity {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    private String season;
+
     // 생성 메서드
     public static UserEntity createUser(String socialId, String email, String nickname) {
         UserEntity userEntity = new UserEntity();
@@ -44,6 +46,7 @@ public class UserEntity {
         userEntity.setImage(null);
         userEntity.setRole("ROLE_USER");
         userEntity.setRefreshToken(null);
+        userEntity.setSeason("봄");
         return userEntity;
     }
 }

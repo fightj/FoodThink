@@ -30,7 +30,7 @@ public class SubscribeServiceImpl implements SubscribeService{
                 .orElseThrow(() -> new RuntimeException("구독 대상 사용자를 찾을 수 없습니다."));
 
         // 이미 구독 중인지 확인
-        Optional<SubscribeEntity> existingSubscription =subscribeRepository
+        Optional<SubscribeEntity> existingSubscription = subscribeRepository
                 .findBySubscriberAndSubscribedUser(subscriber, subscribedUser);
 
         if (existingSubscription.isPresent()) {
@@ -99,7 +99,7 @@ public class SubscribeServiceImpl implements SubscribeService{
 
     @Override
     public int countSubscribedUser(String nickname) {
-        UserEntity subscriber = userRepository.findByEmail(nickname)
+        UserEntity subscriber = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new RuntimeException("구독자(현재 로그인한 사용자)를 찾을 수 없습니다."));
 
         return subscribeRepository.countBySubscriber(subscriber);

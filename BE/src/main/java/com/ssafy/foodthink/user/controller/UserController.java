@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.user.controller;
 
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.ssafy.foodthink.user.dto.RecipeViewDto;
 import com.ssafy.foodthink.user.dto.UserDto;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
@@ -46,6 +47,16 @@ public class UserController {
         Long userId = jwtUtil.getUserId(accessToken);
         UserInfoDto userInfoDto = userService.readUserByUserId(userId);
         return ResponseEntity.ok(userInfoDto);
+    }
+
+    // 회원 마이페이지 배경 상태 수정(계절)
+    @PutMapping("/update/season")
+    public ResponseEntity<UserInfoDto> updateUserSeason(@RequestHeader("Authorization") String token, @RequestBody UserInfoDto updatedInfo){
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        UserInfoDto updatedUser = userService.updateUserSeason(userId, updatedInfo.getSeason());
+        return ResponseEntity.ok(updatedUser);
     }
 
 

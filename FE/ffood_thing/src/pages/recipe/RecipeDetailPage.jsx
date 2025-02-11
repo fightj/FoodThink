@@ -29,19 +29,29 @@ const RecipeDetailPage = () => {
         const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${id}`, {
           headers: user
             ? {
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`, // null 체크 후 빈 문자열 대입
               }
             : {},
         })
-        setRecipe(response.data)
+
+        // Check if response and response.data are valid
+        if (response && response.data) {
+          setRecipe(response.data)
+        } else {
+          console.error("Recipe response data is invalid:", response)
+        }
 
         if (user) {
           const bookmarkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}` },
           })
-          const isBookmarked = bookmarkResponse.data.isBookmarked
-          setIsBookmarked(isBookmarked)
-          localStorage.setItem(`bookmark_${id}`, isBookmarked.toString())
+
+          // Check if bookmarkResponse and bookmarkResponse.data are valid
+          if (bookmarkResponse && bookmarkResponse.data !== undefined) {
+            setIsBookmarked(bookmarkResponse.data)
+          } else {
+            console.error("Bookmark response data is invalid:", bookmarkResponse)
+          }
         }
       } catch (error) {
         console.error("Error fetching recipe details", error)
@@ -57,9 +67,10 @@ const RecipeDetailPage = () => {
       }
     }
 
+    // 로컬 스토리지에서 북마크 상태 불러오기
     const bookmarkStatus = localStorage.getItem(`bookmark_${id}`)
     if (bookmarkStatus !== null) {
-      setIsBookmarked(bookmarkStatus === "true")
+      setIsBookmarked(bookmarkStatus === "true") // "true"이면 true, 아니면 false
     }
 
     fetchRecipe()
@@ -99,6 +110,7 @@ const RecipeDetailPage = () => {
     return <div>Loading...</div>
   }
 
+  // 북마크 상태가 변경될 때 로컬 스토리지 업데이트
   const handleBookmarkClick = async () => {
     if (!user) {
       Swal.fire({
@@ -281,6 +293,8 @@ const RecipeDetailPage = () => {
                     onNextStep={() => setCurrentStep((prevStep) => prevStep + 1)}
                     onPrevStep={() => setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))}
                     pages={recipe.processes}
+                    recipeId={recipe.recipeId}
+                    onClose={() => setShowModal(false)} // onClose 함수를 전달
                   />
                   <RecipeComponent pages={recipe.processes} />
                 </div>

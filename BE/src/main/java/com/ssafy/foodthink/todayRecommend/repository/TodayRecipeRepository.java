@@ -1,12 +1,9 @@
-package com.ssafy.foodthink.todayRecipe.repository;
+package com.ssafy.foodthink.todayRecommend.repository;
 
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
-import com.ssafy.foodthink.todayRecipe.dto.TodayRecipeResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public interface TodayRecipeRepository extends JpaRepository<RecipeEntity, Long> {

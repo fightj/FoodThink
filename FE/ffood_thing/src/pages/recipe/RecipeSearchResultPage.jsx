@@ -9,13 +9,14 @@ function useQuery() {
 }
 
 const RecipeSearchResultPage = () => {
-  const query = useQuery().get("query")
   const navigate = useNavigate()
   const [filteredRecipes, setFilteredRecipes] = useState([])
   const [page, setPage] = useState(0)
   const [size, setSize] = useState(10)
   const [totalPages, setTotalPages] = useState(1)
   const [loading, setLoading] = useState(false)
+  const [totalResults, setTotalResults] = useState(0)
+  const [searchQuery, setSearchQuery] = useState(useQuery().get("query") || "") // 검색어 상태 추가
   const observer = useRef()
 
   const debounce = (func, delay) => {
@@ -34,13 +35,14 @@ const RecipeSearchResultPage = () => {
         query,
         page,
         size,
-        orderBy: "createdDate", // 기본값: 작성시간순
+        orderBy: "createdDate",
       }
 
       const response = await axios.get(`https://i12e107.p.ssafy.io/api/elasticsearch/search/pagenation`, { params })
 
       setFilteredRecipes((prev) => (page === 0 ? response.data.content : [...prev, ...response.data.content]))
       setTotalPages(response.data.totalPages)
+      setTotalResults(response.data.totalElements)
     } catch (error) {
       console.error("Error fetching recipes", error)
     } finally {
@@ -49,19 +51,19 @@ const RecipeSearchResultPage = () => {
   }
 
   useEffect(() => {
-    if (query) {
-      fetchRecipes(query, page, size)
+    if (searchQuery) {
+      setFilteredRecipes([])
+      setPage(0)
+      fetchRecipes(searchQuery, 0, size)
     }
-  }, [query, page, size])
+  }, [searchQuery])
 
   const handleDetailClick = (id) => {
     navigate(`/recipes/${id}`)
   }
 
   const handleSearch = debounce((query) => {
-    setFilteredRecipes([])
-    setPage(0)
-    fetchRecipes(query, 0, size)
+    setSearchQuery(query) // 검색어 상태 업데이트
   }, 300)
 
   const lastRecipeElementRef = useCallback(
@@ -78,9 +80,15 @@ const RecipeSearchResultPage = () => {
     [loading, page, totalPages]
   )
 
+  useEffect(() => {
+    if (page > 0) {
+      fetchRecipes(searchQuery, page, size)
+    }
+  }, [page])
+
   return (
     <div className="base-div">
-      <SearchBarRecipe onSearch={handleSearch} initialQuery={query} />
+      <SearchBarRecipe onSearch={handleSearch} initialQuery={searchQuery} />
       <div className="recipe-parent-div">
         <div className="recipe-card-div">
           <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
@@ -89,7 +97,7 @@ const RecipeSearchResultPage = () => {
               이전
             </button>
             <h3>
-              "{query}"에 대한 검색 결과가 {filteredRecipes.length}개 있습니다.
+              "{searchQuery}"에 대한 검색 결과가 총 {totalResults}개 있습니다.
             </h3>
           </div>
           <div className="recipe-list2">
