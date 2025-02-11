@@ -263,11 +263,19 @@ h3 {
   position: absolute;
   top: 10px; /* 이미지 상단에서 10px 위치 */
   right: 10px; /* 이미지 우측에서 10px 위치 */
-  background-color: rgb(255, 255, 255); /* 반투명 배경 */
+  background-image: url("/images/do-Bookmark.png");
+  background-size: cover;
   color: #000000; /* 텍스트 색상 */
   padding: 5px 10px; /* 패딩 */
   border-radius: 5px; /* 모서리 둥글게 */
   font-size: 14px; /* 폰트 크기 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bookmark-text2 {
+  font-size: 20px; /* 숫자 크기 */
 }
 
 .profile-info {

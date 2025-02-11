@@ -79,3 +79,13 @@
   display: block;
   text-decoration: none;
 }
+
+.home h1 {
+  font-family: "MyCustomFont", sans-serif;
+  font-size: 3rem;
+}
+
+.home h4 {
+  font-family: "Pretendard-Regular", sans-serif;
+  font-size: 1.5rem;
+}
