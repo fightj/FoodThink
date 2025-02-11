@@ -95,10 +95,16 @@ public class RecipeService {
     //로그인 했을 때 : 구독한 사용자의 다른 레시피들 (20개) 목록 조회
 
     //레시피 상세 보기
+    @Transactional
     public RecipeDetailResponseDto getRecipeDetail(Long recipeId) {
+        // 조회수 증가 (쿼리 업데이트)
+        recipeListRepository.increaseHits(recipeId);
+
         //레시피 조회
         RecipeEntity recipeEntity = recipeListRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."));
+
+
 
         //재료 정보
         List<IngredientDto> ingredients = recipeEntity.getIngredients().stream()

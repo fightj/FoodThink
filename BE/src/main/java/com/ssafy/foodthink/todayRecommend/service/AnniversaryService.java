@@ -49,8 +49,8 @@ public class AnniversaryService {
     public AnniversaryDto getAnniversaryDetails() {
         try{
             LocalDate currentDate = LocalDate.now();
-            String today = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-            //String today = "20250531";
+            //String today = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String today = "20250531";
             String[] endpoints = {"getHoliDeInfo", "get24DivisionsInfo","getSundryDayInfo"};
 
             List<String> anniversaryNames = new java.util.ArrayList<>();

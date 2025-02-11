@@ -24,7 +24,7 @@ const ProfileHeaderMe = () => {
       console.error("❌ 토큰 없음: 로그인 필요");
       return;
     }
-  
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/users/read/my-info", {
         method: "GET",
@@ -33,15 +33,15 @@ const ProfileHeaderMe = () => {
           Authorization: `Bearer ${token}`
         }
       });
-  
+
       if (!response.ok) {
         const errorText = await response.text(); // 서버 응답 확인
         throw new Error(`계절 정보 불러오기 실패: ${errorText}`);
       }
-  
+
       const data = await response.json();
       console.log("✅ 서버에서 받은 계절 정보:", data);
-  
+
       if (data.season) {
         setSeason(data.season); // ✅ UI 업데이트
       } else {
@@ -61,7 +61,7 @@ const ProfileHeaderMe = () => {
       console.error("❌ 토큰 없음: 로그인 필요");
       return;
     }
-  
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/season", {
         method: "PUT", // ✅ PUT 방식으로 요청
@@ -71,12 +71,12 @@ const ProfileHeaderMe = () => {
         },
         body: JSON.stringify({ season: newSeason }) // ✅ 계절 정보 업데이트
       });
-  
+
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`계절 변경 실패: ${errorText}`);
       }
-  
+
       console.log(`✅ 서버에 '${newSeason}' 테마 저장 완료!`);
       setSeason(newSeason); // ✅ UI 반영
       fetchUserSeason();
@@ -84,7 +84,7 @@ const ProfileHeaderMe = () => {
       console.error("❌ 계절 변경 실패:", error);
     }
   };
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState(user?.nickname || "");
   const [errorMessage, setErrorMessage] = useState(""); // ✅ 에러 메시지 상태 추가
@@ -125,6 +125,21 @@ const ProfileHeaderMe = () => {
     const token = localStorage.getItem("accessToken");
     if (!token) return;
 
+    // ✅ 사용 불가능한 문자 정규식 (공백 및 특수 문자 제거)
+    const invalidChars = /[@%&?\/\\#+=:;*|<>\s]/g;
+    if (invalidChars.test(newNickname)) {
+      Swal.fire("⚠️ 닉네임 오류", "닉네임에 공백 또는 특수문자를 사용할 수 없습니다.", "error");
+      return;
+    }
+
+    // ✅ 닉네임 앞뒤 공백 제거
+    const sanitizedNickname = newNickname.trim();
+
+    if (!sanitizedNickname) {
+      Swal.fire("⚠️ 닉네임 오류", "닉네임을 입력해주세요.", "error");
+      return;
+    }
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/nickname", {
         method: "PUT",
@@ -148,6 +163,7 @@ const ProfileHeaderMe = () => {
         sessionStorage.setItem("user", JSON.stringify(updatedUser));
 
         navigate(`/profile/${newNickname}`);
+        window.location.reload();
       });
     } catch (error) {
       Swal.fire("앗!", "고민하는 사이에 다른 유저가 닉네임을 가져갔어요!", "error");
@@ -264,7 +280,7 @@ const ProfileHeaderMe = () => {
       const data = await response.json();
       setSubscriberCount(data.count); // ✅ 구독자 수 저장
     } catch (error) {
-      console.error("❌ 구독자 수 불러오기 실패:", error); 
+      console.error("❌ 구독자 수 불러오기 실패:", error);
     }
   };
 
@@ -272,7 +288,7 @@ const ProfileHeaderMe = () => {
   const fetchSubscribersList = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) return;
-  
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/subscribe/read", {
         method: "GET",
@@ -281,14 +297,14 @@ const ProfileHeaderMe = () => {
           "Authorization": `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error("구독자 리스트 조회 실패");
       }
-  
+
       const data = await response.json();
       console.log("✅ 서버에서 받은 구독 리스트:", data);
-  
+
       // ✅ 서버 응답이 배열이 아닐 경우 배열로 변환
       // if (Array.isArray(data.subscribers)) {
       //   setSubscribersList(data.subscribers);
@@ -302,7 +318,7 @@ const ProfileHeaderMe = () => {
       console.error("❌ 구독자 리스트 불러오기 실패:", error);
     }
   };
-  
+
 
   // ✅ useEffect (닉네임 변경 시 게시물 개수 & 구독자 수 갱신)
   useEffect(() => {
@@ -319,9 +335,14 @@ const ProfileHeaderMe = () => {
       <div className="profile-content">
         {/* 프로필 이미지 */}
         <div className="profile-avatar-container">
-          <img src={`${user?.image}?timestamp=${new Date().getTime()}` || "/default_profile.png"} alt="프로필" className="profile-avatar" />
+          <img
+            src={user?.image ? `${user.image}?timestamp=${new Date().getTime()}` : "/images/default_profile.png"}
+            alt="프로필"
+            className="profile-avatar"
+          />
           <button className="edit-icon" onClick={() => setIsImageEditing(true)}>✏️</button>
         </div>
+
         <div className="profile-details">
           <div className="profile-username">
             {user?.nickname}
@@ -356,7 +377,12 @@ const ProfileHeaderMe = () => {
         <div className="nickname-modal-overlay">
           <div className="nickname-modal">
             <h3>닉네임 수정</h3>
-            <input type="text" value={newNickname} onChange={(e) => setNewNickname(e.target.value)} />
+            <input type="text" value={newNickname} onChange={(e) => {
+              const inputNickname = e.target.value.replace(/[@%&?\/\\#+=:;*|<>\s]/g, ""); // ✅ 공백 및 특수문자 제거
+              setNewNickname(inputNickname);
+              setErrorMessage(""); // 에러 메시지 초기화
+            }}
+            />
             {errorMessage && <p className="nickname-error-message">{errorMessage}</p>}
             <div className="nickname-modal-buttons">
               <button className="nickname-btn-save" onClick={handleNicknameChange}>확인</button>
