@@ -73,7 +73,8 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
     @Query("SELECT r from RecipeEntity r where r.userEntity.userId IN " +
             "(SELECT s.subscribedUser.userId from SubscribeEntity s " +
-            "where s.subscriber.userId = :userId)")
-    List<RecipeEntity> findSubscribedRecipes(@Param("userId") Long userId);
+            "where s.subscriber.userId = :userId)" +
+            "order by r.writeTime desc")
+    List<RecipeEntity> findSubscribedRecipes(@Param("userId") Long userId, Pageable pageable);
 
 }

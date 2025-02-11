@@ -8,6 +8,8 @@ import com.ssafy.foodthink.subscribe.repository.SubscribeRepository;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -119,7 +121,24 @@ public class SubscribeServiceImpl implements SubscribeService{
 //        List<UserEntity> userEntities = subscribeRepository.findSubscribedUserBySubscriber(userEntity);
 
         //해당 사용자들 레시피 조회
-        List<RecipeEntity> recipeEntities = recipeRepository.findSubscribedRecipes(id);
-        return List.of();
+        Pageable pageable = PageRequest.of(0, 20);
+
+        List<RecipeEntity> recipeEntities = recipeRepository.findSubscribedRecipes(id, pageable);
+        List<RecipeListTop20ResponseDto> recipeListTop20ResponseDtos = new ArrayList<>();
+
+        for (RecipeEntity recipeEntity : recipeEntities) {
+            RecipeListTop20ResponseDto recipeListTop20ResponseDto = new RecipeListTop20ResponseDto(
+                    recipeEntity.getRecipeId(),
+                    recipeEntity.getRecipeTitle(),
+                    recipeEntity.getImage(),
+                    recipeEntity.getUserEntity().getNickname(),
+                    recipeEntity.getUserEntity().getImage(),
+                    recipeEntity.getHits(),
+                    recipeEntity.getRecipeBookmarkEntities().stream().count()
+            );
+
+            recipeListTop20ResponseDtos.add(recipeListTop20ResponseDto);
+        }
+        return recipeListTop20ResponseDtos;
     }
 }
