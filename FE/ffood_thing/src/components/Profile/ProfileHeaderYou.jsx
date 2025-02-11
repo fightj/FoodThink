@@ -211,7 +211,8 @@ const ProfileHeaderYou = ({ nickname }) => {
       <div className="profile-content">
         {/* 프로필 이미지 */}
         <div className="profile-avatar-container">
-          <img src={profileData.image || "/default_profile.png"} alt="프로필" className="profile-avatar" />
+          <img src={profileData?.image && profileData.image.trim() ? profileData.image : "/images/default_profile.png"}
+ alt="프로필" className="profile-avatar" />
         </div>
 
         {/* 닉네임 */}
