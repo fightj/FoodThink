@@ -24,7 +24,7 @@ const ProfileHeaderMe = () => {
       console.error("❌ 토큰 없음: 로그인 필요");
       return;
     }
-  
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/users/read/my-info", {
         method: "GET",
@@ -33,15 +33,15 @@ const ProfileHeaderMe = () => {
           Authorization: `Bearer ${token}`
         }
       });
-  
+
       if (!response.ok) {
         const errorText = await response.text(); // 서버 응답 확인
         throw new Error(`계절 정보 불러오기 실패: ${errorText}`);
       }
-  
+
       const data = await response.json();
       console.log("✅ 서버에서 받은 계절 정보:", data);
-  
+
       if (data.season) {
         setSeason(data.season); // ✅ UI 업데이트
       } else {
@@ -61,7 +61,7 @@ const ProfileHeaderMe = () => {
       console.error("❌ 토큰 없음: 로그인 필요");
       return;
     }
-  
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/season", {
         method: "PUT", // ✅ PUT 방식으로 요청
@@ -71,12 +71,12 @@ const ProfileHeaderMe = () => {
         },
         body: JSON.stringify({ season: newSeason }) // ✅ 계절 정보 업데이트
       });
-  
+
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`계절 변경 실패: ${errorText}`);
       }
-  
+
       console.log(`✅ 서버에 '${newSeason}' 테마 저장 완료!`);
       setSeason(newSeason); // ✅ UI 반영
       fetchUserSeason();
@@ -84,7 +84,7 @@ const ProfileHeaderMe = () => {
       console.error("❌ 계절 변경 실패:", error);
     }
   };
-  
+
   const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState(user?.nickname || "");
   const [errorMessage, setErrorMessage] = useState(""); // ✅ 에러 메시지 상태 추가
@@ -264,7 +264,7 @@ const ProfileHeaderMe = () => {
       const data = await response.json();
       setSubscriberCount(data.count); // ✅ 구독자 수 저장
     } catch (error) {
-      console.error("❌ 구독자 수 불러오기 실패:", error); 
+      console.error("❌ 구독자 수 불러오기 실패:", error);
     }
   };
 
@@ -272,7 +272,7 @@ const ProfileHeaderMe = () => {
   const fetchSubscribersList = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) return;
-  
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/subscribe/read", {
         method: "GET",
@@ -281,14 +281,14 @@ const ProfileHeaderMe = () => {
           "Authorization": `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error("구독자 리스트 조회 실패");
       }
-  
+
       const data = await response.json();
       console.log("✅ 서버에서 받은 구독 리스트:", data);
-  
+
       // ✅ 서버 응답이 배열이 아닐 경우 배열로 변환
       // if (Array.isArray(data.subscribers)) {
       //   setSubscribersList(data.subscribers);
@@ -302,7 +302,7 @@ const ProfileHeaderMe = () => {
       console.error("❌ 구독자 리스트 불러오기 실패:", error);
     }
   };
-  
+
 
   // ✅ useEffect (닉네임 변경 시 게시물 개수 & 구독자 수 갱신)
   useEffect(() => {
@@ -319,9 +319,14 @@ const ProfileHeaderMe = () => {
       <div className="profile-content">
         {/* 프로필 이미지 */}
         <div className="profile-avatar-container">
-          <img src={`${user?.image}?timestamp=${new Date().getTime()}` || "/default_profile.png"} alt="프로필" className="profile-avatar" />
+          <img
+            src={user?.image ? `${user.image}?timestamp=${new Date().getTime()}` : "/images/default_profile.png"}
+            alt="프로필"
+            className="profile-avatar"
+          />
           <button className="edit-icon" onClick={() => setIsImageEditing(true)}>✏️</button>
         </div>
+
         <div className="profile-details">
           <div className="profile-username">
             {user?.nickname}
