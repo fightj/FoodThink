@@ -314,3 +314,45 @@ hr {
   width: 100%;
   padding-right: 20px;
 }
+/* FeedWrite.css */
+.hash-tag-area {
+  display: flex;
+  align-items: center; /* 세로 정렬 */
+  gap: 2rem; /* 자식 요소 간격 */
+}
+/* FeedDetail.css */
+
+/* 말풍선 스타일 */
+.recipe-tooltip {
+  position: absolute;
+  top: -20%;
+  left: 25%;
+  transform: translate(0, 0); /* 이미지의 오른쪽 상단에 배치 */
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 30px;
+  cursor: pointer;
+  max-width: 200px;
+  text-align: center;
+  z-index: 10; /* 이미지 위에 보이게 하기 위해 높은 z-index 설정 */
+}
+
+.recipe-tooltip h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+/* 이미지 컨테이너 스타일 */
+.recipe-image-container {
+  margin-top: 10%;
+  position: relative;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.recipe-main-image {
+  width: 30%;
+  height: auto;
+}
