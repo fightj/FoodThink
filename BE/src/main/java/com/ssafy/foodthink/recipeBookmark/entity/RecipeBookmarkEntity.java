@@ -25,12 +25,12 @@ public class RecipeBookmarkEntity {
     private Long markId;
 
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "recipe_id")
     private RecipeEntity recipeEntity;
 
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
