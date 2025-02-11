@@ -10,8 +10,81 @@ import "../../styles/profile/ProfileHeader.css";
 const ProfileHeaderMe = () => {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
-  const [season, setSeason] = useState("spring");
+  const [season, setSeason] = useState("봄");
   const [background, setBackground] = useState("#FFEBE9"); // 기본 배경 설정
+
+  useEffect(() => {
+    fetchUserSeason(); // 페이지 로드 시 서버에서 유저 테마 가져오기
+  }, []);
+
+  // ✅ 서버에서 사용자 계절 정보 가져오기
+  const fetchUserSeason = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("❌ 토큰 없음: 로그인 필요");
+      return;
+    }
+  
+    try {
+      const response = await fetch("https://i12e107.p.ssafy.io/api/users/read/my-info", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text(); // 서버 응답 확인
+        throw new Error(`계절 정보 불러오기 실패: ${errorText}`);
+      }
+  
+      const data = await response.json();
+      console.log("✅ 서버에서 받은 계절 정보:", data);
+  
+      if (data.season) {
+        setSeason(data.season); // ✅ UI 업데이트
+      } else {
+        console.warn("⚠ 서버에서 받은 계절 데이터가 없음. 기본값(봄) 설정");
+        setSeason("봄");
+      }
+    } catch (error) {
+      console.error("❌ 계절 불러오기 실패:", error);
+      setSeason("봄"); // 기본값
+    }
+  };
+
+  // ✅ 서버에 계절 정보 업데이트
+  const updateUserSeason = async (newSeason) => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("❌ 토큰 없음: 로그인 필요");
+      return;
+    }
+  
+    try {
+      const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/season", {
+        method: "PUT", // ✅ PUT 방식으로 요청
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ season: newSeason }) // ✅ 계절 정보 업데이트
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`계절 변경 실패: ${errorText}`);
+      }
+  
+      console.log(`✅ 서버에 '${newSeason}' 테마 저장 완료!`);
+      setSeason(newSeason); // ✅ UI 반영
+      fetchUserSeason();
+    } catch (error) {
+      console.error("❌ 계절 변경 실패:", error);
+    }
+  };
+  
   const [isEditing, setIsEditing] = useState(false);
   const [newNickname, setNewNickname] = useState(user?.nickname || "");
   const [errorMessage, setErrorMessage] = useState(""); // ✅ 에러 메시지 상태 추가
@@ -242,7 +315,7 @@ const ProfileHeaderMe = () => {
 
   return (
     <div className="profile-header" style={{ background }}>
-      <BackgroundEffect season={season} setSeason={setSeason} setBackground={setBackground} />
+      <BackgroundEffect season={season} setSeason={setSeason} setBackground={setBackground} updateUserSeason={updateUserSeason} isEditable={true} />
       <div className="profile-content">
         {/* 프로필 이미지 */}
         <div className="profile-avatar-container">
@@ -310,7 +383,6 @@ const ProfileHeaderMe = () => {
 
       {/* ✅ 구독자 리스트 모달 */}
       {isSubscriberModalOpen && (
-     
         <SubscriberModal
           subscribers={subscribersList}
           onClose={() => setIsSubscriberModalOpen(false)}

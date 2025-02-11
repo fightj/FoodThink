@@ -27,12 +27,20 @@ const ProfileHeaderYou = ({ nickname }) => {
       if (!response.ok) throw new Error("프로필 데이터를 불러오는 데 실패했습니다.");
       const data = await response.json();
       setProfileData(data);
+      if (data.season) {
+        setSeason(data.season); // 🔥 서버에서 받은 계절 정보 설정
+      }
     } catch (error) {
       console.error("❌ 프로필 불러오기 실패:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  // useEffect(() => {
+  //   fetchProfileData();
+  // }, [nickname]);
+
 
   // ✅ 구독 상태 확인
   const fetchSubscriptionStatus = async () => {
@@ -62,8 +70,6 @@ const ProfileHeaderYou = ({ nickname }) => {
       setIsSubscribed(false); // 네트워크 오류 시 기본값 false
     }
   };
-
-
 
   // ✅ 구독 수 가져오기
   const fetchSubscriberCount = async () => {
@@ -200,7 +206,7 @@ const ProfileHeaderYou = ({ nickname }) => {
   return (
     <div className="profile-header" style={{ background }}>
       {/* 배경 이펙트 추가 */}
-      <BackgroundEffect season={season} setSeason={setSeason} setBackground={setBackground} />
+      <BackgroundEffect season={season} setSeason={setSeason} setBackground={setBackground} isEditable={false} />
 
       <div className="profile-content">
         {/* 프로필 이미지 */}
