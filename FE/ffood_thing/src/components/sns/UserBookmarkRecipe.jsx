@@ -1,51 +1,65 @@
-import React from "react"
-import Modal from "react-bootstrap/Modal"
-import Carousel from "react-bootstrap/Carousel"
-import "bootstrap/dist/css/bootstrap.min.css"
-import "../../styles/sns/UserBookmarkRecipe.css"
+import React from "react";
+import Modal from "react-bootstrap/Modal";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Swal from "sweetalert2";
+import "flickity/css/flickity.css"; // Flickity CSS 임포트
+import Flickity from "react-flickity-component"; // Flickity 컴포넌트 임포트
+import "../../styles/sns/UserBookmarkRecipe.css"; // 사용자 정의 CSS 임포트
 
-function UserBookmarkRecipe({ closeModal, bookmarks }) {
-  // 카드 그룹을 나누기 위해 배열을 슬라이스하는 함수
-  const chunkArray = (array, chunkSize) => {
-    const chunks = []
-    for (let i = 0; i < array.length; i += chunkSize) {
-      chunks.push(array.slice(i, i + chunkSize))
-    }
-    return chunks
-  }
+const flickityOptions = {
+  wrapAround: true
+};
 
-  // 3개씩 나누어진 카드 그룹 배열
-  const cardGroups = chunkArray(bookmarks, 3)
+function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
+  const handleBookmarkClick = (bookmark) => {
+    Swal.fire({
+      title: "이 레시피를 참조하셨나요?",
+      showCancelButton: true,
+      confirmButtonText: "예",
+      cancelButtonText: "아니오",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onBookmarkSelect(bookmark.recipeId);
+        closeModal();
+      }
+    });
+  };
 
   return (
-    <Modal show onHide={closeModal} centered>
+    <Modal show onHide={closeModal} centered dialogClassName="modal-dialog" style={{ minWidth: "80vw", minHeight: "50vh", margin: "auto" }}>
       <Modal.Header closeButton>
         <Modal.Title>내 북마크 레시피</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body style={{ width: "100%", height: "100%", margin: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
         {bookmarks.length === 0 ? (
           <p>비어있습니다.</p>
         ) : (
-          <Carousel>
-            {cardGroups.map((group, index) => (
-              <Carousel.Item key={index}>
-                <div className="bookmark-card-container d-flex justify-content-around">
-                  {group.map((bookmark, idx) => (
-                    <div key={idx} className="bookmark-card mx-2">
-                      <img className="d-block w-100" src={bookmark.image} alt={bookmark.title} />
-                      <Carousel.Caption>
-                        <h5>{bookmark.title}</h5>
-                      </Carousel.Caption>
-                    </div>
-                  ))}
-                </div>
-              </Carousel.Item>
+          <Flickity
+            className={"bookmark-gallery"}
+            elementType={"div"}
+            options={flickityOptions}
+            disableImagesLoaded={false}
+            reloadOnUpdate
+          >
+            {bookmarks.map((bookmark, idx) => (
+              <div
+                key={idx}
+                className="bookmark-gallery-cell"
+                onClick={() => handleBookmarkClick(bookmark)}
+                style={{ cursor: "pointer", backgroundImage: `url(${bookmark.image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                cursor: "pointer"}}
+              >
+                <h2>{bookmark.title}</h2>
+                <span className="scroll-item-date">{bookmark.date}</span>
+              </div>
             ))}
-          </Carousel>
+          </Flickity>
         )}
       </Modal.Body>
     </Modal>
-  )
+  );
 }
 
-export default UserBookmarkRecipe
+export default UserBookmarkRecipe;
