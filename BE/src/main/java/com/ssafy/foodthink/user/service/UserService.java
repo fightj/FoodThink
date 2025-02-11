@@ -116,33 +116,33 @@ public class UserService {
         UserEntity userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        deleteRecipesByUser(userId);
+        //deleteRecipesByUser(userId);
 
         userRepository.delete(userEntity);
     }
 
     // 사용자와 관련된 데이터  삭제
-    @Transactional
-    public void deleteRecipesByUser(Long userId) {
-        // 사용자 조회
-        UserEntity userEntity = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        recipeViewRepository.deleteByUserEntity(userEntity);
-
-        // 사용자가 작성한 모든 레시피 조회
-        List<RecipeEntity> recipes = recipeRepository.findByUserEntity(userEntity);
-
-        // 각 레시피에 대해 연관 데이터 삭제
-        for (RecipeEntity recipe : recipes) {
-
-            // TF-IDF 데이터 삭제
-            recipeTfIdfRepository.deleteByRecipeEntity(recipe);
-
-            // 레시피 삭제
-            recipeRepository.delete(recipe);
-        }
-    }
+//    @Transactional
+//    public void deleteRecipesByUser(Long userId) {
+//        // 사용자 조회
+//        UserEntity userEntity = userRepository.findByUserId(userId)
+//                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+//
+//        recipeViewRepository.deleteByUserEntity(userEntity);
+//
+//        // 사용자가 작성한 모든 레시피 조회
+//        List<RecipeEntity> recipes = recipeRepository.findByUserEntity(userEntity);
+//
+//        // 각 레시피에 대해 연관 데이터 삭제
+//        for (RecipeEntity recipe : recipes) {
+//
+//            // TF-IDF 데이터 삭제
+//            recipeTfIdfRepository.deleteByRecipeEntity(recipe);
+//
+//            // 레시피 삭제
+//            recipeRepository.delete(recipe);
+//        }
+//    }
 
     private UserInfoDto convertToDto(UserEntity userEntity) {
         return UserInfoDto.builder()

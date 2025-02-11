@@ -19,6 +19,6 @@ public interface RecipeViewRepository extends JpaRepository<RecipeViewHistoryEnt
 
     List<RecipeViewHistoryEntity> findByUserEntity_userId(Long userId);
 
-    void deleteByUserEntity(UserEntity userEntity);
+    //void deleteByUserEntity(UserEntity userEntity);
 }
 
