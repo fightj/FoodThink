@@ -98,6 +98,18 @@ public class UserService {
         return convertToDto(userEntity);
     }
 
+    // 회원 마이페이지 배경 상태 수정(계절)
+    public UserInfoDto updateUserSeason(Long userId, String season){
+        UserEntity userEntity = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+        if(season != null && !season.isEmpty()){
+            userEntity.setSeason(season);
+        }
+        userRepository.save(userEntity);
+
+        return convertToDto(userEntity);
+    }
+
     // 회원 탈퇴
     @Transactional
     public void deleteUser(Long userId) {
@@ -138,6 +150,7 @@ public class UserService {
                 .email(userEntity.getEmail())
                 .nickname(userEntity.getNickname())
                 .image(userEntity.getImage())
+                .season(userEntity.getSeason())
                 .build();
     }
 
