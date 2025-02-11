@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.subscribe.service;
 
+import com.ssafy.foodthink.recipes.dto.RecipeListTop20ResponseDto;
 import com.ssafy.foodthink.user.dto.UserInfoDto;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface SubscribeService {
     boolean checkSubscribe(Long id, String nickname);
     //구독자 수
     int countSubscribedUser(String nickname);
+    //구독한 사람들 레시피 조회
+    List<RecipeListTop20ResponseDto> readRecipesBySubscribe(Long id);
 }

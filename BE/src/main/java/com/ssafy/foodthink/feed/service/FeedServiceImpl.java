@@ -10,6 +10,7 @@ import com.ssafy.foodthink.feed.repository.FeedImageRepository;
 import com.ssafy.foodthink.feed.repository.FeedLikeRepository;
 import com.ssafy.foodthink.feed.repository.FeedRepository;
 import com.ssafy.foodthink.global.S3Service;
+import com.ssafy.foodthink.recipes.dto.RecipeListResponseDto;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
 import com.ssafy.foodthink.user.entity.UserEntity;
@@ -103,7 +104,28 @@ public class FeedServiceImpl implements FeedService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드를 찾을 수 없습니다. ID: " + id));
 
         List<String> imageUrls = readImageUrlsByFeedId(feedEntity.getId());
-        FeedResponseDto feedResponseDto = createFeedResponseDtoByBuilder(feedEntity, imageUrls);
+
+        log.info(feedEntity.getRecipeEntity().getRecipeTitle());
+
+        FeedResponseDto feedResponseDto = FeedResponseDto.builder()
+                .id(feedEntity.getId())
+                .foodName(feedEntity.getFoodName())
+                .content(feedEntity.getContent())
+                .writeTime(feedEntity.getWriteTime())
+                .userId(feedEntity.getUserEntity().getUserId())
+                .username(feedEntity.getUserEntity().getNickname())
+                .userImage(feedEntity.getUserEntity().getImage())
+                .recipeListResponseDto(feedEntity.getRecipeEntity() != null ?
+                        RecipeListResponseDto.builder()
+                                .recipeId(feedEntity.getRecipeEntity().getRecipeId())
+                                .recipeTitle(feedEntity.getRecipeEntity().getRecipeTitle())
+                                .image(feedEntity.getRecipeEntity().getImage())
+                                .nickname(feedEntity.getRecipeEntity().getUserEntity().getNickname())
+                                .build()
+                        : null)
+                .images(imageUrls)
+                .build();
+
         //댓글 조회
         List<FeedCommentResponseDto> feedCommentResponseDtos = readFeedCommentsByFeedId(id);
         feedResponseDto.setFeedCommentResponseDtos(feedCommentResponseDtos);

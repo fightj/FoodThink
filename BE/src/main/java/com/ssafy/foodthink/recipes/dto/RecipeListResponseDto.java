@@ -1,6 +1,7 @@
 package com.ssafy.foodthink.recipes.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 public class RecipeListResponseDto {
     private Long recipeId;
     private String recipeTitle;

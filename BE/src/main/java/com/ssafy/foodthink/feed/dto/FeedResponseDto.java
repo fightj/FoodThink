@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.feed.dto;
 
+import com.ssafy.foodthink.recipes.dto.RecipeListResponseDto;
 import jakarta.persistence.Entity;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class FeedResponseDto {
     private Long userId;
     private String username;
     private String userImage;
+    private RecipeListResponseDto recipeListResponseDto;
     private Long recipeId;
     private List<String> images;
     private boolean isLike;

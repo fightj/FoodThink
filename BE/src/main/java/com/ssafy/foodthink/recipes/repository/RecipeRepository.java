@@ -71,4 +71,10 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
     //닉네임으로 사용자 아이디 찾기 : 어떤 사용자가 작성한 레시피 목록 조회 최신순 (마이페이지)
     List<RecipeEntity> findByUserEntity_UserIdOrderByWriteTimeDesc(Long userId);
 
+    @Query("SELECT r from RecipeEntity r where r.userEntity.userId IN " +
+            "(SELECT s.subscribedUser.userId from SubscribeEntity s " +
+            "where s.subscriber.userId = :userId)" +
+            "order by r.writeTime desc")
+    List<RecipeEntity> findSubscribedRecipes(@Param("userId") Long userId, Pageable pageable);
+
 }
