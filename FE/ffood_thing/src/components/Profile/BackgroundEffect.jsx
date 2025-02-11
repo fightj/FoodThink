@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/profile/ProfileHeader.css";
 
-const BackgroundEffect = ({ season, setSeason, setBackground }) => {
+const BackgroundEffect = ({ season, setSeason, setBackground, updateUserSeason, isEditable = false }) => {
   const [fallingElements, setFallingElements] = useState([]);
 
   const seasonStyles = {
-    spring: { background: "#FFEBE9", effectClass: "falling-cherry-blossom", emoji: "🌸" },
-    summer: { background: "#B3E5FC", effectClass: "falling-rain", emoji: "💧" },
-    autumn: { background: "#FFD180", effectClass: "falling-leaves", emoji: "🍂" },
-    winter: { background: "#E3F2FD", effectClass: "falling-snow", emoji: "❄" }
+    봄: { background: "#FFEBE9", effectClass: "falling-cherry-blossom", emoji: "🌸" },
+    여름: { background: "#B3E5FC", effectClass: "falling-rain", emoji: "💧" },
+    가을: { background: "#FFD180", effectClass: "falling-leaves", emoji: "🍂" },
+    겨울: { background: "#E3F2FD", effectClass: "falling-snow", emoji: "❄" }
   };
 
-  // 떨어지는 요소 생성
+  // ✅ 계절 스타일 적용
+  const applySeason = (selectedSeason) => {
+    setSeason(selectedSeason);
+    setBackground(seasonStyles[selectedSeason].background);
+    generateFallingElements(selectedSeason);
+  };
+
+  // ✅ 떨어지는 효과 생성
   const generateFallingElements = (currentSeason) => {
     const elements = Array.from({ length: 15 }).map((_, i) => ({
       id: i,
@@ -22,17 +29,17 @@ const BackgroundEffect = ({ season, setSeason, setBackground }) => {
     setFallingElements(elements);
   };
 
-  // 계절 변경 함수
+  // ✅ 테마 변경 시 서버에도 저장
   const changeSeason = (newSeason) => {
-    setSeason(newSeason);
-    setBackground(seasonStyles[newSeason].background);
-    generateFallingElements(newSeason);
+    if (!seasonStyles[newSeason]) return;
+    applySeason(newSeason);
+    updateUserSeason(newSeason); // ✅ ProfileHeaderMe.jsx에서 전달받은 함수 호출
   };
 
-  // useEffect (배경 애니메이션 분리)
   useEffect(() => {
-    generateFallingElements(season);
-    setBackground(seasonStyles[season].background); // ✅ 배경 색상 변경
+    if (season) {
+      applySeason(season); // 처음 렌더링 시 설정 적용
+    }
   }, [season]);
 
   return (
@@ -42,7 +49,7 @@ const BackgroundEffect = ({ season, setSeason, setBackground }) => {
         {fallingElements.map((element) => (
           <div
             key={element.id}
-            className={`falling-effect ${seasonStyles[season].effectClass}`}
+            className={`falling-effect ${seasonStyles[season]?.effectClass}`}
             style={{
               left: element.left,
               animationDuration: element.animationDuration
@@ -54,12 +61,14 @@ const BackgroundEffect = ({ season, setSeason, setBackground }) => {
       </div>
 
       {/* 🟡 계절 변경 버튼 */}
+      {isEditable && (
       <div className="season-buttons">
-        <button className="spring-btn" onClick={() => changeSeason("spring")}>🌸</button>
-        <button className="summer-btn" onClick={() => changeSeason("summer")}>🌞</button>
-        <button className="autumn-btn" onClick={() => changeSeason("autumn")}>🍂</button>
-        <button className="winter-btn" onClick={() => changeSeason("winter")}>❄</button>
+        <button className="spring-btn" onClick={() => changeSeason("봄")}>🌸</button>
+        <button className="summer-btn" onClick={() => changeSeason("여름")}>🌞</button>
+        <button className="autumn-btn" onClick={() => changeSeason("가을")}>🍂</button>
+        <button className="winter-btn" onClick={() => changeSeason("겨울")}>❄</button>
       </div>
+      )}
     </div>
   );
 };
