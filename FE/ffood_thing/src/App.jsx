@@ -216,7 +216,7 @@ const AnimatedRoutes = ({ userInfo }) => {
           }
         />
         <Route
-          path="/profile/:id"
+          path="/profile/:nickname"
           element={
             <PageSlide>
               <ProfilePage />
