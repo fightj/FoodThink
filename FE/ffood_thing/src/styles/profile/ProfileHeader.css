@@ -61,36 +61,6 @@
   border: 3px solid white;
 }
 
-/* 프로필 아바타 컨테이너 */
-/* .profile-avatar-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-} */
-
-/* 프로필 이미지 숨김 및 편집 UI 위치 조정 */
-/* .profile-image-upload {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-} */
-
-/* 프로필 이미지 숨김 효과 */
-/* .profile-avatar-wrapper.hidden {
-  display: none;
-} */
 
 /* 📌 프로필 정보 */
 .profile-details {
@@ -152,6 +122,26 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+/* 📌 Profile 버튼 */
+.subscriber-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  background-color: #ff1e00;
+  border: 2px solid #ff1e00;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 3px 5px rgba(255, 127, 0, 0.3);
+}
+
 
 
 /* 📌 반응형 - 모바일에서는 세로 정렬 */
@@ -244,7 +234,7 @@
 
 /* 📌 눈 */
 .falling-snow {
-  color: white;
+  color: black;
   animation-duration: 6s;
   text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
 }

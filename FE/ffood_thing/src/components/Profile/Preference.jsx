@@ -21,6 +21,14 @@ const Preference = ({ onClose, userId }) => {
   const [selectedAvoidances, setSelectedAvoidances] = useState([]); // 기피 재료 리스트
   const [loading, setLoading] = useState(true);
 
+  // ✅ 모달이 열리면 스크롤 막기
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto"; // 모달 닫힐 때 원래대로
+    };
+  }, []);
+
   // ✅ 백엔드에서 기존 관심사 불러오기 (로컬 저장 X)
   useEffect(() => {
     const fetchUserPreferences = async () => {
