@@ -1,30 +1,31 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../../contexts/UserContext";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext"; // ✅ UserContext 가져오기
 import "../../styles/profile/RecipeList.css";
 
-const RecipeList = ({ userId }) => {
-  const { user } = useContext(UserContext);
+const RecipeList = () => {
+  const { user } = useContext(UserContext); // ✅ 현재 로그인한 유저 정보 가져오기
+  const { nickname } = useParams(); // ✅ URL에서 닉네임 가져오기
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const isOwnProfile = user?.userId === userId;
+  const isOwnProfile = user?.nickname === nickname; // ✅ 본인 프로필 여부 판단
 
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
         const token = localStorage.getItem("accessToken");
 
-        // API URL 결정 (본인 or 타인)
+        // ✅ API URL 결정 (본인 or 타인)
         const apiUrl = isOwnProfile
           ? "https://i12e107.p.ssafy.io/api/myOwnRecipe/read/myRecipeList"
-          : `https://i12e107.p.ssafy.io/api/userRecipe/read/${userId}`;
+          : `https://i12e107.p.ssafy.io/api/userRecipe/read/${nickname}`;
 
         const response = await fetch(apiUrl, {
           method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: isOwnProfile ? { Authorization: `Bearer ${token}` } : {},
         });
 
         if (!response.ok) throw new Error(`서버 응답 오류: ${response.status}`);
@@ -44,8 +45,8 @@ const RecipeList = ({ userId }) => {
       }
     };
 
-    if (userId) fetchRecipes(); // userId가 존재할 때만 API 호출
-  }, [userId, isOwnProfile]); // userId 또는 isOwnProfile 변경 시 재요청
+    if (nickname) fetchRecipes(); // nickname이 존재할 때만 API 호출
+  }, [nickname, isOwnProfile]); // nickname 또는 isOwnProfile 변경 시 재요청
 
   if (loading) return <div className="recipe-container">⏳ 레시피를 불러오는 중...</div>;
   if (error) return <div className="recipe-container">❌ {error}</div>;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/profile/RecipeList.css";
 
@@ -6,13 +6,14 @@ const BookmarkList = () => {
   const navigate = useNavigate();
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
 
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
         const token = localStorage.getItem("accessToken");
 
+        // 1️⃣ 북마크된 레시피 ID 가져오기
         const response = await fetch("https://i12e107.p.ssafy.io/api/bookmark/read/list", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
@@ -20,13 +21,30 @@ const BookmarkList = () => {
 
         if (!response.ok) throw new Error(`서버 응답 오류: ${response.status}`);
 
-        const data = await response.json();
-        console.log("📌 북마크된 레시피 데이터:", data);
+        const bookmarkData = await response.json();
+        console.log("📌 북마크된 레시피 ID 목록:", bookmarkData);
 
-        setBookmarks(data);
+        // 2️⃣ 각 레시피의 상세 정보 불러오기
+        const recipeDetails = await Promise.all(
+          bookmarkData.map(async (bookmark) => {
+            const recipeResponse = await fetch(
+              `https://i12e107.p.ssafy.io/api/recipes/read/detail/${bookmark.recipeId}`,
+              {
+                method: "GET",
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+
+            if (!recipeResponse.ok) throw new Error(`레시피 상세 불러오기 오류: ${recipeResponse.status}`);
+
+            return recipeResponse.json();
+          })
+        );
+
+        console.log("🍽️ 상세한 레시피 데이터:", recipeDetails);
+        setBookmarks(recipeDetails);
       } catch (error) {
-        console.error("❌ 북마크 불러오기 실패:", error);
-        setError("북마크된 레시피를 불러오는 중 문제가 발생했습니다.");
+        console.error("❌ 북마크된 레시피 데이터 불러오기 실패:", error);
       } finally {
         setLoading(false);
       }
@@ -36,7 +54,6 @@ const BookmarkList = () => {
   }, []);
 
   if (loading) return <div className="recipe-container">⏳ 북마크를 불러오는 중...</div>;
-  if (error) return <div className="recipe-container">❌ {error}</div>;
   if (!bookmarks || bookmarks.length === 0) {
     return (
       <div className="recipe-container">
@@ -53,18 +70,18 @@ const BookmarkList = () => {
   return (
     <div className="recipe-container">
       <div className="recipe-grid">
-        {bookmarks.map((bookmark) => (
+        {bookmarks.map((recipe) => (
           <Link
-            to={`/recipes/${bookmark.recipeId}`} // API 응답 필드에 맞게 수정
-            key={bookmark.recipeId}
+            to={`/recipes/${recipe.recipeId}`} // API 응답 필드에 맞게 수정
+            key={recipe.recipeId}
             className="recipe-card"
             style={{ textDecoration: "none", color: "inherit" }} // 링크 스타일 유지
           >
-            <img src={bookmark.image} alt={bookmark.recipeTitle} className="recipe-image" />
-            <p className="recipe-title1">{bookmark.recipeTitle}</p>
-            {/* <div className="recipe-meta">
+            <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />
+            <p className="recipe-title1">{recipe.recipeTitle}</p>
+            <div className="recipe-meta">
               👁 {recipe.hits} | ⭐ {recipe.bookmarkCount}
-            </div> */}
+            </div>
           </Link>
         ))}
       </div>

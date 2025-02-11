@@ -10,6 +10,7 @@ import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -186,6 +187,33 @@ public class MyOwnRecipeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("레시피 삭제에 실패했습니다.");
         }
     }
+
+
+    //다른 사용자가 작성한 래시피 목록 조회
+    //다른 사용자의 마이페이지
+    @GetMapping("/read/diffUserRecipeList/{nickName}")
+    public ResponseEntity<List<MyOwnRecipeListResponseDto>> getDiffUserRecipeList(
+            @RequestHeader(value = "Authorization", required = false) String token,
+            @PathVariable("nickName") String nickName) {
+
+        Long userId = null;
+
+        if(token != null && token.startsWith("Bearer ")) {
+            try {
+                String accessToken = token.replace("Bearer ", "");
+                userId = jwtUtil.getUserId(accessToken);
+            } catch (Exception e) {
+                userId = null;
+            }
+        }
+
+        List<MyOwnRecipeListResponseDto> recipeList = myOwnRecipeService.getRecipesByNickname(nickName);
+
+        return ResponseEntity.ok(recipeList);
+
+    }
+
+
 
 
 }

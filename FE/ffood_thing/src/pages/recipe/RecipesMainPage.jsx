@@ -13,6 +13,8 @@ const RecipesMainPage = () => {
   const [sortType, setSortType] = useState("조회순")
   const [isCategoryListVisible, setIsCategoryListVisible] = useState(true)
   const [isInitialLoad, setIsInitialLoad] = useState(true)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [pageSize] = useState(20) // 한 페이지에 20개의 레시피
   const carouselRef1 = useRef(null)
   const carouselRef2 = useRef(null)
 
@@ -88,7 +90,6 @@ const RecipesMainPage = () => {
   const handleSearch = (query) => {
     navigate(`/search?query=${query}`)
   }
-
   const handleCategoryClick = (category, type) => {
     if (type === "cateType") {
       const newCateType = cateType === category ? "" : category
@@ -135,6 +136,19 @@ const RecipesMainPage = () => {
       }
       return 0
     })
+
+  const currentRecipes = filteredAndSortedRecipes.slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+
+  const totalPages = Math.ceil(filteredAndSortedRecipes.length / pageSize)
+
+  const handlePageChange = (direction) => {
+    if (direction === "prev" && currentPage > 0) {
+      setCurrentPage(currentPage - 1)
+    } else if (direction === "next" && currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
   console.log("Filtered and Sorted Recipes: ", filteredAndSortedRecipes)
 
   return (
@@ -144,7 +158,7 @@ const RecipesMainPage = () => {
         <div className="recipe-card-div">
           <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
             <h2></h2>
-            <button href="/recipes/write" className="write-recipe-button" onClick={() => navigate("/recipes/write")}>
+            <button href="/recipes/write" className="write-recipe-button5" onClick={() => navigate("/recipes/write")}>
               <img src="/images/feed_write_button.png" alt="Recipe 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
             </button>
           </div>
@@ -173,9 +187,11 @@ const RecipesMainPage = () => {
               </div>
             </div>
           )}
+
           <button className="category-onoff-button" onClick={() => setIsCategoryListVisible(!isCategoryListVisible)}>
             {isCategoryListVisible ? "카테고리 닫기" : "카테고리 열기"}
           </button>
+
           {!cateType && !cateMainIngre && (
             <div className="filters2">
               <div className="carousel-wrapper2">
@@ -200,7 +216,7 @@ const RecipesMainPage = () => {
               </div>
               <div className="carousel-wrapper2">
                 <h3>맞춤 추천</h3>
-                <div className="carousel2" ref={carouselRef1}>
+                <div className="carousel2" ref={carouselRef2}>
                   {sortRecipes(top20Recipes, "북마크순").map((recipe) => (
                     <div key={recipe.recipeId} className="recipe-card2" onClick={() => handleDetailClick(recipe.recipeId)}>
                       <div className="image-container2">
@@ -220,6 +236,7 @@ const RecipesMainPage = () => {
               </div>
             </div>
           )}
+
           <div>
             <h3>총 {filteredAndSortedRecipes.length}개의 레시피가 있습니다.</h3>
             <div className="sort-filters2">
@@ -234,7 +251,7 @@ const RecipesMainPage = () => {
               </span>
             </div>
             <div className="recipe-list2">
-              {filteredAndSortedRecipes.map((recipe) => (
+              {currentRecipes.map((recipe) => (
                 <div key={recipe.recipeId} className="recipe-card2 recipe-card2-small" onClick={() => handleDetailClick(recipe.recipeId)}>
                   <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
                   <div className="recipe-info2">
@@ -247,9 +264,48 @@ const RecipesMainPage = () => {
                 </div>
               ))}
             </div>
+
+            <FoodPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+const FoodPagination = ({ currentPage, totalPages, onPageChange }) => {
+  const maxVisibleButtons = 10
+  let startPage = Math.floor(currentPage / maxVisibleButtons) * maxVisibleButtons
+
+  if (startPage + maxVisibleButtons > totalPages) {
+    startPage = Math.max(0, totalPages - maxVisibleButtons)
+  }
+
+  const foodText = Array.from({ length: maxVisibleButtons }, (_, index) => {
+    const pageIndex = startPage + index
+    return pageIndex < totalPages ? "o" : null
+  })
+
+  return (
+    <div className="pagination">
+      <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 0} className="navigation-button">
+        F
+      </button>
+      {foodText.map((char, index) => {
+        if (char === null) return null
+        const pageIndex = startPage + index
+        return (
+          <div key={index} className="page-button">
+            <button className={pageIndex === currentPage ? "active" : ""} onClick={() => onPageChange(pageIndex)}>
+              {char}
+            </button>
+            <div className="page-number">{pageIndex + 1}</div>
+          </div>
+        )
+      })}
+      <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages - 1} className="navigation-button">
+        d
+      </button>
     </div>
   )
 }
