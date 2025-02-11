@@ -3,8 +3,9 @@ import { Holistic } from "@mediapipe/holistic"
 import PropTypes from "prop-types"
 import { Camera } from "@mediapipe/camera_utils"
 import "../../styles/recipe/RecipeComponent.css"
+import VoiceRecognitionComponent from "../voice/VoiceRecognitionComponent" // 새 컴포넌트 불러오기
 
-const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
+const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeId, onClose }) => {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const swipeTrackingRef = useRef({
@@ -18,55 +19,52 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
   const [handDetected, setHandDetected] = useState(false)
   const [timer, setTimer] = useState(0) // 타이머 상태 추가
   const [isTimerRunning, setIsTimerRunning] = useState(false) // 타이머 실행 여부 상태 추가
-  const [isRecording, setIsRecording] = useState(false) // 녹음 상태 추가
-  const [lastServerResponse, setLastServerResponse] = useState(null) // 서버 응답 상태 추가
   const [isAlarmPlaying, setIsAlarmPlaying] = useState(false) // 알람 재생 상태 추가
   const alarmAudioRef = useRef(new Audio("/sound/Alarm.wav")) // 알람 소리 파일 경로 설정
 
-  // 효과음 재생
+  const [currentProcessText, setCurrentProcessText] = useState("")
+  const currentProcessRef = useRef(pages[currentStep])
+
+  const token = localStorage.getItem("accessToken")
+
+  useEffect(() => {
+    if (pages[currentStep]) {
+      const newCurrentProcess = pages[currentStep]
+      const newCurrentProcessText = `${newCurrentProcess.processOrder}. ${newCurrentProcess.processExplain}`
+      setCurrentProcessText(newCurrentProcessText)
+      currentProcessRef.current = newCurrentProcess
+    }
+  }, [currentStep, pages])
+
   const playSound = (url) => {
     const audio = new Audio(url)
     audio.play()
   }
 
-  // 타이머 알람 재생 함수
   const playAlarm = () => {
+    alarmAudioRef.current.currentTime = 0
     alarmAudioRef.current.play()
-    setIsAlarmPlaying(true) // 알람 재생 상태를 true로 설정
+    setIsAlarmPlaying(true)
   }
 
-  // 타이머 알람 멈추기 함수
   const stopAlarm = () => {
     alarmAudioRef.current.pause()
-    alarmAudioRef.current.currentTime = 11
-    setIsAlarmPlaying(false) // 알람 재생 상태를 false로 설정
+    alarmAudioRef.current.currentTime = 0
+    setIsAlarmPlaying(false)
   }
-
-  // 음성인식 필요 데이터
-  const token = localStorage.getItem("accessToken")
-  // 현재 URL에서 recipeId 추출
-  const getRecipeIdFromURL = () => {
-    const url = window.location.href // 현재 URL 가져오기
-    const match = url.match(/\/recipes\/(\d+)/) // 정규 표현식으로 숫자 추출
-    return match ? match[1] : null // 매칭된 값이 있으면 recipeId 반환, 없으면 null 반환
-  }
-
-  // 사용 예시
-  const recipeId = getRecipeIdFromURL()
-  // console.log("추출된 recipeId:", recipeId)
 
   useEffect(() => {
     let timerInterval = null
     if (isTimerRunning) {
       timerInterval = setInterval(() => {
         setTimer((prevTimer) => {
-          if (prevTimer <= 3 && prevTimer > 0) {
-            console.log(prevTimer) // 타이머가 3초 이하로 남았을 때 로그 출력
+          if (prevTimer <= 3 && prevTimer > 1) {
+            console.log(prevTimer)
           }
-          if (prevTimer === 0 && !isAlarmPlaying) {
-            playAlarm() // 타이머가 0이 될 때 알람 소리 재생
+          if (prevTimer === 1 && !isAlarmPlaying) {
+            playAlarm()
           }
-          return prevTimer > 0 ? prevTimer - 1 : 0 // 타이머 감소
+          return prevTimer > 0 ? prevTimer - 1 : 0
         })
       }, 1000)
     } else {
@@ -75,17 +73,13 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     return () => clearInterval(timerInterval)
   }, [isTimerRunning, isAlarmPlaying])
 
-  // 손 위치 변화에 따른 타이머 제어 함수
   const handleTimerGesture = (handLandmarks) => {
     if (handLandmarks) {
-      const palmY = handLandmarks[0].y // 손바닥의 Y 좌표를 가져옴
+      const palmY = handLandmarks[0].y
 
-      // 손을 위로 올리면 타이머 시작
       if (palmY < 0.3 && !isTimerRunning) {
         setIsTimerRunning(true)
-      }
-      // 손을 아래로 내리면 타이머 일시 정지
-      else if (palmY > 0.7 && isTimerRunning) {
+      } else if (palmY > 0.7 && isTimerRunning) {
         setIsTimerRunning(false)
       }
     }
@@ -112,7 +106,6 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     setTimeout(() => setSwipeMessage(""), 1000)
   }
 
-  // 텍스트를 음성으로 읽어주는 함수
   const speakText = (text) => {
     const synth = window.speechSynthesis
     const utterance = new SpeechSynthesisUtterance(text)
@@ -131,8 +124,9 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
 
     switch (intent) {
       case "현재단계읽기":
-        const currentText = `${currentProcess.processOrder}. ${currentProcess.processExplain}`
-        console.log("읽을 텍스트:", currentText) // 콘솔에 출력
+        console.log(currentProcessRef.current.processExplain)
+        const currentText = `${currentProcessRef.current.processOrder}. ${currentProcessRef.current.processExplain}`
+        console.log("읽을 텍스트:", currentText)
         speakText(currentText)
         break
       case "이전단계돌아가기":
@@ -153,6 +147,7 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
         break
       case "종료하기":
         console.log("종료합니다.")
+        onClose() // 모달을 닫는 onClose 함수를 호출
         break
       case "타이머중지":
         setIsTimerRunning(false)
@@ -187,7 +182,6 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     setLastServerResponse(data)
   }
 
-  // 터치 이벤트 처리 함수
   const handleTouchStart = (e) => {
     const touch = e.touches[0]
     swipeTrackingRef.current.startX = touch.clientX
@@ -325,86 +319,6 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
     )
   }
 
-  const currentProcess = pages[currentStep]
-
-  // 음성 인식 및 녹음 코드
-  useEffect(() => {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
-    recognition.continuous = true
-    recognition.interimResults = false
-
-    recognition.onresult = (event) => {
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          const transcript = event.results[i][0].transcript.trim()
-          console.log("인식된 텍스트:", transcript) // 텍스트 콘솔 출력
-          if (transcript.toLowerCase().includes("안녕 푸딩")) {
-            console.log("안녕 푸딩 인식")
-            setIsRecording(true) // 녹음 상태 변경
-            startRecording()
-          }
-          if (transcript.toLowerCase().includes("알람 꺼")) {
-            console.log("알람 꺼 인식")
-            stopAlarm() // 알람 소리 멈추기
-          }
-        }
-      }
-    }
-
-    recognition.start()
-
-    let mediaRecorder
-    let audioChunks = []
-
-    const startRecording = () => {
-      console.log("녹음 시작")
-      audioChunks = [] // 새로운 녹음 파일 생성을 위해 초기화
-      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-        mediaRecorder = new MediaRecorder(stream)
-        mediaRecorder.start()
-
-        mediaRecorder.ondataavailable = (event) => {
-          audioChunks.push(event.data)
-        }
-
-        mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: "audio/wav" })
-          sendAudioToServer(audioBlob)
-        }
-
-        setTimeout(() => {
-          mediaRecorder.stop()
-        }, 5000) // 5초 녹음
-      })
-    }
-
-    const sendAudioToServer = (audioBlob) => {
-      const formData = new FormData()
-      formData.append("file", audioBlob, "음성.wav") // 파일 이름을 지정하여 업로드
-      formData.append("recipeId", recipeId) // 현재 레시피 아이디 전송
-
-      fetch("https://i12e107.p.ssafy.io/api/speech/process", {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: token,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("서버 응답 데이터:", data) // 서버 응답 데이터 콘솔 출력
-          handleResponse(data) // 서버 응답 데이터 처리
-        })
-        .catch((error) => {
-          console.error("오류:", error)
-        })
-    }
-
-    return () => {
-      recognition.stop()
-    }
-  }, []) // 빈 의존성 배열로 첫 렌더링 시에만 실행
-
   return (
     <div className="handpose-container3" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
       <video ref={videoRef} style={{ display: "none" }} autoPlay playsInline />
@@ -413,12 +327,14 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
         <div className="steps3">
           <div className="process-item3">
             <h2 className="steps-h23">
-              {currentProcess.processOrder}. {currentProcess.processExplain}
+              {currentProcessRef.current.processOrder}. {currentProcessRef.current.processExplain}
             </h2>
           </div>
           <div className="process-image-container3">
-            {currentProcess.images &&
-              currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
+            {currentProcessRef.current.images &&
+              currentProcessRef.current.images.map((image, imgIndex) => (
+                <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcessRef.current.processOrder}`} className="process-image3" />
+              ))}
           </div>
           <hr />
         </div>
@@ -429,6 +345,7 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages }) => {
         {Math.floor(timer / 60)}분 {timer % 60}초
       </div>
       {currentStep === pages.length - 1 && <div className="end-message">마지막 페이지 입니다</div>}
+      <VoiceRecognitionComponent onRecognize={handleResponse} onStopAlarm={stopAlarm} recipeId={recipeId} token={token} />
     </div>
   )
 }
@@ -438,6 +355,8 @@ HandPoseComponent.propTypes = {
   onNextStep: PropTypes.func.isRequired,
   onPrevStep: PropTypes.func.isRequired,
   pages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  recipeId: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired, // Add onClose prop validation
 }
 
 export default HandPoseComponent
