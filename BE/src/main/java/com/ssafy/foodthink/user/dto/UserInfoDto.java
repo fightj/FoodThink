@@ -13,4 +13,5 @@ public class UserInfoDto {
     private String email;
     private String nickname;
     private String image;
+    private String season;
 }

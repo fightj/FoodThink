@@ -17,25 +17,28 @@ const RecipeList = () => {
     const fetchRecipes = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-
+  
+        // ✅ 한글 닉네임 URL 인코딩
+        const encodedNickname = encodeURIComponent(nickname);
+  
         // ✅ API URL 결정 (본인 or 타인)
         const apiUrl = isOwnProfile
           ? "https://i12e107.p.ssafy.io/api/myOwnRecipe/read/myRecipeList"
-          : `https://i12e107.p.ssafy.io/api/userRecipe/read/${nickname}`;
-
+          : `https://i12e107.p.ssafy.io/api/myOwnRecipe/read/diffUserRecipeList/${nickname}`;
+  
         const response = await fetch(apiUrl, {
           method: "GET",
           headers: isOwnProfile ? { Authorization: `Bearer ${token}` } : {},
         });
-
+  
         if (!response.ok) throw new Error(`서버 응답 오류: ${response.status}`);
-
+  
         let data = await response.json();
         console.log("📌 불러온 레시피 데이터:", data);
-
+  
         // recipeId 내림차순 정렬 (최신순)
         data = data.sort((a, b) => Number(b.recipeId) - Number(a.recipeId));
-
+  
         setRecipes(data);
       } catch (error) {
         console.error("❌ 레시피 불러오기 실패:", error);
@@ -44,7 +47,7 @@ const RecipeList = () => {
         setLoading(false);
       }
     };
-
+  
     if (nickname) fetchRecipes(); // nickname이 존재할 때만 API 호출
   }, [nickname, isOwnProfile]); // nickname 또는 isOwnProfile 변경 시 재요청
 

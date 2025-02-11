@@ -64,7 +64,12 @@ public class RecipeBookmarkService {
     }
 
     private RecipeBookmarkListDto convertToDto(RecipeBookmarkEntity entity) {
-        return new RecipeBookmarkListDto(entity.getRecipeEntity().getRecipeId());
+        return new RecipeBookmarkListDto(entity.getRecipeEntity().getRecipeId()
+                , entity.getRecipeEntity().getRecipeTitle()
+                , entity.getRecipeEntity().getImage()
+                , entity.getRecipeEntity().getUserEntity().getNickname()
+                , entity.getUserEntity().getImage()
+                );
     }
 
     // 해당 사용자가 해당 레시피를 북마크 했는지

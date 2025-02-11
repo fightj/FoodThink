@@ -4,6 +4,7 @@ import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,8 @@ public interface RecipeListRepository extends JpaRepository<RecipeEntity, Long> 
     @Query("SELECT r FROM RecipeEntity r WHERE r.isPublic = true ORDER BY r.hits DESC")
     List<RecipeEntity> findTopRecipesByHits(Pageable pageable);
 
-
+    @Modifying
+    @Query("UPDATE RecipeEntity r SET r.hits = r.hits + 1 WHERE r.recipeId = :recipeId")
+    void increaseHits(@Param("recipeId") Long recipeId);
 
 }
