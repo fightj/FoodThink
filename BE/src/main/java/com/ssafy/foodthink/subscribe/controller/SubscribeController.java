@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,5 +79,18 @@ public class SubscribeController {
         response.put("count", count);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/read/recipes")
+    public ResponseEntity<?> readRecipesBySubscribe(@RequestHeader(value = "Authorization", required = false) String token){
+        // 토큰이 없거나 빈 문자열이면 빈 리스트 반환
+        if (token == null || token.isBlank()) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        return ResponseEntity.ok(subscribeService.readRecipesBySubscribe(userId));
     }
 }

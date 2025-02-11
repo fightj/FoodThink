@@ -15,7 +15,10 @@ import java.util.Optional;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
+    //레시피 수정 기능
     //레시피 삭제 기능 : 레시피 아이디와 로그인한 사용자 아이디 확인
+//    @Query("SELECT r FROM RecipeEntity r JOIN FETCH r.userEntity WHERE r.recipeId = :recipeId AND r.userEntity.userId = :userId")
+//    Optional<RecipeEntity> findByRecipeIdAndUserEntity_UserId(@Param("recipeId") Long recipeId, @Param("userId") Long userId);
     Optional<RecipeEntity> findByRecipeIdAndUserEntity_UserId(Long recipeId, Long userId);
 
     List<RecipeEntity> findByUserEntity(UserEntity userEntity);
@@ -70,5 +73,11 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Long> {
 
     //닉네임으로 사용자 아이디 찾기 : 어떤 사용자가 작성한 레시피 목록 조회 최신순 (마이페이지)
     List<RecipeEntity> findByUserEntity_UserIdOrderByWriteTimeDesc(Long userId);
+
+    @Query("SELECT r from RecipeEntity r where r.userEntity.userId IN " +
+            "(SELECT s.subscribedUser.userId from SubscribeEntity s " +
+            "where s.subscriber.userId = :userId)" +
+            "order by r.writeTime desc")
+    List<RecipeEntity> findSubscribedRecipes(@Param("userId") Long userId, Pageable pageable);
 
 }
