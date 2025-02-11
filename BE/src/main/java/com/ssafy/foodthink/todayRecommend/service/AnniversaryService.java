@@ -22,6 +22,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -49,8 +50,8 @@ public class AnniversaryService {
         try{
             LocalDate currentDate = LocalDate.now();
             String today = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-            //String today = "20250129";
-            String[] endpoints = {"getHoliDeInfo", "get24DivisionsInfo"};
+            //String today = "20250531";
+            String[] endpoints = {"getHoliDeInfo", "get24DivisionsInfo","getSundryDayInfo"};
 
             List<String> anniversaryNames = new java.util.ArrayList<>();
 
@@ -58,17 +59,26 @@ public class AnniversaryService {
                 List<String> dateNames = getAnniversaryInfo(endpoint, today);
                 anniversaryNames.addAll(dateNames);
             }
+            log.info("Anniversary Names from API: {}", anniversaryNames);
             if(!anniversaryNames.isEmpty()){
                 String AnniversaryName = anniversaryNames.get(0);
+                //List<AnniversaryDto> anniversaryDtos = new ArrayList<>();
 
-                return anniversaryRepository.findByAnniversaryName(AnniversaryName)
-                        .map(this::convertDto)
-                        .orElseThrow(() -> new NoExistsException("데이터베이스에 없는 기념일입니다."));
+//                for(String anniversaryName : anniversaryNames){
+//                    AnniversaryEntity entity = anniversaryRepository.findByAnniversaryName(anniversaryName)
+//                            .orElseThrow(() -> new NoExistsException("데이터베이스가 없는 기념일"));
+//                    anniversaryDtos.add(convertDto(entity));
+//                }
+//
+//                return anniversaryDtos;
+                AnniversaryEntity entity = anniversaryRepository.findByAnniversaryName(AnniversaryName)
+                            .orElseThrow(() -> new NoExistsException("데이터베이스가 없는 기념일"));
+                return convertDto(entity);
             }
             throw new NoExistsException("특별한 기념일이 없습니다.");
         }
         catch(Exception e){
-            throw new NoExistsException("기념일 메뉴 추천 기능에 문제를 해결해주세요.");
+            throw new NoExistsException("특별한 기념일이 없습니다.");
         }
     }
 
@@ -114,6 +124,7 @@ public class AnniversaryService {
 
     private List<String> parseJsonResponse(String jsonResponse, String today) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        log.info("API Response: {}", jsonResponse);
         JsonNode rootNode = objectMapper.readTree(jsonResponse);
         JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
 
@@ -136,17 +147,18 @@ public class AnniversaryService {
 
     @PostConstruct
     public void insertData() {
-        anniversaryRepository.save(new AnniversaryEntity(null, "설날", "떡국", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EB%96%A1%EA%B5%AD.png"));
-        anniversaryRepository.save(new AnniversaryEntity(null, "추석", "송편", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%86%A1%ED%8E%B8.png"));
-        anniversaryRepository.save(new AnniversaryEntity(null, "정월대보름", "오곡밥", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%98%A4%EA%B3%A1%EB%B0%A5.png"));
-        anniversaryRepository.save(new AnniversaryEntity(null, "한식", "화전", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%ED%99%94%EC%A0%84.png"));
-        anniversaryRepository.save(new AnniversaryEntity(null, "단오", "수리취떡", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%88%98%EB%A6%AC%EC%B7%A8%EB%96%A1.png"));
-        anniversaryRepository.save(new AnniversaryEntity(null, "초복", "삼계탕", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%82%BC%EA%B3%84%ED%83%95.png"));
-        anniversaryRepository.save(new AnniversaryEntity(null, "중복", "삼계탕", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%82%BC%EA%B3%84%ED%83%95.png"));
-        anniversaryRepository.save(new AnniversaryEntity(null, "말복", "삼계탕", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%82%BC%EA%B3%84%ED%83%95.png"));
-        anniversaryRepository.save(new AnniversaryEntity(null, "칠석", "밀전병", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EB%B0%80%EC%A0%84%EB%B3%91.png"));
-        anniversaryRepository.save(new AnniversaryEntity(null, "동지", "팥죽", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%ED%8C%A5%EC%A3%BD.png"));
-
+        if(anniversaryRepository.count() == 0){
+            anniversaryRepository.save(new AnniversaryEntity(null, "설날", "떡국", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EB%96%A1%EA%B5%AD.png"));
+            anniversaryRepository.save(new AnniversaryEntity(null, "추석", "송편", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%86%A1%ED%8E%B8.png"));
+            anniversaryRepository.save(new AnniversaryEntity(null, "정월대보름", "오곡밥", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%98%A4%EA%B3%A1%EB%B0%A5.png"));
+            anniversaryRepository.save(new AnniversaryEntity(null, "한식", "화전", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%ED%99%94%EC%A0%84.png"));
+            anniversaryRepository.save(new AnniversaryEntity(null, "단오", "수리취떡", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%88%98%EB%A6%AC%EC%B7%A8%EB%96%A1.png"));
+            anniversaryRepository.save(new AnniversaryEntity(null, "초복", "삼계탕", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%82%BC%EA%B3%84%ED%83%95.png"));
+            anniversaryRepository.save(new AnniversaryEntity(null, "중복", "삼계탕", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%82%BC%EA%B3%84%ED%83%95.png"));
+            anniversaryRepository.save(new AnniversaryEntity(null, "말복", "삼계탕", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EC%82%BC%EA%B3%84%ED%83%95.png"));
+            anniversaryRepository.save(new AnniversaryEntity(null, "칠석", "밀전병", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%EB%B0%80%EC%A0%84%EB%B3%91.png"));
+            anniversaryRepository.save(new AnniversaryEntity(null, "동지", "팥죽", "https://foodthinkawsbucket.s3.ap-northeast-2.amazonaws.com/%ED%8C%A5%EC%A3%BD.png"));
+        }
 
     }
 
