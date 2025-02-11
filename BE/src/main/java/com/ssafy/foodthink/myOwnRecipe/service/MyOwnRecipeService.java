@@ -186,86 +186,45 @@ public class MyOwnRecipeService {
         return responseDto;
     }
 
-
     @Transactional
-    public void modifyRecipe(Long userId, Long recipeId, String recipeJson, MultipartFile imageFile,
-                             List<MultipartFile> processImages, List<Integer> processOrders) throws JsonProcessingException {
+    public Long modifyRecipe(Long userId, Long recipeId, String recipeJson, MultipartFile imageFile,
+                             List<MultipartFile> processImages, List<Integer> processOrders) {
 
-        //JSON을 DTO로 변환
+        log.info("레시피 수정 요청, userId: {}, recipeId: {}", userId, recipeId);
+
+        // 레시피 조회
+        RecipeEntity recipeEntity = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."));
+
+        // 사용자 인증 : JWT (레시피의 소유자가 맞는지 확인)
+        if (!recipeEntity.getUserEntity().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("해당 레시피는 이 사용자가 수정할 수 없습니다.");
+        }
+
+        // recipeJson을 DTO로 변환 (예: Jackson을 이용한 파싱)
         ObjectMapper objectMapper = new ObjectMapper();
-        MyRecipeModifyRequestDto dto = objectMapper.readValue(recipeJson, MyRecipeModifyRequestDto.class);
-        log.info("레시피 수정 requestdto :{}",dto);
-
-        //URL로 받은 recipeId와 JSON의 recipeId 비교
-        if (dto.getRecipeId() == null) {
-            dto.setRecipeId(recipeId);  // JSON에 없으면 PathVariable에서 받은 값 사용
-        } else if (!dto.getRecipeId().equals(recipeId)) {
-            throw new IllegalArgumentException("URL의 recipeId와 JSON의 recipeId가 일치하지 않습니다.");
+        MyRecipeModifyRequestDto dto;
+        try {
+            dto = objectMapper.readValue(recipeJson, MyRecipeModifyRequestDto.class);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("레시피 JSON 파싱 실패", e);
         }
 
-        //System.out.println("Parsed DTO: " + dto);
-        //System.out.println("Extracted Recipe ID: " + dto.getRecipeId());
-
-        if (dto.getRecipeId() == null) {
-            throw new IllegalArgumentException("레시피 ID가 누락되었습니다.");
-        }
-
-        // 레시피 조회 (본인 것만 수정 가능하도록 검증)
-        RecipeEntity recipeEntity = recipeRepository.findByRecipeIdAndUserEntity_UserId(dto.getRecipeId(), userId)
-                .orElseThrow(() -> new RuntimeException("레시피를 찾을 수 없거나 수정 권한이 없습니다."));
-
-        //지연 로딩 컬렉션 미리 초기화
-        Hibernate.initialize(recipeEntity.getProcesses());
-        
-        //대표 이미지 처리
-        if(imageFile != null && !imageFile.isEmpty()) {
-            //기존 대표 이미지 삭제
-            if(recipeEntity.getImage() != null) {
+        // 대표 이미지 처리
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // 기존 이미지 삭제
+            if (recipeEntity.getImage() != null) {
                 s3Service.deleteFileFromS3(recipeEntity.getImage());
                 log.info("기존 대표 이미지 삭제 완료");
             }
 
-            //새로운 대표 이미지 업로드
-            try {
-                String newImageUrl = s3Service.uploadFile(imageFile);
-                log.info("레시피 수정 new image url:{}",newImageUrl);
-                recipeEntity.setImage(newImageUrl);
-
-            } catch (Exception e) {
-                throw new RuntimeException("대표 이미지 업로드 중 오류 발생: " + e.getMessage());
-            }
-
+            // 새로운 이미지 업로드
+            String newImageUrl = s3Service.uploadFile(imageFile);
+            log.info("새로운 대표 이미지 업로드 완료, URL: {}", newImageUrl);
+            recipeEntity.setImage(newImageUrl);
         }
 
-        //과정별 이미지 처리
-        if (processImages != null && !processImages.isEmpty()) {
-            if(processOrders == null || processOrders.size() != processImages.size()) {
-                throw new RuntimeException("과정 이미지와 순서 개수가 일치하지 않습니다.");
-            }
-
-            // 기존 과정별 이미지 삭제 후 새로운 이미지 추가
-            for (int i = 0; i < processImages.size(); i++) {
-                Integer processOrder = processOrders.get(i);
-                ProcessEntity processEntity = recipeEntity.getProcesses().stream()
-                        .filter(p -> p.getProcessOrder().equals(processOrder))
-                        .findFirst()
-                        .orElseThrow(() -> new RuntimeException("해당 과정이 존재하지 않습니다."));
-
-                // 기존 이미지 삭제
-                for (ProcessImageEntity existingImage : processEntity.getProcessImages()) {
-                    s3Service.deleteFileFromS3(existingImage.getImageUrl());
-                    log.info("과정별 이미지, 기존 이미지 삭제");
-                }
-
-                // 새로운 이미지 업로드
-                String processImageUrl = s3Service.uploadFile(processImages.get(i));
-                ProcessImageEntity newProcessImage = new ProcessImageEntity(processImageUrl, processEntity);
-                processEntity.getProcessImages().clear();
-                processEntity.getProcessImages().add(newProcessImage);
-                log.info("새로운 이미지 업로드");
-            }
-        }
-
+        // 레시피 필드 수정
         recipeEntity.setRecipeTitle(dto.getRecipeTitle());
         recipeEntity.setCateType(dto.getCateType());
         recipeEntity.setCateMainIngre(dto.getCateMainIngre());
@@ -273,9 +232,158 @@ public class MyOwnRecipeService {
         recipeEntity.setLevel(dto.getLevel());
         recipeEntity.setRequiredTime(dto.getRequiredTime());
         recipeEntity.setIsPublic(dto.getIsPublic());
-        log.info("최종 수정된 레시피:{}",recipeEntity);
-        recipeRepository.save(recipeEntity);
+
+        // 기존 재료는 삭제하지 않고, 새 재료를 추가하는 방식으로 변경
+        List<IngredientEntity> ingredientEntities = dto.getIngredients().stream()
+                .map(ingreDto -> {
+                    IngredientEntity ingredient = new IngredientEntity();
+                    ingredient.setIngreName(ingreDto.getIngreName());
+                    ingredient.setAmount(ingreDto.getAmount());
+                    ingredient.setRecipeEntity(recipeEntity);
+                    return ingredient;
+                }).collect(Collectors.toList());
+
+        // 새 재료 저장
+        ingredientRepository.saveAll(ingredientEntities);
+
+        // 기존 프로세스 및 프로세스 이미지 삭제
+        processRepository.deleteAll(recipeEntity.getProcesses());
+
+        // 새 과정 저장
+        List<ProcessEntity> processEntities = dto.getProcesses().stream()
+                .map(processDto -> {
+                    ProcessEntity process = new ProcessEntity();
+                    process.setProcessOrder(processDto.getProcessOrder());
+                    process.setProcessExplain(processDto.getProcessExplain());
+                    process.setRecipeEntity(recipeEntity);
+                    return process;
+                }).collect(Collectors.toList());
+        processRepository.saveAll(processEntities);
+
+        // 강제 flush() 호출 (process_id 확보)
+        processRepository.flush();
+
+        // 과정 이미지 저장
+        for (int i = 0; i < processOrders.size(); i++) {
+            Integer processOrder = processOrders.get(i);
+            ProcessEntity processEntity = processEntities.stream()
+                    .filter(p -> p.getProcessOrder().equals(processOrder))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("과정 매칭 실패"));
+
+            // 해당 과정의 이미지가 있는 경우만 처리
+            if (i < processImages.size() && processImages.get(i) != null && !processImages.get(i).isEmpty()) {
+                MultipartFile processImageFile = processImages.get(i);
+                String uploadedImageUrl = s3Service.uploadFile(processImageFile);
+                ProcessImageEntity processImage = new ProcessImageEntity();
+                processImage.setImageUrl(uploadedImageUrl);
+                processImage.setProcessEntity(processEntity);
+                processImageRepository.save(processImage);
+                log.info("과정 이미지 업로드 완료, URL: {}", uploadedImageUrl);
+            }
+        }
+
+        log.info("레시피 수정 완료, recipeId: {}", recipeEntity.getRecipeId());
+
+        // 사용자 레시피는 엘라스틱 서버에 즉시 반영
+//        elasticSearchService.indexRecipeWithIngredients(recipeEntity);
+
+        // 수정된 레시피 아이디 반환
+        return recipeEntity.getRecipeId();
     }
+
+
+
+//    @Transactional
+//    public void modifyRecipe(Long userId, Long recipeId, String recipeJson, MultipartFile imageFile,
+//                             List<MultipartFile> processImages, List<Integer> processOrders) throws JsonProcessingException {
+//
+//        //JSON을 DTO로 변환
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        MyRecipeModifyRequestDto dto = objectMapper.readValue(recipeJson, MyRecipeModifyRequestDto.class);
+//        log.info("레시피 수정 requestdto :{}",dto);
+//
+//        //URL로 받은 recipeId와 JSON의 recipeId 비교
+//        if (dto.getRecipeId() == null) {
+//            dto.setRecipeId(recipeId);  // JSON에 없으면 PathVariable에서 받은 값 사용
+//        } else if (!dto.getRecipeId().equals(recipeId)) {
+//            throw new IllegalArgumentException("URL의 recipeId와 JSON의 recipeId가 일치하지 않습니다.");
+//        }
+//
+//        //System.out.println("Parsed DTO: " + dto);
+//        //System.out.println("Extracted Recipe ID: " + dto.getRecipeId());
+//
+//        if (dto.getRecipeId() == null) {
+//            throw new IllegalArgumentException("레시피 ID가 누락되었습니다.");
+//        }
+//
+//        // 레시피 조회 (본인 것만 수정 가능하도록 검증)
+//        RecipeEntity recipeEntity = recipeRepository.findByRecipeIdAndUserEntity_UserId(dto.getRecipeId(), userId)
+//                .orElseThrow(() -> new RuntimeException("레시피를 찾을 수 없거나 수정 권한이 없습니다."));
+//
+//        //지연 로딩 컬렉션 미리 초기화
+////        Hibernate.initialize(recipeEntity.getProcesses());
+//
+//        //대표 이미지 처리
+//        if(imageFile != null && !imageFile.isEmpty()) {
+//            //기존 대표 이미지 삭제
+//            if(recipeEntity.getImage() != null) {
+//                s3Service.deleteFileFromS3(recipeEntity.getImage());
+//                log.info("기존 대표 이미지 삭제 완료");
+//            }
+//
+//            //새로운 대표 이미지 업로드
+//            try {
+//                String newImageUrl = s3Service.uploadFile(imageFile);
+//                log.info("레시피 수정 new image url:{}",newImageUrl);
+//                recipeEntity.setImage(newImageUrl);
+//
+//            } catch (Exception e) {
+//                throw new RuntimeException("대표 이미지 업로드 중 오류 발생: " + e.getMessage());
+//            }
+//
+//        }
+//
+//        //과정별 이미지 처리
+//        if (processImages != null && !processImages.isEmpty()) {
+//            if(processOrders == null || processOrders.size() != processImages.size()) {
+//                throw new RuntimeException("과정 이미지와 순서 개수가 일치하지 않습니다.");
+//            }
+//
+//            // 기존 과정별 이미지 삭제 후 새로운 이미지 추가
+//            for (int i = 0; i < processImages.size(); i++) {
+//                Integer processOrder = processOrders.get(i);
+//                ProcessEntity processEntity = recipeEntity.getProcesses().stream()
+//                        .filter(p -> p.getProcessOrder().equals(processOrder))
+//                        .findFirst()
+//                        .orElseThrow(() -> new RuntimeException("해당 과정이 존재하지 않습니다."));
+//
+//                // 기존 이미지 삭제
+//                for (ProcessImageEntity existingImage : processEntity.getProcessImages()) {
+//                    s3Service.deleteFileFromS3(existingImage.getImageUrl());
+//                    processImageRepository.deleteAll(processEntity.getProcessImages());
+//                    log.info("과정별 이미지, 기존 이미지 삭제");
+//                }
+//
+//                // 새로운 이미지 업로드
+//                String processImageUrl = s3Service.uploadFile(processImages.get(i));
+//                ProcessImageEntity newProcessImage = new ProcessImageEntity(processImageUrl, processEntity);
+//                processEntity.getProcessImages().clear();
+//                processEntity.getProcessImages().add(newProcessImage);
+//                log.info("새로운 이미지 업로드");
+//            }
+//        }
+//
+//        recipeEntity.setRecipeTitle(dto.getRecipeTitle());
+//        recipeEntity.setCateType(dto.getCateType());
+//        recipeEntity.setCateMainIngre(dto.getCateMainIngre());
+//        recipeEntity.setServing(dto.getServing());
+//        recipeEntity.setLevel(dto.getLevel());
+//        recipeEntity.setRequiredTime(dto.getRequiredTime());
+//        recipeEntity.setIsPublic(dto.getIsPublic());
+//        log.info("최종 수정된 레시피:{}",recipeEntity);
+//        recipeRepository.save(recipeEntity);
+//    }
 
     //레시피 수정
 //    @Transactional
