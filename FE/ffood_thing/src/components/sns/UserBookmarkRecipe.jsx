@@ -1,21 +1,12 @@
 import React from "react"
 import Modal from "react-bootstrap/Modal"
-import Carousel from "react-bootstrap/Carousel"
+import Slider from "react-slick"
 import "bootstrap/dist/css/bootstrap.min.css"
-import "../../styles/sns/UserBookmarkRecipe.css"
 import Swal from "sweetalert2"
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
 
 function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
-  const chunkArray = (array, chunkSize) => {
-    const chunks = []
-    for (let i = 0; i < array.length; i += chunkSize) {
-      chunks.push(array.slice(i, i + chunkSize))
-    }
-    return chunks
-  }
-
-  const cardGroups = chunkArray(bookmarks, 3)
-
   const handleBookmarkClick = (bookmark) => {
     Swal.fire({
       title: "이 레시피를 참조하셨나요?",
@@ -30,31 +21,67 @@ function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
     })
   }
 
+  const settings = {
+    infinite: true,
+    centerMode: true,
+    centerPadding: "0",
+    slidesToShow: 3,
+    speed: 500,
+    focusOnSelect: true,
+  }
+
   return (
-    <Modal show onHide={closeModal} centered dialogClassName="modal-dialog">
+    <Modal show onHide={closeModal} centered dialogClassName="modal-dialog" style={{ minWidth: "80vw", minHeight: "50vh", margin: "auto" }}>
       <Modal.Header closeButton>
         <Modal.Title>내 북마크 레시피</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body
+        style={{
+          width: "100%",
+          height: "100%",
+          margin: "auto",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         {bookmarks.length === 0 ? (
           <p>비어있습니다.</p>
         ) : (
-          <Carousel>
-            {cardGroups.map((group, index) => (
-              <Carousel.Item key={index}>
-                <div className="bookmark-card-container d-flex justify-content-around">
-                  {group.map((bookmark, idx) => (
-                    <div key={idx} className="bookmark-card mx-2" onClick={() => handleBookmarkClick(bookmark)} style={{ cursor: "pointer" }}>
-                      <img className="d-block w-100" src={bookmark.image} alt={bookmark.title} />
-                      <Carousel.Caption>
-                        <h5>{bookmark.title}</h5>
-                      </Carousel.Caption>
-                    </div>
-                  ))}
+          <Slider {...settings} style={{ width: "100%" }}>
+            {bookmarks.map((bookmark, idx) => (
+              <div
+                key={idx}
+                className="bookmark-card"
+                onClick={() => handleBookmarkClick(bookmark)}
+                style={{
+                  width: idx === 1 ? "50%" : "30%",
+                  height: idx === 1 ? "40vh" : "30vh",
+                  overflow: "hidden",
+                  position: "relative",
+                  cursor: "pointer",
+                  borderRadius: "10px",
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <img src={bookmark.image} alt={bookmark.title} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }} />
+                <div
+                  className="carousel-caption"
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    left: "10px",
+                    color: "white",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    padding: "5px",
+                    borderRadius: "5px",
+                  }}
+                >
+                  <h5>{bookmark.title}</h5>
                 </div>
-              </Carousel.Item>
+              </div>
             ))}
-          </Carousel>
+          </Slider>
         )}
       </Modal.Body>
     </Modal>

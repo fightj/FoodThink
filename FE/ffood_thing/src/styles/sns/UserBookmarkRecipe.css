@@ -1,7 +1,8 @@
 /* UserBookmarkRecipe.css */
 
 .modal-dialog {
-  max-width: 80vw; /* 너비를 90%로 설정 */
+  max-width: 80vw; /* 너비를 80%로 설정 */
+  min-height: 25vh; /* 높이를 절반으로 줄임 */
   margin: auto;
 }
 
