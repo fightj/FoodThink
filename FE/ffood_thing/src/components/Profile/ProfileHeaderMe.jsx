@@ -125,6 +125,21 @@ const ProfileHeaderMe = () => {
     const token = localStorage.getItem("accessToken");
     if (!token) return;
 
+    // ✅ 사용 불가능한 문자 정규식 (공백 및 특수 문자 제거)
+    const invalidChars = /[@%&?\/\\#+=:;*|<>\s]/g;
+    if (invalidChars.test(newNickname)) {
+      Swal.fire("⚠️ 닉네임 오류", "닉네임에 공백 또는 특수문자를 사용할 수 없습니다.", "error");
+      return;
+    }
+
+    // ✅ 닉네임 앞뒤 공백 제거
+    const sanitizedNickname = newNickname.trim();
+
+    if (!sanitizedNickname) {
+      Swal.fire("⚠️ 닉네임 오류", "닉네임을 입력해주세요.", "error");
+      return;
+    }
+
     try {
       const response = await fetch("https://i12e107.p.ssafy.io/api/users/update/nickname", {
         method: "PUT",
@@ -361,7 +376,12 @@ const ProfileHeaderMe = () => {
         <div className="nickname-modal-overlay">
           <div className="nickname-modal">
             <h3>닉네임 수정</h3>
-            <input type="text" value={newNickname} onChange={(e) => setNewNickname(e.target.value)} />
+            <input type="text" value={newNickname} onChange={(e) => {
+              const inputNickname = e.target.value.replace(/[@%&?\/\\#+=:;*|<>\s]/g, ""); // ✅ 공백 및 특수문자 제거
+              setNewNickname(inputNickname);
+              setErrorMessage(""); // 에러 메시지 초기화
+            }}
+            />
             {errorMessage && <p className="nickname-error-message">{errorMessage}</p>}
             <div className="nickname-modal-buttons">
               <button className="nickname-btn-save" onClick={handleNicknameChange}>확인</button>
