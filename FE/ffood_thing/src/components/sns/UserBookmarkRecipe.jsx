@@ -1,14 +1,14 @@
-import React from "react";
-import Modal from "react-bootstrap/Modal";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Swal from "sweetalert2";
-import "flickity/css/flickity.css"; // Flickity CSS 임포트
-import Flickity from "react-flickity-component"; // Flickity 컴포넌트 임포트
-import "../../styles/sns/UserBookmarkRecipe.css"; // 사용자 정의 CSS 임포트
+import React from "react"
+import Modal from "react-bootstrap/Modal"
+import "bootstrap/dist/css/bootstrap.min.css"
+import Swal from "sweetalert2"
+import "flickity/css/flickity.css" // Flickity CSS 임포트
+import Flickity from "react-flickity-component" // Flickity 컴포넌트 임포트
+import "../../styles/sns/UserBookmarkRecipe.css" // 사용자 정의 CSS 임포트
 
 const flickityOptions = {
-  wrapAround: true
-};
+  wrapAround: true,
+}
 
 function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
   const handleBookmarkClick = (bookmark) => {
@@ -19,11 +19,11 @@ function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
       cancelButtonText: "아니오",
     }).then((result) => {
       if (result.isConfirmed) {
-        onBookmarkSelect(bookmark.recipeId);
-        closeModal();
+        onBookmarkSelect(bookmark.recipeId)
+        closeModal()
       }
-    });
-  };
+    })
+  }
 
   return (
     <Modal show onHide={closeModal} centered dialogClassName="modal-dialog" style={{ minWidth: "80vw", minHeight: "50vh", margin: "auto" }}>
@@ -34,22 +34,13 @@ function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
         {bookmarks.length === 0 ? (
           <p>비어있습니다.</p>
         ) : (
-          <Flickity
-            className={"bookmark-gallery"}
-            elementType={"div"}
-            options={flickityOptions}
-            disableImagesLoaded={false}
-            reloadOnUpdate
-          >
+          <Flickity className={"bookmark-gallery"} elementType={"div"} options={flickityOptions} disableImagesLoaded={false} reloadOnUpdate>
             {bookmarks.map((bookmark, idx) => (
               <div
                 key={idx}
                 className="bookmark-gallery-cell"
                 onClick={() => handleBookmarkClick(bookmark)}
-                style={{ cursor: "pointer", backgroundImage: `url(${bookmark.image})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                cursor: "pointer"}}
+                style={{ backgroundImage: `url(${bookmark.image})`, backgroundSize: "cover", backgroundPosition: "center", cursor: "pointer" }}
               >
                 <h2>{bookmark.title}</h2>
                 <span className="scroll-item-date">{bookmark.date}</span>
@@ -59,7 +50,7 @@ function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
         )}
       </Modal.Body>
     </Modal>
-  );
+  )
 }
 
-export default UserBookmarkRecipe;
+export default UserBookmarkRecipe

@@ -160,6 +160,17 @@ function FeedWrite() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (selectedImages.length === 0) {
+      Swal.fire("사진은 필수항목입니다", "", "warning")
+      return
+    }
+
+    if (foodName.trim() === "") {
+      Swal.fire("제목은 필수 항목입니다", "", "warning")
+      return
+    }
+
     const imagesToUpload = selectedImages.filter((img) => checkedImages.includes(img.id))
     console.log("업로드할 이미지:", imagesToUpload)
     const accessToken = localStorage.getItem("accessToken")
@@ -194,6 +205,7 @@ function FeedWrite() {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
+          
           try {
             if (!accessToken) throw new Error("Access token is missing")
 
