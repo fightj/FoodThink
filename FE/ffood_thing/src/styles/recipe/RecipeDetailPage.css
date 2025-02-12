@@ -117,6 +117,7 @@
   transform: translateX(-50%);
   border: 2px solid white; /* Optional: Add a border to make it stand out */
 }
+
 .bookmark-icon-btn {
   position: absolute;
   right: 0;
