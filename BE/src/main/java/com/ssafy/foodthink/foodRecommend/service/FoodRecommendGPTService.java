@@ -42,8 +42,7 @@ public class FoodRecommendGPTService {
 
         String prompt = String.format(
                 "### 현재 날씨 ###\n%s\n\n"
-                        + "### 사용자 취향 분석 ###\n"
-                        + "%s\n"
+                        + "%s"
                         + "### 추천 후보 목록 ###\n%s\n\n"
                         + "### 요청 사항 ###\n"
                         + "- 추천 후보 목록 중에서 현재 날씨와 사용자 취향 분석을 반영한 상위 3개 요리 선정\n"
@@ -75,12 +74,17 @@ public class FoodRecommendGPTService {
         );
     }
 
-    // 사용자 선호도를 문자열로 포맷팅
+    // 사용자 취향 분석을 문자열로 포맷팅
     private String formatUserPreferences(List<String> answers) {
-        StringBuilder sb = new StringBuilder();
+        if (answers == null || answers.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder("### 사용자 취향 분석 ###\n");
         for (int i = 0; i < answers.size(); i++) {
             sb.append(String.format("%d. %s\n", i + 1, answers.get(i)));
         }
+        sb.append("\n");
         return sb.toString();
     }
 

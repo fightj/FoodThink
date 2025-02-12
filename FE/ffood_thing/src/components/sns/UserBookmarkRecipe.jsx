@@ -40,7 +40,10 @@ function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
                 key={idx}
                 className="bookmark-gallery-cell"
                 onClick={() => handleBookmarkClick(bookmark)}
-                style={{ cursor: "pointer", backgroundImage: `url(${bookmark.image})`, backgroundSize: "cover", backgroundPosition: "center" }}
+                style={{ cursor: "pointer", backgroundImage: `url(${bookmark.image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                }}
               >
                 <h2>{bookmark.title}</h2>
                 <span className="scroll-item-date">{bookmark.date}</span>

@@ -1,7 +1,8 @@
 .base-div {
-  background: linear-gradient(to bottom, #ff5252d7, #ffd5af, #ff9a57);
+  /* background: linear-gradient(to bottom, #ff5252d7, #ffd5af, #ff9a57); */
+  background: #F7B05B; /* 배경색 통일 (02.12) */
   min-height: 10vh; /* 최소 높이를 화면 전체로 설정 */
-  padding-top: 30px; /* 상단 여백 지정 (100px로 예시) */
+  padding-top: 3vh; /* (02.12) */
   box-sizing: border-box; /* 패딩 포함 높이 계산 */
 }
 .parent-container {
@@ -11,13 +12,17 @@
 .card-div {
   background-color: rgb(255, 255, 255);
   width: 95%; /* 수평 공간 전체를 차지 */
-  padding: 20px 0; /* 상하 패딩을 늘려서 높이를 증가 */
+  /* padding: 30px 10px; 상하 패딩을 늘려서 높이를 증가 */
+  /* (02.12) (그림자 수정도 한꺼번에 다 처리해야 해.) */
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
   flex-direction: column; /* 자식 요소를 세로로 정렬 */
   justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  border-radius: 50px; /* 아래 두 꼭지점만 둥글게 설정 */
   height: auto; /* 높이를 패딩에 따라 유동적으로 설정 */
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
+  margin-bottom: 30px;
+  border-radius: 40px; /* 아래 두 꼭지점만 둥글게 설정 */
+  /* height: auto; 높이를 패딩에 따라 유동적으로 설정 */
+  /* box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); 상단 그림자 더 강조 */
+
 }
 
 @font-face {

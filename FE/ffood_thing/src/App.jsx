@@ -22,7 +22,8 @@ import LoginPage from "./pages/login/LoginPage"
 import AiRecommendPage from "./pages/recommend/AiRecommendPage"
 import SnsSearchResultPage from "./pages/sns/SnsSearchResultPage"
 import RecipeSearchResultPage from "./pages/recipe/RecipeSearchResultPage"
-import CookingPage from "./pages/recipe/CookingPage"
+
+import DemoCookingPage from "./pages/recipe/DemoCookingPage"
 
 import NavbarBottom from "./components/base/Navbar-bottom"
 import PageSlide from "./components/base/PageSlide"
@@ -205,6 +206,14 @@ const AnimatedRoutes = ({ userInfo }) => {
           element={
             <PageSlide>
               <RecipeDetailPage />
+            </PageSlide>
+          }
+        />
+        <Route
+          path="/recipes/:id/cooking"
+          element={
+            <PageSlide>
+              <DemoCookingPage />
             </PageSlide>
           }
         />
