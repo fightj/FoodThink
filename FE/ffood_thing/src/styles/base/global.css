@@ -18,6 +18,7 @@
   border-radius: 50px; /* 아래 두 꼭지점만 둥글게 설정 */
   height: auto; /* 높이를 패딩에 따라 유동적으로 설정 */
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
+  margin-bottom: 30px;
 }
 
 @font-face {

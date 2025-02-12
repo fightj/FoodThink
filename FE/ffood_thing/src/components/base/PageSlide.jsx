@@ -15,7 +15,7 @@ const PageSlide = ({ children }) => {
         width: "100%",
         minHeight: "100vh",
         overflow: "visible", // 부모 요소의 overflow 제거
-        paddingBottom: "60px", // 네비게이션 바 공간 확보
+        // paddingBottom: "60px", // 네비게이션 바 공간 확보
       }}
     >
       {children}

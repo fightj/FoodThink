@@ -20,3 +20,7 @@
 .info-right {
   background-color: rgb(76, 0, 255); /* 오른쪽 div의 배경색 */
 }
+.recipe-image{
+  width: 80%;
+  height: 60%;
+}
