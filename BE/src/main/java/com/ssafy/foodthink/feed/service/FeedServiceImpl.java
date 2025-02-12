@@ -317,7 +317,13 @@ public class FeedServiceImpl implements FeedService {
         // 선택적 업데이트
         Optional.ofNullable(feedRequestDto.getFoodName()).ifPresent(feedEntity::setFoodName);
         Optional.ofNullable(feedRequestDto.getContent()).ifPresent(feedEntity::setContent);
-        Optional.ofNullable(recipe).ifPresent(feedEntity::setRecipeEntity);
+
+        // recipe가 null이면 FeedEntity의 recipeEntity도 null로 설정
+        if (recipe == null) {
+            feedEntity.setRecipeEntity(null);
+        } else {
+            feedEntity.setRecipeEntity(recipe);
+        }
 
         // 기존 이미지 삭제
         List<FeedImageEntity> feedImageEntities = feedImageRepository.findByFeedEntity_Id(feedId);
