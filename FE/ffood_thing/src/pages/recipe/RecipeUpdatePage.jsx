@@ -291,7 +291,6 @@ function RecipeUpdatePage() {
     return missingFields
   }
 
-  // 레시피 수정 제출
   const updateRecipe = async () => {
     const missingFields = validateForm()
     if (missingFields.length > 0) {
@@ -306,7 +305,7 @@ function RecipeUpdatePage() {
     const token = localStorage.getItem("accessToken")
     const formData = new FormData()
 
-    // API 요청 형식에 맞춘 recipeData
+    // 레시피 데이터 준비
     const recipeData = {
       recipeTitle,
       cateType: category,
@@ -325,46 +324,52 @@ function RecipeUpdatePage() {
       })),
     }
 
-    // recipe JSON 문자열 생성
     const recipeBlob = new Blob([JSON.stringify(recipeData)], { type: "application/json" })
     formData.append("recipe", recipeBlob)
 
-    // 대표 이미지가 있는지 확인
-    if (imageFile) {
-      formData.append("imageFile", imageFile)
-    } else {
-      // imageFile이 없는 경우 빈 파일을 추가
-      const emptyFile = new Blob([], { type: "multipart/form-data" })
-      formData.append("imageFile", emptyFile, "placeholder.png")
+    // 기존 이미지 URL을 가져오는 부분 (기존 이미지 URL이 필요함)
+    // 예시로 existingImageUrl을 props나 state에서 가져온다고 가정합니다.
+    let existingImageUrl = "" // existingImageUrl을 올바르게 초기화합니다.
+    if (recipeData.imageUrl) {
+      existingImageUrl = recipeData.imageUrl
     }
 
-    // 단계별 이미지 및 순서 추가
+    // 1. 대표 이미지 처리 (수정하지 않으면 기존 이미지 유지)
+    if (imageFile) {
+      formData.append("imageFile", imageFile) // 새 이미지를 포함
+    } else if (existingImageUrl) {
+      formData.append("imageFile", existingImageUrl) // 기존 이미지 URL을 포함
+    }
+
+    // 2. 과정 이미지 처리 (새 이미지와 기존 이미지를 혼합)
     const processOrders = []
-    steps.forEach((step, idx) => {
+    const processImages = []
+    const existingProcessImages = []
+
+    for (const [idx, step] of steps.entries()) {
       if (step.imageFile) {
-        formData.append("processImages", step.imageFile)
+        formData.append("processImages", step.imageFile) // 새 과정 이미지를 추가
+        processImages.push(step.imageFile)
         processOrders.push(idx + 1)
       } else if (step.imageUrl) {
+        existingProcessImages.push(step.imageUrl) // 기존 과정 이미지를 유지
         processOrders.push(idx + 1)
       }
-    })
-
-    // 기존 이미지를 processOrders에 추가
-    const processImages = steps.flatMap((step) => (step.images ? step.images.map((img) => img.imageUrl) : []))
-    console.log("processImages:", processImages)
-
-    if (processOrders.length > 0) {
-      const processOrdersBlob = new Blob([JSON.stringify(processOrders)], { type: "application/json" })
-      formData.append("processOrders", processOrdersBlob)
     }
 
-    if (processImages.length > 0) {
-      formData.append("existingImages", JSON.stringify(processImages))
+    // 기존 이미지가 있을 경우 추가
+    if (existingProcessImages.length > 0) {
+      formData.append("existingImages", JSON.stringify(existingProcessImages))
     }
+
+    // 과정 순서 데이터 추가
+    formData.append("processOrders", new Blob([JSON.stringify(processOrders)], { type: "application/json" }))
 
     try {
-      console.log("Submitting recipe data:", JSON.stringify(recipeData, null, 2))
-      console.log("Submitting process orders:", processOrders)
+      console.log("📤 Submitting recipe data:", JSON.stringify(recipeData, null, 2))
+      console.log("🖼️ processOrders:", processOrders)
+      console.log("🖼️ processImages count:", processImages.length)
+      console.log("🖼️ existingImages count:", existingProcessImages.length)
 
       const response = await axios.put(`https://i12e107.p.ssafy.io/api/myOwnRecipe/update/${recipeId}`, formData, {
         headers: {
