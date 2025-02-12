@@ -153,12 +153,11 @@
   margin: 0 0 0 5px; /* 왼쪽 여백 추가 */
 }
 .nickname-container {
-  display: flex;
-  align-items: center;
-  left: 57%;
-  transform: translateX(-50%);
   position: absolute;
-  bottom: -100px; /* Adjust based on the desired position */
+  bottom: -90px;
+  text-align: center;
+  color: #ffa726;
+  font-size: 30px;
 }
 
 .nickname-area {
