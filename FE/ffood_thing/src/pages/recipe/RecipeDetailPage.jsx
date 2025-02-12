@@ -229,7 +229,6 @@ const RecipeDetailPage = () => {
     setActiveSection(section)
     document.getElementById(section).scrollIntoView({ behavior: "smooth" })
   }
-
   return (
     <div className="base-div">
       <SearchBar />
@@ -278,6 +277,17 @@ const RecipeDetailPage = () => {
                 <button className="cook-btn" onClick={() => setShowModal(true)}>
                   조리시작
                 </button>
+
+                <button
+  className="start-cooking-btn"
+  onClick={() => {
+    console.log("Navigating with recipe:", recipe)
+    navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe })
+  }}
+>
+  요리 시작
+</button>
+
               </div>
             </div>
 
@@ -326,61 +336,63 @@ const RecipeDetailPage = () => {
                     <span className="ingredient-name">{ingredient.ingreName}</span>
                     <span>{ingredient.amount}</span>
                   </div>
-                )
-              }
-              return null
-            })}
-          </div>
-          <div className="right-half">
-            {recipe.ingredients.map((ingredient, index) => {
-              if (index % 2 !== 0) {
-                return (
-                  <div key={index} className="ingredient-item">
-                    <span className="ingredient-name">{ingredient.ingreName}</span>
-                    <span>{ingredient.amount}</span>
-                  </div>
-                )
-              }
-              return null
-            })}
-          </div>
-        </div>
-      </div>
-      <div className="parent-container">
-        <div id="steps" ref={stepsRef} className="card-div-section">
-          <h1 className="section-title">조리순서</h1>
-          <div className="steps">
-            {recipe.processes.map((process, index) => (
-              <div key={index} className="process-item">
-                <h2>
-                  {process.processOrder}. {process.processExplain}
-                </h2>
-                {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
-                <hr />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="parent-container">
-        <div id="feed" ref={feedRef} className="card-div-section">
-          <h1 className="section-title">관련 Feed</h1>
-        </div>
-      </div>
-
-      {user && user.nickname === recipe.nickname && (
-        <div className="button-container">
-          <button onClick={handleEditClick} className="edit-button">
-            수정
-          </button>
-          <button onClick={handleDeleteClick} className="delete-button">
-            삭제
-          </button>
-        </div>
-      )}
-    </div>
-  )
-}
-
-export default RecipeDetailPage
+                                )
+                              }
+                              return null
+                            })}
+                          </div>
+                          <div className="right-half">
+                            {recipe.ingredients.map((ingredient, index) => {
+                              if (index % 2 !== 0) {
+                                return (
+                                  <div key={index} className="ingredient-item">
+                                    <span className="ingredient-name">{ingredient.ingreName}</span>
+                                    <span>{ingredient.amount}</span>
+                                  </div>
+                                )
+                              }
+                              return null
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                
+                      <div className="parent-container">
+                        <div id="steps" ref={stepsRef} className="card-div-section">
+                          <h1 className="section-title">조리순서</h1>
+                          <div className="steps">
+                            {recipe.processes.map((process, index) => (
+                              <div key={index} className="process-item">
+                                <h2>
+                                  {process.processOrder}. {process.processExplain}
+                                </h2>
+                                {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
+                                <hr />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                
+                      <div className="parent-container">
+                        <div id="feed" ref={feedRef} className="card-div-section">
+                          <h1 className="section-title">관련 Feed</h1>
+                        </div>
+                      </div>
+                
+                      {user && user.nickname === recipe.nickname && (
+                        <div className="button-container">
+                          <button onClick={handleEditClick} className="edit-button">
+                            수정
+                          </button>
+                          <button onClick={handleDeleteClick} className="delete-button">
+                            삭제
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )
+                }
+                
+                export default RecipeDetailPage
+                
