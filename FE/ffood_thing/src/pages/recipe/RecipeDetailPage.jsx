@@ -250,10 +250,9 @@ const RecipeDetailPage = () => {
                   <img src="/images/hit-eye.png" alt="" className="hit-eye-icon" />
                   <p>{recipe.hits}</p>
                 </div>
-                <img src={recipe.userImage} alt="프로필이미지" className="profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
+                <img src={recipe.userImage || "/images/default_profile.png"} alt="프로필이미지" className="profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
                 <div className="nickname-container">
-                  <h2 className="nickname-area">{recipe.nickname}</h2>
-                  {user && user.nickname !== recipe.nickname && <button className="sub-btn">구독</button>}
+                {recipe.nickname}
                 </div>
               </div>
 
