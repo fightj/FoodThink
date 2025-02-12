@@ -1,0 +1,47 @@
+.profile-container {
+  position: relative;
+}
+
+.profile-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+}
+
+.custom-dropdown {
+  position: absolute;
+  top: 0;
+  left: 100%; /* 오른쪽으로 배치 */
+  width: 180px;
+  background-color: #343a40;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transform: translateX(20px);
+  opacity: 0;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  visibility: hidden;
+}
+
+.custom-dropdown.open {
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.custom-dropdown a {
+  display: block;
+  color: white;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.custom-dropdown a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}

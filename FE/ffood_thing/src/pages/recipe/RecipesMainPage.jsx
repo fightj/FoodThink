@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import "../../styles/recipe/RecipesMainPage.css"
 import SearchBarRecipe from "../../components/base/SearchBarRecipe"
+import AnniversaryApiModal from "../../components/anniversary/anniversaryApiModal"
 
 const RecipesMainPage = () => {
   const navigate = useNavigate()
@@ -148,6 +149,7 @@ const RecipesMainPage = () => {
 
   return (
     <div className="base-div">
+      <AnniversaryApiModal />
       <SearchBarRecipe onSearch={handleSearch} />
       <div className="recipe-parent-div">
         <div className="recipe-card-div">
