@@ -217,7 +217,7 @@ const AnimatedRoutes = ({ userInfo }) => {
           }
         />
         <Route
-          path="/recipes/:id/update"
+          path="/recipes/update/:id"
           element={
             <PageSlide>
               <RecipeUpdatePage />
