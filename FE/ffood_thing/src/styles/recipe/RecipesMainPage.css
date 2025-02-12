@@ -13,7 +13,7 @@
 .recipe-card-div {
   background-color: rgb(255, 255, 255);
   width: 95%;
-  padding: 20px 0;
+  padding: 30px 10px;
   display: flex;
   border-radius: 50px;
   height: auto;
