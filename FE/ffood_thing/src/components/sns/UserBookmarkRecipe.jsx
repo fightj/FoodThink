@@ -49,7 +49,7 @@ function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
                 style={{ cursor: "pointer", backgroundImage: `url(${bookmark.image})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                cursor: "pointer"}}
+                }}
               >
                 <h2>{bookmark.title}</h2>
                 <span className="scroll-item-date">{bookmark.date}</span>
