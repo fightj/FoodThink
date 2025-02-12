@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { UserContext } from "../../contexts/UserContext"
-import RecipeComponent from "../../components/recipe/RecipeComponent"
 import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 import SearchBar from "../../components/base/SearchBar"
 import Swal from "sweetalert2"
@@ -13,15 +12,18 @@ const RecipeDetailPage = () => {
   const navigate = useNavigate()
   const { user, setUser } = useContext(UserContext)
   const [recipe, setRecipe] = useState(null)
-  const [showModal, setShowModal] = useState(false)
+  const [processPage, setProcessPage] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
   const [activeSection, setActiveSection] = useState("ingredients")
   const [isBookmarked, setIsBookmarked] = useState(false)
-
   const ingredientsRef = useRef(null)
   const stepsRef = useRef(null)
   const completedRef = useRef(null)
   const feedRef = useRef(null)
+
+  const handleStartCooking = () => {
+    navigate(`/recipes/${id}/cooking`)
+  }
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -276,30 +278,11 @@ const RecipeDetailPage = () => {
                   </div>
                 </div>
 
-                <button className="cook-btn" onClick={() => setShowModal(true)}>
+                <button className="cook-btn" onClick={handleStartCooking}>
                   조리시작
                 </button>
               </div>
             </div>
-
-            {showModal && (
-              <div className="modal-overlay3">
-                <div className="modal-content3">
-                  <button className="close-button3" onClick={() => setShowModal(false)}>
-                    X
-                  </button>
-                  <HandPoseComponent
-                    currentStep={currentStep}
-                    onNextStep={() => setCurrentStep((prevStep) => prevStep + 1)}
-                    onPrevStep={() => setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))}
-                    pages={recipe.processes}
-                    recipeId={recipe.recipeId}
-                    onClose={() => setShowModal(false)} // onClose 함수를 전달
-                  />
-                  <RecipeComponent pages={recipe.processes} />
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -5,6 +5,8 @@ import { Camera } from "@mediapipe/camera_utils"
 import "../../styles/recipe/RecipeComponent.css"
 import VoiceRecognitionComponent from "../voice/VoiceRecognitionComponent" // 새 컴포넌트 불러오기
 
+
+// 손동작 인식 관련 함수
 const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeId, onClose }) => {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
@@ -25,7 +27,7 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
   const [currentProcessText, setCurrentProcessText] = useState("")
   const currentProcessRef = useRef(pages[currentStep])
 
-  const token = localStorage.getItem("accessToken")
+  
 
   useEffect(() => {
     if (pages[currentStep]) {
@@ -344,7 +346,7 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
         {Math.floor(timer / 60)}분 {timer % 60}초
       </div>
       {currentStep === pages.length - 1 && <div className="end-message">마지막 페이지 입니다</div>}
-      <VoiceRecognitionComponent onRecognize={handleResponse} onStopAlarm={stopAlarm} recipeId={recipeId} token={token} />
+
     </div>
   )
 }
