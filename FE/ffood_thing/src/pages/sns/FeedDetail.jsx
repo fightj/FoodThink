@@ -120,7 +120,15 @@ function FeedDetail() {
   }
 
   const handleEdit = () => {
-    navigate(`/feed/${id}/update`)
+    navigate(`/feed/${id}/update`, {
+      state: {
+        foodName: currentFeed.foodName,
+        content: currentFeed.content,
+        images: currentFeed.images,
+        recipeId: currentFeed.recipeListResponseDto ? currentFeed.recipeListResponseDto.recipeId : null,
+        recipeTitle: currentFeed.recipeListResponseDto ? currentFeed.recipeListResponseDto.recipeTitle : null,
+      },
+    })
   }
 
   const handleLikeToggle = async () => {
