@@ -1,5 +1,8 @@
 package com.ssafy.foodthink.feed.service;
 
+import com.ssafy.foodthink.elasticsearch.elasticsearchrepository.ElasticSearchFeedRepository;
+import com.ssafy.foodthink.elasticsearch.entity.FeedElasticEntity;
+import com.ssafy.foodthink.elasticsearch.service.ElasticSearchService;
 import com.ssafy.foodthink.feed.dto.*;
 import com.ssafy.foodthink.feed.entity.FeedCommentEntity;
 import com.ssafy.foodthink.feed.entity.FeedEntity;
@@ -41,8 +44,10 @@ public class FeedServiceImpl implements FeedService {
     private final FeedImageRepository feedImageRepository;
     private final FeedLikeRepository feedLikeRepository;
     private final FeedCommentRepository feedCommentRepository;
+    private final ElasticSearchService elasticSearchService;
+    private final ElasticSearchFeedRepository elasticSearchFeedRepository;
 
-    public FeedServiceImpl(FeedRepository feedRepository, UserRepository userRepository, RecipeRepository recipeRepository, S3Service s3Service, FeedImageRepository feedImageRepository, FeedLikeRepository feedLikeRepository, FeedCommentRepository feedCommentRepository) {
+    public FeedServiceImpl(FeedRepository feedRepository, UserRepository userRepository, RecipeRepository recipeRepository, S3Service s3Service, FeedImageRepository feedImageRepository, FeedLikeRepository feedLikeRepository, FeedCommentRepository feedCommentRepository, ElasticSearchService elasticSearchService, ElasticSearchFeedRepository elasticSearchFeedRepository) {
         this.feedRepository = feedRepository;
         this.userRepository = userRepository;
         this.recipeRepository = recipeRepository;
@@ -50,6 +55,8 @@ public class FeedServiceImpl implements FeedService {
         this.feedImageRepository = feedImageRepository;
         this.feedLikeRepository = feedLikeRepository;
         this.feedCommentRepository = feedCommentRepository;
+        this.elasticSearchService = elasticSearchService;
+        this.elasticSearchFeedRepository = elasticSearchFeedRepository;
     }
 
 
@@ -95,6 +102,9 @@ public class FeedServiceImpl implements FeedService {
         }
 
         feedImageRepository.saveAll(feedImageEntities);
+
+        //엘라스칙서치 반영
+        elasticSearchService.indexFeed(feedEntity);
     }
 
     @Override
@@ -283,6 +293,9 @@ public class FeedServiceImpl implements FeedService {
 
         //DB 삭제
         feedRepository.delete(feedEntity);
+
+        //엘라스틱 서버 반영
+        elasticSearchFeedRepository.deleteById(String.valueOf(feedId));
     }
 
     @Override
@@ -336,6 +349,17 @@ public class FeedServiceImpl implements FeedService {
             }
 
             feedImageRepository.saveAll(newFeedImageEntities);
+
+            // 엘라스틱서치 반영
+            Optional<FeedElasticEntity> optionalElasticEntity = elasticSearchFeedRepository.findById(String.valueOf(feedEntity.getId()));
+
+            if (optionalElasticEntity.isPresent()) {
+                FeedElasticEntity feedElasticEntity = optionalElasticEntity.get();
+                feedElasticEntity.setFoodName(feedEntity.getFoodName());
+                feedElasticEntity.setNickname(feedEntity.getUserEntity().getNickname());
+
+                elasticSearchFeedRepository.save(feedElasticEntity); // 업데이트 후 저장
+            }
         }
     }
 
