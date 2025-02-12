@@ -179,7 +179,6 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
     }
 
     // 최신 서버 응답을 상태로 업데이트
-    setLastServerResponse(data)
   }
 
   const handleTouchStart = (e) => {
