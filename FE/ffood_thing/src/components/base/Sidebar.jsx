@@ -19,10 +19,10 @@ function Sidebar({ isOpen, toggleSidebar }) {
 
   // ✅ 페이지 이동 시 사이드바 & 드롭다운 닫기
   useEffect(() => {
-  //   if (isOpen) toggleSidebar(false);
-  //   if (dropdownOpen) setDropdownOpen(false);
-  // }, [location.pathname]);
-  if (isOpen) toggleSidebar(false);
+    //   if (isOpen) toggleSidebar(false);
+    //   if (dropdownOpen) setDropdownOpen(false);
+    // }, [location.pathname]);
+    if (isOpen) toggleSidebar(false);
     setDropdownOpen(false);
   }, [location.pathname]);
 
@@ -66,9 +66,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
     <div className={`sidebar-container ${isOpen ? "show" : "hide"}`}>
       {/* ✅ 기본 사이드바 */}
       <div className="sidebar">
-        <a href="/" className="home-link">
-          <span className="fs-4">홈</span>
-        </a>
+        <a href="/" className="home-link">홈</a>
         <hr />
 
         {user ? (
@@ -84,16 +82,18 @@ function Sidebar({ isOpen, toggleSidebar }) {
             <hr />
 
             {/* ✅ 프로필 버튼 */}
-            <button 
+            <button
               className="profile-button"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
-              <img 
-                src={user?.image ? `${user.image}?timestamp=${new Date().getTime()}` : "/images/default_profile.png"} 
-                alt="프로필" 
+              <img
+                src={user?.image ? `${user.image}?timestamp=${new Date().getTime()}` : "/images/default_profile.png"}
+                alt="프로필"
                 className="profile-img"
               />
               <strong>{user?.nickname || "User"}</strong>
+              {/* ✅ 드롭다운 방향 표시 아이콘 추가 */}
+  <span className={`dropdown-arrow ${dropdownOpen ? "open" : ""}`}>›</span>
             </button>
           </>
         ) : (

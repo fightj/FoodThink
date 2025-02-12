@@ -142,6 +142,14 @@
   box-shadow: 0 3px 5px rgba(255, 127, 0, 0.3);
 }
 
+/* ✅ 구독 중 상태 (회색으로 변경) */
+.subscriber-button.subscribed {
+  background-color: #888; /* ⚫ 구독 중: 회색 */
+  border-color: #888;
+  cursor: default; /* 구독 중 상태에서는 클릭 효과 제거 */
+  box-shadow: none;
+}
+
 
 
 /* 📌 반응형 - 모바일에서는 세로 정렬 */
