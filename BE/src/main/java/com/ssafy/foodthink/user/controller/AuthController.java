@@ -50,7 +50,18 @@ public class AuthController {
     6. "액세스 토큰, 이메일, 신규사용자 여부"를 반환
      */
     @PostMapping("/kakao")
-    public ResponseEntity<?> kakaoLogin(@RequestParam("code") String code) {
+    public ResponseEntity<?> kakaoLogin(@RequestBody MultiValueMap<String, String> requestBody) {
+        String code = requestBody.getFirst("code"); // JSON에서 code 추출
+
+        if (code == null || code.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "type", "about:blank",
+                    "title", "Bad Request",
+                    "status", 400,
+                    "detail", "Required parameter 'code' is not present.",
+                    "instance", "/api/auth/kakao"
+            ));
+        }
         log.info("==controller 인가코드:{}==",code);
         try {
             // 인가 코드로 액세스 토큰 요청

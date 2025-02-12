@@ -8,7 +8,7 @@ import { UserContext } from "../../contexts/UserContext"
 
 function Home() {
   const [accessToken, setAccessToken] = useState(null)
-  const location = useLocation()
+  //const location = useLocation()
   const navigate = useNavigate()
   const { user } = useContext(UserContext) // useContext를 사용하여 UserContext에서 user를 가져옴
 
