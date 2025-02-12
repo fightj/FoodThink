@@ -5,8 +5,13 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import com.ssafy.foodthink.elasticsearch.dto.ElasticSearchRecipeDto;
+import com.ssafy.foodthink.elasticsearch.elasticsearchrepository.ElasticSearchFeedRepository;
+import com.ssafy.foodthink.elasticsearch.entity.FeedElasticEntity;
 import com.ssafy.foodthink.elasticsearch.entity.RecipeElasticEntity;
 import com.ssafy.foodthink.elasticsearch.elasticsearchrepository.ElasticSearchRecipeRepository;
+import com.ssafy.foodthink.feed.dto.FeedSummaryResponseDto;
+import com.ssafy.foodthink.feed.entity.FeedEntity;
+import com.ssafy.foodthink.feed.repository.FeedRepository;
 import com.ssafy.foodthink.recipeBookmark.repository.RecipeBookmarkRepository;
 import com.ssafy.foodthink.recipes.dto.RecipeListResponseDto;
 import com.ssafy.foodthink.recipes.entity.IngredientEntity;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,16 +38,20 @@ public class ElasticSearchService {
     private final IngredientRepository ingredientRepository;
     private final ElasticSearchRecipeRepository elasticSearchRecipeRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
+    private final FeedRepository feedRepository;
+    private final ElasticSearchFeedRepository elasticSearchFeedRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ElasticSearchService.class);
 
 
-    public ElasticSearchService(ElasticsearchClient elasticsearchClient, RecipeRepository recipeRepository, IngredientRepository ingredientRepository, ElasticSearchRecipeRepository elasticSearchRecipeRepository, RecipeBookmarkRepository recipeBookmarkRepository) {
+    public ElasticSearchService(ElasticsearchClient elasticsearchClient, RecipeRepository recipeRepository, IngredientRepository ingredientRepository, ElasticSearchRecipeRepository elasticSearchRecipeRepository, RecipeBookmarkRepository recipeBookmarkRepository, FeedRepository feedRepository, ElasticSearchFeedRepository elasticSearchFeedRepository) {
         this.elasticsearchClient = elasticsearchClient;
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
         this.elasticSearchRecipeRepository = elasticSearchRecipeRepository;
         this.recipeBookmarkRepository = recipeBookmarkRepository;
+        this.feedRepository = feedRepository;
+        this.elasticSearchFeedRepository = elasticSearchFeedRepository;
     }
 
     //레시피와 재료를 하나의 DTO로 합쳐서 색인
@@ -261,5 +271,72 @@ public class ElasticSearchService {
     }
 
 
+    //피드 엘라스틱 서치
+    //인덱스 등록(하나)
+    public void indexFeed(FeedEntity feedEntity){
+        FeedElasticEntity feedElasticEntity = new FeedElasticEntity();
+        feedElasticEntity.setFeedId(feedEntity.getId());
+        feedElasticEntity.setNickname(feedEntity.getUserEntity().getNickname());
+        feedElasticEntity.setFoodName(feedEntity.getFoodName());
+
+        IndexRequest<FeedElasticEntity> request = IndexRequest.of(i -> i
+                .index("feed1")
+                .id(String.valueOf(feedEntity.getId()))
+                .document(feedElasticEntity)
+        );
+
+        try {
+            elasticsearchClient.index(request);
+        } catch (Exception e) {
+            e.printStackTrace(); // 예외 처리
+        }
+
+    }
+    //모든 인덱스 등록
+    public void indexAllFeed(){
+        List<FeedEntity> feedEntities = feedRepository.findAll();
+        for (FeedEntity feedEntity : feedEntities) {
+            indexFeed(feedEntity);
+        }
+    }
+
+    public List<Long> getSearchFeedIds(String query) {
+        List<FeedElasticEntity> feedElasticEntities;
+
+        if (query == null || query.trim().isEmpty()) {
+            feedElasticEntities = elasticSearchFeedRepository.findAll();
+        } else {
+            feedElasticEntities = elasticSearchFeedRepository.findByNicknameContainingIgnoreCaseOrFoodNameContainingIgnoreCase(query, query);
+        }
+
+        List<Long> feedIds = feedElasticEntities.stream()
+                .map(FeedElasticEntity::getFeedId)
+                .toList();
+
+        return feedIds;
+    }
+
+    public Page<FeedSummaryResponseDto> getSearchFeeds(String query, int page, int size){
+        List<Long> feedIds = getSearchFeedIds(query);
+
+        // Pageable 설정
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("writeTime")));
+
+        // 페이지네이션 처리
+        Page<FeedEntity> pageResult = feedRepository.findByIdIn(feedIds, pageable);
+        List<FeedSummaryResponseDto> feedSummaryResponseDtos = new ArrayList<>();
+        for (FeedEntity feedEntity : pageResult) {
+            FeedSummaryResponseDto feedSummaryResponseDto = FeedSummaryResponseDto.builder()
+                    .id(feedEntity.getId())
+                    .image(feedEntity.getImages().get(0).getImageUrl())
+                    .userNickname(feedEntity.getUserEntity().getNickname())
+                    .userImage(feedEntity.getUserEntity().getImage())
+                    .imageSize(feedEntity.getImages().size())
+                    .build();
+            feedSummaryResponseDtos.add(feedSummaryResponseDto);
+        }
+        //new PageImpl<>(recipeListResponseDtos, pageable, pageResult.getTotalElements());
+        return new PageImpl<>(feedSummaryResponseDtos, pageable, pageResult.getTotalElements());
+    }
 
 }

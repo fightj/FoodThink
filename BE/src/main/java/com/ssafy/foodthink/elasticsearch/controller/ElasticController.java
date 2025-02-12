@@ -5,6 +5,7 @@ import co.elastic.clients.elasticsearch.core.InfoResponse;
 import com.ssafy.foodthink.elasticsearch.dto.ElasticSearchRecipeDto;
 import com.ssafy.foodthink.elasticsearch.entity.RecipeElasticEntity;
 import com.ssafy.foodthink.elasticsearch.service.ElasticSearchService;
+import com.ssafy.foodthink.feed.dto.FeedSummaryResponseDto;
 import com.ssafy.foodthink.recipes.dto.RecipeListResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -78,4 +79,17 @@ public class ElasticController {
         return ResponseEntity.ok("성능 비교 완료");
     }
 
+    @PostMapping("/index/feed")
+    public String indexAllFeed(){
+        elasticSearchService.indexAllFeed();
+        return "정상적으로 인덱싱이 성공했습니다.";
+    }
+
+    @GetMapping("/search/feed/pagenation")
+    public ResponseEntity<?> searchFeeds(@RequestParam(required = false) String query,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int size){
+        Page<FeedSummaryResponseDto> result = elasticSearchService.getSearchFeeds(query, page, size);
+        return ResponseEntity.ok(result);
+    }
 }
