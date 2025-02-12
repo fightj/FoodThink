@@ -109,8 +109,15 @@ public class ElasticSearchService {
     }
 
     public List<Long> searchRecipeIds(String searchTerm) {
-        // Elasticsearch에서 제목과 재료로 검색
-        List<RecipeElasticEntity> recipeElasticEntities = elasticSearchRecipeRepository.findByRecipeTitleContainingIgnoreCaseOrIngredientsContainingIgnoreCase(searchTerm, searchTerm);
+        List<RecipeElasticEntity> recipeElasticEntities;
+
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            // 검색어가 없으면 전체 레시피 조회
+            recipeElasticEntities = elasticSearchRecipeRepository.findAll();
+        } else {
+            // 검색어가 있으면 제목 또는 재료에서 검색
+            recipeElasticEntities = elasticSearchRecipeRepository.findByRecipeTitleContainingIgnoreCaseOrIngredientsContainingIgnoreCase(searchTerm, searchTerm);
+        }
 
         // 검색된 엔티티에서 recipeId만 추출하여 리스트로 반환
         List<Long> recipeIds = recipeElasticEntities.stream()
@@ -212,7 +219,7 @@ public class ElasticSearchService {
     }
 
     //작성순 페이지네이션 처리
-    public Page<RecipeListResponseDto> getSearchedRecipe(String searchTerm, int page, int size, String orderBy) {
+    public Page<RecipeListResponseDto> getSearchedRecipe(String searchTerm, int page, int size, String orderBy, String cateType, String cateMainIngre) {
         List<Long> ids = searchRecipeIds(searchTerm);
 
         // Pageable 설정
@@ -224,13 +231,13 @@ public class ElasticSearchService {
         // 정렬 방식에 따라 적절한 Repository 메서드 호출
         switch (orderBy.toLowerCase()) {
             case "hits": // 조회순
-                pageResult = recipeRepository.findAllByRecipeIdInOrderByHitsDesc(ids, pageable);
+                pageResult = recipeRepository.findAllByRecipeIdInOrderByHitsDesc(ids, cateType, cateMainIngre, pageable);
                 break;
             case "bookmarks": // 북마크 개수순
-                pageResult = recipeRepository.findAllByRecipeIdInOrderByBookmarkCountDesc(ids, pageable);
+                pageResult = recipeRepository.findAllByRecipeIdInOrderByBookmarkCountDesc(ids, cateType, cateMainIngre, pageable);
                 break;
             default: // 기본값 (작성 시간순)
-                pageResult = recipeRepository.findAllByRecipeIdInOrderByWriteTimeDesc(ids, pageable);
+                pageResult = recipeRepository.findAllByRecipeIdInOrderByWriteTimeDesc(ids, cateType, cateMainIngre, pageable);
                 break;
         }
 

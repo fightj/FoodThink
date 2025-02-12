@@ -39,6 +39,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
+    // 기념일 DB에 존재하지않음
+    @ExceptionHandler(NoExistsException.class)
+    public ResponseEntity<Map<String, Object>> handleNoExistsException(NoExistsException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("available", false);
+        response.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
         Map<String, Object> response = new HashMap<>();

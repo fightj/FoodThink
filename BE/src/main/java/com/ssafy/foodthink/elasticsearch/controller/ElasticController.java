@@ -6,6 +6,7 @@ import com.ssafy.foodthink.elasticsearch.dto.ElasticSearchRecipeDto;
 import com.ssafy.foodthink.elasticsearch.entity.RecipeElasticEntity;
 import com.ssafy.foodthink.elasticsearch.service.ElasticSearchService;
 import com.ssafy.foodthink.recipes.dto.RecipeListResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/elasticsearch")
+@Slf4j
 public class ElasticController {
     private final ElasticsearchClient elasticsearchClient;
     private final ElasticSearchService elasticSearchService;
@@ -50,11 +52,17 @@ public class ElasticController {
     }
 
     @GetMapping("/search/pagenation")
-    public ResponseEntity<Page<RecipeListResponseDto>> searchRecipes(@RequestParam String query,
+    public ResponseEntity<Page<RecipeListResponseDto>> searchRecipes(@RequestParam(required = false) String query,
                                                                      @RequestParam(defaultValue = "0") int page,
                                                                      @RequestParam(defaultValue = "10") int size,
-                                                                     @RequestParam(defaultValue = "writeTime") String orderBy) {
-        Page<RecipeListResponseDto> result = elasticSearchService.getSearchedRecipe(query, page, size, orderBy);
+                                                                     @RequestParam(defaultValue = "writeTime") String orderBy,
+                                                                     @RequestParam(required = false) String cateType, // 선택적 카테고리
+                                                                     @RequestParam(required = false) String cateMainIngre // 선택적 카테고리
+    ) {
+        // 파라미터 값 로그 출력
+        log.info("검색 파라미터 - query: " + query + ", orderBy: " + orderBy + ", cateType: " + cateType + ", cateMainIngre: " + cateMainIngre);
+
+        Page<RecipeListResponseDto> result = elasticSearchService.getSearchedRecipe(query, page, size, orderBy, cateType, cateMainIngre);
         return ResponseEntity.ok(result);
     }
 

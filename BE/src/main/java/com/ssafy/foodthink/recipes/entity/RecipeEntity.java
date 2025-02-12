@@ -1,5 +1,6 @@
 package com.ssafy.foodthink.recipes.entity;
 
+import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdfEntity;
 import com.ssafy.foodthink.recipeBookmark.entity.RecipeBookmarkEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
@@ -40,7 +41,8 @@ public class RecipeEntity {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isPublic = true;           //공개여부
 
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
 //    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")     //외래키 컬럼 지정 (recipeId로 생성된다.)
     private UserEntity userEntity;      //사용자ID
@@ -64,5 +66,9 @@ public class RecipeEntity {
     private List<ProcessEntity> processes = new ArrayList<>();
     @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<RecipeBookmarkEntity> recipeBookmarkEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<RecipeTfIdfEntity> TfIDFs = new ArrayList<>();
+
 
 }

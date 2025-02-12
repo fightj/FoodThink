@@ -9,12 +9,12 @@ import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
 
 const RecipeDetailPage = () => {
-  const { id } = useParams() // URL 파라미터에서 ID를 가져옴
+  const { id } = useParams()
   const navigate = useNavigate()
-  const { user, setUser } = useContext(UserContext) // UserContext 사용
+  const { user, setUser } = useContext(UserContext)
   const [recipe, setRecipe] = useState(null)
   const [showModal, setShowModal] = useState(false)
-  const [currentStep, setCurrentStep] = useState(0) // currentStep 상태 추가
+  const [currentStep, setCurrentStep] = useState(0)
   const [activeSection, setActiveSection] = useState("ingredients")
   const [isBookmarked, setIsBookmarked] = useState(false)
 
@@ -23,26 +23,35 @@ const RecipeDetailPage = () => {
   const completedRef = useRef(null)
   const feedRef = useRef(null)
 
-  // 서버에서 레시피 데이터를 가져오는 useEffect 훅
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        console.log("Fetching recipe with ID:", id)
         const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${id}`, {
           headers: user
             ? {
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`, // null 체크 후 빈 문자열 대입
               }
             : {},
         })
-        setRecipe(response.data)
 
-        // 🔹 북마크 상태 확인 API 호출
+        // Check if response and response.data are valid
+        if (response && response.data) {
+          setRecipe(response.data)
+        } else {
+          console.error("Recipe response data is invalid:", response)
+        }
+
         if (user) {
           const bookmarkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+            headers: { Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}` },
           })
-          setIsBookmarked(bookmarkResponse.data.isBookmarked) // 서버에서 받은 북마크 상태 반영
+
+          // Check if bookmarkResponse and bookmarkResponse.data are valid
+          if (bookmarkResponse && bookmarkResponse.data !== undefined) {
+            setIsBookmarked(bookmarkResponse.data)
+          } else {
+            console.error("Bookmark response data is invalid:", bookmarkResponse)
+          }
         }
       } catch (error) {
         console.error("Error fetching recipe details", error)
@@ -58,6 +67,12 @@ const RecipeDetailPage = () => {
       }
     }
 
+    // 로컬 스토리지에서 북마크 상태 불러오기
+    const bookmarkStatus = localStorage.getItem(`bookmark_${id}`)
+    if (bookmarkStatus !== null) {
+      setIsBookmarked(bookmarkStatus === "true") // "true"이면 true, 아니면 false
+    }
+
     fetchRecipe()
   }, [id, navigate, user])
 
@@ -71,7 +86,6 @@ const RecipeDetailPage = () => {
     const handleIntersection = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          console.log("Intersecting:", entry.target.id)
           setActiveSection(entry.target.id)
         }
       })
@@ -96,12 +110,15 @@ const RecipeDetailPage = () => {
     return <div>Loading...</div>
   }
 
+  // 북마크 상태가 변경될 때 로컬 스토리지 업데이트
   const handleBookmarkClick = async () => {
     if (!user) {
       Swal.fire({
         title: "로그인 필요!",
         text: "북마크를 사용하려면 로그인하세요.",
         icon: "warning",
+      }).then(() => {
+        navigate("/login")
       })
       return
     }
@@ -117,39 +134,36 @@ const RecipeDetailPage = () => {
     }
 
     try {
-      // 북마크 상태 확인
       const checkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
 
-      const isBookmarked = checkResponse.data // true 또는 false
+      const isBookmarked = checkResponse.data
 
       let response
 
       if (isBookmarked) {
-        // 북마크 삭제
         response = await axios.delete(`https://i12e107.p.ssafy.io/api/bookmark/delete/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         if (response.status !== 200) throw new Error("북마크 삭제 실패")
       } else {
-        // 북마크 추가
         response = await axios.post(
           `https://i12e107.p.ssafy.io/api/bookmark/create/${id}`,
-          {}, // 추가할 데이터가 필요하다면 여기 적어야 합니다.
+          {},
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         )
 
-        // 상태 코드와 응답 확인
         if (![200, 201].includes(response.status)) {
           throw new Error(`북마크 추가 실패. 상태 코드: ${response.status}`)
         }
       }
 
-      // 성공적으로 요청이 처리되었을 때 상태 업데이트
-      setIsBookmarked(!isBookmarked) // 상태 변경
+      const newBookmarkStatus = !isBookmarked
+      setIsBookmarked(newBookmarkStatus)
+      localStorage.setItem(`bookmark_${id}`, newBookmarkStatus.toString()) // 로컬 스토리지에 북마크 상태 저장
       Swal.fire({
         title: isBookmarked ? "북마크 취소!" : "북마크 완료!",
         text: isBookmarked ? "북마크에서 제거했어요." : "북마크에 추가했어요.",
@@ -157,7 +171,7 @@ const RecipeDetailPage = () => {
       })
     } catch (error) {
       console.error("북마크 처리 중 오류 발생", error)
-      // error.response에서 더 구체적인 정보를 확인
+
       if (error.response) {
         console.error("응답 에러 상태 코드:", error.response.status)
         console.error("응답 에러 데이터:", error.response.data)
@@ -171,12 +185,12 @@ const RecipeDetailPage = () => {
   }
 
   const handleEditClick = () => {
-    navigate(`/recipes/edit/${id}`)
+    navigate(`/recipes/update/${id}`)
   }
 
   const handleDeleteClick = async () => {
     try {
-      await axios.delete(`https://i12e107.p.ssafy.io/api/recipes/delete/${id}`, {
+      await axios.delete(`https://i12e107.p.ssafy.io/api/myOwnRecipe/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -236,10 +250,9 @@ const RecipeDetailPage = () => {
                   <img src="/images/hit-eye.png" alt="" className="hit-eye-icon" />
                   <p>{recipe.hits}</p>
                 </div>
-                <img src={recipe.userImage} alt="프로필이미지" className="profile-image" />
+                <img src={recipe.userImage || "/images/default_profile.png"} alt="프로필이미지" className="profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
                 <div className="nickname-container">
-                  <h2 className="nickname-area">{recipe.nickname}</h2>
-                  <button className="sub-btn">구독</button>
+                {recipe.nickname}
                 </div>
               </div>
 
@@ -278,7 +291,9 @@ const RecipeDetailPage = () => {
                     currentStep={currentStep}
                     onNextStep={() => setCurrentStep((prevStep) => prevStep + 1)}
                     onPrevStep={() => setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))}
-                    pages={recipe.processes} // 서버에서 가져온 데이터를 HandPoseComponent로 전달
+                    pages={recipe.processes}
+                    recipeId={recipe.recipeId}
+                    onClose={() => setShowModal(false)} // onClose 함수를 전달
                   />
                   <RecipeComponent pages={recipe.processes} />
                 </div>
@@ -288,7 +303,6 @@ const RecipeDetailPage = () => {
         </div>
       </div>
 
-      {/* Sticky Navigation Bar */}
       <div className="card-div-firstsection">
         <button className={activeSection === "ingredients" ? "active" : ""} onClick={() => scrollToSection("ingredients")}>
           재료
@@ -301,7 +315,6 @@ const RecipeDetailPage = () => {
         </button>
       </div>
 
-      {/* Sections */}
       <div className="parent-container">
         <div id="ingredients" ref={ingredientsRef} className="card-div-section">
           <h1 className="section-title">재료</h1>
@@ -333,7 +346,6 @@ const RecipeDetailPage = () => {
           </div>
         </div>
       </div>
-      {/* Steps Section */}
       <div className="parent-container">
         <div id="steps" ref={stepsRef} className="card-div-section">
           <h1 className="section-title">조리순서</h1>
@@ -354,12 +366,10 @@ const RecipeDetailPage = () => {
       <div className="parent-container">
         <div id="feed" ref={feedRef} className="card-div-section">
           <h1 className="section-title">관련 Feed</h1>
-          {/* Feed 내용 추가 */}
         </div>
       </div>
 
-      {/* Edit, Delete, and Bookmark Buttons */}
-      {user && user.id === recipe.userId && (
+      {user && user.nickname === recipe.nickname && (
         <div className="button-container">
           <button onClick={handleEditClick} className="edit-button">
             수정

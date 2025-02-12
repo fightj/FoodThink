@@ -90,7 +90,6 @@ function RecipeWritePage() {
   const [cookingTime, setCookingTime] = useState("")
   const [difficulty, setDifficulty] = useState("")
   const [recipeTitle, setRecipeTitle] = useState("")
-  const [recipeDescription, setRecipeDescription] = useState("")
 
   // 대표 사진 업로드
   const handleImageUpload = (event) => {
@@ -164,7 +163,6 @@ function RecipeWritePage() {
     const missingFields = []
 
     if (!recipeTitle.trim()) missingFields.push("레시피 제목")
-    if (!recipeDescription.trim()) missingFields.push("요리 소개")
     if (!category) missingFields.push("카테고리")
     if (!mainIngredient) missingFields.push("메인 재료")
     if (!servings) missingFields.push("인분")
@@ -279,7 +277,6 @@ function RecipeWritePage() {
       servings,
       cookingTime,
       difficulty,
-      recipeDescription,
       ingredients,
       steps,
       imageFile,
@@ -328,7 +325,6 @@ function RecipeWritePage() {
       setServings(parsedRecipe.servings)
       setCookingTime(parsedRecipe.cookingTime)
       setDifficulty(parsedRecipe.difficulty)
-      setRecipeDescription(parsedRecipe.recipeDescription)
       setIngredients(parsedRecipe.ingredients)
       setSteps(parsedRecipe.steps)
       if (parsedRecipe.imageFile) {
@@ -345,13 +341,12 @@ function RecipeWritePage() {
       servings,
       cookingTime,
       difficulty,
-      recipeDescription,
       ingredients,
       steps,
       imageFile,
     }
     localStorage.setItem("draftRecipe", JSON.stringify(draftRecipe))
-  }, [recipeTitle, category, mainIngredient, servings, cookingTime, difficulty, recipeDescription, ingredients, steps, imageFile])
+  }, [recipeTitle, category, mainIngredient, servings, cookingTime, difficulty, ingredients, steps, imageFile])
 
   return (
     <DndProvider backend={window.innerWidth < 768 ? TouchBackend : HTML5Backend}>
@@ -370,10 +365,86 @@ function RecipeWritePage() {
                   <label className="form-label">레시피 제목</label>
                   <input type="text" className="recipe-title-input" placeholder="예) 연어 포케 만들기" value={recipeTitle} onChange={(e) => setRecipeTitle(e.target.value)} />
                 </div>
+                <div className="category-container">
+                  <label className="form-label">카테고리</label>
+                  <select className="dropdown1" value={category} onChange={(e) => setCategory(e.target.value)}>
+                    <option value="" disabled>
+                      종류별
+                    </option>
+                    <option value="반찬">반찬</option>
+                    <option value="국/탕">국/탕</option>
+                    <option value="찌개">찌개</option>
+                    <option value="디저트">디저트</option>
+                    <option value="면/만두">면/만두</option>
+                    <option value="밥/죽/떡">밥/죽/떡</option>
+                    <option value="김치/젓갈/장류">김치/젓갈/장류</option>
+                    <option value="양념/소스/잼">양념/소스/잼</option>
+                    <option value="양식">양식</option>
+                    <option value="샐러드">샐러드</option>
+                    <option value="차/음료/술">차/음료/술</option>
+                    <option value="기타">기타</option>
+                  </select>
 
-                <div className="recipe-description-container">
-                  <label className="form-label">요리 소개</label>
-                  <textarea className="recipe-description" placeholder="이 레시피의 탄생배경을 적어주세요." value={recipeDescription} onChange={(e) => setRecipeDescription(e.target.value)} />
+                  <select className="dropdown1" value={mainIngredient} onChange={(e) => setMainIngredient(e.target.value)}>
+                    <option value="" disabled>
+                      메인재료별
+                    </option>
+                    <option value="소고기">소고기</option>
+                    <option value="돼지고기">돼지고기</option>
+                    <option value="닭고기">닭고기</option>
+                    <option value="육류">육류</option>
+                    <option value="채소류">채소류</option>
+                    <option value="해물류">해물류</option>
+                    <option value="달걀/유제품">달걀/유제품</option>
+                    <option value="가공식품">가공식품</option>
+                    <option value="쌀">쌀</option>
+                    <option value="밀가루">밀가루</option>
+                    <option value="건어물류">건어물류</option>
+                    <option value="버섯류">버섯류</option>
+                    <option value="과일류">과일류</option>
+                    <option value="빵/견과류">빵/견과류</option>
+                    <option value="곡류">곡류</option>
+                    <option value="기타">기타</option>
+                  </select>
+                </div>
+
+                <div className="cooking-info-container">
+                  <label className="form-label">요리정보</label>
+                  <select className="dropdown1" value={servings} onChange={(e) => setServings(e.target.value)}>
+                    <option value="" disabled>
+                      인분
+                    </option>
+                    <option value="1인분">1인분</option>
+                    <option value="2인분">2인분</option>
+                    <option value="3인분">3인분</option>
+                    <option value="4인분">4인분</option>
+                    <option value="5인분">5인분</option>
+                    <option value="6인분 이상">6인분 이상</option>
+                  </select>
+
+                  <select className="dropdown1" value={cookingTime} onChange={(e) => setCookingTime(e.target.value)}>
+                    <option value="" disabled>
+                      시간
+                    </option>
+                    <option value="5분 이내">5분 이내</option>
+                    <option value="10분 이내">10분 이내</option>
+                    <option value="15분 이내">15분 이내</option>
+                    <option value="20분 이내">20분 이내</option>
+                    <option value="30분 이내">30분 이내</option>
+                    <option value="60분 이내">60분 이내</option>
+                    <option value="90분 이내">90분 이내</option>
+                    <option value="120분 이내">120분 이내</option>
+                    <option value="2시간 이상">2시간 이상</option>
+                  </select>
+
+                  <select className="dropdown1" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+                    <option value="" disabled>
+                      난이도
+                    </option>
+                    <option value="하">하</option>
+                    <option value="중">중</option>
+                    <option value="상">상</option>
+                  </select>
                 </div>
               </div>
 
@@ -392,88 +463,6 @@ function RecipeWritePage() {
                   )}
                 </label>
               </div>
-            </div>
-
-            <div className="category-container">
-              <label className="form-label">카테고리</label>
-              <select className="dropdown1" value={category} onChange={(e) => setCategory(e.target.value)}>
-                <option value="" disabled>
-                  종류별
-                </option>
-                <option value="반찬">반찬</option>
-                <option value="국/탕">국/탕</option>
-                <option value="찌개">찌개</option>
-                <option value="디저트">디저트</option>
-                <option value="면/만두">면/만두</option>
-                <option value="밥/죽/떡">밥/죽/떡</option>
-                <option value="김치/젓갈/장류">김치/젓갈/장류</option>
-                <option value="양념/소스/잼">양념/소스/잼</option>
-                <option value="양식">양식</option>
-                <option value="샐러드">샐러드</option>
-                <option value="차/음료/술">차/음료/술</option>
-                <option value="기타">기타</option>
-              </select>
-
-              <select className="dropdown1" value={mainIngredient} onChange={(e) => setMainIngredient(e.target.value)}>
-                <option value="" disabled>
-                  메인재료별
-                </option>
-                <option value="소고기">소고기</option>
-                <option value="돼지고기">돼지고기</option>
-                <option value="닭고기">닭고기</option>
-                <option value="육류">육류</option>
-                <option value="채소류">채소류</option>
-                <option value="해물류">해물류</option>
-                <option value="달걀/유제품">달걀/유제품</option>
-                <option value="가공식품">가공식품</option>
-                <option value="쌀">쌀</option>
-                <option value="밀가루">밀가루</option>
-                <option value="건어물류">건어물류</option>
-                <option value="버섯류">버섯류</option>
-                <option value="과일류">과일류</option>
-                <option value="빵/견과류">빵/견과류</option>
-                <option value="곡류">곡류</option>
-                <option value="기타">기타</option>
-              </select>
-            </div>
-
-            <div className="cooking-info-container">
-              <label className="form-label">요리정보</label>
-              <select className="dropdown1" value={servings} onChange={(e) => setServings(e.target.value)}>
-                <option value="" disabled>
-                  인분
-                </option>
-                <option value="1인분">1인분</option>
-                <option value="2인분">2인분</option>
-                <option value="3인분">3인분</option>
-                <option value="4인분">4인분</option>
-                <option value="5인분">5인분</option>
-                <option value="6인분 이상">6인분 이상</option>
-              </select>
-
-              <select className="dropdown1" value={cookingTime} onChange={(e) => setCookingTime(e.target.value)}>
-                <option value="" disabled>
-                  시간
-                </option>
-                <option value="5분 이내">5분 이내</option>
-                <option value="10분 이내">10분 이내</option>
-                <option value="15분 이내">15분 이내</option>
-                <option value="20분 이내">20분 이내</option>
-                <option value="30분 이내">30분 이내</option>
-                <option value="60분 이내">60분 이내</option>
-                <option value="90분 이내">90분 이내</option>
-                <option value="120분 이내">120분 이내</option>
-                <option value="2시간 이상">2시간 이상</option>
-              </select>
-
-              <select className="dropdown1" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
-                <option value="" disabled>
-                  난이도
-                </option>
-                <option value="하">하</option>
-                <option value="중">중</option>
-                <option value="상">상</option>
-              </select>
             </div>
 
             <div className="ingredients-container">
