@@ -2,6 +2,8 @@ package com.ssafy.foodthink.myOwnRecipe.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.foodthink.elasticsearch.elasticsearchrepository.ElasticSearchRecipeRepository;
+import com.ssafy.foodthink.elasticsearch.entity.RecipeElasticEntity;
 import com.ssafy.foodthink.elasticsearch.service.ElasticSearchService;
 import com.ssafy.foodthink.global.S3Service;
 import com.ssafy.foodthink.myOwnRecipe.dto.*;
@@ -46,6 +48,7 @@ public class MyOwnRecipeService {
     private final MyOwnRecipeListRepository myOwnRecipeListRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
     private final ElasticSearchService elasticSearchService;
+    private final ElasticSearchRecipeRepository elasticSearchRecipeRepository;
 
     //레시피 등록
     @Transactional
@@ -284,6 +287,23 @@ public class MyOwnRecipeService {
 
         // 사용자 레시피는 엘라스틱 서버에 즉시 반영
 //        elasticSearchService.indexRecipeWithIngredients(recipeEntity);
+        Optional<RecipeElasticEntity> recipeElasticEntityOptional = elasticSearchRecipeRepository.findById(String.valueOf(recipeEntity.getRecipeId()));
+
+        if (recipeElasticEntityOptional.isPresent()) {
+            RecipeElasticEntity recipeElasticEntity = recipeElasticEntityOptional.get(); // 값 꺼내기
+
+            // 내용 수정
+            recipeElasticEntity.setRecipeTitle(recipeEntity.getRecipeTitle());
+            recipeElasticEntity.setIngredients(recipeEntity.getIngredients()
+                    .stream()
+                    .map(IngredientEntity::getIngreName)
+                    .collect(Collectors.toList()));
+
+            // 수정된 내용 저장 (Elasticsearch 업데이트)
+            elasticSearchRecipeRepository.save(recipeElasticEntity);
+        } else {
+            log.info("해당 레시피를 찾을 수 없습니다.");
+        }
 
         // 수정된 레시피 아이디 반환
         return recipeEntity.getRecipeId();
@@ -501,6 +521,8 @@ public class MyOwnRecipeService {
         ingredientRepository.deleteByRecipeEntity_RecipeId(recipeId); // IngredientEntity 삭제
         // 4. 레시피 삭제
         recipeRepository.delete(recipe); // RecipeEntity 삭제
+        // 레시피의 id로 해당 레시피를 삭제
+        elasticSearchRecipeRepository.deleteById(String.valueOf(recipe.getRecipeId()));
     }
 
 

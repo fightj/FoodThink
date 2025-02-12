@@ -9,7 +9,7 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
     recognition.continuous = true
     recognition.interimResults = false
 
-    const callFooding = ["하이푸딩", "하이, 푸딩", "푸딩", "하이 푸딩.", "하이 푸딩", "하이퍼딩", "하이프릴", "파이프딩", "hi 푸딩"]
+    const callFooding = ["하이푸딩", "하이, 푸딩", "푸딩", "하이 푸딩.", "하이 푸딩", "하이퍼딩", "하이프릴", "파이프딩", "hi 푸딩", "파이프팅"]
 
     recognition.onresult = (event) => {
       for (let i = event.resultIndex; i < event.results.length; ++i) {

@@ -1,67 +1,103 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, useContext } from "react"
+import axios from "axios"
 import imageIcon from "../../assets/image.svg"
-import { Form } from "react-bootstrap"
-import { useNavigate, useParams } from "react-router-dom"
+import { Form, Badge } from "react-bootstrap"
+import { useNavigate, useParams, useLocation } from "react-router-dom"
 import Swal from "sweetalert2"
-import { Feed, FeedImages } from "./feed_data"
 import "../../styles/sns/FeedWrite.css"
+import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
+import { UserContext } from "../../contexts/UserContext"
 
 function FeedUpdatePage() {
   const { id } = useParams()
-  const feedId = parseInt(id)
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [selectedImages, setSelectedImages] = useState([])
   const [checkedImages, setCheckedImages] = useState([])
   const [foodName, setFoodName] = useState("")
   const [description, setDescription] = useState("")
+  const [showBookmarkModal, setShowBookmarkModal] = useState(false)
+  const [bookmarkData, setBookmarkData] = useState([])
+  const [selectedRecipeId, setSelectedRecipeId] = useState(null)
+  const [recipeTitle, setRecipeTitle] = useState("")
+
   const fileInputRef = useRef()
 
-  useEffect(() => {
-    const currentFeed = Feed.find((item) => item.feed_id === feedId)
-    if (currentFeed) {
-      setFoodName(currentFeed.food_name)
-      setDescription(currentFeed.content)
+  const { user } = useContext(UserContext)
 
-      const images = FeedImages.filter((image) => image.feed_id === feedId)
+  const fetchRecipeTitle = async (recipeId) => {
+    try {
+      const response = await axios.get(`/recipes/read/detail/${recipeId}`)
+      const { recipeTitle } = response.data
+      setRecipeTitle(recipeTitle)
+    } catch (error) {
+      console.error("Error fetching recipe details:", error)
+      Swal.fire("오류 발생!", "레시피 정보를 가져오는 중 오류가 발생했습니다.", "error")
+    }
+  }
+
+  useEffect(() => {
+    if (location.state) {
+      setFoodName(location.state.foodName || "")
+      setDescription(location.state.content || "")
+      const images = location.state.images || []
       const previews = images.map((image) => ({
-        id: image.image_url,
-        file: null,
+        id: image,
       }))
       setSelectedImages(previews)
       setCheckedImages(previews.map((image) => image.id))
-    }
 
-    // Check if there are saved changes and prompt the user to load them
-    const savedFoodName = localStorage.getItem(`foodName_${feedId}`)
-    const savedDescription = localStorage.getItem(`description_${feedId}`)
-    const savedImages = localStorage.getItem(`selectedImages_${feedId}`)
-    const savedCheckedImages = localStorage.getItem(`checkedImages_${feedId}`)
+      if (location.state.recipeId) {
+        setSelectedRecipeId(location.state.recipeId)
+        setRecipeTitle(location.state.recipeTitle)
+      }
+    } else {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`/feed/read/id/${id}`)
+          const data = response.data
 
-    if (savedFoodName || savedDescription || savedImages || savedCheckedImages) {
-      Swal.fire({
-        title: "이전에 저장한 임시 데이터가 있습니다. 불러올까요?",
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: "불러오기",
-        denyButtonText: `불러오지 않기`,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if (savedFoodName) setFoodName(savedFoodName)
-          if (savedDescription) setDescription(savedDescription)
-          if (savedImages) setSelectedImages(JSON.parse(savedImages))
-          if (savedCheckedImages) setCheckedImages(JSON.parse(savedCheckedImages))
-          Swal.fire("불러오기 완료!", "", "success")
-        } else if (result.isDenied) {
-          localStorage.removeItem(`foodName_${feedId}`)
-          localStorage.removeItem(`description_${feedId}`)
-          localStorage.removeItem(`selectedImages_${feedId}`)
-          localStorage.removeItem(`checkedImages_${feedId}`)
-          Swal.fire("임시 저장 데이터를 삭제했습니다.", "", "info")
+          setFoodName(data.food_name)
+          setDescription(data.content)
+
+          const images = data.images.map((image) => ({
+            id: image.url,
+            file: null,
+          }))
+          setSelectedImages(images)
+          setCheckedImages(images.map((image) => image.id))
+
+          if (data.recipe_id) {
+            setSelectedRecipeId(data.recipe_id)
+            await fetchRecipeTitle(data.recipe_id)
+          }
+        } catch (error) {
+          console.error("Error fetching feed data:", error)
         }
-      })
+      }
+      fetchData()
     }
-  }, [feedId])
+
+    const fetchBookmarkData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken")
+        if (!accessToken) throw new Error("Access token is missing")
+
+        const response = await axios.get("https://i12e107.p.ssafy.io/api/bookmark/read/list", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        console.log("Bookmark Data:", response.data)
+        setBookmarkData(response.data)
+      } catch (error) {
+        console.error("Error fetching bookmark data:", error)
+      }
+    }
+
+    fetchBookmarkData()
+  }, [id, location.state])
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files)
@@ -77,10 +113,12 @@ function FeedUpdatePage() {
   }
 
   const temporarySave = () => {
-    localStorage.setItem(`selectedImages_${feedId}`, JSON.stringify(selectedImages))
-    localStorage.setItem(`checkedImages_${feedId}`, JSON.stringify(checkedImages))
-    localStorage.setItem(`foodName_${feedId}`, foodName)
-    localStorage.setItem(`description_${feedId}`, description)
+    localStorage.setItem(`selectedImages_${id}`, JSON.stringify(selectedImages))
+    localStorage.setItem(`checkedImages_${id}`, JSON.stringify(checkedImages))
+    localStorage.setItem(`foodName_${id}`, foodName)
+    localStorage.setItem(`description_${id}`, description)
+    localStorage.setItem(`selectedRecipeId_${id}`, JSON.stringify(selectedRecipeId))
+    localStorage.setItem(`recipeTitle_${id}`, recipeTitle)
     console.log("임시저장 완료")
   }
 
@@ -106,10 +144,70 @@ function FeedUpdatePage() {
     navigate(path)
   }
 
-  const handleSubmit = (e) => {
+  const handleBookmarkSelect = async (recipeId) => {
+    setSelectedRecipeId(recipeId)
+
+    try {
+      const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${recipeId}`)
+      const { recipeTitle } = response.data
+      setRecipeTitle(recipeTitle)
+    } catch (error) {
+      console.error("Error fetching recipe details:", error)
+      Swal.fire("오류 발생!", "레시피 정보를 가져오는 중 오류가 발생했습니다.", "error")
+    }
+  }
+
+  const handleRecipeRemove = () => {
+    setSelectedRecipeId(null)
+    setRecipeTitle("")
+  }
+
+  const urlToFile = async (url, filename, mimeType) => {
+    try {
+      const response = await fetch(url)
+      const blob = await response.blob()
+      return new File([blob], filename, { type: mimeType })
+    } catch (error) {
+      console.error("Error converting URL to File:", error)
+    }
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const imagesToUpload = selectedImages.filter((img) => checkedImages.includes(img.id))
-    console.log("업로드할 이미지:", imagesToUpload)
+
+    if (selectedImages.length === 0) {
+      Swal.fire("사진은 필수항목입니다", "", "warning")
+      return
+    }
+
+    if (foodName.trim() === "") {
+      Swal.fire("제목은 필수 항목입니다", "", "warning")
+      return
+    }
+
+    const accessToken = localStorage.getItem("accessToken")
+
+    const formData = new FormData()
+
+    for (const img of selectedImages) {
+      if (img.file) {
+        // 새로운 이미지인 경우
+        formData.append("images", img.file, img.file.name)
+      } else {
+        // 기존 이미지인 경우 URL을 이용해 Blob을 생성하고 File 객체로 변환
+        const file = await urlToFile(img.id, img.id.split("/").pop(), "image/jpeg")
+        formData.append("images", file)
+      }
+    }
+
+    const feedRequestDto = {
+      foodName: foodName,
+      content: description,
+      userId: JSON.parse(sessionStorage.getItem("user")).userId,
+      recipeId: selectedRecipeId,
+    }
+    console.log(feedRequestDto)
+    formData.append("feedRequestDto", new Blob([JSON.stringify(feedRequestDto)], { type: "application/json" }))
 
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -127,24 +225,41 @@ function FeedUpdatePage() {
         confirmButtonText: "수정완료!",
         cancelButtonText: "취소!",
       })
-      .then((result) => {
+      .then(async (result) => {
         if (result.isConfirmed) {
-          // 폼 제출 후 localStorage 비우기
-          localStorage.removeItem(`selectedImages_${feedId}`)
-          localStorage.removeItem(`checkedImages_${feedId}`)
-          localStorage.removeItem(`foodName_${feedId}`)
-          localStorage.removeItem(`description_${feedId}`)
-          swalWithBootstrapButtons
-            .fire({
-              title: "수정완료!",
-              text: "성공적으로 피드가 수정됐어요.",
-              imageUrl: "/images/mainlogo.jpg",
-              imageWidth: 350,
-              imageHeight: 300,
-              imageAlt: "Custom image",
-              icon: "success",
+          try {
+            await axios.put(`https://i12e107.p.ssafy.io/api/feed/update/${id}`, formData, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "multipart/form-data",
+              },
             })
-            .then(() => navigate(-1))
+
+            localStorage.removeItem(`selectedImages_${id}`)
+            localStorage.removeItem(`checkedImages_${id}`)
+            localStorage.removeItem(`foodName_${id}`)
+            localStorage.removeItem(`description_${id}`)
+            localStorage.removeItem(`selectedRecipeId_${id}`)
+            localStorage.removeItem(`recipeTitle_${id}`)
+            swalWithBootstrapButtons
+              .fire({
+                title: "수정완료!",
+                text: "성공적으로 피드가 수정됐어요.",
+                imageUrl: "/images/mainlogo.jpg",
+                imageWidth: 350,
+                imageHeight: 300,
+                imageAlt: "Custom image",
+                icon: "success",
+              })
+              .then(() => navigate(-1))
+          } catch (error) {
+            console.error("Error updating feed:", error)
+            swalWithBootstrapButtons.fire({
+              title: "오류 발생!",
+              text: "피드 수정 중 오류가 발생했습니다.",
+              icon: "error",
+            })
+          }
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire({
             title: "수정 취소!",
@@ -157,57 +272,67 @@ function FeedUpdatePage() {
 
   return (
     <div className="base-div">
-      <div className="card-div">
-        <div className="div-80">
-          <button onClick={handleBack} className="back-button">
-            <img src="/images/previous_button.png" alt="Previous" className="icon" />
-            이전
-          </button>
-          <form onSubmit={handleSubmit}>
-            <div className="preview-container">
-              {selectedImages.map((image) => (
-                <div key={image.id} className="preview-image">
-                  <div className="square">
-                    <img src={image.id} alt="미리보기" />
+      <div className="parent-container">
+        <div className="card-div-write">
+          <div className="div-80">
+            <button onClick={handleBack} className="back-button1">
+              <img src="/images/previous_button.png" alt="Previous" className="icon" />
+              이전
+            </button>
+            <form onSubmit={handleSubmit}>
+              <div className="preview-container">
+                {selectedImages.map((image) => (
+                  <div key={image.id} className="preview-image">
+                    <div className="square">
+                      <img src={image.id} alt="미리보기" />
+                    </div>
+                    <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
                   </div>
-                  <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
+                ))}
+              </div>
+
+              <div className="file-upload" onClick={() => fileInputRef.current.click()}>
+                <img src={imageIcon} alt="이미지 아이콘" />
+                <p>이미지 선택</p>
+                <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
+              </div>
+
+              <hr className="featurette-divider" />
+
+              <Form.Control size="lg" type="text" placeholder="음식명" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
+              <br />
+              <Form.Control type="text" placeholder="문구 추가..." value={description} onChange={(e) => setDescription(e.target.value)} />
+
+              <div className="recipe-section">
+                <h5>참고한 레시피</h5>
+                {recipeTitle && (
+                  <div className="recipe-badge" style={{ display: "flex", alignItems: "center" }}>
+                    <Badge bg="dark" style={{ fontSize: "1.25em", padding: "0.5em 1em" }}>
+                      {recipeTitle}
+                      <span style={{ cursor: "pointer", marginLeft: "0.5em" }} onClick={handleRecipeRemove}>
+                        &times;
+                      </span>
+                    </Badge>
+                  </div>
+                )}
+                <div className="button-container">
+                  <button type="button" className="btn btn-secondary" onClick={() => setShowBookmarkModal(true)}>
+                    내 북마크에서 찾기
+                  </button>
                 </div>
-              ))}
-            </div>
+              </div>
 
-            <div className="file-upload" onClick={() => fileInputRef.current.click()}>
-              <img src={imageIcon} alt="이미지 아이콘" />
-              <p>이미지 선택</p>
-              <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
-            </div>
-
-            <hr className="featurette-divider" />
-
-            <Form.Control size="lg" type="text" placeholder="음식명" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
-            <br />
-            <Form.Control type="text" placeholder="문구 추가..." value={description} onChange={(e) => setDescription(e.target.value)} />
-
-            {/* 참고한 레시피 섹션 */}
-            <div className="recipe-section">
-              <h5>참고한 레시피</h5>
-              <div className="button-container">
-                <button type="button" className="btn btn-secondary" onClick={() => handleNavigate("/recipes")}>
-                  레시피 검색
-                </button>
-                <button type="button" className="btn btn-secondary" onClick={() => handleNavigate("/profile/1?tab=bookmarks")}>
-                  내 북마크에서 찾기
+              <div className="submit-button">
+                <button type="submit" className="btn btn-primary">
+                  수정 완료
                 </button>
               </div>
-            </div>
-
-            <div className="submit-button">
-              <button type="submit" className="btn btn-primary">
-                수정 완료
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
+
+      {showBookmarkModal && <UserBookmarkRecipe closeModal={() => setShowBookmarkModal(false)} bookmarks={bookmarkData} onBookmarkSelect={handleBookmarkSelect} />}
     </div>
   )
 }
