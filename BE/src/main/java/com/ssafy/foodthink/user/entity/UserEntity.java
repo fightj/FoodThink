@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "users")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity {
 
     @Id

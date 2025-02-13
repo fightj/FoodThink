@@ -5,187 +5,268 @@
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: auto;
-  min-height: 80vh;
+  height: 100%;
+  min-height: 85vh;
+  padding: 2%;
   position: relative;
-  padding: 20px;
-  overflow: auto;
+}
+
+/* AI 캐릭터 이미지 */
+.ai-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3% 0;
+}
+
+.ai-image {
+  width: 40%; /* 기존 30% → 40%로 크기 증가 */
+  height: auto;
+  max-width: 300px; /* 최대 크기 제한 */
+  object-fit: contain;
+  animation: float 3s infinite ease-in-out;
+}
+
+/* AI 이미지 부드럽게 움직이는 애니메이션 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* 진행 바 */
 .progress-bar {
   width: 80%;
-  height: 8px;
-  background: #eee;
+  height: 1%;
+  background: #ddd;
   border-radius: 5px;
-  margin: 20px 0;
-  position: relative;
+  margin: 1.5% 0;
   overflow: hidden;
+  position: relative;
 }
 
 .progress-bar-fill {
   height: 100%;
   width: 0%;
-  background: #ffb74d;
+  background: #ff9800;
   transition: width 0.5s ease-in-out;
 }
 
-/* 말풍선 (질문) */
+/* 질문 말풍선 */
 .speech-bubble {
-  background: #ffd98d;
-  padding: 15px 25px;
+  background: #ffcc80;
+  padding: 2% 3%;
   border-radius: 30px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
-  font-size: 24px;
+  font-size: 1.8vw;
   font-weight: bold;
   width: auto;
-  position: relative;
-  margin: 50px 0px 50px;
-  order: -1; /* 항상 최상단 */
+  margin-top: 3%;
 }
 
-/* AI 캐릭터 + 선택지 정렬 */
+/* 선택지 컨테이너 */
 .ai-content {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 30px;
+  gap: 5%;
   width: 100%;
-  flex-direction: row;
-  margin: 30px 0;
-}
-
-/* AI 캐릭터 */
-.ai-image {
-  width: 250px;
-  height: 250px;
-  object-fit: contain;
-  order: 2;
+  margin: 2% 0;
 }
 
 /* 선택 카드 */
-.choice-card {
+/* .choice-card {
   background: white;
-  padding: 20px;
-  border-radius: 15px;
+  padding: 2%;
+  border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 20%;
   max-width: 250px;
-  max-height: 340px;
   transition: transform 0.2s ease-in-out;
   cursor: pointer;
-}
+} */
 
 .choice-card:hover {
   transform: scale(1.05);
 }
 
-/* 선택 이미지 */
-.choice-image {
+/* 버튼 컨테이너 (다음 질문 & 엔드 버튼) */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 2%;
+  /* margin-top: 2%; */
   width: 100%;
-  max-height: 180px;
-  object-fit: contain;
-  margin-bottom: 10px;
 }
 
-/* 선택 버튼 */
+/* 선택 버튼 스타일 (대답 버튼) */
 .choice-btn {
-  background: #ffb74d;
+  background: #ff9800;
   color: white;
   border: none;
-  padding: 12px 18px;
+  padding: 2%;
   border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  /* text-align: center; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
+  /* width: 20%; */
+  /* max-width: 250px; */
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1.2vw;
   transition: background 0.3s, transform 0.2s;
+  /* transition: transform 0.2s ease-in-out; */
   width: 100%;
 }
 
+/* 다음 질문 받기 & 엔드 버튼 */
+.skip-btn, .end-btn {
+  background: #757575;
+  color: white;
+  border: none;
+  padding: 2%;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2vw;
+  transition: background 0.3s, transform 0.2s;
+  width: 45%;
+}
+
+/* 버튼 호버 효과 */
 .choice-btn:hover {
-  background: #ffa726;
+  background: #fb8c00;
+  transform: translateY(-2px);
+}
+
+.skip-btn:hover, .end-btn:hover {
+  background: #616161;
   transform: translateY(-2px);
 }
 
 /* 로딩 화면 */
 .loading-text {
-  font-size: 20px;
+  font-size: 1.5vw;
   font-weight: bold;
-  color: #ff9800;
+  color: #ff5722;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 2%;
+  animation: blink 1s infinite;
+}
+
+
+@keyframes blink {
+  50% { opacity: 0.5; }
 }
 
 /* 결과 컨테이너 */
-.result-container {
-  background: #fff3e0;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-  margin-top: 30px;
-  width: 80%;
+.recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2%;
+  width: 100%;
+  margin-top: 2%;
 }
 
-/* 반응형: 모바일 최적화 */
-@media (max-width: 768px) {
+/* 레시피 카드 */
+.recipe-card {
+  background: #fff;
+  padding: 2%;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s;
+  cursor: pointer;
+  width: 18%;
+  max-width: 220px;
+}
+
+.recipe-card:hover {
+  transform: scale(1.05);
+}
+
+/* 레시피 이미지 */
+.recipe-image {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* 레시피 제목 */
+.recipe-title {
+  font-size: 1.2vw;
+  font-weight: bold;
+  margin-top: 2%;
+}
+
+/* 반응형 디자인 (태블릿 및 모바일 최적화) */
+@media (max-width: 1024px) {
   .ai-content {
     flex-direction: column;
     align-items: center;
   }
 
-  .speech-bubble {
-    font-size: 20px;
-    padding: 12px 20px;
-    max-width: 90%;
-    margin-bottom: 15px;
+  .ai-image {
+    width: 50%;
   }
 
-  .ai-image {
-    width: 200px;
-    height: 200px;
+  .speech-bubble {
+    font-size: 2.5vw;
+    padding: 3% 5%;
+    margin-bottom: 2%;
   }
 
   .choice-card {
-    max-width: 200px;
-    max-height: 300px;
+    width: 40%;
   }
 
   .choice-btn {
-    font-size: 14px;
-    padding: 10px 16px;
+    font-size: 1.5vw;
+    padding: 3%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .skip-btn, .end-btn {
+    width: 100%;
+    font-size: 1.5vw;
   }
 }
 
-/* 더 작은 화면 최적화 */
+/* 작은 화면 (스마트폰) */
 @media (max-width: 480px) {
   .speech-bubble {
-    font-size: 16px;
-    padding: 10px 15px;
+    font-size: 4vw;
+    padding: 4% 6%;
   }
 
   .ai-image {
-    width: 160px;
-    height: 160px;
+    width: 60%;
   }
 
   .choice-card {
-    width: 100%;
-    max-height: 280px;
-  }
-
-  .choice-image {
-    max-height: 140px;
+    width: 80%;
   }
 
   .choice-btn {
-    font-size: 14px;
-    padding: 8px 12px;
+    font-size: 2vw;
+    padding: 4%;
+  }
+
+  .skip-btn, .end-btn {
+    font-size: 2vw;
+    width: 100%;
   }
 }
