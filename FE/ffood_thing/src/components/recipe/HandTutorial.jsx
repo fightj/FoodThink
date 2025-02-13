@@ -1,20 +1,10 @@
-import React, { useState } from "react"
+import React from "react"
 import "../../styles/recipe/HandTutorial.css" // 스타일을 위한 CSS 파일을 임포트합니다.
-import VoiceTutorial from "./VoiceTutorial" // Ensure this path is correct
 
-const HandTutorial = ({ recipe, onBack }) => {
-  const [showVoiceTutorial, setShowVoiceTutorial] = useState(false) // State to control which component to show
-
-  if (!recipe) {
-    return <div>Loading...</div>
-  }
-
-  if (showVoiceTutorial) {
-    return <VoiceTutorial onBack={() => setShowVoiceTutorial(false)} />
-  }
-
+const HandTutorial = ({ onPrevPage, onNextPage, onSkip }) => {
   return (
     <div className="tutorial-container">
+      <h1>현재 페이지: 1</h1>
       <div className="tutorial-left">
         <div className="handmotion-div">
           <img src="/images/motion.gif" alt="Motion" className="handmotion-gif" />
@@ -30,8 +20,9 @@ const HandTutorial = ({ recipe, onBack }) => {
         </div>
         <div className="speaking-info-div">{/* Add any additional tutorial info here */}</div>
       </div>
-      <button onClick={onBack}>이전</button> {/* Back button */}
-      <button onClick={() => setShowVoiceTutorial(true)}>다음</button> {/* Next button */}
+      <button onClick={onPrevPage}>이전</button> {/* Back button */}
+      <button onClick={onNextPage}>다음</button> {/* Next button */}
+      <button onClick={onSkip}>스킵하기</button> {/* Skip button */}
     </div>
   )
 }
