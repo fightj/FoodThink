@@ -325,7 +325,7 @@ const HandPoseComponent = ({ currentStep, onNextStep, onPrevStep, pages, recipeI
       <div className="card-div7">
         <div className="steps3">
           <div className="process-item3">
-             <h2 className="steps-h23">
+            <h2 className="steps-h23">
               {currentProcessRef.current.processOrder}. {currentProcessRef.current.processExplain}
             </h2>
           </div>

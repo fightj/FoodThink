@@ -1,7 +1,7 @@
 import React from "react"
 import { useLocation } from "react-router-dom"
 import "../../styles/recipe/DemoCookingPage.css" // 스타일을 위한 CSS 파일을 임포트합니다.
-import Tutorial from "../../components/recipe/Tutorial"
+
 import RecipeInfo from "../../components/recipe/RecipeInfo"
 
 const DemoCookingPage = () => {
@@ -10,10 +10,9 @@ const DemoCookingPage = () => {
 
   return (
     <div className="cooking-container">
-        <RecipeInfo recipe={recipe} />
+      <RecipeInfo recipe={recipe} />
     </div>
   )
 }
-
 
 export default DemoCookingPage
