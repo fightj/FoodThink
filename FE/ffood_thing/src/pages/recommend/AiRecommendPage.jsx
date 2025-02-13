@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
+import Swal from "sweetalert2";
 import "../../styles/base/global.css";
 import "../../styles/recommend/AiRecommendPage.css";
 import LoginCheck from "../../components/base/LoginCheck";
@@ -81,34 +82,24 @@ function AiRecommendPage() {
   const sendToBackend = async (userAnswers) => {
     setLoading(true);
 
-    const API_URL = "https://i12e107.p.ssafy.io/api/recommend/final-recommend";
-    const requestData = { answers: userAnswers };
-
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch("https://i12e107.p.ssafy.io/api/recommend/final-recommend", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify(requestData),
+        body: JSON.stringify({ answers: userAnswers }),
       });
 
-      const responseText = await response.text();
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (error) {
-        throw new Error("서버에서 올바른 JSON을 반환하지 않았습니다.");
-      }
-
+      const data = await response.json();
       if (!Array.isArray(data)) {
-        throw new Error("추천된 레시피가 없습니다.");
+        Swal.fire("알림", "추천된 레시피가 없습니다.", "warning");
+        return;
       }
-
       setRecipes(data);
     } catch (error) {
-      alert("추천된 레시피를 불러오지 못했습니다.");
+      Swal.fire("오류 발생", "추천된 레시피를 불러오지 못했습니다.", "error");
     } finally {
       setLoading(false);
     }
@@ -117,10 +108,12 @@ function AiRecommendPage() {
   return (
     <div className="base-div">
       <LoginCheck />
-
       <div className="parent-container">
         <div className="card-div">
           <div className="ai-recommend-container">
+          <div className="progress-bar">
+          <div className="progress-bar-fill" style={{ width: `${(answers.length / 5) * 100}%` }}></div>
+        </div>
             <div className="speech-bubble">
               {recipes.length > 0 ? "🍽 추천된 레시피 🍽" : currentQuestion?.question}
             </div>
