@@ -20,5 +20,6 @@ public interface FeedRepository extends JpaRepository<FeedEntity, Long> {
             "ORDER BY SIZE(f.likes) DESC")
     List<FeedEntity> findTop6ByRecipeEntity_RecipeIdOrderByLikesDesc(@Param("recipeId") Long recipeId, Pageable pageable);
 
+    Page<FeedEntity> findByIdIn(List<Long> ids, Pageable pageable);
 }
 
