@@ -17,9 +17,11 @@ function Sidebar({ isOpen, toggleSidebar }) {
   // ✅ 로그아웃 핸들러 (sessionStorage와 localStorage 초기화)
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("kakaoAuthProcessed");
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("isNewUser");
+    sessionStorage.removeItem("user");
     setUser(null);
     window.location.reload(); // 로그아웃 후 새로고침 (새로운 상태 반영)
   };
@@ -87,7 +89,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
               <Dropdown.Divider />
             </>
           )}
-          {user ? (
+          {localStorage.getItem("kakaoAuthProcessed") ? (
             <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
           ) : (
             <Dropdown.Item href="/login">Log In</Dropdown.Item>

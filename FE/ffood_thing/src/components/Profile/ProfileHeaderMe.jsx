@@ -165,6 +165,7 @@ const ProfileHeaderMe = () => {
 
           Swal.fire("회원 탈퇴 완료", "그동안 이용해주셔서 감사합니다.", "success").then(() => {
             localStorage.clear();
+            sessionStorage.clear();
             navigate("/login");
           });
         } catch (error) {

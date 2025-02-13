@@ -62,7 +62,7 @@ function KakaoCallback() {
                     
 
                     console.log("로그인 성공:", { accessToken, email, isNewUser });
-                    localStorage.removeItem("kakaoAuthProcessed");
+                    //localStorage.removeItem("kakaoAuthProcessed");
                     navigate("/");
                 } else {
                     console.error("Error: 응답 상태 코드:", response.status);
