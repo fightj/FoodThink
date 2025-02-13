@@ -75,10 +75,10 @@ const RecipeList = () => {
           <Link
             to={`/recipes/${recipe.recipeId}`}
             key={recipe.recipeId}
-            className="recipe-card"
+            className="mypage-recipe-card"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />
+            <img src={recipe.image} alt={recipe.recipeTitle} className="mypage-recipe-image" />
             <p className="recipe-title1">{recipe.recipeTitle}</p>
             <div className="recipe-meta">
               👁 {recipe.hits} | ⭐ {recipe.bookmarkCount}

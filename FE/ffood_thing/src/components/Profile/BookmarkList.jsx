@@ -74,10 +74,10 @@ const BookmarkList = () => {
           <Link
             to={`/recipes/${recipe.recipeId}`} // API 응답 필드에 맞게 수정
             key={recipe.recipeId}
-            className="recipe-card"
+            className="mypage-recipe-card"
             style={{ textDecoration: "none", color: "inherit" }} // 링크 스타일 유지
           >
-            <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />
+            <img src={recipe.image} alt={recipe.recipeTitle} className="mypage-recipe-image" />
             <p className="recipe-title1">{recipe.recipeTitle}</p>
             <div className="recipe-meta">
               👁 {recipe.hits} | ⭐ {recipe.bookmarkCount}

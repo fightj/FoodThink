@@ -54,7 +54,7 @@ const FeedList = () => {
     <div className="feed-container">
       {feeds.map((feed) => (
         <Link 
-          to={`/feed/${feed.feedId}`} 
+          to={`/feed/${feed.id}`} 
           key={feed.feedId} 
           style={{ textDecoration: "none" }} 
         >

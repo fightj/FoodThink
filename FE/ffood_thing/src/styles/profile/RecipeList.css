@@ -9,10 +9,12 @@
 /* 레시피 그리드 */
 .recipe-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* 기본 설정 */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /*기본 설정*/
   gap: 35px;
   width: 100%;
-  max-width: 1000px;
+  /* max-width: 1000px; */
+  margin: 0 auto; /* 가운데 정렬 */
+  place-items: center;
 }
 
 /* 태블릿에서 카드 크기 조절 */
@@ -32,15 +34,16 @@
 }
 
 /* 레시피 카드 */
-.recipe-card {
+.mypage-recipe-card {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-self: space-between;
   width: 100%;
   padding: 10px;
   border-radius: 10px;
   background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -51,9 +54,10 @@
 }
 
 /* 이미지 스타일 */
-.recipe-image {
+.mypage-recipe-image {
   width: 100%;
   min-width: 200px;
+  min-height: 230px;
   height: 160px;
   border-radius: 10px;
   object-fit: cover;
@@ -98,7 +102,7 @@
 
 /* 모바일에서 이미지 크기 조절 */
 @media (max-width: 480px) {
-  .recipe-image {
+  .mypage-recipe-image {
       height: 120px;
   }
 }
