@@ -1,28 +1,64 @@
-/* 전체 컨테이너 */
+/* ✅ 전체 컨테이너 중앙 정렬 */
 .ai-recommend-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  align-items: center; /* 모든 요소를 중앙 정렬 */
+  justify-content: center;
   width: 100%;
-  height: 100%;
-  min-height: 85vh;
   padding: 2%;
-  position: relative;
 }
 
-/* AI 캐릭터 이미지 */
+/* ✅ 진행 바 (Progress Bar) */
+.progress-bar {
+  width: 80%;
+  height: 8px;
+  background: #ddd;
+  border-radius: 5px;
+  margin: 20px auto; /* 중앙 정렬 */
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: #ff9800;
+  transition: width 0.5s ease-in-out;
+}
+
+/* ✅ 질문지 (말풍선) */
+.speech-bubble {
+  background: #ffcc80;
+  padding: 2% 3%;
+  border-radius: 30px;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  width: auto;
+  margin-top: 2%;
+}
+
+/* ✅ AI 캐릭터 + 대답 컨테이너 */
+.ai-question-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /* margin-top: 2%; */
+  gap: 5%;
+}
+
+/* 왼쪽: AI 캐릭터 */
 .ai-image-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 3% 0;
+  width: 50%;
 }
 
 .ai-image {
-  width: 40%; /* 기존 30% → 40%로 크기 증가 */
+  width: 70%;
   height: auto;
-  max-width: 300px; /* 최대 크기 제한 */
   object-fit: contain;
   animation: float 3s infinite ease-in-out;
 }
@@ -37,115 +73,121 @@
   }
 }
 
-/* 진행 바 */
-.progress-bar {
-  width: 80%;
-  height: 1%;
-  background: #ddd;
-  border-radius: 5px;
-  margin: 1.5% 0;
-  overflow: hidden;
-  position: relative;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  width: 0%;
-  background: #ff9800;
-  transition: width 0.5s ease-in-out;
-}
-
-/* 질문 말풍선 */
-.speech-bubble {
-  background: #ffcc80;
-  padding: 2% 3%;
-  border-radius: 30px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  font-size: 1.8vw;
-  font-weight: bold;
-  width: auto;
-  margin-top: 3%;
-}
-
-/* 선택지 컨테이너 */
-.ai-content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 5%;
-  width: 100%;
-  margin: 2% 0;
-}
-
-/* 선택 카드 */
-/* .choice-card {
-  background: white;
-  padding: 2%;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
+/* 오른쪽: 대답 버튼 + 선택된 답변 */
+.answer-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 20%;
-  max-width: 250px;
-  transition: transform 0.2s ease-in-out;
-  cursor: pointer;
-} */
-
-.choice-card:hover {
-  transform: scale(1.05);
+  width: 50%;
+  gap: 50px;
 }
 
-/* 버튼 컨테이너 (다음 질문 & 엔드 버튼) */
-.button-container {
+/* 대답 버튼 3개 */
+.answer-selection-container {
   display: flex;
+  flex-direction: row;
   justify-content: center;
-  gap: 2%;
-  /* margin-top: 2%; */
+  gap: 5%;
   width: 100%;
+  align-items: center; /* 버튼 중앙 정렬 */
 }
 
-/* 선택 버튼 스타일 (대답 버튼) */
+/* 선택 버튼 */
 .choice-btn {
+  font-size: 1.5rem;
   background: #ff9800;
   color: white;
   border: none;
-  padding: 2%;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  /* text-align: center; */
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* align-items: center; */
-  /* width: 20%; */
-  /* max-width: 250px; */
+  padding: 12px;
+  border-radius: 10%;
+  /* font-size: 1.2vw; */
+  font-weight: bold;
+  width: auto;
+  height: 80px;
+  /* min-height: ; */
+  min-width: 20%; /* 버튼 크기 제한 */
   cursor: pointer;
-  font-size: 1.2vw;
+  text-align: center;
   transition: background 0.3s, transform 0.2s;
-  /* transition: transform 0.2s ease-in-out; */
-  width: 100%;
 }
 
-/* 다음 질문 받기 & 엔드 버튼 */
-.skip-btn, .end-btn {
+.choice-btn:hover {
+  background: #fb8c00;
+  transform: scale(1.05);
+}
+
+/* 선택된 답변 카드 */
+.selected-answers {
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: center; */
+  gap: 10px;
+  width: 100%;
+  padding: 20px;
+  background: #fff7e0;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ 개별 답변 카드 */
+.answer-card {
+  background: #ff9800;
+  color: white;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-align: center;
+  width: auto;
+  opacity: 0;
+  transform: scale(0.5);
+  animation: fadeInScale 0.5s ease-in-out forwards;
+}
+
+/* ✅ 컨트롤 버튼 (오른쪽 하단) */
+.button-control-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ✅ 애니메이션: 카드가 추가될 때 점점 커지고 나타남 */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* "다음 질문 받기" & "엔드 버튼" */
+.skip-btn {
   background: #757575;
   color: white;
   border: none;
-  padding: 2%;
+  padding: 10px;
   border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 1.2vw;
   transition: background 0.3s, transform 0.2s;
-  width: 45%;
+  width: 12%;
 }
 
-/* 버튼 호버 효과 */
-.choice-btn:hover {
-  background: #fb8c00;
-  transform: translateY(-2px);
+.end-btn {
+  background: #ff0000;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  width: 12%;
 }
 
 .skip-btn:hover, .end-btn:hover {
@@ -153,120 +195,27 @@
   transform: translateY(-2px);
 }
 
-/* 로딩 화면 */
-.loading-text {
-  font-size: 1.5vw;
-  font-weight: bold;
-  color: #ff5722;
-  text-align: center;
-  margin-top: 2%;
-  animation: blink 1s infinite;
-}
-
-
-@keyframes blink {
-  50% { opacity: 0.5; }
-}
-
-/* 결과 컨테이너 */
-.recipe-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2%;
-  width: 100%;
-  margin-top: 2%;
-}
-
-/* 레시피 카드 */
-.recipe-card {
-  background: #fff;
-  padding: 2%;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  transition: transform 0.3s;
-  cursor: pointer;
-  width: 18%;
-  max-width: 220px;
-}
-
-.recipe-card:hover {
-  transform: scale(1.05);
-}
-
-/* 레시피 이미지 */
-.recipe-image {
-  width: 100%;
-  border-radius: 8px;
-}
-
-/* 레시피 제목 */
-.recipe-title {
-  font-size: 1.2vw;
-  font-weight: bold;
-  margin-top: 2%;
-}
-
-/* 반응형 디자인 (태블릿 및 모바일 최적화) */
+/* ✅ 반응형 디자인 (태블릿 및 모바일 최적화) */
 @media (max-width: 1024px) {
-  .ai-content {
+  .ai-question-container {
     flex-direction: column;
     align-items: center;
   }
 
-  .ai-image {
-    width: 50%;
-  }
-
-  .speech-bubble {
-    font-size: 2.5vw;
-    padding: 3% 5%;
-    margin-bottom: 2%;
-  }
-
-  .choice-card {
-    width: 40%;
-  }
-
-  .choice-btn {
-    font-size: 1.5vw;
-    padding: 3%;
-  }
-
-  .button-container {
-    flex-direction: column;
+  .ai-image-container {
     width: 100%;
+  }
+
+  .answer-section {
+    width: 100%;
+    align-items: center;
+  }
+
+  .button-control-container {
+    justify-content: center;
   }
 
   .skip-btn, .end-btn {
-    width: 100%;
-    font-size: 1.5vw;
-  }
-}
-
-/* 작은 화면 (스마트폰) */
-@media (max-width: 480px) {
-  .speech-bubble {
-    font-size: 4vw;
-    padding: 4% 6%;
-  }
-
-  .ai-image {
-    width: 60%;
-  }
-
-  .choice-card {
-    width: 80%;
-  }
-
-  .choice-btn {
-    font-size: 2vw;
-    padding: 4%;
-  }
-
-  .skip-btn, .end-btn {
-    font-size: 2vw;
-    width: 100%;
+    width: 45%;
   }
 }
