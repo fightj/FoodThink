@@ -79,11 +79,13 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="today-recommend-card" onClick={(e) => e.stopPropagation()}>
         {/* 닫기 버튼 */}
-        <button className="today-close-btn" onClick={onClose}>×</button>
+        <button className="today-close-btn" onClick={onClose}>
+          <img src="/src/assets/icon/close_icon.png" alt="닫기" />
+          </button>
         
         {/* 새로고침 버튼 */}
         <button className="refresh-btn" onClick={refreshRecommendations} disabled={loading}>
-          <FaRedo />
+          <img src="/src/assets/icon/rotate_right.png" alt="닫기" />
         </button>
         
         <div className="today-title">오늘 뭐 먹지? 🍽️</div>
