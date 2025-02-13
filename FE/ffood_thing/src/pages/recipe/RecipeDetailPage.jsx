@@ -185,7 +185,7 @@ const RecipeDetailPage = () => {
   }
 
   const handleEditClick = () => {
-    navigate(`/recipes/edit/${id}`)
+    navigate(`/recipes/update/${id}`)
   }
 
   const handleDeleteClick = async () => {
@@ -229,7 +229,6 @@ const RecipeDetailPage = () => {
     setActiveSection(section)
     document.getElementById(section).scrollIntoView({ behavior: "smooth" })
   }
-
   return (
     <div className="base-div">
       <SearchBar />
@@ -250,11 +249,8 @@ const RecipeDetailPage = () => {
                   <img src="/images/hit-eye.png" alt="" className="hit-eye-icon" />
                   <p>{recipe.hits}</p>
                 </div>
-                <img src={recipe.userImage} alt="프로필이미지" className="profile-image" />
-                <div className="nickname-container">
-                  <h2 className="nickname-area">{recipe.nickname}</h2>
-                  {user && user.id !== recipe.userId && <button className="sub-btn">구독</button>}
-                </div>
+                <img src={recipe.userImage || "/images/default_profile.png"} alt="프로필이미지" className="profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
+                <div className="nickname-container">{recipe.nickname}</div>
               </div>
 
               <div style={{ flex: "0 0 40%", display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -278,6 +274,16 @@ const RecipeDetailPage = () => {
 
                 <button className="cook-btn" onClick={() => setShowModal(true)}>
                   조리시작
+                </button>
+
+                <button
+                  className="start-cooking-btn"
+                  onClick={() => {
+                    console.log("Navigating with recipe:", recipe)
+                    navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe })
+                  }}
+                >
+                  요리 시작
                 </button>
               </div>
             </div>
@@ -347,6 +353,7 @@ const RecipeDetailPage = () => {
           </div>
         </div>
       </div>
+
       <div className="parent-container">
         <div id="steps" ref={stepsRef} className="card-div-section">
           <h1 className="section-title">조리순서</h1>
@@ -370,7 +377,7 @@ const RecipeDetailPage = () => {
         </div>
       </div>
 
-      {user && user.id === recipe.userId && (
+      {user && user.nickname === recipe.nickname && (
         <div className="button-container">
           <button onClick={handleEditClick} className="edit-button">
             수정

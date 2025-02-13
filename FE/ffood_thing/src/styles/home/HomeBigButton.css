@@ -1,8 +1,11 @@
 /* 컨테이너 스타일 */
-.container {
+.home-container {
   max-width: 100%;
-  margin: 0 auto;
 }
+
+/* #custom-card {
+  padding: 0 auto;
+} */
 
 /* Grid 레이아웃 */
 .custom-grid {
@@ -13,7 +16,7 @@
     "card1 card2"
     "card1 card3"
     "card4 card3"; /* 모든 카드 위치 고정 */
-  grid-gap: 20px;
+  /* grid-gap: 20px; */
 }
 
 /* 기본 카드 스타일 */
@@ -22,15 +25,14 @@
   background-size: cover;
   background-position: center;
   border-radius: 20px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.06);
+  /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.05); */
   transition: transform 0.2s, box-shadow 0.2s;
   width: 100%;
-  margin-bottom: 20px; /* 카드 사이에 간격 추가 */
-  overflow: hidden; /* 카드의 경계 밖으로 나가는 내용을 숨김 */
+  overflow: hidden;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-7px);
   box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.2), 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -44,11 +46,10 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 20px;
   color: white;
-  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+  text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.8);
   background: rgba(0, 0, 0, 0);
-  border-radius: inherit;
+  /* border-radius: inherit; */
   overflow: hidden; /* 카드 내용의 경계 밖으로 나가는 내용을 숨김 */
 }
 
@@ -56,21 +57,23 @@
 .card-1 {
   grid-area: card1;
   height: 300px;
+  margin-bottom:25px;
 }
 
 .card-2 {
   grid-area: card2;
   height: 400px;
+  margin-bottom:25px;
 }
 
 .card-3 {
   grid-area: card3;
-  height: 450px;
+  height: 400px;
 }
 
 .card-4 {
   grid-area: card4;
-  height: 350px;
+  height: 300px;
   align-self: end; /* 카드 4번을 하단에 배치 */
 }
 
@@ -78,4 +81,14 @@
 .card-link {
   display: block;
   text-decoration: none;
+}
+
+.home h1 {
+  font-family: "MyCustomFont", sans-serif;
+  font-size: 3rem;
+}
+
+.home h4 {
+  font-family: "Pretendard-Regular", sans-serif;
+  font-size: 1.5rem;
 }

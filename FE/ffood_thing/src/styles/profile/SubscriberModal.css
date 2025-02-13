@@ -19,7 +19,9 @@
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  width: 350px;
+  width: 380px; /* ✅ 모달 너비 설정 */
+  max-height: 450px; /* ✅ 최대 높이 설정 */
+  overflow-y: auto; /* ✅ 내용이 넘칠 경우 스크롤 추가 */
   text-align: center;
   position: relative;
   animation: fadeIn 0.3s ease-in-out;
@@ -58,7 +60,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  max-height: 300px;
+  max-height: 350px;
   overflow-y: auto;
 }
 

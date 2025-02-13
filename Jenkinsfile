@@ -295,7 +295,9 @@ pipeline {
                 script {
                     dir('FE/ffood_thing') {
                         nodejs('NodeJS 22.13.0'){
-                            sh 'npm install'
+                            sh 'pwd'
+                            sh 'npm install --force'
+//                            sh 'npm install'
                             sh 'npm run build'
                         }
                     }

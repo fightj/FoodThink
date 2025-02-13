@@ -1,5 +1,8 @@
 package com.ssafy.foodthink.feed.service;
 
+import com.ssafy.foodthink.elasticsearch.elasticsearchrepository.ElasticSearchFeedRepository;
+import com.ssafy.foodthink.elasticsearch.entity.FeedElasticEntity;
+import com.ssafy.foodthink.elasticsearch.service.ElasticSearchService;
 import com.ssafy.foodthink.feed.dto.*;
 import com.ssafy.foodthink.feed.entity.FeedCommentEntity;
 import com.ssafy.foodthink.feed.entity.FeedEntity;
@@ -10,6 +13,7 @@ import com.ssafy.foodthink.feed.repository.FeedImageRepository;
 import com.ssafy.foodthink.feed.repository.FeedLikeRepository;
 import com.ssafy.foodthink.feed.repository.FeedRepository;
 import com.ssafy.foodthink.global.S3Service;
+import com.ssafy.foodthink.recipes.dto.RecipeListResponseDto;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
 import com.ssafy.foodthink.user.entity.UserEntity;
@@ -40,8 +44,10 @@ public class FeedServiceImpl implements FeedService {
     private final FeedImageRepository feedImageRepository;
     private final FeedLikeRepository feedLikeRepository;
     private final FeedCommentRepository feedCommentRepository;
+    private final ElasticSearchService elasticSearchService;
+    private final ElasticSearchFeedRepository elasticSearchFeedRepository;
 
-    public FeedServiceImpl(FeedRepository feedRepository, UserRepository userRepository, RecipeRepository recipeRepository, S3Service s3Service, FeedImageRepository feedImageRepository, FeedLikeRepository feedLikeRepository, FeedCommentRepository feedCommentRepository) {
+    public FeedServiceImpl(FeedRepository feedRepository, UserRepository userRepository, RecipeRepository recipeRepository, S3Service s3Service, FeedImageRepository feedImageRepository, FeedLikeRepository feedLikeRepository, FeedCommentRepository feedCommentRepository, ElasticSearchService elasticSearchService, ElasticSearchFeedRepository elasticSearchFeedRepository) {
         this.feedRepository = feedRepository;
         this.userRepository = userRepository;
         this.recipeRepository = recipeRepository;
@@ -49,6 +55,8 @@ public class FeedServiceImpl implements FeedService {
         this.feedImageRepository = feedImageRepository;
         this.feedLikeRepository = feedLikeRepository;
         this.feedCommentRepository = feedCommentRepository;
+        this.elasticSearchService = elasticSearchService;
+        this.elasticSearchFeedRepository = elasticSearchFeedRepository;
     }
 
 
@@ -94,6 +102,9 @@ public class FeedServiceImpl implements FeedService {
         }
 
         feedImageRepository.saveAll(feedImageEntities);
+
+        //엘라스칙서치 반영
+        elasticSearchService.indexFeed(feedEntity);
     }
 
     @Override
@@ -103,7 +114,27 @@ public class FeedServiceImpl implements FeedService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 피드를 찾을 수 없습니다. ID: " + id));
 
         List<String> imageUrls = readImageUrlsByFeedId(feedEntity.getId());
-        FeedResponseDto feedResponseDto = createFeedResponseDtoByBuilder(feedEntity, imageUrls);
+
+
+        FeedResponseDto feedResponseDto = FeedResponseDto.builder()
+                .id(feedEntity.getId())
+                .foodName(feedEntity.getFoodName())
+                .content(feedEntity.getContent())
+                .writeTime(feedEntity.getWriteTime())
+                .userId(feedEntity.getUserEntity().getUserId())
+                .username(feedEntity.getUserEntity().getNickname())
+                .userImage(feedEntity.getUserEntity().getImage())
+                .recipeListResponseDto(Optional.ofNullable(feedEntity.getRecipeEntity())
+                        .map(recipe -> RecipeListResponseDto.builder()
+                                .recipeId(recipe.getRecipeId())
+                                .recipeTitle(recipe.getRecipeTitle())
+                                .image(recipe.getImage())
+                                .nickname(Optional.ofNullable(recipe.getUserEntity()).map(UserEntity::getNickname).orElse(null))
+                                .build())
+                        .orElse(null))  // ✅ 레시피가 없으면 null 반환
+                .images(imageUrls)
+                .build();
+
         //댓글 조회
         List<FeedCommentResponseDto> feedCommentResponseDtos = readFeedCommentsByFeedId(id);
         feedResponseDto.setFeedCommentResponseDtos(feedCommentResponseDtos);
@@ -262,6 +293,9 @@ public class FeedServiceImpl implements FeedService {
 
         //DB 삭제
         feedRepository.delete(feedEntity);
+
+        //엘라스틱 서버 반영
+        elasticSearchFeedRepository.deleteById(String.valueOf(feedId));
     }
 
     @Override
@@ -283,7 +317,13 @@ public class FeedServiceImpl implements FeedService {
         // 선택적 업데이트
         Optional.ofNullable(feedRequestDto.getFoodName()).ifPresent(feedEntity::setFoodName);
         Optional.ofNullable(feedRequestDto.getContent()).ifPresent(feedEntity::setContent);
-        Optional.ofNullable(recipe).ifPresent(feedEntity::setRecipeEntity);
+
+        // recipe가 null이면 FeedEntity의 recipeEntity도 null로 설정
+        if (recipe == null) {
+            feedEntity.setRecipeEntity(null);
+        } else {
+            feedEntity.setRecipeEntity(recipe);
+        }
 
         // 기존 이미지 삭제
         List<FeedImageEntity> feedImageEntities = feedImageRepository.findByFeedEntity_Id(feedId);
@@ -315,6 +355,17 @@ public class FeedServiceImpl implements FeedService {
             }
 
             feedImageRepository.saveAll(newFeedImageEntities);
+
+            // 엘라스틱서치 반영
+            Optional<FeedElasticEntity> optionalElasticEntity = elasticSearchFeedRepository.findById(String.valueOf(feedEntity.getId()));
+
+            if (optionalElasticEntity.isPresent()) {
+                FeedElasticEntity feedElasticEntity = optionalElasticEntity.get();
+                feedElasticEntity.setFoodName(feedEntity.getFoodName());
+                feedElasticEntity.setNickname(feedEntity.getUserEntity().getNickname());
+
+                elasticSearchFeedRepository.save(feedElasticEntity); // 업데이트 후 저장
+            }
         }
     }
 

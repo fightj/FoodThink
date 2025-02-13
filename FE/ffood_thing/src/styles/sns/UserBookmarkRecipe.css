@@ -1,19 +1,25 @@
-.bookmark-card-container {
+.bookmark-gallery * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.bookmark-gallery {
+  background: #EEE;
+  width: 100%; /* 추가된 스타일 */
+  overflow: hidden; /* 추가된 스타일 */
+}
+
+.bookmark-gallery-cell {
+  width: 66%;
+  height: 200px;
+  margin-right: 10px;
+  background: #8C8;
+  counter-increment: bookmark-gallery-cell;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  text-align: center; /* 추가된 스타일 */
 }
 
-.bookmark-card {
-  width: 200px;
-  height: 300px;
-  overflow: hidden;
-  position: relative;
-}
+/* cell number */
 
-.bookmark-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}

@@ -15,6 +15,10 @@ const ProfilePage = () => {
   const { user } = useContext(UserContext); // ✅ 현재 로그인한 유저 정보 가져오기
   const location = useLocation();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("getTabFromURL()");
+  const isOwnProfile = user?.nickname === nickname; // ✅ 본인 프로필 여부 판별
+  const [profileData, setProfileData] = useState(isOwnProfile ? user : null);
+  const [loading, setLoading] = useState(!isOwnProfile); // 본인 프로필이면 API 호출 불필요
 
 // ✅ URL에서 tab 값을 읽어 초기 상태 설정
 const getTabFromURL = () => {
@@ -22,10 +26,6 @@ const getTabFromURL = () => {
   return params.get("tab") || "recipes"; // 기본값: recipes
 };
 
-  const [activeTab, setActiveTab] = useState("getTabFromURL()");
-  const isOwnProfile = user?.nickname === nickname; // ✅ 본인 프로필 여부 판별
-  const [profileData, setProfileData] = useState(isOwnProfile ? user : null);
-  const [loading, setLoading] = useState(!isOwnProfile); // 본인 프로필이면 API 호출 불필요
 
   useEffect(() => {
     // ✅ URL이 변경될 때마다 activeTab 업데이트
