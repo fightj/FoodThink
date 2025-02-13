@@ -55,12 +55,14 @@ function Sidebar({ isOpen, toggleSidebar }) {
   }, [isOpen]);
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("kakaoAuthProcessed");
-    sessionStorage.removeItem("user");
+    // localStorage.removeItem("accessToken");
+    // localStorage.removeItem("kakaoAuthProcessed");
+    // sessionStorage.removeItem("user");
+    localStorage.clear();
+    sessionStorage.clear();
     toggleSidebar(false);
     setDropdownOpen(false);
-    navigate("/login");
+    navigate("/");
   };
 
   return (
