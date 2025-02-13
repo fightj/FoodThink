@@ -5,19 +5,45 @@
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: auto;
-  min-height: 80vh;
-  padding: 20px;
+  height: 100%;
+  min-height: 85vh;
+  padding: 2%;
   position: relative;
+}
+
+/* AI 캐릭터 이미지 */
+.ai-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3% 0;
+}
+
+.ai-image {
+  width: 40%; /* 기존 30% → 40%로 크기 증가 */
+  height: auto;
+  max-width: 300px; /* 최대 크기 제한 */
+  object-fit: contain;
+  animation: float 3s infinite ease-in-out;
+}
+
+/* AI 이미지 부드럽게 움직이는 애니메이션 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* 진행 바 */
 .progress-bar {
   width: 80%;
-  height: 10px;
+  height: 1%;
   background: #ddd;
   border-radius: 5px;
-  margin: 15px 0;
+  margin: 1.5% 0;
   overflow: hidden;
   position: relative;
 }
@@ -32,14 +58,14 @@
 /* 질문 말풍선 */
 .speech-bubble {
   background: #ffcc80;
-  padding: 15px 25px;
+  padding: 2% 3%;
   border-radius: 30px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
-  font-size: 22px;
+  font-size: 1.8vw;
   font-weight: bold;
   width: auto;
-  margin: 40px 0;
+  margin-top: 3%;
 }
 
 /* 선택지 컨테이너 */
@@ -48,26 +74,26 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 5%;
   width: 100%;
-  margin: 20px 0;
+  margin: 2% 0;
 }
 
 /* 선택 카드 */
-.choice-card {
+/* .choice-card {
   background: white;
-  padding: 18px;
+  padding: 2%;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 240px;
-  max-height: 320px;
+  width: 20%;
+  max-width: 250px;
   transition: transform 0.2s ease-in-out;
   cursor: pointer;
-}
+} */
 
 .choice-card:hover {
   transform: scale(1.05);
@@ -77,8 +103,8 @@
 .button-container {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 15px; /* 선택지 아래 여백 추가 */
+  gap: 2%;
+  /* margin-top: 2%; */
   width: 100%;
 }
 
@@ -87,11 +113,19 @@
   background: #ff9800;
   color: white;
   border: none;
-  padding: 12px 18px;
+  padding: 2%;
   border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  /* text-align: center; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
+  /* width: 20%; */
+  /* max-width: 250px; */
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1.2vw;
   transition: background 0.3s, transform 0.2s;
+  /* transition: transform 0.2s ease-in-out; */
   width: 100%;
 }
 
@@ -100,12 +134,12 @@
   background: #757575;
   color: white;
   border: none;
-  padding: 12px 16px;
+  padding: 2%;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1.2vw;
   transition: background 0.3s, transform 0.2s;
-  width: 45%; /* 동일한 너비 */
+  width: 45%;
 }
 
 /* 버튼 호버 효과 */
@@ -121,13 +155,14 @@
 
 /* 로딩 화면 */
 .loading-text {
-  font-size: 18px;
+  font-size: 1.5vw;
   font-weight: bold;
   color: #ff5722;
   text-align: center;
-  margin-top: 20px;
+  margin-top: 2%;
   animation: blink 1s infinite;
 }
+
 
 @keyframes blink {
   50% { opacity: 0.5; }
@@ -138,21 +173,22 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 2%;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 2%;
 }
 
 /* 레시피 카드 */
 .recipe-card {
   background: #fff;
-  padding: 15px;
+  padding: 2%;
   border-radius: 12px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
   transition: transform 0.3s;
   cursor: pointer;
-  width: 200px;
+  width: 18%;
+  max-width: 220px;
 }
 
 .recipe-card:hover {
@@ -167,33 +203,35 @@
 
 /* 레시피 제목 */
 .recipe-title {
-  font-size: 16px;
+  font-size: 1.2vw;
   font-weight: bold;
-  margin-top: 8px;
+  margin-top: 2%;
 }
 
 /* 반응형 디자인 (태블릿 및 모바일 최적화) */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .ai-content {
     flex-direction: column;
     align-items: center;
   }
 
+  .ai-image {
+    width: 50%;
+  }
+
   .speech-bubble {
-    font-size: 20px;
-    padding: 12px 20px;
-    max-width: 90%;
-    margin-bottom: 15px;
+    font-size: 2.5vw;
+    padding: 3% 5%;
+    margin-bottom: 2%;
   }
 
   .choice-card {
-    max-width: 200px;
-    max-height: 280px;
+    width: 40%;
   }
 
   .choice-btn {
-    font-size: 14px;
-    padding: 10px 16px;
+    font-size: 1.5vw;
+    padding: 3%;
   }
 
   .button-container {
@@ -203,24 +241,32 @@
 
   .skip-btn, .end-btn {
     width: 100%;
-    font-size: 14px;
+    font-size: 1.5vw;
   }
 }
 
 /* 작은 화면 (스마트폰) */
 @media (max-width: 480px) {
   .speech-bubble {
-    font-size: 16px;
-    padding: 10px 15px;
+    font-size: 4vw;
+    padding: 4% 6%;
+  }
+
+  .ai-image {
+    width: 60%;
   }
 
   .choice-card {
-    width: 100%;
-    max-height: 260px;
+    width: 80%;
   }
 
   .choice-btn {
-    font-size: 14px;
-    padding: 8px 12px;
+    font-size: 2vw;
+    padding: 4%;
+  }
+
+  .skip-btn, .end-btn {
+    font-size: 2vw;
+    width: 100%;
   }
 }

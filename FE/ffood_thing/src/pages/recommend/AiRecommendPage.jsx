@@ -6,6 +6,15 @@ import "../../styles/base/global.css";
 import "../../styles/recommend/AiRecommendPage.css";
 import LoginCheck from "../../components/base/LoginCheck";
 
+// AI 캐릭터 이미지 배열 (5개)
+const aiImages = [
+  "/images/꾸덕이.png",
+  "/images/끼쟁이.png",
+  "/images/샤방이.png",
+  "/images/시원이.png",
+  "/images/씩씩이.png"
+];
+
 const questionsData = [
   { question: "어떤 맛을 원하시나요?", options: ["매운 음식", "단 음식", "짠 음식"] },
   { question: "어떤 종류의 음식을 원하시나요?", options: ["국물요리", "밥종류", "면요리"] },
@@ -32,6 +41,7 @@ function AiRecommendPage() {
   const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState([]);
+  const [aiImage, setAiImage] = useState(aiImages[Math.floor(Math.random() * aiImages.length)]); // 랜덤 이미지 초기값 설정
 
   const token = localStorage.getItem("accessToken");
 
@@ -49,6 +59,9 @@ function AiRecommendPage() {
     const nextIndex = Math.floor(Math.random() * availableQuestions.length);
     setCurrentQuestion(availableQuestions[nextIndex]);
     setAvailableQuestions(prev => prev.filter((_, i) => i !== nextIndex)); // 선택한 질문 제거
+
+    // 🔹 질문이 변경될 때마다 AI 캐릭터 이미지 랜덤 변경
+    setAiImage(aiImages[Math.floor(Math.random() * aiImages.length)]);
   };
 
   // 답변 선택
@@ -111,12 +124,20 @@ function AiRecommendPage() {
       <div className="parent-container">
         <div className="card-div">
           <div className="ai-recommend-container">
-          <div className="progress-bar">
-          <div className="progress-bar-fill" style={{ width: `${(answers.length / 5) * 100}%` }}></div>
-        </div>
+            <div className="progress-bar">
+              <div className="progress-bar-fill" style={{ width: `${(answers.length / 5) * 100}%` }}></div>
+            </div>
+            {/* AI 캐릭터 질문 영역 */}
             <div className="speech-bubble">
               {recipes.length > 0 ? "🍽 추천된 레시피 🍽" : currentQuestion?.question}
             </div>
+
+            {/* AI 캐릭터 이미지 */}
+            <div className="ai-image-container">
+              <img src={aiImage} alt="AI 도우미" className="ai-image" />
+            </div>
+
+            {/* 답변 버튼 영역 */}
             <div className="ai-content">
               {recipes.length === 0 ? (
                 <>
@@ -132,7 +153,7 @@ function AiRecommendPage() {
                       ⏩ 다음 질문 받기
                     </button>
                     <button className="end-btn" onClick={handleEndSurvey}>
-                      🚀 엔드 버튼
+                      🚀 질문 그만! 바로 추천받기
                     </button>
                   </div>
                 </>
