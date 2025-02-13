@@ -1,4 +1,4 @@
-.tutorial-container {
+.hand-tutorial-container {
   display: flex;
   flex-direction: row; /* Align children horizontally */
   width: 100%;
@@ -10,9 +10,7 @@
   background-position: center; /* Center the background image */
 }
 
-
-
-.tutorial-right {
+.hand-tutorial-right {
   width: 100%;
   height: 100%;
   flex: 1;
@@ -25,7 +23,7 @@
   /* background-color: aqua; */
 }
 
-.tutorial-left {
+.hand-tutorial-left {
   width: 100%;
   height: 100%;
   flex: 1;
@@ -38,8 +36,8 @@
   /* background-color: rgb(255, 255, 255); */
 }
 
-.tutorial-left .handmotion-div,
-.tutorial-left .handmotion-info-div {
+.hand-tutorial-left .handmotion-div,
+.hand-tutorial-left .handmotion-info-div {
   width: 100%;
   height: 50%; /* Each takes up half the height */
   display: flex;
@@ -47,13 +45,13 @@
   align-items: center;
   flex-direction: column;
 }
-.handmotion-gif{
-width: 50%;
-height: 100%;
+.handmotion-gif {
+  width: 50%;
+  height: 100%;
 }
 
-.tutorial-right .speaking-div,
-.tutorial-right .speaking-info-div {
+.hand-tutorial-right .speaking-div,
+.hand-tutorial-right .speaking-info-div {
   width: 100%;
   height: 50%; /* Each takes up half the height */
   display: flex;
@@ -62,13 +60,11 @@ height: 100%;
   flex-direction: column;
   flex-direction: row;
 }
-.speaking-gif{
+.speaking-gif {
   width: 50%;
   height: 100%;
-  }
- 
+}
 
-  .speaking-info-div-left,
-  .speaking-info-div-right {
-    
-  }
+.speaking-info-div-left,
+.speaking-info-div-right {
+}

@@ -1,50 +1,51 @@
-import React, { useState } from "react";
-import "../../styles/recipe/RecipeInfo.css"; // 스타일을 위한 CSS 파일을 임포트합니다.
-import Ingredients from "./Ingredients"; // Ensure this path is correct
+import React, { useState } from "react"
+import "../../styles/recipe/RecipeInfo.css"
+import HandTutorial from "./HandTutorial" // Ensure this path is correct
 
-const RecipeInfo = ({ recipe }) => {
-  const [showIngredients, setShowIngredients] = useState(false); // State to control which component to show
+const RecipeInfo = ({ recipe, onBack }) => {
+  const [showHandTutorial, setShowHandTutorial] = useState(false) // State to control which component to show
 
   if (!recipe) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
-  console.log("RecipeInfo component rendered. showIngredients:", showIngredients);
-  const getLevelText = (level) => {
-    switch (level) {
-      case 1:
-        return "하"
-      case 2:
-        return "중"
-      case 3:
-        return "상"
-      default:
-        return level
-    }
-  }
+  console.log("Ingredients component rendered. showTutorial:", showHandTutorial)
+
   return (
     <div className="recipeInfo-container">
-      {!showIngredients ? ( // Conditionally render based on the state
+      {!showHandTutorial ? (
         <>
           <div className="recipeInfo-left info-left">
+            <p>Recipe</p>
             <img src={recipe.image} alt="Recipe" className="recipe-image" />
           </div>
-          <div className="recipeInfo-right info-right">
-            <h1>{recipe.recipeTitle}</h1>
-            <h3>조리시간: {recipe.requiredTime}</h3>
-            <h3>난이도: {getLevelText(recipe.level)}</h3>
-            <h3>총 조리과정: {recipe.processes.length}</h3>
-            <button onClick={() => {
-              console.log("Next button clicked");
-              setShowIngredients(true);
-            }}>다음</button>
+          <div className="recipeInfo-right info-right" onClick={() => setShowHandTutorial(true)}>
+            <div className="recipe-details">
+              <h1>{recipe.recipeTitle}</h1>
+            </div>
+            <div className="recipe-ingredients">
+              <p>재료</p>
+              <ul className="ingredients-list">
+                {recipe.ingredients.map((ingredient, index) => (
+                  <li key={index} className="ingredient-item">
+                    {ingredient.ingreName}: {ingredient.amount}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <button onClick={onBack} className="hidden-button1">
+              이전
+            </button>
+            <button onClick={() => setShowHandTutorial(true)} className="hidden-button1">
+              다음
+            </button>
           </div>
         </>
       ) : (
-        <Ingredients recipe={recipe} onBack={() => setShowIngredients(false)} /> // Pass the onBack function as a prop
+        <HandTutorial recipe={recipe} onBack={() => setShowHandTutorial(false)} />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default RecipeInfo;
+export default RecipeInfo
