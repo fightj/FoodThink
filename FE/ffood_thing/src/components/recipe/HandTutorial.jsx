@@ -14,8 +14,8 @@ const HandTutorial = ({ recipe, onBack }) => {
   }
 
   return (
-    <div className="tutorial-container">
-      <div className="tutorial-left">
+    <div className="hand-tutorial-container">
+      <div className="hand-tutorial-left" onClick={onBack}>
         <div className="handmotion-div">
           <img src="/images/motion.gif" alt="Motion" className="handmotion-gif" />
         </div>
@@ -24,14 +24,20 @@ const HandTutorial = ({ recipe, onBack }) => {
           <p>이전 화면 = 왼쪽에서 오른쪽으로 슬라이드</p>
         </div>
       </div>
-      <div className="tutorial-right">
+      <div className="hand-tutorial-right" onClick={() => setShowVoiceTutorial(true)}>
         <div className="speaking-div">
           <img src="/images/talking.gif" alt="Talking" className="speaking-gif" />
         </div>
         <div className="speaking-info-div">{/* Add any additional tutorial info here */}</div>
+        <button className="hidden-button1" onClick={onBack}>
+          이전
+        </button>{" "}
+        {/* Back button */}
+        <button className="hidden-button1" onClick={() => setShowVoiceTutorial(true)}>
+          다음
+        </button>{" "}
+        {/* Next button */}
       </div>
-      <button onClick={onBack}>이전</button> {/* Back button */}
-      <button onClick={() => setShowVoiceTutorial(true)}>다음</button> {/* Next button */}
     </div>
   )
 }
