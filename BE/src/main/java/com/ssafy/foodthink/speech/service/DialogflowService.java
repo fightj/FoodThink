@@ -96,7 +96,7 @@ public class DialogflowService {
                 }
 
                 responseMap.put("data", Map.of("minutes", minutes, "seconds", seconds));
-            } else if(List.of("현대단계읽기", "다음단계넘어가기", "이전단계돌아가기", "타이머중지", "종료하기").contains(intentName)) {
+            } else if(List.of("현대단계읽기", "다음단계넘어가기", "이전단계돌아가기", "타이머중지", "종료하기", "재료닫기", "재료보기").contains(intentName)) {
                 responseMap.put("data", Map.of());
             } else {
                 //정확도가 낮거나 intent가 비어있을 때 재시도 요청 반환
