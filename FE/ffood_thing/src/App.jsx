@@ -36,7 +36,7 @@ const fetchUserInfo = async () => {
     const accessToken = localStorage.getItem("accessToken")
     if (!accessToken) throw new Error("엑세스 토큰이 없습니다.")
 
-    const response = await axios.get("http://localhost:8080/api/users/read", {
+    const response = await axios.get("https://i12e107.p.ssafy.io/api/users/read/my-info", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -122,10 +122,10 @@ const MainApp = () => {
       try {
         // Parse accessToken from URL parameters
         const accessToken = localStorage.getItem("accessToken");
-        if (accessToken) {
-          console.log("Access Token:", accessToken);
-          setTokenLoaded(true);
-        }
+        // if (accessToken) {
+        //   console.log("Access Token:", accessToken);
+        //   setTokenLoaded(true);
+        // }
 
         // Initialize userInfo and fetch user details
         if (accessToken) {

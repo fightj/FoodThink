@@ -88,7 +88,11 @@ public class AuthController {
             log.info("==회원 확인 및 처리:{}==",user.getSocialId());
 
             // JWT 생성
-            String accessToken = jwtUtil.createAccessToken(user.getUserId(), user.getRole(), 60 * 60 * 1000L);
+            String accessToken = jwtUtil.createAccessToken(user.getUserId(), user.getRole(), 24 * 60 * 60 * 1000L);
+            String refreshToken = jwtUtil.createRefreshToken(user.getEmail(), 7 * 24 * 60 * 60 * 1000L);
+
+            user.setRefreshToken(refreshToken);
+            userRepository.save(user);
 
             // 액세스 토큰은 헤더로 이메일,신규사용자 여부는 body로
             HttpHeaders headers = new HttpHeaders();
@@ -96,6 +100,10 @@ public class AuthController {
 
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("email", user.getEmail());
+            responseBody.put("nickname", user.getNickname());
+            responseBody.put("userId", user.getUserId());
+            responseBody.put("image",user.getImage());
+            responseBody.put("season",user.getSeason());
             responseBody.put("isNewUser", isNewUser);
 
             log.info("==로그인 성공!!!!!==");
@@ -203,7 +211,7 @@ public class AuthController {
             }
 
             // 새로운 액세스 토큰 생성
-            String newAccessToken = jwtUtil.createAccessToken(user.getUserId(), user.getRole(), 60 * 60 * 1000L); // 1시간
+            String newAccessToken = jwtUtil.createAccessToken(user.getUserId(), user.getRole(), 24 * 60 * 60 * 1000L);
 
             log.info("=== 액세스 토큰 재발급 성공 ===");
 

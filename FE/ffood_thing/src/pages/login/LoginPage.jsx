@@ -5,7 +5,7 @@ function LoginPage() {
   const handleKakaoClick = () => {
     const kakaoClientId = import.meta.env.VITE_KAKAO_CLIENT_ID
     console.log("Kakao login button clicked")
-    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=&redirect_uri=http://localhost:5173/oauth/callback/kakao`
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=http://localhost:5173/oauth/callback/kakao`
   }
 
   return (

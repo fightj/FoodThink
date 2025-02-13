@@ -18,6 +18,8 @@ function Sidebar({ isOpen, toggleSidebar }) {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     sessionStorage.removeItem("user");
+    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("isNewUser");
     setUser(null);
     window.location.reload(); // 로그아웃 후 새로고침 (새로운 상태 반영)
   };

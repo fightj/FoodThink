@@ -29,7 +29,7 @@ function KakaoCallback() {
                 console.log("인가코드 전달 중:", code);
 
                 const response = await axios.post(
-                    "http://localhost:8080/api/auth/kakao",
+                    "https://i12e107.p.ssafy.io/api/auth/kakao",
                     qs.stringify({ code }),
                     {
                         headers: {
@@ -42,11 +42,24 @@ function KakaoCallback() {
 
                 if (response.status >= 200 && response.status < 300) {
                     const accessToken = response.headers["authorization"]?.split(" ")[1];
-                    const { email, isNewUser } = response.data;
+                    const { email, nickname, userId, image, season, isNewUser  } = response.data;
 
                     if (accessToken) localStorage.setItem("accessToken", accessToken);
+                    //if (email) sessionStorage.setItem("email", email);
+                    //if (isNewUser !== undefined) sessionStorage.setItem("isNewUser", isNewUser);
+
+                    const user = {
+                        email: email,
+                        nickname: nickname,
+                        userId: userId,
+                        image: image,
+                        season:  season
+                    }
                     if (email) sessionStorage.setItem("email", email);
                     if (isNewUser !== undefined) sessionStorage.setItem("isNewUser", isNewUser);
+
+                    sessionStorage.setItem("user",JSON.stringify(user));
+                    
 
                     console.log("로그인 성공:", { accessToken, email, isNewUser });
                     localStorage.removeItem("kakaoAuthProcessed");
