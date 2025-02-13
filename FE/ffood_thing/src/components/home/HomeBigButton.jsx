@@ -9,7 +9,8 @@ const HomeBigButton = () => {
   return (
     <div className="parent-container">
       <div className="card-div">
-        <div className="container px-4 py-5 home-container" id="custom-cards">
+        {/* (02.13) home-container에서 px-5 클래스 제거*/}
+        <div className="container px-4 home-container" id="custom-cards">
           <div className="row">
             <div className="col">
               {/* 왼쪽 열 */}
