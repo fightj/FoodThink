@@ -19,59 +19,71 @@ const questionsData = [
   { question: "어떤 조리 방법을 원하시나요?", options: ["볶음", "튀김", "찜"] },
   { question: "누구와 함께 식사를 하나요?", options: ["혼자먹어요", "친구와 함께", "가족과 함께"] },
   { question: "어떤 식감을 원하시나요?", options: ["부드러운", "쫄깃한", "바삭한"] },
-  // { question: "예산 범위는 어느 정도인가요?", options: ["저렴한 재료", "보통 가격", "고급 재료"] }, //애매...
   { question: "기분에 따라 어떤 요리를 드시고 싶나요?", options: ["기운 나는 음식", "가벼운 음식", "든든한 음식"] },
   { question: "어떤 국물을 선호하시나요?", options: ["맑은 국물", "걸쭉한 국물", "국물 없이"] },
-
 ];
 
 function AiRecommendPage() {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext); // UserContext에서 user 가져오기
-  const [questions, setQuestions] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const { user } = useContext(UserContext);
+  const [availableQuestions, setAvailableQuestions] = useState([...questionsData]);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState([]);
 
-  // localStorage에서 accessToken 가져오기
   const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    const shuffled = [...questionsData].sort(() => 0.5 - Math.random()).slice(0, 5);
-    setQuestions(shuffled);
+    pickNextQuestion();
   }, []);
 
-  useEffect(() => {
-    console.log("🔥 UserContext에서 가져온 user:", user);
-    console.log("📌 LocalStorage에서 가져온 token:", token);
-  }, [user, token]);
+  // 새로운 질문 선택 (중복 방지)
+  const pickNextQuestion = () => {
+    if (availableQuestions.length === 0) {
+      sendToBackend(answers);
+      return;
+    }
 
+    const nextIndex = Math.floor(Math.random() * availableQuestions.length);
+    setCurrentQuestion(availableQuestions[nextIndex]);
+    setAvailableQuestions(prev => prev.filter((_, i) => i !== nextIndex)); // 선택한 질문 제거
+  };
+
+  // 답변 선택
   const handleChoice = (answer) => {
-    console.log(`선택한 답변: ${answer}`);
-
-    setAnswers((prev) => {
+    setAnswers(prev => {
       const updatedAnswers = [...prev, answer];
-      console.log("📌 현재까지의 답변 리스트:", updatedAnswers);
-
-      if (updatedAnswers.length === 5) {
+      if (updatedAnswers.length === 5 || availableQuestions.length === 0) {
         sendToBackend(updatedAnswers);
       } else {
-        setCurrentIndex((prevIndex) => prevIndex + 1);
+        pickNextQuestion();
       }
       return updatedAnswers;
     });
   };
 
+  // 질문 건너뛰기 (답변 없이 다음 질문)
+  const handleSkipQuestion = () => {
+    if (availableQuestions.length > 0) {
+      pickNextQuestion();
+    } else {
+      sendToBackend(answers);
+    }
+  };
+
+  // "엔드 버튼" - 현재까지의 답변으로 API 요청
+  const handleEndSurvey = () => {
+    sendToBackend(answers);
+  };
+
+  // API 요청
   const sendToBackend = async (userAnswers) => {
     setLoading(true);
-  
+
     const API_URL = "https://i12e107.p.ssafy.io/api/recommend/final-recommend";
-    const requestData = { answers: userAnswers }; // JSON 배열 그대로 유지
-  
-    console.log("📌 API 요청 시작:", JSON.stringify(requestData, null, 2));
-    console.log("📌 사용 중인 토큰:", token);
-  
+    const requestData = { answers: userAnswers };
+
     try {
       const response = await fetch(API_URL, {
         method: "POST",
@@ -79,38 +91,28 @@ function AiRecommendPage() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify(requestData), // JSON 배열 그대로 변환하여 전송
+        body: JSON.stringify(requestData),
       });
-  
-      console.log("📌 서버 응답 상태 코드:", response.status);
-  
+
       const responseText = await response.text();
-      console.log("📌 서버 응답 원문:", responseText);
-  
       let data;
       try {
         data = JSON.parse(responseText);
       } catch (error) {
-        console.error("❌ JSON 파싱 오류. 응답이 JSON이 아닐 가능성 있음:", responseText);
         throw new Error("서버에서 올바른 JSON을 반환하지 않았습니다.");
       }
-  
-      console.log("📌 백엔드 응답 데이터 (JSON):", data);
-  
+
       if (!Array.isArray(data)) {
-        console.error("❌ 추천 데이터가 배열 형식이 아닙니다. 서버 응답:", data);
         throw new Error("추천된 레시피가 없습니다.");
       }
-  
+
       setRecipes(data);
     } catch (error) {
-      console.error("❌ 추천 요청 실패:", error);
       alert("추천된 레시피를 불러오지 못했습니다.");
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="base-div">
@@ -120,17 +122,27 @@ function AiRecommendPage() {
         <div className="card-div">
           <div className="ai-recommend-container">
             <div className="speech-bubble">
-              {recipes.length > 0 ? "🍽 추천된 레시피 🍽" : questions[currentIndex]?.question}
+              {recipes.length > 0 ? "🍽 추천된 레시피 🍽" : currentQuestion?.question}
             </div>
             <div className="ai-content">
               {recipes.length === 0 ? (
-                questions[currentIndex]?.options.map((option, index) => (
-                  <div className="choice-card" key={index}>
-                    <button className="choice-btn" onClick={() => handleChoice(option)}>
-                      {option}
+                <>
+                  {currentQuestion?.options.map((option, index) => (
+                    <div className="choice-card" key={index}>
+                      <button className="choice-btn" onClick={() => handleChoice(option)}>
+                        {option}
+                      </button>
+                    </div>
+                  ))}
+                  <div className="button-container">
+                    <button className="skip-btn" onClick={handleSkipQuestion}>
+                      ⏩ 다음 질문 받기
+                    </button>
+                    <button className="end-btn" onClick={handleEndSurvey}>
+                      🚀 엔드 버튼
                     </button>
                   </div>
-                ))
+                </>
               ) : (
                 <div className="recipe-list">
                   {recipes.map((recipe) => (
