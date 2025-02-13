@@ -279,8 +279,18 @@ const RecipeDetailPage = () => {
                 <button
                   className="start-cooking-btn"
                   onClick={() => {
-                    console.log("Navigating with recipe:", recipe)
-                    navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe })
+                    Swal.fire({
+                      title: "요리 하러 가보실까요?",
+                      icon: "question",
+                      showCancelButton: true,
+                      confirmButtonText: "네",
+                      cancelButtonText: "아니요",
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        console.log("Navigating with recipe:", recipe)
+                        navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe })
+                      }
+                    })
                   }}
                 >
                   요리 시작
