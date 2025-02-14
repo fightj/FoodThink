@@ -61,9 +61,9 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
 
     const sendAudioToServer = (audioBlob) => {
       const formData = new FormData()
+
       formData.append("file", audioBlob, "음성.wav") // 파일 이름을 지정하여 업로드
       formData.append("recipeId", recipeId) // 현재 레시피 아이디 전송
-
       fetch("https://i12e107.p.ssafy.io/api/speech/process", {
         method: "POST",
         body: formData,
