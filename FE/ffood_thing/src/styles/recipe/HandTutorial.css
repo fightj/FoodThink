@@ -3,7 +3,7 @@
   flex-direction: row; /* Align children horizontally */
   width: 100%;
   height: 100%;
-  background-image: url("/images/조리과정_백그라운드이미지.png");
+
   justify-content: center; /* Center children horizontally */
   align-items: center; /* Center children vertically */
   background-size: cover; /* Ensure the image covers the entire container */
