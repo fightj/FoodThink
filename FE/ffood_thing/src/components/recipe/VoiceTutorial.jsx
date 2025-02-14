@@ -11,13 +11,15 @@ const VoiceTutorial = ({ onPrevPage, onNextPage, onSkip }) => {
           {/* 추가적인 음성 인식 정보 */}
         </div>
       </div>
-      <div className="voice-tutorial-right">
-        <div className="voice-tutorial-gif">
-          <img src="/images/voice.gif" alt="Voice" className="voice-gif" />
+      <div className="voice-tutorial-right" onClick={onNextPage}>
+        <div className="speaking-div">
+          <img src="/images/talking.gif" alt="Talking" className="speaking-gif" />
         </div>
       </div>
       <button onClick={onNextPage}>다음</button>
-      <button onClick={onSkip}>스킵하기</button>
+      <button className="tuto-skip-button" onClick={onSkip}>
+        스킵하기
+      </button>
       <button className="hidden-button1" onClick={onPrevPage}>
         이전
       </button>
