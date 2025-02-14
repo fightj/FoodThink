@@ -1,20 +1,14 @@
+/* FeedWrite.jsx의 이전으로에도 쓰임 */
 .back-button1 {
   display: flex;
   align-items: center;
-  font-size: 2rem;
   background: none;
   border: none;
-  cursor: pointer;
-  margin-bottom: 20px;
-  color: #000;
-  border-radius: 8px;
-  margin-left: 40px;
 }
 
-.icon {
-  width: 50px;
-  height: 50px;
-  margin-right: 15px;
+.icon,
+.back-button-icon {
+  width: 3rem;
 }
 
 .user-info-feed {

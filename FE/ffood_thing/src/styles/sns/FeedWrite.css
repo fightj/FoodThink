@@ -1,16 +1,13 @@
-.div-80 {
-  width: 80%;
-}
+
 form {
-  width: 80%;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .preview-container {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 0.5%;
 }
 
 .preview-image {
@@ -68,29 +65,29 @@ form {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-/* Existing styles */
 
-.recipe-section {
-  margin-top: 20px;
+/* 참고한 레시피 */
+.reference-recipe {
+  margin-top: 25px;
 }
 
 .button-container {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
 }
 
 /* Add other styles as needed */
-.card-div-write {
+/* .card-div-write {
   background-color: rgb(255, 255, 255);
-  width: 95%; /* 수평 공간 전체를 차지 */
-  padding: 20px 0; /* 상하 패딩을 늘려서 높이를 증가 */
-  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
-  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  border-radius: 50px; /* 아래 두 꼭지점만 둥글게 설정 */
-  height: auto; /* 높이를 패딩에 따라 유동적으로 설정 */
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); /* 상단 그림자 더 강조 */
-}
+  width: 95%;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center; 
+  border-radius: 50px; 
+  height: auto;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3);
+} */
+
 .recipe-badge {
   position: relative;
   display: inline-block;
