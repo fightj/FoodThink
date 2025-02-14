@@ -9,23 +9,27 @@ const RecipeInfo = ({ recipe, onNextPage }) => {
 
   return (
     <div className="recipeInfo-container">
-      <div className="recipeInfo-left info-left">
-        <p>Recipe</p>
-        <img src={recipe.image} alt="Recipe" className="recipe-image" />
-      </div>
-      <div className="recipeInfo-right info-right" onClick={onNextPage}>
+      <header>
         <div className="recipe-details">
           <h1>{recipe.recipeTitle}</h1>
         </div>
-        <div className="recipe-ingredients">
-          <p>재료</p>
-          <ul className="ingredients-list">
-            {recipe.ingredients.map((ingredient, index) => (
-              <li key={index} className="ingredient-item">
-                {ingredient.ingreName}: {ingredient.amount}
-              </li>
-            ))}
-          </ul>
+      </header>
+      <div className="recipe-left-right">
+        <div className="recipeInfo-left info-left">
+          <p>Recipe</p>
+          <img src={recipe.image} alt="Recipe" className="recipe-image" />
+        </div>
+        <div className="recipeInfo-right info-right" onClick={onNextPage}>
+          <div className="recipe-ingredients">
+            <p>재료</p>
+            <ul className="ingredients-list">
+              {recipe.ingredients.map((ingredient, index) => (
+                <li key={index} className="ingredient-item">
+                  {ingredient.ingreName}: {ingredient.amount}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <button onClick={onNextPage} className="hidden-button1">
