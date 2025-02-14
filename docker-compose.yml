@@ -27,9 +27,9 @@ services:
       - TZ=Asia/Seoul
     volumes:
       - /etc/localtime:/etc/localtime:ro
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+#    depends_on:
+#      elasticsearch:
+#        condition: service_healthy
     networks:
       - backend_network
       - frontend_network
