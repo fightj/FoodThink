@@ -205,7 +205,6 @@ function FeedWrite() {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          
           try {
             if (!accessToken) throw new Error("Access token is missing")
 

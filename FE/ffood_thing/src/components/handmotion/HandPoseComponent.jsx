@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react"
 import { Holistic } from "@mediapipe/holistic"
 import PropTypes from "prop-types"
 import { Camera } from "@mediapipe/camera_utils"
+import { useNavigate } from "react-router-dom"
 import "../../styles/recipe/RecipeComponent.css"
 import VoiceRecognitionComponent from "../voice/VoiceRecognitionComponent"
 import axios from "axios"
@@ -21,19 +22,36 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
   const [timer, setTimer] = useState(0)
   const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [isAlarmPlaying, setIsAlarmPlaying] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isTimerModalOpen, setIsTimerModalOpen] = useState(false)
+  const [minutes, setMinutes] = useState(0)
+  const [seconds, setSeconds] = useState(0)
   const alarmAudioRef = useRef(new Audio("/sound/Alarm.wav"))
+  const workerRef = useRef(null)
 
   const [currentProcess, setCurrentProcess] = useState({})
   const [isDataFetched, setIsDataFetched] = useState(false)
+  const [spokenText, setSpokenText] = useState("")
 
   const token = localStorage.getItem("accessToken")
   const recipeId = recipe.recipeId
   const totalPages = recipe.processes.length
+
+  const navigate = useNavigate()
+
   const fetchProcessData = async (recipeId, page) => {
     try {
       const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/processes/${recipeId}/${page}`)
       const data = response.data
-      setCurrentProcess(data.processes[0])
+      const process = data.processes[0]
+      setCurrentProcess(process)
+
+      // minutes와 seconds가 0이 아닐 경우 타이머 설정 (자동 시작 X)
+      if (process.minutes !== 0 || process.seconds !== 0) {
+        const totalSeconds = process.minutes * 60 + process.seconds
+        setTimer(totalSeconds)
+      }
+
       if (!isDataFetched) {
         setIsDataFetched(true)
       }
@@ -45,6 +63,32 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
   useEffect(() => {
     fetchProcessData(recipeId, currentStep)
   }, [recipeId, currentStep])
+
+  useEffect(() => {
+    workerRef.current = new Worker(new URL("./timerWorker.js", import.meta.url))
+    workerRef.current.onmessage = (e) => {
+      if (e.data.type === "updateTimer") {
+        setTimer(e.data.timer)
+      } else if (e.data.type === "alarm") {
+        playAlarm()
+      } else if (e.data.type === "timerStopped") {
+        setIsTimerRunning(false)
+      }
+    }
+
+    return () => workerRef.current.terminate()
+  }, [])
+
+  const startTimer = () => {
+    workerRef.current.postMessage({ type: "startTimer", timer })
+    setIsTimerRunning(true)
+  }
+
+  const stopTimer = () => {
+    workerRef.current.postMessage({ type: "stopTimer" })
+    setTimer(0)
+    setIsTimerRunning(false)
+  }
 
   const playSound = (url) => {
     const audio = new Audio(url)
@@ -58,30 +102,11 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
   }
 
   const stopAlarm = () => {
+    workerRef.current.postMessage({ type: "stopTimer" })
     alarmAudioRef.current.pause()
     alarmAudioRef.current.currentTime = 0
     setIsAlarmPlaying(false)
   }
-
-  useEffect(() => {
-    let timerInterval = null
-    if (isTimerRunning) {
-      timerInterval = setInterval(() => {
-        setTimer((prevTimer) => {
-          if (prevTimer <= 3 && prevTimer > 1) {
-            console.log(prevTimer)
-          }
-          if (prevTimer === 1 && !isAlarmPlaying) {
-            playAlarm()
-          }
-          return prevTimer > 0 ? prevTimer - 1 : 0
-        })
-      }, 1000)
-    } else {
-      clearInterval(timerInterval)
-    }
-    return () => clearInterval(timerInterval)
-  }, [isTimerRunning, isAlarmPlaying])
 
   const changePage = (direction) => {
     if (direction === "다음 페이지") {
@@ -110,22 +135,25 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
     synth.speak(utterance)
   }
 
-  const handleResponse = (data) => {
+  const handleResponse = async (data) => {
     const { intent, data: responseData } = data
 
     if (!intent) {
       const errorMessage = responseData.message
       console.log("에러 메시지:", errorMessage)
       speakText(errorMessage)
+      setSpokenText(errorMessage)
+      setTimeout(() => setSpokenText(""), 3000) // 3초 후에 텍스트 지우기
       return
     }
 
     switch (intent) {
       case "현재단계읽기":
-        console.log(currentProcess.processExplain)
-        const currentText = `${currentProcess.processOrder}. ${currentProcess.processExplain}`
+        const currentText = recipe.processes[currentStep + 1].processExplain
         console.log("읽을 텍스트:", currentText)
         speakText(currentText)
+        setSpokenText(currentText)
+        setTimeout(() => setSpokenText(""), 3000) // 3초 후에 텍스트 지우기
         break
       case "이전단계돌아가기":
         if (currentStep > 0) {
@@ -145,32 +173,45 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
         break
       case "종료하기":
         console.log("종료합니다.")
-        onClose()
+        navigate(`/recipes/${recipeId}`)
         break
       case "타이머중지":
-        setIsTimerRunning(false)
-        setTimer(0)
-        stopAlarm()
+        stopTimer()
         console.log("타이머 중지 및 초기화")
         break
       case "타이머설정":
         const { seconds, minutes } = responseData
         const totalSeconds = minutes * 60 + seconds
         setTimer(totalSeconds)
-        setIsTimerRunning(true)
+        setIsTimerRunning(false)
         console.log(`타이머 설정: ${minutes}분 ${seconds}초`)
+        break
+      case "타이머시작":
+        if (timer > 0) {
+          startTimer()
+        }
         break
       case "대체재료추천1":
         const alternatives1 = responseData.alternativeIngredients.join(", ")
         const recommendation1 = `다음 재료를 추천합니다: ${alternatives1}`
         console.log(recommendation1)
         speakText(recommendation1)
+        setSpokenText(recommendation1)
+        setTimeout(() => setSpokenText(""), 3000) // 3초 후에 텍스트 지우기
         break
       case "대체재료추천2":
         const alternatives2 = responseData.alternativeIngredients.join(", ")
         const recommendation2 = `다음 재료를 추천합니다: ${alternatives2}. ${responseData.message}`
         console.log(recommendation2)
         speakText(recommendation2)
+        setSpokenText(recommendation2)
+        setTimeout(() => setSpokenText(""), 3000) // 3초 후에 텍스트 지우기
+        break
+      case "재료보기":
+        setIsSidebarOpen(true)
+        break
+      case "재료닫기":
+        setIsSidebarOpen(false)
         break
       default:
         console.log("알 수 없는 intent:", intent)
@@ -212,6 +253,17 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
 
   const handleTouchEnd = () => {
     swipeTrackingRef.current.isTracking = false
+  }
+
+  const handleTimerIconClick = () => {
+    setIsTimerModalOpen(true)
+  }
+
+  const handleSetTimer = () => {
+    const totalSeconds = minutes * 60 + seconds
+    setTimer(totalSeconds)
+    setIsTimerRunning(false)
+    setIsTimerModalOpen(false)
   }
 
   useEffect(() => {
@@ -306,25 +358,57 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
     <div className="handpose-container3" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
       <video ref={videoRef} style={{ display: "none" }} autoPlay playsInline />
       <canvas ref={canvasRef} className="handpose-canvas" />
+
       <div className="card-div7">
         <div className="steps3">
           <div className="process-item3">
             <h2 className="steps-h23">
-              <p>{currentStep}</p>
+              {spokenText && <div className="spoken-text">{spokenText}</div>}
+              {isTimerModalOpen && (
+                <div className="timer-modal">
+                  <h2>타이머 설정</h2>
+                  <label>
+                    분:
+                    <input type="number" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} />
+                  </label>
+                  <label>
+                    초:
+                    <input type="number" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} />
+                  </label>
+                  <button onClick={handleSetTimer}>설정</button>
+                  <button onClick={() => setIsTimerModalOpen(false)}>취소</button>
+                </div>
+              )}
               {currentProcess.processOrder}. {currentProcess.processExplain}
             </h2>
           </div>
           <div className="process-image-container3">
             {currentProcess.images &&
               currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
+            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>재료보기</button>
+            {isSidebarOpen && (
+              <div className="sidebar">
+                <h2>재료 정보</h2>
+                <ul>
+                  {recipe.ingredients.map((ingredient, index) => (
+                    <li key={index}>
+                      {ingredient.ingreName}: {ingredient.amount}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           <hr />
         </div>
       </div>
       {swipeMessage && <div className="swipe-message">{swipeMessage}</div>}
       <div className="timer3">
-        <img className="timer-image3" src="/images/timerequired.png" alt="Time Required" />
+        <img className="timer-image3" src="/images/timerequired.png" alt="Time Required" onClick={handleTimerIconClick} />
         {Math.floor(timer / 60)}분 {timer % 60}초
+        <button onClick={isTimerRunning ? stopTimer : startTimer} disabled={timer === 0}>
+          {isTimerRunning ? "타이머 정지" : "타이머 시작"}
+        </button>
       </div>
       {currentStep === totalPages - 1 && <div className="end-message">마지막 페이지 입니다</div>}
       <VoiceRecognitionComponent onRecognize={handleResponse} onStopAlarm={stopAlarm} recipeId={recipeId} token={token} />
@@ -337,7 +421,7 @@ HandPoseComponent.propTypes = {
   onNextStep: PropTypes.func.isRequired,
   onPrevStep: PropTypes.func.isRequired,
   recipe: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired, // Add onClose prop validation
+  onClose: PropTypes.func.isRequired,
 }
 
 export default HandPoseComponent

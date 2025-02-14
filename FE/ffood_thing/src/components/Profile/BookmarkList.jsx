@@ -23,26 +23,7 @@ const BookmarkList = () => {
 
         const bookmarkData = await response.json();
         console.log("📌 북마크된 레시피 ID 목록:", bookmarkData);
-
-        // 2️⃣ 각 레시피의 상세 정보 불러오기
-        const recipeDetails = await Promise.all(
-          bookmarkData.map(async (bookmark) => {
-            const recipeResponse = await fetch(
-              `https://i12e107.p.ssafy.io/api/recipes/read/detail/${bookmark.recipeId}`,
-              {
-                method: "GET",
-                headers: { Authorization: `Bearer ${token}` },
-              }
-            );
-
-            if (!recipeResponse.ok) throw new Error(`레시피 상세 불러오기 오류: ${recipeResponse.status}`);
-
-            return recipeResponse.json();
-          })
-        );
-
-        console.log("🍽️ 상세한 레시피 데이터:", recipeDetails);
-        setBookmarks(recipeDetails);
+        setBookmarks(bookmarkData);
       } catch (error) {
         console.error("❌ 북마크된 레시피 데이터 불러오기 실패:", error);
       } finally {
@@ -74,13 +55,13 @@ const BookmarkList = () => {
           <Link
             to={`/recipes/${recipe.recipeId}`} // API 응답 필드에 맞게 수정
             key={recipe.recipeId}
-            className="recipe-card"
+            className="mypage-recipe-card"
             style={{ textDecoration: "none", color: "inherit" }} // 링크 스타일 유지
           >
-            <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />
+            <img src={recipe.image} alt={recipe.recipeTitle} className="mypage-recipe-image" />
             <p className="recipe-title1">{recipe.recipeTitle}</p>
             <div className="recipe-meta">
-              👁 {recipe.hits} | ⭐ {recipe.bookmarkCount}
+              👁 {recipe.hits} | ⭐ {recipe.bookmarks}
             </div>
           </Link>
         ))}
