@@ -29,9 +29,13 @@ import PageSlide from "./components/base/PageSlide"
 import Sidebar from "./components/base/Sidebar"
 import { UserProvider, UserContext } from "./contexts/UserContext" // 올바르게 import
 
-import KakaoCallback from "./pages/login/KakaoCallback";
+import KakaoCallback from "./pages/login/KakaoCallback"
 
+<<<<<<< HEAD
+// // Function to fetch user info
+=======
 // Function to fetch user info
+>>>>>>> 3cece737c66eaef329a88bcbaf60a5e8e0192bcb
 // const fetchUserInfo = async () => {
 //   try {
 //     const accessToken = localStorage.getItem("accessToken")
@@ -43,7 +47,11 @@ import KakaoCallback from "./pages/login/KakaoCallback";
 //       },
 //     })
 
+<<<<<<< HEAD
+//     // console.log("User Info:", response.data)
+=======
 //     console.log("User Info:", response.data)
+>>>>>>> 3cece737c66eaef329a88bcbaf60a5e8e0192bcb
 //     return response.data
 //   } catch (error) {
 //     console.error("Error fetching user info:", error.response?.data || error.message)
@@ -68,15 +76,19 @@ const App = () => {
   )
 }
 const MainApp = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { user, setUser } = useContext(UserContext);
-  const [tokenLoaded, setTokenLoaded] = useState(false); // UserContext를 올바르게 사용
+  const [isOpen, setIsOpen] = useState(false)
+  const { user, setUser } = useContext(UserContext)
+  const [tokenLoaded, setTokenLoaded] = useState(false) // UserContext를 올바르게 사용
 
   // useEffect(() => {
   //   const initializeApp = async () => {
   //     try {
   //       // Parse accessToken from URL parameters
+<<<<<<< HEAD
+  //       const accessToken = localStorage.getItem("accessToken")
+=======
   //       const accessToken = localStorage.getItem("accessToken");
+>>>>>>> 3cece737c66eaef329a88bcbaf60a5e8e0192bcb
   //       // if (accessToken) {
   //       //   console.log("Access Token:", accessToken); // 콘솔에 accessToken 출력
   //       //   localStorage.setItem("accessToken", accessToken)
@@ -86,6 +98,7 @@ const MainApp = () => {
   //       // Initialize userInfo and fetch user details
   //       if (accessToken) {
   //         try {
+
   //           //const userInfo = await fetchUserInfo();
   //           //setUser(userInfo);
   //           //sessionStorage.setItem("user", JSON.stringify(userInfo));
@@ -102,7 +115,8 @@ const MainApp = () => {
   //   initializeApp();
   // }, [setUser]);
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
+
+  const toggleSidebar = () => setIsOpen(!isOpen)
 
   return (
     <>
@@ -144,7 +158,6 @@ const AnimatedRoutes = ({ userInfo }) => {
             </PageSlide>
           }
         />
-        
 
         <Route
           path="/sns"

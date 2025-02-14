@@ -12,12 +12,7 @@ function Home() {
   const navigate = useNavigate()
   const { user } = useContext(UserContext) // useContext를 사용하여 UserContext에서 user를 가져옴
 
-  useEffect(() => {
-    if (user) {
-      console.log("Current User Info in Home:", user) // 콘솔에 사용자 정보 출력
-      
-    }
-
+  // useEffect(() => {
   //   const urlParams = new URLSearchParams(location.search)
   //   const token = urlParams.get("accessToken")
   //   const isNewUser = urlParams.get("isNewUser")
@@ -36,16 +31,16 @@ function Home() {
   //   }
   // }, [location, navigate, accessToken, user])
 
-  const token = localStorage.getItem("accessToken");
-    if (token && !accessToken) {
-      setAccessToken(token);
-      console.log("Access Token:", token);
+  //   const token = localStorage.getItem("accessToken")
+  //   if (token && !accessToken) {
+  //     setAccessToken(token)
+  //     console.log("Access Token:", token)
 
-      // 사용자 정보를 로드하거나 다른 작업 수행
-      navigate("/", { replace: true });
-    }
-  }, [navigate, accessToken, user]);
-  
+  //     // 사용자 정보를 로드하거나 다른 작업 수행
+  //     navigate("/", { replace: true })
+  //   }
+  // }, [navigate, accessToken, user])
+
   return (
     <PageSlide>
       <div className="base-div">
