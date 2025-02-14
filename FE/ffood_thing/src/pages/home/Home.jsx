@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import SearchBar from "../../components/base/SearchBar"
+import SearchBarRecipeMain from "../../components/base/SearchBarRecipeMain"
 import HomeBigButton from "../../components/home/HomeBigButton"
 import PageSlide from "../../components/base/PageSlide"
 import { UserContext } from "../../contexts/UserContext"
@@ -43,7 +43,7 @@ function Home() {
   return (
     <PageSlide>
       <div className="base-div">
-        <SearchBar />
+        <SearchBarRecipeMain />
         <HomeBigButton />
       </div>
     </PageSlide>
