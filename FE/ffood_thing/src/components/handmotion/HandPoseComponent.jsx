@@ -24,21 +24,17 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
   const alarmAudioRef = useRef(new Audio("/sound/Alarm.wav"))
 
   const [currentProcess, setCurrentProcess] = useState({})
-  const [totalProcess, setTotalProcess] = useState(0)
-  const [totalPages, setTotalPages] = useState(0)
   const [isDataFetched, setIsDataFetched] = useState(false)
 
   const token = localStorage.getItem("accessToken")
   const recipeId = recipe.recipeId
-
+  const totalPages = recipe.processes.length
   const fetchProcessData = async (recipeId, page) => {
     try {
       const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/processes/${recipeId}/${page}`)
       const data = response.data
       setCurrentProcess(data.processes[0])
-      setTotalProcess(data.totalProcess)
       if (!isDataFetched) {
-        setTotalPages(data.totalPages)
         setIsDataFetched(true)
       }
     } catch (error) {
