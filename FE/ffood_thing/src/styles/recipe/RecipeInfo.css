@@ -1,38 +1,57 @@
 .recipeInfo-container {
+  background-image: url("/images/backgroundImage.png");
+  background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
   display: flex;
+  flex-direction: column; /* 상단의 헤더와 좌우 컨텐츠를 분리하기 위해 컬럼 방향으로 정렬 */
   width: 100%;
   height: 100vh; /* 전체 화면 높이로 설정 */
   overflow: hidden; /* 전체 컨테이너에서 넘치는 내용 숨김 */
 }
 
+header {
+  flex-shrink: 0; /* 헤더가 크기를 줄이지 않도록 설정 */
+
+  padding: 1%;
+  text-align: center;
+}
+
+.recipe-details {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.recipe-left-right {
+  display: flex;
+  flex: 1; /* 좌우 영역이 남은 공간을 채우도록 설정 */
+  width: 100%;
+  overflow: hidden; /* 전체 컨테이너에서 넘치는 내용 숨김 */
+}
+
 .recipeInfo-left {
   flex-basis: 55%;
-  flex-grow: 0;
-  flex-shrink: 0; /* div가 줄어들지 않도록 설정 */
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* 수직 정렬을 위해 컬럼 방향으로 설정 */
+  justify-content: flex-start; /* 상단 정렬 */
   align-items: center;
   font-size: 2em;
   overflow: hidden; /* div 내에서 넘치는 내용 숨김 */
+  padding-top: 20px; /* 위쪽 패딩 추가 */
+}
+
+.recipe-image {
+  width: 70%;
+  height: auto; /* 비율을 유지하며 높이를 조정 */
+  border-radius: 20%;
+  margin-top: -20px; /* 원하는 위치에 따라 값 조정 */
 }
 
 .recipeInfo-right {
   flex-basis: 45%;
-  flex-grow: 0;
-  flex-shrink: 0;
   display: flex;
   justify-content: flex-start; /* 상단 정렬 */
   align-items: flex-start; /* 좌측 정렬 */
   padding: 10px; /* 여유 공간을 추가 */
   position: relative; /* 자식 요소의 절대 위치를 위한 설정 */
-}
-
-.recipe-details {
-  flex: 1; /* 윗부분 차지 */
-}
-
-.recipe-ingredients {
-  flex: 1; /* 아랫부분 차지 */
 }
 
 .recipe-ingredients p {
@@ -48,9 +67,8 @@
   font-weight: bold;
 }
 
-.info-left {
-  background-image: url("/images/backgroundImage.png");
-  background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
+.info-left,
+.info-right {
   flex-direction: column;
   overflow: hidden; /* 오른쪽 div 내에서 넘치는 내용 숨김 */
 }
@@ -58,42 +76,24 @@
 .info-left p {
   font-family: "BlackswordFont";
   font-size: 5rem;
+  color: rgb(117, 17, 17);
   position: absolute;
   top: 1%; /* 원하는 위치에 따라 값 조정 */
   left: 1%; /* 원하는 위치에 따라 값 조정 */
 }
 
-.info-right {
-  background-image: url("/images/backgroundImage.png");
-  background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
-  flex-direction: column;
-  overflow: hidden; /* 오른쪽 div 내에서 넘치는 내용 숨김 */
-}
-
-.info-right > * {
-  margin-bottom: 10%;
-}
-
-.info-right h1 {
+.recipe-details h1 {
   font-size: 4rem;
   font-weight: bolder;
-  padding: 0 10px; /* 좌우 여백을 추가 */
+  padding-left: 22%; /* 좌우 여백을 추가 */
   box-sizing: border-box; /* 패딩을 포함한 전체 너비 계산 */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* 최대 두 줄까지 표시 */
+  -webkit-line-clamp: 1; /* 최대 한 줄까지만 표시 */
   -webkit-box-orient: vertical; /* 수직 박스 오리엔트 설정 */
-  margin: 0;
+  margin-top: 2%;
   text-align: left; /* 좌측 정렬 */
-  position: absolute;
-  top: 20%;
-  left: 0%;
-}
-
-.recipeInfo-detail h3 {
-  font-size: 1rem;
-  font-weight: bold;
 }
 
 .recipe-image {
