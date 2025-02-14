@@ -3,6 +3,7 @@ import { Holistic } from "@mediapipe/holistic"
 import PropTypes from "prop-types"
 import { Camera } from "@mediapipe/camera_utils"
 import { useNavigate } from "react-router-dom"
+import throttle from "lodash/throttle"
 import "../../styles/recipe/RecipeComponent.css"
 import VoiceRecognitionComponent from "../voice/VoiceRecognitionComponent"
 import axios from "axios"
@@ -278,7 +279,7 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
       minTrackingConfidence: 0.7,
     })
 
-    holistic.onResults(onResults)
+    holistic.onResults(throttle(onResults, 100)) // 10 FPS로 업데이트
 
     const camera = new Camera(videoRef.current, {
       onFrame: async () => {
