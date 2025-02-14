@@ -58,9 +58,31 @@ const RecipeSearchResultPage = () => {
     }
   }, [searchQuery])
 
-  const handleDetailClick = (id) => {
-    navigate(`/recipes/${id}`)
-  }
+  const handleDetailClick = async (id) => {
+    try {
+      // 토큰 가져오기 (예: 로컬 스토리지나 쿠키에서 가져옴)
+      const token = localStorage.getItem("accessToken"); // 토큰 저장 위치에 따라 수정 필요
+  
+      // API 호출을 통해 레시피 상세 정보를 가져옴
+      const headers = token
+        ? { Authorization: `Bearer ${token}` }
+        : {}; // 로그인 상태에 따라 헤더 추가
+  
+      const response = await axios.get(
+        `https://i12e107.p.ssafy.io/api/recipes/read/detail/${id}`,
+        { headers }
+      );
+  
+      const recipeDetail = response.data;
+  
+      // 레시피 상세 페이지로 이동하며 데이터 전달
+      navigate(`/recipes/${id}`, { state: { recipeDetail } });
+    } catch (error) {
+      console.error("Error fetching recipe detail", error);
+      alert("레시피 상세 정보를 불러오는 데 실패했습니다.");
+    }
+  };
+  
 
   const handleSearch = debounce((query) => {
     setSearchQuery(query) // 검색어 상태 업데이트
