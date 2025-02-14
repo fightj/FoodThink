@@ -1,6 +1,6 @@
 /* 레시피 컨테이너 */
 .recipe-container {
-  padding: 20px;
+  padding-top: 20px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -9,10 +9,12 @@
 /* 레시피 그리드 */
 .recipe-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* 기본 설정 */
-  gap: 35px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /*기본 설정*/
+  gap: 30px;
   width: 100%;
-  max-width: 1000px;
+  /* max-width: 1000px; */
+  margin: 0 auto; /* 가운데 정렬 */
+  place-items: center;
 }
 
 /* 태블릿에서 카드 크기 조절 */
@@ -24,12 +26,12 @@
 }
 
 /* 모바일에서 카드 크기 조절 */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .recipe-grid {
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      /* gap: 15px; */
+      gap: 15px;
   }
-}
+} */
 
 /* 레시피 카드 */
 .recipe-card {
@@ -45,6 +47,22 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+
+/* 레시피 카드 */
+.mypage-recipe-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: space-between;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
 .recipe-card:hover {
   transform: scale(1.08);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -54,6 +72,17 @@
 .recipe-image {
   width: 100%;
   min-width: 200px;
+  height: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+
+/* 이미지 스타일 */
+.mypage-recipe-image {
+  width: 100%;
+  min-width: 200px;
+  min-height: 230px;
   height: 160px;
   border-radius: 10px;
   object-fit: cover;
@@ -98,7 +127,7 @@
 
 /* 모바일에서 이미지 크기 조절 */
 @media (max-width: 480px) {
-  .recipe-image {
+  .mypage-recipe-image {
       height: 120px;
   }
 }
@@ -114,6 +143,18 @@
   width: 100%;
   max-width: 200px;
 }
+
+.mypage-recipe-title1 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 200px;
+}
+
 
 /* 모바일에서 제목 크기 줄이기 */
 @media (max-width: 480px) {
