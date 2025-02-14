@@ -7,7 +7,7 @@ const BackgroundEffect = ({ season, setSeason, setBackground, updateUserSeason, 
   const seasonStyles = {
     봄: { background: "#FFEBE9", effectClass: "falling-cherry-blossom", emoji: "🌸" },
     여름: { background: "#B3E5FC", effectClass: "falling-rain", emoji: "💧" },
-    가을: { background: "#FFD180", effectClass: "falling-leaves", emoji: "🍂" },
+    가을: { background: "#FFD180", effectClass: "falling-leaves", emoji: "🍁" },
     겨울: { background: "#E3F2FD", effectClass: "falling-snow", emoji: "❄" }
   };
 
@@ -65,7 +65,7 @@ const BackgroundEffect = ({ season, setSeason, setBackground, updateUserSeason, 
       <div className="season-buttons">
         <button className="spring-btn" onClick={() => changeSeason("봄")}>🌸</button>
         <button className="summer-btn" onClick={() => changeSeason("여름")}>🌞</button>
-        <button className="autumn-btn" onClick={() => changeSeason("가을")}>🍂</button>
+        <button className="autumn-btn" onClick={() => changeSeason("가을")}>🍁</button>
         <button className="winter-btn" onClick={() => changeSeason("겨울")}>❄</button>
       </div>
       )}

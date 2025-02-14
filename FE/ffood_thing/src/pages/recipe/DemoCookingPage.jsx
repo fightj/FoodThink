@@ -7,6 +7,8 @@ import HandTutorial from "../../components/recipe/HandTutorial"
 import VoiceTutorial from "../../components/recipe/VoiceTutorial"
 import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 
+import Welcome from "../../components/recipe/Welcome"
+
 const DemoCookingPage = () => {
   const location = useLocation()
   const recipe = location.state // passed recipe data
@@ -23,27 +25,30 @@ const DemoCookingPage = () => {
   }
 
   const handleSkip = () => {
-    setComponentPage(3) // 스킵할 경우 조리 시작 페이지로 이동
+    setComponentPage(4) // 스킵할 경우 조리 시작 페이지로 이동
   }
 
   let CurrentComponent
   switch (componentPage) {
     case 0:
-      CurrentComponent = RecipeInfo
+      CurrentComponent = Welcome
       break
     case 1:
-      CurrentComponent = HandTutorial
+      CurrentComponent = RecipeInfo
       break
     case 2:
-      CurrentComponent = VoiceTutorial
+      CurrentComponent = HandTutorial
       break
     case 3:
+      CurrentComponent = VoiceTutorial
+      break
+    case 4:
       CurrentComponent = HandPoseComponent
       break
     default:
       CurrentComponent = RecipeInfo
   }
-
+  console.log(componentPage)
   return (
     <div className="cooking-container">
       <CurrentComponent

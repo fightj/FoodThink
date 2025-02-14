@@ -29,25 +29,28 @@ import PageSlide from "./components/base/PageSlide"
 import Sidebar from "./components/base/Sidebar"
 import { UserProvider, UserContext } from "./contexts/UserContext" // 올바르게 import
 
+import KakaoCallback from "./pages/login/KakaoCallback"
+
 // Function to fetch user info
-const fetchUserInfo = async () => {
-  try {
-    const accessToken = localStorage.getItem("accessToken")
-    if (!accessToken) throw new Error("엑세스 토큰이 없습니다.")
+// const fetchUserInfo = async () => {
+//   try {
+//     const accessToken = localStorage.getItem("accessToken")
+//     if (!accessToken) throw new Error("엑세스 토큰이 없습니다.")
 
-    const response = await axios.get("https://i12e107.p.ssafy.io/api/users/read", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+//     const response = await axios.get("https://i12e107.p.ssafy.io/api/users/read/my-info", {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//     })
 
-    console.log("User Info:", response.data)
-    return response.data
-  } catch (error) {
-    console.error("Error fetching user info:", error.response?.data || error.message)
-    throw error
-  }
-}
+//     console.log("User Info:", response.data)
+
+//     return response.data
+//   } catch (error) {
+//     console.error("Error fetching user info:", error.response?.data || error.message)
+//     throw error
+//   }
+// }
 
 // Function to parse URL parameters
 const getUrlParameter = (name) => {
@@ -65,50 +68,43 @@ const App = () => {
     </UserProvider>
   )
 }
-
-// Separate MainApp component to use context properly
 const MainApp = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const { user, setUser } = useContext(UserContext) // UserContext를 올바르게 사용
-  const [tokenLoaded, setTokenLoaded] = useState(false)
+  const { user, setUser } = useContext(UserContext)
+  const [tokenLoaded, setTokenLoaded] = useState(false) // UserContext를 올바르게 사용
 
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        // Parse accessToken from URL parameters
-        const accessToken = getUrlParameter("accessToken")
-        if (accessToken) {
-          console.log("Access Token:", accessToken) // 콘솔에 accessToken 출력
-          localStorage.setItem("accessToken", accessToken)
-          setTokenLoaded(true)
-        }
+  // useEffect(() => {
+  //   const initializeApp = async () => {
+  //     try {
+  //       // Parse accessToken from URL parameters
 
-        // Optional: Parse isNewUser from URL parameters and log it
-        const isNewUser = getUrlParameter("isNewUser")
-        console.log("Is New User:", isNewUser) // 콘솔에 isNewUser 출력
-      } catch (error) {
-        console.error("Failed to load access token:", error)
-      }
-    }
+  //       const accessToken = localStorage.getItem("accessToken");
 
-    initializeApp()
-  }, [])
+  //       // if (accessToken) {
+  //       //   console.log("Access Token:", accessToken); // 콘솔에 accessToken 출력
+  //       //   localStorage.setItem("accessToken", accessToken)
+  //       //   setTokenLoaded(true);
+  //       // }
 
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        if (!tokenLoaded) return
-        const userInfo = await fetchUserInfo()
-        setUser(userInfo)
-        sessionStorage.setItem("user", JSON.stringify(userInfo))
-        console.log("Current User Info:", userInfo) // 콘솔에 유저 정보 출력
-      } catch (error) {
-        console.error("Failed to fetch user info:", error)
-      }
-    }
+  //       // Initialize userInfo and fetch user details
+  //       if (accessToken) {
+  //         try {
 
-    getUserInfo()
-  }, [tokenLoaded, setUser])
+  //           //const userInfo = await fetchUserInfo();
+  //           //setUser(userInfo);
+  //           //sessionStorage.setItem("user", JSON.stringify(userInfo));
+  //           //console.log("Initial User Info:", userInfo);
+  //         } catch (error) {
+  //           console.error("Failed to fetch user info:", error);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to load access token:", error);
+  //     }
+  //   };
+
+  //   initializeApp();
+  // }, [setUser]);
 
   const toggleSidebar = () => setIsOpen(!isOpen)
 
@@ -144,6 +140,15 @@ const AnimatedRoutes = ({ userInfo }) => {
             </PageSlide>
           }
         />
+        <Route
+          path="/oauth/callback/kakao"
+          element={
+            <PageSlide>
+              <KakaoCallback />
+            </PageSlide>
+          }
+        />
+
         <Route
           path="/sns"
           element={
