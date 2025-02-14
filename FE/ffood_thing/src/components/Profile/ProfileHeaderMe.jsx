@@ -210,11 +210,13 @@ const ProfileHeaderMe = () => {
       setUser((prevUser) => {
         const updatedUser = { ...prevUser, image: newImageUrl }
         sessionStorage.setItem("user", JSON.stringify(updatedUser)) // ✅ 세션 스토리지 업데이트
+        localStorage.setItem("profileImage", newImageUrl )
         return updatedUser
       })
 
       setIsImageEditing(false)
       setSelectedImage(null)
+      
 
       Swal.fire("성공!", "멋진 사진으로 변신했어요! 📸", "success")
     } catch (error) {
