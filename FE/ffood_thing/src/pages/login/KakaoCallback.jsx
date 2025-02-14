@@ -58,6 +58,7 @@ function KakaoCallback() {
                     if (email) sessionStorage.setItem("email", email);
                     if (nickname) localStorage.setItem("nickname", nickname);
                     if (isNewUser !== undefined) sessionStorage.setItem("isNewUser", isNewUser);
+                    if (image) localStorage.setItem("profileImage", image);
 
                     sessionStorage.setItem("user",JSON.stringify(user));
                     
