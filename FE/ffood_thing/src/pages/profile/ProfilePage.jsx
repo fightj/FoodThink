@@ -16,6 +16,7 @@ const ProfilePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("getTabFromURL()");
+  const isLoggedIn = localStorage.getItem("kakaoAuthProcessed") === "true";
   const isOwnProfile = user?.nickname === nickname; // ✅ 본인 프로필 여부 판별
   const [profileData, setProfileData] = useState(isOwnProfile ? user : null);
   const [loading, setLoading] = useState(!isOwnProfile); // 본인 프로필이면 API 호출 불필요
