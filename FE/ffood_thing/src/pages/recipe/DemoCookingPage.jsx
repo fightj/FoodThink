@@ -2,14 +2,11 @@ import { useState } from "react"
 import { useLocation } from "react-router-dom"
 import "../../styles/recipe/DemoCookingPage.css" // 스타일을 위한 CSS 파일을 임포트합니다.
 
-<<<<<<< HEAD
-=======
 import RecipeInfo from "../../components/recipe/RecipeInfo"
 import HandTutorial from "../../components/recipe/HandTutorial"
 import VoiceTutorial from "../../components/recipe/VoiceTutorial"
 import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 
->>>>>>> 97f45a57472a4daf9eede4c5ea47d91b7953d6e9
 import Welcome from "../../components/recipe/Welcome"
 
 const DemoCookingPage = () => {
@@ -54,9 +51,6 @@ const DemoCookingPage = () => {
   console.log(componentPage)
   return (
     <div className="cooking-container">
-<<<<<<< HEAD
-      <Welcome recipe={recipe} />
-=======
       <CurrentComponent
         recipe={recipe}
         onNextPage={handleNextPage} // 다음 컴포넌트 이동하기
@@ -67,7 +61,6 @@ const DemoCookingPage = () => {
         onNextStep={() => setCurrentStep((prevStep) => prevStep + 1)}
         onPrevStep={() => setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))}
       />
->>>>>>> 97f45a57472a4daf9eede4c5ea47d91b7953d6e9
     </div>
   )
 }
