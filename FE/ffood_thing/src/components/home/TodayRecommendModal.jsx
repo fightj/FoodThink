@@ -6,10 +6,23 @@ import { FaRedo } from "react-icons/fa";
 const API_URL = "https://i12e107.p.ssafy.io/api/today-recommend/random";
 
 const TodayRecommendModal = ({ isOpen, onClose }) => {
-  const [activeIndex, setActiveIndex] = useState(1);
-  const [selectedRecipes, setSelectedRecipes] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  //const [selectedRecipes, setSelectedRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [startX, setStartX] = useState(0); // 터치 시작 위치
+  const [currentTranslate, setCurrentTranslate] = useState(0); // 현재 translateX 값
+  const [isDragging, setIsDragging] = useState(false); // 드래그 상태
+  const [selectedRecipes, setSelectedRecipes] = useState([
+    { recipeId: 1, image: "/images/recipe1.jpg", recipeTitle: "Recipe 1" },
+    { recipeId: 2, image: "/images/recipe2.jpg", recipeTitle: "Recipe 2" },
+    { recipeId: 3, image: "/images/recipe3.jpg", recipeTitle: "Recipe 3" },
+  ]);
+  const [centerIndex, setCenterIndex] = useState(1);
+  const [itemTransforms, setItemTransforms] = useState(
+    selectedRecipes.map(() => 0) // 초기값: 모든 아이템의 translateX = 0
+  )
+  
 
   useEffect(() => {
     if (isOpen) {
@@ -48,6 +61,7 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
   };
 
   if (!isOpen || selectedRecipes.length < 3) return null;
+  
 
   const goToRecipeDetail = (recipeId) => {
     navigate(`/recipes/${recipeId}`);
@@ -76,6 +90,53 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
       }
     }
   };
+  const handleTouchStart = (e, index) => {
+    setStartX(e.touches[0].clientX); // 터치 시작 위치 저장
+    setIsDragging(true);
+  };
+  
+  const handleTouchMove = (e, index) => {
+    if (!isDragging) return;
+    const touchX = e.touches[0].clientX;
+    const deltaX = touchX - startX;
+  
+    // 특정 아이템의 translateX 값 업데이트
+    setItemTransforms((prevTransforms) =>
+      prevTransforms.map((transform, i) => (i === index ? deltaX : transform))
+    );
+  };
+  
+  const handleTouchEnd = (index) => {
+    setIsDragging(false);
+  
+    // 슬라이드 이동 처리
+    if (itemTransforms[index] > 50) {
+      slideRight(index); // 오른쪽으로 슬라이드
+    } else if (itemTransforms[index] < -50) {
+      slideLeft(index); // 왼쪽으로 슬라이드
+    }
+  
+    // 이동 거리 초기화
+    setItemTransforms((prevTransforms) =>
+      prevTransforms.map((transform, i) => (i === index ? 0 : transform))
+    );
+  };
+  
+  const slideLeft = (index) => {
+    setSelectedRecipes((prevRecipes) => {
+      const updatedRecipes = [...prevRecipes];
+      updatedRecipes.push(updatedRecipes.shift()); // 첫 번째 요소를 맨 뒤로 이동
+      return updatedRecipes;
+    });
+  };
+  
+  const slideRight = (index) => {
+    setSelectedRecipes((prevRecipes) => {
+      const updatedRecipes = [...prevRecipes];
+      updatedRecipes.unshift(updatedRecipes.pop()); // 마지막 요소를 맨 앞으로 이동
+      return updatedRecipes;
+    });
+  };
   
   
 
@@ -90,22 +151,30 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
         </button>
         <div className="today-title">오늘 뭐 먹지? 🍽️</div>
         {loading ? (
-          <div className="loading-text"><img src="/src/assets/icon/loading.png" alt="추천받는 중..." className="rotating-image"/></div>
+          <div className="loading-text"><img src="/images/loading.png" alt="추천받는 중..." className="rotating-image"/></div>
         ) : (
           <>
             <div className="today-carousel">
               <div className="today-recipe-list">
                 {selectedRecipes.map((recipe, i) => (
-                  <div
-                    key={recipe.recipeId}
-                    className={`today-recipe-item ${i === activeIndex ? "active" : ""}`}
-                    onClick={() => (i === activeIndex ? goToRecipeDetail(recipe.recipeId) : moveToCenter(i))}
+                  <div key={recipe.recipeId}
+                    className={`today-recipe-item ${i === centerIndex ? "active" : ""}`}
+                    style={{
+                      transform: `translateX(${itemTransforms[i]}px)`,
+                      transition: isDragging ? "none" : "transform 0.3s ease-in-out",
+                    }}
+                    onTouchStart={(e) => handleTouchStart(e, i)}
+                    onTouchMove={(e) => handleTouchMove(e, i)}
+                    onTouchEnd={() => handleTouchEnd(i)}
+                    onClick={() => i === centerIndex && goToRecipeDetail(recipe.recipeId)} // 중앙 아이템 클릭 시 상세 페이지로 이동
                   >
-                    <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />
-                  </div>
+                  <img src={recipe.image} alt={recipe.recipeTitle} className="today-recipe-image" />
+                </div>
+                
                 ))}
               </div>
             </div>
+
             <div className="recipe-title-container">
               <p className="recipe-title-main">{selectedRecipes[activeIndex].recipeTitle}</p>
             </div>
