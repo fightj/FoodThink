@@ -14,4 +14,7 @@ public class RecipeBookmarkListDto {
     private String image;
     private String nickname;
     private String userImage;
+    private Integer hits;
+    private Integer bookmarks;
+
 }

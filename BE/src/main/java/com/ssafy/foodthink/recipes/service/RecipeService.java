@@ -6,7 +6,9 @@ import com.ssafy.foodthink.recipes.entity.ProcessEntity;
 import com.ssafy.foodthink.recipes.entity.RecipeEntity;
 import com.ssafy.foodthink.recipes.repository.RecipeListRepository;
 import com.ssafy.foodthink.recipes.repository.RecipeRepository;
+import com.ssafy.foodthink.user.entity.RecipeViewHistoryEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
+import com.ssafy.foodthink.user.repository.RecipeViewRepository;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class RecipeService {
 
     private final RecipeListRepository recipeListRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
+    private final UserRepository userRepository;
+    private final RecipeRepository recipeRepository;
+    private final RecipeViewRepository recipeViewRepository;
 
     //레시피 목록 조회
     //cateType, cateMainIngre, sorType을 파라미터값으로 받아 처리
@@ -103,6 +108,59 @@ public class RecipeService {
         //레시피 조회
         RecipeEntity recipeEntity = recipeListRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."));
+
+
+
+        //재료 정보
+        List<IngredientDto> ingredients = recipeEntity.getIngredients().stream()
+                .map(ingredient -> new IngredientDto(ingredient.getIngreName(), ingredient.getAmount()))
+                .collect(Collectors.toList());
+
+        // 과정 정보 (이미지 포함)
+        List<ProcessDto> processes = recipeEntity.getProcesses().stream()
+                .map(step -> new ProcessDto(
+                        step.getProcessOrder(),     //과정 순서
+                        step.getProcessExplain(),   //과정 설명
+                        step.getProcessImages() != null ?
+                                step.getProcessImages().stream()
+                                        .map(image -> new ProcessImageDto(image.getImageUrl()))
+                                        .collect(Collectors.toList()) : Collections.emptyList()  // null 체크 후 처리
+                ))
+                .collect(Collectors.toList());
+
+        // RecipeDetailResponseDto 반환
+        return new RecipeDetailResponseDto(
+                recipeEntity.getRecipeId(),
+                recipeEntity.getRecipeTitle(),
+                recipeEntity.getImage(),
+                recipeEntity.getUserEntity().getNickname(),
+                recipeEntity.getUserEntity().getImage(),
+                recipeEntity.getServing(),
+                recipeEntity.getLevel(),
+                recipeEntity.getRequiredTime(),
+                recipeEntity.getHits(),
+                ingredients,
+                processes
+        );
+    }
+
+    // 레시피 상세보기 : 로그인한 경우
+    @Transactional
+    public RecipeDetailResponseDto getRecipeDetail(Long recipeId, Long userId) {
+        UserEntity userEntity = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없어요!!!"));
+
+        //레시피 조회
+        RecipeEntity recipeEntity = recipeListRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."));
+
+        // 해당 사용자의 레시피 조회기록 저장
+        RecipeViewHistoryEntity history = new RecipeViewHistoryEntity(userEntity, recipeEntity);
+        recipeViewRepository.save(history);
+
+        // 레시피 조회수 증가
+        recipeEntity.setHits(recipeEntity.getHits()+1);
+        recipeRepository.save(recipeEntity);
 
 
 
