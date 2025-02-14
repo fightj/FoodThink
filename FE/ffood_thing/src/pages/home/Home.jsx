@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import SearchBar from "../../components/base/SearchBar"
 import HomeBigButton from "../../components/home/HomeBigButton"
-import "../../styles/home/Home.css"
+// import "../../styles/home/Home.css"
 import PageSlide from "../../components/base/PageSlide"
 import { UserContext } from "../../contexts/UserContext"
 
