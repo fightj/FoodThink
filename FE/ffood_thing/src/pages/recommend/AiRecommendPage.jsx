@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import "../../styles/base/global.css";
 import "../../styles/recommend/AiRecommendPage.css";
 import LoginCheck from "../../components/base/LoginCheck";
+import LoadingBar from "../../components/base/LoadingBar";
 
 // AI 캐릭터 이미지 배열 (5개)
 const aiImages = [
@@ -25,7 +26,7 @@ const questionsData = [
     options: ["국물요리", "밥종류", "면요리"],
   },
   {
-    question: "요리 난이도를 선택해주세요.",
+    question: "요리 난이도는 어느정도 원하시나요?",
     options: ["쉬운 요리", "보통 난이도의 요리", "어려운 요리"],
   },
   {
@@ -33,7 +34,7 @@ const questionsData = [
     options: ["아침식사", "점심식사", "저녁식사"],
   },
   {
-    question: "요리 스타일을 선택해주세요.",
+    question: "어떤 요리 스타일을 원하시나요?",
     options: ["간단요리", "정통요리", "퓨전요리"],
   },
   {
@@ -49,7 +50,7 @@ const questionsData = [
     options: ["한식", "양식", "중식"],
   },
   {
-    question: "매운 정도를 선택해주세요.",
+    question: "어느 정도 매운맛을 원하시나요?",
     options: ["안 매운맛", "보통 매운맛", "아주 매운맛"],
   },
   {
@@ -78,6 +79,7 @@ const questionsData = [
 function AiRecommendPage() {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+  const [step, setStep] = useState("start"); // start(첫 화면) → question(질문) → loading(로딩) → result(결과)
   const [availableQuestions, setAvailableQuestions] = useState([
     ...questionsData,
   ]);
@@ -92,8 +94,10 @@ function AiRecommendPage() {
   const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
-    pickNextQuestion();
-  }, []);
+    if (step === "question") {
+      pickNextQuestion();
+    }
+  }, [step]);
 
   // 새로운 질문 선택 (중복 방지)
   const pickNextQuestion = () => {
@@ -139,7 +143,7 @@ function AiRecommendPage() {
 
   // API 요청
   const sendToBackend = async (userAnswers) => {
-    setLoading(true);
+    setStep("loading"); // 로딩 화면 표시
 
     try {
       const response = await fetch(
@@ -157,13 +161,14 @@ function AiRecommendPage() {
       const data = await response.json();
       if (!Array.isArray(data)) {
         Swal.fire("알림", "추천된 레시피가 없습니다.", "warning");
+        setStep("start");
         return;
       }
       setRecipes(data);
+      setStep("result"); // 결과 화면으로 전환
     } catch (error) {
       Swal.fire("오류 발생", "추천된 레시피를 불러오지 못했습니다.", "error");
-    } finally {
-      setLoading(false);
+      setStep("start");
     }
   };
 
@@ -173,86 +178,129 @@ function AiRecommendPage() {
       <div className="parent-container">
         <div className="card-div">
           <div className="ai-recommend-container">
-            {/* 진행 바 */}
-            <div className="progress-bar">
-              <div
-                className="progress-bar-fill"
-                style={{ width: `${(answers.length / 5) * 100}%` }}
-              ></div>
-            </div>
-
-            {/* ✅ 질문지 (말풍선) */}
-            <div className="speech-bubble">{currentQuestion?.question}</div>
-
-            {/* ✅ AI 캐릭터 + 대답 버튼 컨테이너 */}
-            <div className="ai-question-container">
-              {/* 왼쪽: AI 캐릭터 */}
-              <div className="ai-image-container">
-                <img src={aiImage} alt="AI 도우미" className="ai-image" />
+            {/* ✅ 맞춤 추천받기 (최초 화면) */}
+            {step === "start" && (
+              <div className="start-container">
+                <h1 className="start-title">🍽 Ai맞춤 요리추천받기</h1>
+                <p className="start-description">
+                  AI가 당신의 취향을 분석해 딱 맞는 요리를 추천해드려요!
+                </p>
+                <button
+                  className="ai-start-btn"
+                  onClick={() => setStep("question")}
+                >
+                  시작하기 🚀
+                </button>
               </div>
+            )}
 
-              {/* 오른쪽: 대답 버튼 + 선택된 답변 */}
-              <div className="answer-section">
-                {/* 대답 버튼 3개 */}
-                <div className="answer-selection-container">
-                  {currentQuestion?.options.map((option, index) => (
-                    <button
-                      key={index}
-                      className="choice-btn"
-                      onClick={() => handleChoice(option)}
-                    >
-                      {option}
-                    </button>
-                  ))}
+            {/* ✅ 질문 화면 */}
+            {step === "question" && (
+              <>
+                {/* 진행 바 */}
+                <div className="progress-bar">
+                  <div
+                    className="progress-bar-fill"
+                    style={{ width: `${(answers.length / 5) * 100}%` }}
+                  ></div>
                 </div>
 
-                {/* 선택된 답변 카드 */}
-                <div className="selected-answers">
-                  {answers.map((answer, index) => (
-                    <div key={index} className="answer-card">
-                      {answer}
+                {/* ✅ 질문지 (말풍선) */}
+                <div className="speech-bubble">{currentQuestion?.question}</div>
+
+                {/* ✅ AI 캐릭터 + 대답 버튼 컨테이너 */}
+                <div className="ai-question-container">
+                  {/* 왼쪽: AI 캐릭터 */}
+                  <div className="ai-image-container">
+                    <img src={aiImage} alt="AI 도우미" className="ai-image" />
+                  </div>
+
+                  {/* 오른쪽: 대답 버튼 + 선택된 답변 */}
+                  <div className="answer-section">
+                    {/* 대답 버튼 3개 */}
+                    <div className="answer-selection-container">
+                      {currentQuestion?.options.map((option, index) => (
+                        <button
+                          key={index}
+                          className="choice-btn"
+                          onClick={() => handleChoice(option)}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* 선택된 답변 카드 */}
+                    {answers.length > 0 && (
+                      <div className="selected-answers">
+                        {answers.map((answer, index) => (
+                          <div key={index} className="answer-card">
+                            {answer}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="button-control-container">
+                  <button className="skip-btn" onClick={handleSkipQuestion}>
+                    건너뛰기
+                  </button>
+                  <button className="end-btn" onClick={handleEndSurvey}>
+                    바로 추천받기
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* ✅ 로딩 화면 */}
+            {step === "loading" && (
+              <LoadingBar onComplete={() => setStep("result")} />
+            )}
+
+            {/* ✅ 결과 페이지 */}
+            {step === "result" && recipes.length > 0 && (
+              <div className="ai-result-container">
+                {/* AI 메시지 박스 + AI 캐릭터 컨테이너 */}
+                <div className="ai-message-wrapper">
+                  {/* 왼쪽: 메시지 박스 */}
+                  <div className="ai-result-message">
+                    <span className="nickname-ellipsis">
+                      {user?.nickname || "사용자"}
+                    </span>
+                    님이 찾던 요리에요!
+                  </div>
+                  {/* 오른쪽: AI 캐릭터 */}
+                  <div className="ai-character-container">
+                    <img
+                      src={aiImage}
+                      alt="AI 도우미"
+                      className="ai-result-image"
+                    />
+                  </div>
+                </div>
+
+                {/* 아래: 추천된 레시피 목록 */}
+                <div className="ai-recipe-list">
+                  {recipes.map((recipe) => (
+                    <div
+                      key={recipe.recipeId}
+                      className="ai-recipe-card"
+                      onClick={() => navigate(`/recipes/${recipe.recipeId}`)}
+                    >
+                      <img
+                        src={recipe.image}
+                        alt={recipe.recipeTitle}
+                        className="ai-recipe-image"
+                      />
+                      <div className="ai-recipe-title">
+                        {recipe.recipeTitle}
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
-
-            {/* ✅ 컨트롤 버튼 (오른쪽 하단) */}
-            <div className="button-control-container">
-              <button className="skip-btn" onClick={handleSkipQuestion}>
-                건너뛰기
-              </button>
-              <button className="end-btn" onClick={handleEndSurvey}>
-                바로 추천받기
-              </button>
-            </div>
-
-            {/* ✅ 결과 페이지 (추천된 레시피) */}
-            {recipes.length > 0 && (
-              <div className="recipe-list">
-                {recipes.map((recipe) => (
-                  <div
-                    key={recipe.recipeId}
-                    className="recipe-card"
-                    onClick={() => navigate(`/recipes/${recipe.recipeId}`)}
-                  >
-                    <img
-                      src={recipe.image}
-                      alt={recipe.recipeTitle}
-                      className="recipe-image"
-                    />
-                    <div className="recipe-title">{recipe.recipeTitle}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {loading && <div className="loading-text">추천받는 중...</div>}
-
-            {recipes.length > 0 && (
-              <button className="btn btn-primary" onClick={() => navigate("/")}>
-                홈으로 돌아가기
-              </button>
             )}
           </div>
         </div>

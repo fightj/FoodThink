@@ -5,8 +5,60 @@
   align-items: center; /* 모든 요소를 중앙 정렬 */
   justify-content: center;
   width: 100%;
-  padding: 2%;
+  min-height: 85vh;
 }
+
+/* lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll */
+
+/* 🔹 전체 컨테이너 스타일 */
+.start-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
+  border-radius: 20px;
+  text-align: center; 
+}
+
+/* 🔹 제목 스타일 */
+.start-title {
+  font-size: 5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-bottom: 5%;
+}
+
+/* 🔹 설명 스타일 */
+.start-description {
+  font-size: 1.5rem;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+/* 🔹 버튼 스타일 */
+.ai-start-btn {
+  background: #fff;
+  color: #d97742;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 15px 30px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* 🔹 버튼 클릭 효과 */
+.ai-start-btn:active {
+  transform: scale(0.95);
+}
+
+/* lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll */
 
 /* ✅ 진행 바 (Progress Bar) */
 .progress-bar {
@@ -45,7 +97,7 @@
   align-items: center;
   width: 100%;
   /* margin-top: 2%; */
-  gap: 5%;
+  /* gap: 5%; */
 }
 
 /* 왼쪽: AI 캐릭터 */
@@ -54,6 +106,7 @@
   justify-content: center;
   align-items: center;
   width: 50%;
+  margin-left: 5%;
 }
 
 .ai-image {
@@ -90,17 +143,19 @@
   gap: 5%;
   width: 100%;
   align-items: center; /* 버튼 중앙 정렬 */
+  
 }
+
+
 
 /* 선택 버튼 */
 .choice-btn {
   font-size: 1.5rem;
-  background: #ff9800;
+  background: #7a4f3c;
   color: white;
   border: none;
   padding: 12px;
   border-radius: 10%;
-  /* font-size: 1.2vw; */
   font-weight: bold;
   width: auto;
   height: 80px;
@@ -111,10 +166,10 @@
   transition: background 0.3s, transform 0.2s;
 }
 
-.choice-btn:hover {
-  background: #fb8c00;
-  transform: scale(1.05);
+.choice-btn:active {
+  animation: jellyEffect 0.5s ease-in-out;
 }
+
 
 /* 선택된 답변 카드 */
 .selected-answers {
@@ -122,7 +177,7 @@
   flex-wrap: wrap;
   /* justify-content: center; */
   gap: 10px;
-  width: 100%;
+  width: 90%;
   padding: 20px;
   background: #fff7e0;
   border-radius: 8px;
@@ -150,7 +205,8 @@
   align-items: center;
   width: 100%;
   gap: 10px;
-  margin-top: 20px;
+  margin: 20px;
+  padding: 0% 5%;
 }
 
 /* ✅ 애니메이션: 카드가 추가될 때 점점 커지고 나타남 */
@@ -179,7 +235,7 @@
 }
 
 .end-btn {
-  background: #ff0000;
+  background: #cc0000;
   color: white;
   border: none;
   padding: 10px;
@@ -188,11 +244,6 @@
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
   width: 12%;
-}
-
-.skip-btn:hover, .end-btn:hover {
-  background: #616161;
-  transform: translateY(-2px);
 }
 
 /* ✅ 반응형 디자인 (태블릿 및 모바일 최적화) */
@@ -218,4 +269,113 @@
   .skip-btn, .end-btn {
     width: 45%;
   }
+}
+
+
+/* 결과 페이지 전체 레이아웃 (세로 정렬) */
+.ai-result-container {
+  display: flex;
+  flex-direction: column; /* 세로 정렬 */
+  align-items: center; /* 가운데 정렬 */
+  width: 100%;
+  position: relative;
+}
+
+/* 메시지 박스 + AI 캐릭터 (가로 정렬) */
+.ai-message-wrapper {
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center;
+  width: fit-content;
+  width: 90%;
+  position: relative;
+  gap: 5%;
+}
+
+
+/* 메시지 박스 (왼쪽) */
+.ai-result-message {
+  background-color: #ffcc80; /* 배경색 */
+  border-radius: 10px;
+  padding: 15px 5%; /* 좌우 5% 여백 추가 */
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  border: 2px solid #ccc;
+  width: fit-content;
+  max-width: 600px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 닉네임이 길면 ... 처리 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* 🔹 닉네임 부분만 따로 스타일 적용 */
+.nickname-ellipsis {
+  max-width: 50%; /* 닉네임 부분이 차지할 최대 너비 */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+
+/* AI 캐릭터 컨테이너 (오른쪽) */
+.ai-character-container {
+  display: absolute;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* AI 캐릭터 */
+.ai-result-image {
+  width: 250px;
+  height: auto;
+  animation: float 3s infinite ease-in-out;
+}
+
+/* 레시피 목록 (기존 유지) */
+.ai-recipe-list {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 3%;
+}
+
+/* 레시피 카드 스타일 */
+.ai-recipe-card {
+  width: 250px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.ai-recipe-card:hover {
+  transform: scale(1.05);
+}
+
+/* 카드 이미지 */
+.ai-recipe-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+/* 카드 제목 */
+.ai-recipe-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px;
+  color: #333;
 }

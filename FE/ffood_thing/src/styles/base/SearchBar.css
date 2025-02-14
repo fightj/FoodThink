@@ -87,13 +87,13 @@
 
 /* ------------------------------------------------------------------- */
 
-.bd-placeholder-img {
+/* .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-}
+} */
 
 @media (min-width: 768px) {
   .bd-placeholder-img-lg {
@@ -116,10 +116,10 @@
   height: 100vh;
 }
 
-.bi {
+/* .bi {
   vertical-align: -0.125em;
   fill: currentColor;
-}
+} */
 
 .nav-scroller {
   position: relative;
