@@ -1,103 +1,125 @@
-import React, { useContext } from "react"
-import { Dropdown } from "react-bootstrap"
-import { UserContext } from "../../contexts/UserContext"
-import "../../styles/base/Sidebar.css"
+import React, { useState, useEffect, useRef,useContext } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
+import "../../styles/base/Sidebar.css"; // ✅ CSS 파일 추가
 
 function Sidebar({ isOpen, toggleSidebar }) {
-  if (!isOpen) return null
-
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const prevScrollPos = useRef(0);
   // ✅ UserContext에서 최신 유저 정보 가져오기
   const { user, setUser } = useContext(UserContext);
-  
+
   // ✅ 세션 스토리지에서도 유저 정보를 가져와 닉네임을 최신 상태로 유지
   const sessionUser = JSON.parse(sessionStorage.getItem("user"));
   const sessionUserNickname = user?.nickname || sessionUser?.nickname || "User";
 
-  // ✅ 로그아웃 핸들러 (sessionStorage와 localStorage 초기화)
+
+  // ✅ 로그인 여부를 localStorage에서 확인
+  const isLoggedIn = localStorage.getItem("kakaoAuthProcessed") === "true";
+
+  // 사이드바가 닫힐 때 드롭다운도 함께 닫기
+  useEffect(() => {
+    if (!isOpen) {
+      setDropdownOpen(false);
+    }
+  }, [isOpen]);
+
+  // ✅ 페이지 이동 시 사이드바 & 드롭다운 닫기
+  useEffect(() => {
+    if (isOpen) toggleSidebar(false);
+    setDropdownOpen(false);
+  }, [location.pathname]);
+
+  // ✅ 스크롤 시 사이드바 & 드롭다운 자동 닫기
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      const isScrollingDown = currentScrollPos > prevScrollPos.current;
+
+      if (isScrollingDown) {
+        toggleSidebar(false);
+      }
+
+      prevScrollPos.current = currentScrollPos;
+    };
+
+    if (isOpen) {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isOpen]);
+
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("kakaoAuthProcessed");
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("email");
-    sessionStorage.removeItem("isNewUser");
-    sessionStorage.removeItem("user");
-    setUser(null);
-    window.location.reload(); // 로그아웃 후 새로고침 (새로운 상태 반영)
+    // localStorage.removeItem("accessToken");
+    // localStorage.removeItem("kakaoAuthProcessed");
+    // sessionStorage.removeItem("user");
+    localStorage.clear();
+    sessionStorage.clear();
+    toggleSidebar(false);
+    setDropdownOpen(false);
+    navigate("/");
   };
 
   return (
-    <div
-      className="sidebar d-flex flex-column flex-shrink-0 p-3 text-bg-dark"
-      style={{
-        width: "220px",
-        maxWidth: "90%",
-        position: "fixed",
-        top: "300px",
-        left: "10px",
-        maxHeight: "calc(100vh - 40px)",
-        height: "auto",
-        zIndex: "1050",
-        borderRadius: "10px",
-        overflowY: "auto",
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
-      }}
-    >
-      <a href="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-        <svg className="bi pe-none me-2" width="40" height="32">
-          <use xlinkHref="#bootstrap" />
-        </svg>
-        <span className="fs-4">홈</span>
-      </a>
-      <hr />
-      <ul className="nav nav-pills flex-column mb-auto">
-        <li>
-          <a href="/recipes/write" className="nav-link text-white">
-            레시피 작성
-          </a>
-        </li>
-        <li>
-          <a href="/feed/write" className="nav-link text-white">
-            피드 작성
-          </a>
-        </li>
-        <li>
-          <a href="/ai-recommend" className="nav-link text-white">
-            AI 추천받기
-          </a>
-        </li>
-        {/* ✅ 닉네임 기반 마이페이지 링크 */}
-        {sessionUserNickname && (
-          <li>
-            <a href={`/profile/${sessionUserNickname}`} className="nav-link text-white">마이페이지</a>
-          </li>
-        )}
-      </ul>
-      <hr />
-      <Dropdown className="dropdown">
-        <Dropdown.Toggle variant="link" id="user-dropdown" className="d-flex align-items-center text-white text-decoration-none">
-          <img src={`${user?.image}?timestamp=${new Date().getTime()}` || "/default_profile.png"} alt="" width="32" height="32" className="rounded-circle me-2" />
-          <strong>{sessionUserNickname || "User"}</strong>
-        </Dropdown.Toggle>
+    <div className={`sidebar-container ${isOpen ? "show" : "hide"}`}>
+      {/* ✅ 기본 사이드바 */}
+      <div className="sidebar">
+        <a href="/" className="home-link">홈</a>
+        <hr />
 
-        <Dropdown.Menu className="dropdown-menu-dark text-small shadow">
-        {sessionUserNickname && (
-            <>
-              <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=bookmarks`}>북마크한 레시피</Dropdown.Item>
-              <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=recipes`}>내 레시피</Dropdown.Item>
-              <Dropdown.Item href={`/profile/${sessionUserNickname}?tab=feed`}>내 피드</Dropdown.Item>
-              <Dropdown.Divider />
-            </>
-          )}
-          {localStorage.getItem("kakaoAuthProcessed") ? (
-            <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
-          ) : (
-            <Dropdown.Item href="/login">Log In</Dropdown.Item>
-          )}
-        </Dropdown.Menu>
-      </Dropdown>
+        {isLoggedIn ? (
+          <>
+            <ul className="nav-list">
+              <li><a href="/recipes/write">레시피 작성</a></li>
+              <li><a href="/feed/write">피드 작성</a></li>
+              <li><a href="/ai-recommend">AI 추천받기</a></li>
+              <li><a href={`/profile/${localStorage.getItem("nickname")}`}>마이페이지</a></li>
+            </ul>
+            <hr />
+
+            {/* ✅ 프로필 버튼 */}
+            <button
+              className="profile-button"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
+              <img
+                src={
+                  localStorage.getItem("profileImage")
+                    ? `${localStorage.getItem("profileImage")}?timestamp=${new Date().getTime()}`
+                    : "/images/default_profile.png"
+                }
+                alt="프로필"
+                className="profile-img"
+              />
+              <strong>{sessionUserNickname || "User"}</strong>
+              {/* ✅ 드롭다운 방향 표시 아이콘 추가 */}
+              <span className={`dropdown-arrow ${dropdownOpen ? "open" : ""}`}>›</span>
+            </button>
+          </>
+        ) : (
+          <button className="login-btn" onClick={() => { navigate("/login"); toggleSidebar(false); }}>
+            로그인해주세요
+          </button>
+        )}
+      </div>
+
+      {/* ✅ 프로필 드롭다운 */}
+      {isLoggedIn && (
+        <div className={`profile-dropdown ${dropdownOpen ? "open" : ""}`}>
+          <a href={`/profile/${localStorage.getItem("nickname")}?tab=bookmarks`} onClick={() => setDropdownOpen(false)}>북마크한 레시피</a>
+          <a href={`/profile/${localStorage.getItem("nickname")}?tab=recipes`} onClick={() => setDropdownOpen(false)}>내 레시피</a>
+          <a href={`/profile/${localStorage.getItem("nickname")}?tab=feed`} onClick={() => setDropdownOpen(false)}>내 피드</a>
+          <hr />
+          <a href="#" onClick={handleLogout}>로그아웃</a>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default Sidebar
+export default Sidebar;

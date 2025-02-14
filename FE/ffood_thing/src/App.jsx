@@ -29,7 +29,7 @@ import PageSlide from "./components/base/PageSlide"
 import Sidebar from "./components/base/Sidebar"
 import { UserProvider, UserContext } from "./contexts/UserContext" // 올바르게 import
 
-import KakaoCallback from "./pages/login/KakaoCallback";
+import KakaoCallback from "./pages/login/KakaoCallback"
 
 // Function to fetch user info
 // const fetchUserInfo = async () => {
@@ -44,6 +44,7 @@ import KakaoCallback from "./pages/login/KakaoCallback";
 //     })
 
 //     console.log("User Info:", response.data)
+
 //     return response.data
 //   } catch (error) {
 //     console.error("Error fetching user info:", error.response?.data || error.message)
@@ -68,15 +69,17 @@ const App = () => {
   )
 }
 const MainApp = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { user, setUser } = useContext(UserContext);
-  const [tokenLoaded, setTokenLoaded] = useState(false); // UserContext를 올바르게 사용
+  const [isOpen, setIsOpen] = useState(false)
+  const { user, setUser } = useContext(UserContext)
+  const [tokenLoaded, setTokenLoaded] = useState(false) // UserContext를 올바르게 사용
 
   // useEffect(() => {
   //   const initializeApp = async () => {
   //     try {
   //       // Parse accessToken from URL parameters
+
   //       const accessToken = localStorage.getItem("accessToken");
+
   //       // if (accessToken) {
   //       //   console.log("Access Token:", accessToken); // 콘솔에 accessToken 출력
   //       //   localStorage.setItem("accessToken", accessToken)
@@ -86,10 +89,11 @@ const MainApp = () => {
   //       // Initialize userInfo and fetch user details
   //       if (accessToken) {
   //         try {
-  //           // const userInfo = await fetchUserInfo();
-  //           // setUser(userInfo);
-  //           // sessionStorage.setItem("user", JSON.stringify(userInfo));
-  //           // console.log("Initial User Info:", userInfo);
+
+  //           //const userInfo = await fetchUserInfo();
+  //           //setUser(userInfo);
+  //           //sessionStorage.setItem("user", JSON.stringify(userInfo));
+  //           //console.log("Initial User Info:", userInfo);
   //         } catch (error) {
   //           console.error("Failed to fetch user info:", error);
   //         }
@@ -102,7 +106,7 @@ const MainApp = () => {
   //   initializeApp();
   // }, [setUser]);
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
+  const toggleSidebar = () => setIsOpen(!isOpen)
 
   return (
     <>
@@ -144,7 +148,6 @@ const AnimatedRoutes = ({ userInfo }) => {
             </PageSlide>
           }
         />
-        
 
         <Route
           path="/sns"

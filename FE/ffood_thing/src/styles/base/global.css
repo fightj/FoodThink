@@ -1,6 +1,6 @@
 .base-div {
   /* background: linear-gradient(to bottom, #ff5252d7, #ffd5af, #ff9a57); */
-  background: #F7B05B; /* 배경색 통일 (02.12) */
+  background: #f7b05b; /* 배경색 통일 (02.12) */
   min-height: 10vh; /* 최소 높이를 화면 전체로 설정 */
   padding-top: 3vh; /* (02.12) */
   box-sizing: border-box; /* 패딩 포함 높이 계산 */
@@ -22,7 +22,6 @@
   border-radius: 40px; /* 아래 두 꼭지점만 둥글게 설정 */
   /* height: auto; 높이를 패딩에 따라 유동적으로 설정 */
   /* box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); 상단 그림자 더 강조 */
-
 }
 
 @font-face {
@@ -36,6 +35,13 @@
   font-family: "Pretendard-Regular";
   src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff") format("woff");
   font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BlackSwordFont";
+  src: url("/fonts/Blacksword.otf") format("truetype"), url("/fonts/Blacksword.ttf") format("truetype");
+  font-weight: normal;
   font-style: normal;
 }
 
