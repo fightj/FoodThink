@@ -17,7 +17,7 @@
   position: relative;
   background: white;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 30px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   width: 75%;
   max-width: 1000px;
@@ -63,6 +63,11 @@
   border-radius: 50%;
   z-index: 2; /* ✅ 닫기 버튼과 충돌 방지 */
 }
+.refresh-btn img{
+  width: 50px;
+  height: 50px;
+  filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(-20deg) brightness(100%) contrast(100%);
+}
 
 
 /* 📌 클릭하면 회전되지만 배경 유지 X */
@@ -82,6 +87,11 @@
   color: #333;
   transition: color 0.2s ease-in-out;
   z-index: 3; /* ✅ 새로고침 버튼보다 위에 배치 */
+}
+.today-close-btn img{
+  width: 50px;
+  height: 50px;
+  filter: invert(20%) sepia(100%) saturate(5000%) hue-rotate(-10deg) brightness(100%) contrast(120%);
 }
 
 .today-close-btn:hover {
