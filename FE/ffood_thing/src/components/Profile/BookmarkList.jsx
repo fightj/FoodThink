@@ -25,24 +25,27 @@ const BookmarkList = () => {
         console.log("📌 북마크된 레시피 ID 목록:", bookmarkData);
 
         // 2️⃣ 각 레시피의 상세 정보 불러오기
-        const recipeDetails = await Promise.all(
-          bookmarkData.map(async (bookmark) => {
-            const recipeResponse = await fetch(
-              `https://i12e107.p.ssafy.io/api/recipes/read/detail/${bookmark.recipeId}`,
-              {
-                method: "GET",
-                headers: { Authorization: `Bearer ${token}` },
-              }
-            );
+        // const recipeDetails = await Promise.all(
+        //   bookmarkData.map(async (bookmark) => {
+        //     const recipeResponse = await fetch(
+        //       `https://i12e107.p.ssafy.io/api/recipes/read/detail/${bookmark.recipeId}`,
+        //       {
+        //         method: "GET",
+        //         headers: { Authorization: `Bearer ${token}` },
+        //       }
+        //     );
 
-            if (!recipeResponse.ok) throw new Error(`레시피 상세 불러오기 오류: ${recipeResponse.status}`);
+        //     if (!recipeResponse.ok) throw new Error(`레시피 상세 불러오기 오류: ${recipeResponse.status}`);
 
-            return recipeResponse.json();
-          })
-        );
+        //     return recipeResponse.json();
+        //   })
+        // );
 
-        console.log("🍽️ 상세한 레시피 데이터:", recipeDetails);
-        setBookmarks(recipeDetails);
+        // console.log("🍽️ 상세한 레시피 데이터:", recipeDetails);
+        setBookmarks(bookmarkData);
+
+        console.log("북마크 레시피: " , bookmarks);
+
       } catch (error) {
         console.error("❌ 북마크된 레시피 데이터 불러오기 실패:", error);
       } finally {

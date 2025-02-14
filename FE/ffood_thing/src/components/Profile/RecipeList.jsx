@@ -79,7 +79,7 @@ const RecipeList = () => {
             style={{ textDecoration: "none", color: "inherit" }}
           >
             <img src={recipe.image} alt={recipe.recipeTitle} className="mypage-recipe-image" />
-            <p className="recipe-title1">{recipe.recipeTitle}</p>
+            <p className="mypage-recipe-title1">{recipe.recipeTitle}</p>
             <div className="recipe-meta">
               👁 {recipe.hits} | ⭐ {recipe.bookmarkCount}
             </div>
