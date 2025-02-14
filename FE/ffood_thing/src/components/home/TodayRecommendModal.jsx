@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/recommend/TodayRecommendModal.css";
 import { FaRedo } from "react-icons/fa";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { faQuestion } from '@fortawesome/free-solid-svg-icons';
+
 
 const API_URL = "https://i12e107.p.ssafy.io/api/today-recommend/random";
 
@@ -147,11 +152,12 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
           <img src="/images/close_icon.png" alt="닫기" />
         </button>
         <button className="refresh-btn" onClick={refreshRecommendations} disabled={loading}>
-          <img src="/images/rotate_right.png" alt="새로고침" />
-        </button>
-        <div className="today-title">오늘 뭐 먹지? 🍽️</div>
+        <img src="/images/rotate_right.png" alt="닫기" /></button>
+        <div className="today-title">오늘 뭐 먹지<FontAwesomeIcon icon={faUtensils} bounce style={{color: "#fdb13f", fontSize: "50px" }} /></div>
         {loading ? (
-          <div className="loading-text"><img src="/images/loading.png" alt="추천받는 중..." className="rotating-image"/></div>
+          <div className="loading-text">
+            <FontAwesomeIcon icon={faUtensils} bounce style={{color: "#ffc800", fontSize: "50px" }} />
+          </div>
         ) : (
           <>
             <div className="today-carousel">
@@ -176,7 +182,7 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
             </div>
 
             <div className="recipe-title-container">
-              <p className="recipe-title-main">{selectedRecipes[activeIndex].recipeTitle}</p>
+              <p className="today-recipe-title-main">{selectedRecipes[activeIndex].recipeTitle}</p>
             </div>
           </>
         )}
