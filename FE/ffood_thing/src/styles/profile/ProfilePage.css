@@ -6,7 +6,7 @@
     flex-direction: column;
     align-items: center;
     /* background-color: #f3e5ab; */
-    width: min(90%, 1200px); /* 최대 1200px, 최소 90% */
+    width: min(100%, 1200px);
     margin: auto; /* 중앙 정렬 */
 }
 

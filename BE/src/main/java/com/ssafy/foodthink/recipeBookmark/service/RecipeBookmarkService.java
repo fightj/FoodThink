@@ -64,11 +64,14 @@ public class RecipeBookmarkService {
     }
 
     private RecipeBookmarkListDto convertToDto(RecipeBookmarkEntity entity) {
+        int bookmarkCount = recipeBookmarkRepository.countByRecipeEntity(entity.getRecipeEntity()).intValue();
         return new RecipeBookmarkListDto(entity.getRecipeEntity().getRecipeId()
                 , entity.getRecipeEntity().getRecipeTitle()
                 , entity.getRecipeEntity().getImage()
                 , entity.getRecipeEntity().getUserEntity().getNickname()
                 , entity.getUserEntity().getImage()
+                , entity.getRecipeEntity().getHits()
+                , bookmarkCount
                 );
     }
 
