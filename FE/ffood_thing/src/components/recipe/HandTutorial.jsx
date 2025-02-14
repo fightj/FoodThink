@@ -61,10 +61,10 @@ const HandTutorial = ({ onPrevPage, onNextPage, onSkip }) => {
         </div>
         <button
           className="tuto-skip-button"
-          style={{ zIndex: 1002 }} // 항상 스킵 버튼을 누를 수 있도록 z-index 조정
+          style={{ zIndex: 1009, backgroundColor: "transparent", border: "none", padding: 0, position: "absolute", top: "5%", right: "2%", width: "5%" }} // 항상 스킵 버튼을 누를 수 있도록 z-index 조정
           onClick={onSkip}
         >
-          스킵하기
+          <img src="/images/skipbutton.png" alt="스킵하기" style={{ backgroundColor: "transparent", width: "100%", height: "auto" }} />
         </button>
       </div>
     </div>
