@@ -7,10 +7,7 @@ const HomeBigButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false) // 모달 상태 관리
 
   return (
-    <div className="parent-container">
       <div className="card-div">
-        {/* (02.13) home-container에서 px-5 클래스 제거*/}
-        <div className="container px-4 home-container" id="custom-cards">
           <div className="row">
             <div className="col">
               {/* 왼쪽 열 */}
@@ -52,12 +49,10 @@ const HomeBigButton = () => {
               </Link>
             </div>
           </div>
-        </div>
 
         {/* 모달 컴포넌트 */}
         <TodayRecommendModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </div>
-    </div>
   )
 }
 

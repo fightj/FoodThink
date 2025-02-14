@@ -1,12 +1,10 @@
 /* 부모 요소 정렬 */
 .header-all {
   width: 95%; /* 화면 너비 전체 사용 */
-  display: flex; /* 자식 요소들을 정렬 */
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  /* 작은 화면에서 요소들이 줄바꿈이 될 수 있도록 (02.13) */
   flex-wrap: wrap;
-  margin-bottom: 20px;
   margin: 0 auto 20px;
 }
 
