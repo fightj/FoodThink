@@ -164,6 +164,7 @@
   .profile-content {
     flex-direction: column;
     align-items: center;
+    display: flex;
   }
 
   .profile-avatar {
@@ -346,4 +347,24 @@
 
 .nickname-btn-cancel:hover {
   background: #bbb;
+}
+
+.profile-avatar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px; /* 요소 간 간격 */
+}
+
+@media (max-width: 500px) {
+  .profile-avatar-container {
+    margin-top: 50px;
+    flex-direction: column; /* 세로 정렬 */
+  }
+  .edit-icon {
+    margin-left: 0px;
+    margin-top: 0px;
+  }
+
 }

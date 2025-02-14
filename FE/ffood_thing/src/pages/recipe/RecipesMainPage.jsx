@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import "../../styles/recipe/RecipesMainPage.css"
-import SearchBarRecipe from "../../components/base/SearchBarRecipe"
+import SearchBarRecipeMain from "../../components/base/SearchBarRecipeMain"
 import AnniversaryApiModal from "../../components/anniversary/anniversaryApiModal"
 
 const RecipesMainPage = () => {
@@ -150,7 +150,7 @@ const RecipesMainPage = () => {
   return (
     <div className="base-div">
       <AnniversaryApiModal />
-      <SearchBarRecipe onSearch={handleSearch} />
+      <SearchBarRecipeMain onSearch={handleSearch} />
       <div className="recipe-parent-div">
         <div className="recipe-card-div">
           <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>

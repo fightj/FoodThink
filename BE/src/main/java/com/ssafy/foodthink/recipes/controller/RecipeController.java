@@ -2,7 +2,9 @@ package com.ssafy.foodthink.recipes.controller;
 
 import com.ssafy.foodthink.recipes.dto.*;
 import com.ssafy.foodthink.recipes.service.RecipeService;
+import com.ssafy.foodthink.user.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 public class RecipeController {
 
     private final RecipeService recipeService;
+    private final JWTUtil jwtUtil;
 
     //레시피 목록 조회 : 카테고리별 + 정렬
     @GetMapping("read/recipeList")
@@ -37,8 +40,18 @@ public class RecipeController {
 
     //레시피 상세 보기
     @GetMapping("read/detail/{recipeId}")
-    public RecipeDetailResponseDto getRecipeDetail(@PathVariable Long recipeId) {
-        return recipeService.getRecipeDetail(recipeId);
+    public RecipeDetailResponseDto getRecipeDetail(@PathVariable Long recipeId, @RequestHeader(value = "Authorization", required = false) String token) {
+
+        // 로그인 안했을경우
+        if(token == null || token.isEmpty()){
+            return recipeService.getRecipeDetail(recipeId);
+        }
+
+        //로그인 했을 경우
+        String accessToken = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        return recipeService.getRecipeDetail(recipeId,userId);
     }
 
     //레시피 보기 : 요리 과정 중 재료 정보 (첫페이지)

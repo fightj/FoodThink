@@ -51,17 +51,17 @@ const FeedList = () => {
   }
 
   return (
-    <div className="feed-container">
-      {feeds.map((feed) => (
+      <div className="mypage-feed-container">
+        {feeds.map((feed) => (
         <Link 
-          to={`/feed/${feed.feedId}`} 
-          key={feed.feedId} 
+          to={`/feed/${feed.id}`} 
+          key={feed.id} 
           style={{ textDecoration: "none" }} 
         >
-          <img src={feed.image} alt={`Feed ${feed.feedId}`} className="feed-image" />
+          <img src={feed.image} alt={`Feed ${feed.feedId}`} className="mypage-feed-image" />
         </Link>
       ))}
-    </div>
+      </div>
   );
 };
 

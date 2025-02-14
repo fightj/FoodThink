@@ -159,6 +159,7 @@ const ProfileHeaderMe = () => {
         setUser(updatedUser)
 
         // ✅ 세션 스토리지도 최신 닉네임으로 업데이트
+        localStorage.setItem("nickname", newNickname)
         sessionStorage.setItem("user", JSON.stringify(updatedUser))
 
         navigate(`/profile/${newNickname}`)
@@ -368,12 +369,12 @@ const ProfileHeaderMe = () => {
           {showPreference && <Preference onClose={() => setShowPreference(false)} />}
         </div>
 
-        {/* 회원 탈퇴 버튼 */}
-        <div className="profile-actions">
-          <button className="btn btn-danger delete-btn" onClick={handleDeleteAccount}>
-            회원 탈퇴
-          </button>
-        </div>
+          {/* 회원 탈퇴 버튼 */}
+          <div className="profile-actions">
+            <button className="btn btn-danger delete-btn" onClick={handleDeleteAccount}>
+              회원 탈퇴
+            </button>
+          </div>
       </div>
 
       {/* 닉네임 수정 모달 */}
