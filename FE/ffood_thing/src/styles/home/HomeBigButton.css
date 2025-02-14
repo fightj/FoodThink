@@ -1,6 +1,8 @@
 /* 컨테이너 스타일 */
 .home-container {
   max-width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 /* #custom-card {
@@ -56,24 +58,24 @@
 /* 각 카드의 위치와 크기 설정 */
 .card-1 {
   grid-area: card1;
-  height: 300px;
+  height: 25vh;
   margin-bottom:25px;
 }
 
 .card-2 {
   grid-area: card2;
-  height: 400px;
+  height: 40vh;
   margin-bottom:25px;
 }
 
 .card-3 {
   grid-area: card3;
-  height: 400px;
+  height: 40vh;
 }
 
 .card-4 {
   grid-area: card4;
-  height: 300px;
+  height: 25vh;
   align-self: end; /* 카드 4번을 하단에 배치 */
 }
 
