@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import "../../styles/home/HomeBigButton.css"
 import { Link } from "react-router-dom"
-import TodayRecommendModal from "./TodayRecommendModal" // 모달 컴포넌트 import
+import TodayRecommendModal from "../../../public/images/TodayRecommendModal" // 모달 컴포넌트 import
 
 const HomeBigButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false) // 모달 상태 관리

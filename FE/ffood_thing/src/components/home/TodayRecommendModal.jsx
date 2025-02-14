@@ -54,25 +54,39 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const moveToCenter = (index) => {
-    if (index !== activeIndex) {
-      setActiveIndex(index);
-    }
-  };
+  // const moveToCenter = (index) => {
+  //   if (index !== activeIndex) {
+  //     setActiveIndex(index);
+  //   }
+  // };
 
   const refreshRecommendations = () => {
     localStorage.removeItem("todaySelectedRecipes");
     fetchTodayRecommendations();
   };
+  const moveToCenter = (index) => {
+    if (index !== activeIndex) {
+      setActiveIndex(index);
+  
+      // Calculate the offset to center the selected card
+      const offset = (index - Math.floor(selectedRecipes.length / 2)) * -300; // Adjust `300` based on card width
+      const listElement = document.querySelector(".today-recipe-list");
+      if (listElement) {
+        listElement.style.transform = `translateX(${offset}px)`; // Smooth movement
+      }
+    }
+  };
+  
+  
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="today-recommend-card" onClick={(e) => e.stopPropagation()}>
         <button className="today-close-btn" onClick={onClose}>
-          <img src="/src/assets/icon/close_icon.png" alt="닫기" />
+          <img src="/images/close_icon.png" alt="닫기" />
         </button>
         <button className="refresh-btn" onClick={refreshRecommendations} disabled={loading}>
-          <img src="/src/assets/icon/rotate_right.png" alt="새로고침" />
+          <img src="/images/rotate_right.png" alt="새로고침" />
         </button>
         <div className="today-title">오늘 뭐 먹지? 🍽️</div>
         {loading ? (
@@ -80,17 +94,11 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
         ) : (
           <>
             <div className="today-carousel">
-              <div 
-                className="recipe-list" 
-                style={{ 
-                  transform: `translateX(calc(30% - ${activeIndex * 10}%))`,
-                  transition: 'transform 0.3s ease-in-out'
-                }}
-              >
+              <div className="today-recipe-list">
                 {selectedRecipes.map((recipe, i) => (
                   <div
                     key={recipe.recipeId}
-                    className={`recipe-item ${i === activeIndex ? "active" : ""}`}
+                    className={`today-recipe-item ${i === activeIndex ? "active" : ""}`}
                     onClick={() => (i === activeIndex ? goToRecipeDetail(recipe.recipeId) : moveToCenter(i))}
                   >
                     <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image" />

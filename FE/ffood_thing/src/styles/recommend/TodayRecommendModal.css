@@ -124,6 +124,16 @@
   left: 0px;
 }
 
+.today-recipe-list{
+  display: flex;
+  justify-content: center; /* 아이템 간 간격 균등 배치 */
+  width: 100%; /* 가로 공간을 꽉 채움 */
+  position: relative;
+  /* left: 0px; */
+  transition: 'transform 0.3s ease-in-out'
+
+}
+
 /* 개별 음식 카드 */
 .recipe-item {
   flex: 0 0 auto;
@@ -138,9 +148,13 @@
   position: relative;
   z-index: 1;
 }
+/*오늘의 메뉴 개별 음식 카드*/
+.today-recipe-item{
+  
+}
 
 /* 중앙 카드 (크기 확대) */
-.recipe-item.active {
+.today-recipe-item.active {
   transform: scale(1.2);
   opacity: 1;
   z-index: 2;
