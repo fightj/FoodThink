@@ -1,21 +1,26 @@
 .base-div {
   background: #F7B05B;
-  min-height: 100vh; /* 최소 높이를 화면 전체로 설정 */
+  min-height: 100vh;
   padding-top: 3vh;
+  box-sizing: border-box; /* 패딩 포함 높이 계산 */
+  padding-bottom: 3vh;
 }
-
+.parent-container {
+  display: flex;
+  justify-content: center;
+}
 .card-div {
   background-color: rgb(255, 255, 255);
   width: 95%; /* 수평 공간 전체를 차지 */
-  display: flex;
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
   flex-direction: column; /* 자식 요소를 세로로 정렬 */
   justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
+  height: auto; /* 높이를 패딩에 따라 유동적으로 설정 */
+  margin-bottom: 30px;
+  border-radius: 40px; /* 아래 두 꼭지점만 둥글게 설정 */
   margin: 0 auto 20px;
-  height: auto;
-  border-radius: 40px;
+  padding: 2rem;
   /* box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); 상단 그림자 더 강조 */
-  max-width: 100%;
-  padding: 1.5rem;
 }
 
 @font-face {
