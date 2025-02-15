@@ -276,15 +276,21 @@ function FeedDetail() {
             </button>
             <span>{comments.length}</span>
           </span>
-          <div className="hash-tag-area">
-            <p><strong>#{currentFeed.foodName}</strong></p>
-            {isRecipe && <p><strong>#{currentFeed.recipeListResponseDto.recipeTitle}</strong></p>}
-          </div>
+
+
+          {/* 텍스트부터 밀어야 한다. SNS 내용 넣는 거 변경 할까? 고민됨...
+          참고 레시피 링크 연결도 해야 해. 바로 가기 버튼?
+          댓글 전면 수정 필요해. */}
 
           <hr />
           <p className="description">
             <strong>{author.username || "Unknown User"}</strong> {currentFeed.content}
           </p>
+
+          <div className="hash-tag-area">
+            <p>#나의_요리는_{currentFeed.foodName}</p>
+            {isRecipe && <p>#참고한_레시피는_{currentFeed.recipeListResponseDto.recipeTitle}</p>}
+          </div>
 
           {isRecipe && (
             <div className="linked-recipe-area">

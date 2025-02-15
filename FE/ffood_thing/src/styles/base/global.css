@@ -15,7 +15,7 @@
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
   flex-direction: column; /* 자식 요소를 세로로 정렬 */
   justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  height: auto; /* 높이를 패딩에 따라 유동적으로 설정 */
+  /* height: auto; */
   margin-bottom: 30px;
   border-radius: 40px; /* 아래 두 꼭지점만 둥글게 설정 */
   margin: 0 auto 20px;
@@ -84,6 +84,10 @@ body {
 }
 
 @media screen and (max-width: 600px) {
+  .card-div {
+    padding: 1rem;
+   }
+
   .context-h5 {
     font-size: 1.2rem;
   }
