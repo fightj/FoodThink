@@ -55,6 +55,7 @@ function KakaoCallback() {
                         image: image,
                         season:  season
                     }
+                    
                     if (email) sessionStorage.setItem("email", email);
                     if (nickname) localStorage.setItem("nickname", nickname);
                     if (isNewUser !== undefined) sessionStorage.setItem("isNewUser", isNewUser);
@@ -70,11 +71,13 @@ function KakaoCallback() {
                 } else {
                     console.error("Error: 응답 상태 코드:", response.status);
                     alert("카카오 로그인에 실패했습니다.");
+                    localStorage.removeItem("kakaoAuthProcessed", "true");
                     navigate("/login");
                 }
             } catch (error) {
                 console.error("Error during Kakao login callback:", error.response || error.message);
                 alert("카카오 로그인에 실패했습니다. 다시 시도해주세요.");
+                localStorage.removeItem("kakaoAuthProcessed", "true");
                 navigate("/login");
             }
         };
