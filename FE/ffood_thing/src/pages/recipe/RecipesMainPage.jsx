@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react"
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import "../../styles/recipe/RecipesMainPage.css"
@@ -151,108 +152,115 @@ const RecipesMainPage = () => {
     <div className="base-div">
       <AnniversaryApiModal />
       <SearchBarRecipeMain onSearch={handleSearch} />
-      <div className="recipe-parent-div">
-        <div className="recipe-card-div">
-          <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
-            <h2></h2>
-            <button href="/recipes/write" className="write-recipe-button5" onClick={() => navigate("/recipes/write")}>
-              <img src="/images/feed_write_button.png" alt="Recipe 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
-            </button>
-          </div>
-
-          {isCategoryListVisible && (
-            <div className="categories2">
-              <div className="category-group2">
-                <h2>종류별</h2>
-                <div className="category-items2">
-                  {categoryList.종류별.map((category) => (
-                    <span key={category} className={`category-item2 ${cateType === category ? "selected" : ""}`} onClick={() => handleCategoryClick(category, "cateType")}>
-                      {category}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="category-group2">
-                <h2>재료별</h2>
-                <div className="category-items2">
-                  {categoryList.재료별.map((category) => (
-                    <span key={category} className={`category-item2 ${cateMainIngre === category ? "selected" : ""}`} onClick={() => handleCategoryClick(category, "cateMainIngre")}>
-                      {category}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          <button className="category-onoff-button" onClick={() => setIsCategoryListVisible(!isCategoryListVisible)}>
-            {isCategoryListVisible ? "카테고리 닫기" : "카테고리 열기"}
+      <div className="card-div">
+        <div className="d-flex justify-content-between align-items-center mt-0" style={{ marginBottom: "1rem" }}>
+          <button className="category-onoff-button" onClick={() => setIsCategoryListVisible(prev => !prev)}>
+            {isCategoryListVisible ? "카테고리 닫기 ⩓" : "카테고리 열기 ⩔"}
           </button>
+          <button href="/recipes/write" className="write-recipe-button5" onClick={() => navigate("/recipes/write")}>
+            <img src="/images/feed_write_button.png" alt="Recipe 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
+          </button>
+        </div>
 
-          {!cateType && !cateMainIngre && (
-            <div className="filters2">
-              <div className="carousel-wrapper2">
-                <h3>인기 레시피</h3>
-                <div className="carousel2" ref={carouselRef1}>
-                  {top20Recipes.map((recipe) => (
-                    <div key={recipe.recipeId} className="recipe-card2" onClick={() => handleDetailClick(recipe.recipeId)}>
-                      <div className="image-container2">
-                        <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
-                        <div className="bookmark-count2">
-                          <div className="bookmark-text2">{recipe.bookMarkCount > 99 ? "99+" : recipe.bookMarkCount}</div>
+        {/* motion.div로 감싸서 슬라이드 애니메이션 적용 */}
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={isCategoryListVisible ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className="categories2"
+        >
+          <div className="category-group2">
+            <div className="category-title">종류별</div>
+            <div className="category-items2">
+              {categoryList.종류별.map((category) => (
+                <span key={category} className={`category-item2 ${cateType === category ? "selected" : ""}`} onClick={() => handleCategoryClick(category, "cateType")}>
+                  {category}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="category-group2">
+            <div className="category-title">재료별</div>
+            <div className="category-items2">
+              {categoryList.재료별.map((category) => (
+                <span key={category} className={`category-item2 ${cateMainIngre === category ? "selected" : ""}`} onClick={() => handleCategoryClick(category, "cateMainIngre")}>
+                  {category}
+                </span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {!cateType && !cateMainIngre && (
+          <div className="filters2">
+            <div className="carousel-wrapper2">
+              <div className="popular-recipe">인기 레시피</div>
+              <div className="carousel2" ref={carouselRef1}>
+                {top20Recipes.map((recipe, index) => (
+                  <div key={recipe.recipeId} className="popular-card" onClick={() => handleDetailClick(recipe.recipeId)}>
+                    <div className="popular-card-container">
+                      <img src={recipe.image} alt={recipe.recipeTitle} className="popular-card-image" />
+                      {/* 🏅 첫 번째, 두 번째, 세 번째 카드에 메달 아이콘 추가 */}
+                      {index < 3 && (
+                        <div className="popular-medal">
+                          <img
+                            src={index === 0 ? "/images/gold-medal.png" : index === 1 ? "/images/silver-medal.png" : "/images/bronze-medal.png"}
+                            alt={`${index + 1}등 메달`}
+                            className="popular-medal-icon"
+                          />
                         </div>
-                      </div>
-                      <div className="recipe-info2">
-                        <h2>{recipe.recipeTitle}</h2>
-                        <div className="profile-info">
-                          <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
-                          <p>{recipe.nickname}</p>
-                        </div>
+                      )}
+                      {/* 조회수 아이콘 */}
+                      <div className="popular-hit-eye-icon-area">
+                        <img src="/images/hit-eye.png" alt="" className="popular-hit-eye-icon" />
+                        <div className="popular-hit-eye-count">{recipe.hits}</div>
                       </div>
                     </div>
-                  ))}
-                </div>
+                    <div className="popular-card-info">{recipe.recipeTitle}</div>
+                  </div>
+                ))}
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          <div>
-            <div className="sort-filters2">
-              <span className={`sort-filter2 ${sortType === "조회순" ? "selected" : ""}`} onClick={() => handleSortClick("조회순")}>
-                조회순
-              </span>
-              <span className={`sort-filter2 ${sortType === "최신순" ? "selected" : ""}`} onClick={() => handleSortClick("최신순")}>
-                최신순
-              </span>
-              <span className={`sort-filter2 ${sortType === "북마크순" ? "selected" : ""}`} onClick={() => handleSortClick("북마크순")}>
-                북마크순
-              </span>
-            </div>
-            <div className="recipe-list2">
-              {allRecipes.map((recipe, index) => (
-                <div
-                  key={`${recipe.recipeId}-${index}`}
-                  ref={allRecipes.length === index + 1 ? lastRecipeElementRef : null}
-                  className="recipe-card2 recipe-card2-small"
-                  onClick={() => handleDetailClick(recipe.recipeId)}
-                >
-                  <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
-                  <div className="recipe-info2">
-                    <h2>{recipe.recipeTitle}</h2>
-                    <div className="profile-info">
-                      <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
-                      <p>{recipe.nickname}</p>
-                    </div>
+        <div>
+          <div className="sort-filters2">
+            <span className={`sort-filter2 ${sortType === "조회순" ? "selected" : ""}`} onClick={() => handleSortClick("조회순")}>
+              조회순
+            </span>
+            <span className={`sort-filter2 ${sortType === "최신순" ? "selected" : ""}`} onClick={() => handleSortClick("최신순")}>
+              최신순
+            </span>
+            <span className={`sort-filter2 ${sortType === "북마크순" ? "selected" : ""}`} onClick={() => handleSortClick("북마크순")}>
+              북마크순
+            </span>
+          </div>
+          <div className="recipe-list2">
+            {allRecipes.map((recipe, index) => (
+              <div
+                key={`${recipe.recipeId}-${index}`}
+                ref={allRecipes.length === index + 1 ? lastRecipeElementRef : null}
+                className="recipe-card2 recipe-card2-small"
+                onClick={() => handleDetailClick(recipe.recipeId)}
+              >
+                <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
+                <div className="recipe-info2">
+                  <h2>{recipe.recipeTitle}</h2>
+                  <div className="profile-info">
+                    <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
+                    <p>{recipe.nickname}</p>
                   </div>
                 </div>
-              ))}
-              {loading && <p>로딩 중...</p>}
-              {allRecipes.length === 0 && !loading && <p>레시피가 없습니다.</p>}
-            </div>
+              </div>
+            ))}
+            {loading && <p>로딩 중...</p>}
+            {allRecipes.length === 0 && !loading && <p>레시피가 없습니다.</p>}
           </div>
         </div>
       </div>
     </div>
+    // </div>
   )
 }
 

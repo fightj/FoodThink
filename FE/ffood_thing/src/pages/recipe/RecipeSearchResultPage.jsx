@@ -89,8 +89,8 @@ const RecipeSearchResultPage = () => {
   return (
     <div className="base-div">
       <SearchBarRecipe onSearch={handleSearch} initialQuery={searchQuery} />
-      <div className="recipe-parent-div">
-        <div className="recipe-card-div">
+      {/* <div className="recipe-parent-div"> */}
+        <div className="card-div">
           <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
             <button onClick={() => navigate(-1)} className="back-button1">
               <img src="/images/previous_button.png" alt="Previous" className="icon" />
@@ -123,7 +123,7 @@ const RecipeSearchResultPage = () => {
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   )
 }
 
