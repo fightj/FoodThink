@@ -76,7 +76,13 @@ body {
   /* 글자 조정할 때 사용하라고 여기 일단 둠 */
 }
 
-@media screen and (max-width: 800px) {
+/* SNS피드 작성 및 수정 페이지 타이틀 */
+.sns-write-title-h2 {
+  font-size: 3em;
+  margin: 0;
+}
+
+@media screen and (max-width: 600px) {
   .context-h5 {
     font-size: 1.2rem;
   }
@@ -87,5 +93,16 @@ body {
 
   .feed-write-text {
     font-size: 0.9em;
+  }
+
+  .sns-write-title-h2 {
+    font-size: 1.8rem;
+    margin: 0;
+  }
+  
+  /* 아이콘 가리기? (02.15) */
+  .sns-write-title-icon {
+    display: none;
+    /* width: 10px; */
   }
 }

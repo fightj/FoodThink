@@ -172,20 +172,17 @@ function FeedDetail() {
   }
 
   const handleAddComment = (newComment) => {
-    // Add the new comment to the local state or send it to the server
     console.log("New comment added:", newComment)
   }
 
   return (
     <div className="base-div">
       <SearchBar />
-      <div className="parent-container">
         <div className="card-div">
           <button onClick={() => navigate(-1)} className="back-button1">
             <img src="/images/previous_button.png" alt="Previous" className="icon" />
-            탐색 탭
           </button>
-          <div style={{ width: "80%", margin: "0 auto" }}>
+          <div className="sns-detail">
             <div className="user-info-feed">
               <div className="profile-container-feed">
                 <div className="profile-image1">
@@ -299,7 +296,6 @@ function FeedDetail() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
     </div>
   )
 }

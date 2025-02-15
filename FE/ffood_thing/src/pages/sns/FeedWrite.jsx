@@ -254,9 +254,15 @@ function FeedWrite() {
   return (
     <div className="base-div">
         <div className="card-div">
+          <div className="sns-write-header">
             <button onClick={handleBack} className="back-button1">
               <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
             </button>
+            <div className="sns-write-title">
+                <h2 className="sns-write-title-h2">피드 작성</h2>
+                <img src="/images/시원이.png" className="sns-write-title-icon" />
+            </div>
+          </div>
             <form onSubmit={handleSubmit}>
               <div className="preview-container">
                 {selectedImages.map((image) => (

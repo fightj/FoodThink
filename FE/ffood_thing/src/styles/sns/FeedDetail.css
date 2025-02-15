@@ -2,6 +2,9 @@
 .back-button1 {
   display: flex;
   align-items: center;
+
+  justify-content: center;
+  
   background: none;
   border: none;
   margin: 0 !important;
@@ -12,6 +15,7 @@
 .back-button-icon {
   width: 3rem;
 }
+
 
 .user-info-feed {
   display: flex;
