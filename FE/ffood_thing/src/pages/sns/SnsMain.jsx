@@ -22,6 +22,7 @@ function SnsMain() {
     };
 
     fetchData();
+    window.scrollTo(0,0);
   }, []);
 
   const handleSearch = (query) => {
