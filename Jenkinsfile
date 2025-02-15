@@ -257,6 +257,8 @@ pipeline {
         DIALOGFLOW_PROJECT_ID = credentials('DIALOGFLOW_PROJECT_ID')
         ELASTICSEARCH_URIS = credentials('ELASTICSEARCH_URIS')
         DIALOGFLOW_KEY_PATH = 'BE/src/main/resources/dialogflow-key.json'
+        VITE_KAKAO_CLIENT_ID = credentials('VITE_KAKAO_CLIENT_ID')
+        VITE_KAKAO_REDIRECT_URI = credentials('VITE_KAKAO_REDIRECT_URI')
     }
 
     stages {
@@ -296,6 +298,17 @@ pipeline {
                     dir('FE/ffood_thing') {
                         nodejs('NodeJS 22.13.0'){
                             sh 'pwd'
+
+                            withCredentials([
+                                  string(credentialsId: 'VITE_KAKAO_CLIENT_ID', variable: 'KAKAO_CLIENT_ID'),
+                                  string(credentialsId: 'VITE_KAKAO_REDIRECT_URI', variable: 'KAKAO_REDIRECT_URI')
+                            ]) {
+                                  sh """
+                                  echo "VITE_KAKAO_CLIENT_ID=$KAKAO_CLIENT_ID" > .env.production
+                                  echo "VITE_KAKAO_REDIRECT_URI=$KAKAO_REDIRECT_URI" >> .env.production
+                                  """
+                            }
+
                             sh 'npm install --force'
 //                            sh 'npm install'
                             sh 'npm run build'
