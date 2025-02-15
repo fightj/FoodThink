@@ -4,6 +4,8 @@
   align-items: center;
   background: none;
   border: none;
+  margin: 0 !important;
+  padding: 0;
 }
 
 .icon,
@@ -282,10 +284,6 @@ hr {
   padding: 10px; /* 패딩 추가 */
   cursor: pointer; /* 커서 포인터 */
   white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
-}
-
-.dropdown-item:hover {
-  background-color: #f0f0f0; /* 호버 시 배경색 변경 */
 }
 
 .linked-recipe-area {
