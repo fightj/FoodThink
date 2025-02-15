@@ -423,7 +423,6 @@ function RecipeUpdatePage() {
   return (
     <DndProvider backend={window.innerWidth < 768 ? TouchBackend : HTML5Backend}>
       <div className="base-div">
-        <div className="parent-container">
           <div className="recipe-write-container">
             <div className="recipe-header">
               <button onClick={() => navigate(-1)} className="back-button5">
@@ -605,7 +604,6 @@ function RecipeUpdatePage() {
               </button>
             </div>
           </div>
-        </div>
       </div>
     </DndProvider>
   )
