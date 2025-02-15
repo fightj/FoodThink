@@ -57,22 +57,21 @@ function SnsMain() {
     <PageSlide>
       <div className="base-div">
         <SearchBar onSearch={handleSearch} />
-        <div className="parent-container">
           <div className="card-div">
-            <div className="container px-4 py-2" id="custom-cards">
+            {/* <div className="container px-4 px-2" id="custom-cards"> */}
               <div className="d-flex justify-content-between align-items-center mt-0">
                 <h2></h2>
-                <img src="/images/feed_write_button.png" alt="Feed 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} onClick={handleWriteClick} />
+                <img src="/images/feed_write_button.png" alt="Feed 작성" className="feed-write-button" onClick={handleWriteClick} />
               </div>
 
-              <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+              <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4">
                 {feedData.map((feedItem) => {
                   const hasMultipleImages = feedItem.imageSize >= 2;
 
                   return (
                     <div className="col" key={feedItem.id}>
                       <Link to={`/feed/${feedItem.id}`} style={{ textDecoration: "none" }}>
-                        <div className="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg feed-card" style={{ backgroundImage: `url(${feedItem.image})` }}>
+                      <div className="card card-cover h-100 overflow-hidden rounded-4 feed-card" style={{ backgroundImage: `url(${feedItem.image})` }}>
                           {hasMultipleImages && (
                             <div className="image-icon">
                               <img src="/images/pages.png" alt="Multiple images" />
@@ -92,8 +91,7 @@ function SnsMain() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+      {/* </div> */}
     </PageSlide>
   );
 }
