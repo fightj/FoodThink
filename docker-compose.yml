@@ -5,7 +5,7 @@ services:
     build:
       context: ./BE
       dockerfile: Dockerfile
-    container_name: my-backend-container
+    container_name: my-backend-container-v2
     ports:
       - "8085:8080"
     environment:
@@ -27,9 +27,9 @@ services:
       - TZ=Asia/Seoul
     volumes:
       - /etc/localtime:/etc/localtime:ro
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
+#    depends_on:
+#      elasticsearch:
+#        condition: service_healthy
     networks:
       - backend_network
       - frontend_network
@@ -38,7 +38,7 @@ services:
     build:
       context: ./FE/ffood_thing
       dockerfile: Dockerfile
-    container_name: my-frontend-container
+    container_name: my-frontend-container-v2
     ports:
       - "80:80"
       - "443:443"
@@ -50,33 +50,33 @@ services:
     depends_on:
       - backend
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
-    environment:
-      - node.name=elasticsearch
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-    ports:
-      - "9200:9200"
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
-    networks:
-      - backend_network
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://elasticsearch:9200" ]
-      interval: 30s
-      retries: 3
-      start_period: 10s
-      timeout: 10s
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.14.0
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - "5601:5601"
-    networks:
-      - backend_network
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
+#    environment:
+#      - node.name=elasticsearch
+#      - discovery.type=single-node
+#      - xpack.security.enabled=false
+#    ports:
+#      - "9200:9200"
+#    volumes:
+#      - elasticsearch-data:/usr/share/elasticsearch/data
+#    networks:
+#      - backend_network
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://elasticsearch:9200" ]
+#      interval: 30s
+#      retries: 3
+#      start_period: 10s
+#      timeout: 10s
+#
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:8.14.0
+#    environment:
+#      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+#    ports:
+#      - "5601:5601"
+#    networks:
+#      - backend_network
 
 volumes:
   elasticsearch-data: {}

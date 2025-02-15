@@ -76,20 +76,13 @@
   z-index: 1006;
 }
 
-.tuto-skip-button {
+/* .tuto-skip-button {
   position: absolute;
   top: 5%;
   right: 2%;
-  background: linear-gradient(45deg, #ff7e5f, #feb47b);
   border: none;
-  color: white;
   padding: 10px 20px;
-  text-align: center;
-  text-transform: uppercase;
-  transition: 0.3s;
-  border-radius: 5px;
-  cursor: pointer;
-}
+} */
 
 .tuto-next-button {
   background: linear-gradient(45deg, #ff7e5f, #feb47b);

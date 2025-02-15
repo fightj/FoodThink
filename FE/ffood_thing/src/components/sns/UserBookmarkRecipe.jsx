@@ -1,16 +1,12 @@
-import React from "react"
+import React, { useState } from "react"
 import Modal from "react-bootstrap/Modal"
 import "bootstrap/dist/css/bootstrap.min.css"
 import Swal from "sweetalert2"
-import "flickity/css/flickity.css" // Flickity CSS 임포트
-import Flickity from "react-flickity-component" // Flickity 컴포넌트 임포트
 import "../../styles/sns/UserBookmarkRecipe.css" // 사용자 정의 CSS 임포트
 
-const flickityOptions = {
-  wrapAround: true,
-}
-
 function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
+  const [selectedBookmark, setSelectedBookmark] = useState(null)
+
   const handleBookmarkClick = (bookmark) => {
     Swal.fire({
       title: "이 레시피를 참조하셨나요?",
@@ -25,31 +21,49 @@ function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
     })
   }
 
+  const handleItemSelect = (bookmark) => {
+    setSelectedBookmark(bookmark)
+  }
+
   return (
-    <Modal show onHide={closeModal} centered dialogClassName="modal-dialog" style={{ minWidth: "80vw", minHeight: "50vh", margin: "auto" }}>
+    <Modal show onHide={closeModal} centered dialogClassName="modal-dialog" className="feed-recipe-bookmark">
       <Modal.Header closeButton>
-        <Modal.Title>내 북마크 레시피</Modal.Title>
+        <Modal.Title className="my-bookmark-modal-title">나의 북마크 레시피</Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ width: "100%", height: "100%", margin: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <Modal.Body
+        style={{
+          width: "100%",
+          height: "100%",
+          margin: "auto",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         {bookmarks.length === 0 ? (
           <p>비어있습니다.</p>
         ) : (
-          <Flickity className={"bookmark-gallery"} elementType={"div"} options={flickityOptions} disableImagesLoaded={false} reloadOnUpdate>
+          <div className="bookmark-gallery">
             {bookmarks.map((bookmark, idx) => (
               <div
                 key={idx}
-                className="bookmark-gallery-cell"
-                onClick={() => handleBookmarkClick(bookmark)}
-                style={{ cursor: "pointer", backgroundImage: `url(${bookmark.image})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+                className={`bookmark-gallery-cell ${selectedBookmark === bookmark ? "selected" : ""}`}
+                onClick={() => {
+                  handleBookmarkClick(bookmark)
+                  handleItemSelect(bookmark)
+                }}
+                style={{
+                  cursor: "pointer",
+                  backgroundImage: `url(${bookmark.image})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
                 }}
               >
                 <h2>{bookmark.title}</h2>
                 <span className="scroll-item-date">{bookmark.date}</span>
               </div>
             ))}
-          </Flickity>
+          </div>
         )}
       </Modal.Body>
     </Modal>
