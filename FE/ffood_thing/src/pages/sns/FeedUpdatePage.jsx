@@ -7,6 +7,7 @@ import Swal from "sweetalert2"
 import "../../styles/sns/FeedWrite.css"
 import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
 import { UserContext } from "../../contexts/UserContext"
+import "../../styles/base/global.css" //텍스트 문제
 
 function FeedUpdatePage() {
   const { id } = useParams()
@@ -272,12 +273,9 @@ function FeedUpdatePage() {
 
   return (
     <div className="base-div">
-      <div className="parent-container">
-        <div className="card-div-write">
-          <div className="div-80">
+      <div className="card-div">
             <button onClick={handleBack} className="back-button1">
-              <img src="/images/previous_button.png" alt="Previous" className="icon" />
-              이전
+              <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
             </button>
             <form onSubmit={handleSubmit}>
               <div className="preview-container">
@@ -299,15 +297,17 @@ function FeedUpdatePage() {
 
               <hr className="featurette-divider" />
 
-              <Form.Control size="lg" type="text" placeholder="음식명" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
+              <h5 className="context-h5">음식명</h5>
+              <Form.Control className="feed-write-text" type="text" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
               <br />
-              <Form.Control type="text" placeholder="문구 추가..." value={description} onChange={(e) => setDescription(e.target.value)} />
+              <h5 className="context-h5">한줄평</h5>
+              <Form.Control className="feed-write-text" type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
 
-              <div className="recipe-section">
-                <h5>참고한 레시피</h5>
+              <div className="reference-recipe">
+                <h5 className="context-h5">참고한 레시피</h5>
                 {recipeTitle && (
                   <div className="recipe-badge" style={{ display: "flex", alignItems: "center" }}>
-                    <Badge bg="dark" style={{ fontSize: "1.25em", padding: "0.5em 1em" }}>
+                    <Badge className="sns-reference-recipe">
                       {recipeTitle}
                       <span style={{ cursor: "pointer", marginLeft: "0.5em" }} onClick={handleRecipeRemove}>
                         &times;
@@ -328,9 +328,7 @@ function FeedUpdatePage() {
                 </button>
               </div>
             </form>
-          </div>
         </div>
-      </div>
 
       {showBookmarkModal && <UserBookmarkRecipe closeModal={() => setShowBookmarkModal(false)} bookmarks={bookmarkData} onBookmarkSelect={handleBookmarkSelect} />}
     </div>

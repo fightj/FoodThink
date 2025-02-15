@@ -84,11 +84,10 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
     if (index !== activeIndex) {
       setActiveIndex(index)
 
-      // Calculate the offset to center the selected card
-      const offset = (index - Math.floor(selectedRecipes.length / 2)) * -300 // Adjust `300` based on card width
+      const offset = (index - Math.floor(selectedRecipes.length / 2)) * -300 
       const listElement = document.querySelector(".today-recipe-list")
       if (listElement) {
-        listElement.style.transform = `translateX(${offset}px)` // Smooth movement
+        listElement.style.transform = `translateX(${offset}px)` 
       }
     }
   }
@@ -146,12 +145,12 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
           <img src="/images/rotate_right.png" alt="닫기" />
         </button>
         <div className="today-title">
-          오늘 뭐 먹지
-          <FontAwesomeIcon icon={faUtensils} bounce style={{ color: "#fdb13f", fontSize: "50px" }} />
+          오늘 뭐 먹지&nbsp;
+          <FontAwesomeIcon icon={faUtensils} bounce style={{ color: "#fdb13f", fontSize: "100%" }} />
         </div>
         {loading ? (
           <div className="loading-text">
-            <FontAwesomeIcon icon={faUtensils} bounce style={{ color: "#ffc800", fontSize: "50px" }} />
+            <FontAwesomeIcon icon={faUtensils} bounce style={{ color: "#ffc800", fontSize: "200%" }} />
           </div>
         ) : (
           <>

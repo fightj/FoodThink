@@ -1,3 +1,9 @@
+/* 피드 작성하기 버튼 : SnsMain.jsx */
+.feed-write-button {
+  width: 3rem;
+  margin-bottom: 25px;
+}
+
 .feature-icon {
   width: 4rem;
   height: 4rem;
