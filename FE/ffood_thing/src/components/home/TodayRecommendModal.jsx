@@ -110,9 +110,9 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
 
     // 슬라이드 이동 처리
     if (itemTransforms[index] > 50) {
-      slideRight(index) // 오른쪽으로 슬라이드
+      slideLeft(index) // 오른쪽으로 슬라이드
     } else if (itemTransforms[index] < -50) {
-      slideLeft(index) // 왼쪽으로 슬라이드
+      slideRight(index) // 왼쪽으로 슬라이드
     }
 
     // 이동 거리 초기화
@@ -138,18 +138,21 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="today-recommend-card" onClick={(e) => e.stopPropagation()}>
-        <button className="today-close-btn" onClick={onClose}>
-          <img src="/images/close_icon.png" alt="닫기" />
-        </button>
-        <button className="refresh-btn" onClick={refreshRecommendations} disabled={loading}>
-          <img src="/images/rotate_right.png" alt="닫기" />
-        </button>
-        <div className="today-title">
-          오늘 뭐 먹지&nbsp;
-          <FontAwesomeIcon icon={faUtensils} bounce style={{ color: "#fdb13f", fontSize: "100%" }} />
+        <div className="today-header">
+          
+          <button className="today-refresh-btn" onClick={refreshRecommendations} disabled={loading}>
+            <img src="/images/rotate_right.png" alt="새로고침" />
+          </button>
+          <div className="today-title">
+            오늘 뭐 먹지&nbsp;
+            <FontAwesomeIcon icon={faUtensils} bounce style={{ color: "#fdb13f", fontSize: "100%" }} />
+          </div>
+          <button className="today-close-btn" onClick={onClose}>
+            <img src="/images/close_icon.png" alt="닫기" />
+          </button>
         </div>
         {loading ? (
-          <div className="loading-text">
+          <div className="today-loading-text">
             <FontAwesomeIcon icon={faUtensils} bounce style={{ color: "#ffc800", fontSize: "200%" }} />
           </div>
         ) : (
@@ -175,7 +178,7 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <div className="recipe-title-container">
+            <div className="today-recipe-title-container">
               <p className="today-recipe-title-main">{selectedRecipes[activeIndex].recipeTitle}</p>
             </div>
           </>
