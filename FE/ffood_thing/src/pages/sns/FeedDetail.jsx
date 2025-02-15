@@ -19,6 +19,35 @@ function FeedDetail() {
   const [sessionUserId, setSessionUserId] = useState(null)
   const [showRecipeModal, setShowRecipeModal] = useState(false) // 모달 상태 추가
 
+  //이미지 여러 장 터치 슬라이드 기능 추가
+  const [touchStartX, setTouchStartX] = useState(0); //시작 위치
+  const [touchEndX, setTouchEndX] = useState(0); //끝 위치
+
+  const handleTouchStart = (e) => {
+    //터치 시작 시, 현재 버튼에 해당하는 영역이 터치된 경우
+    const target = e.target;
+    if (target.classList.contains('prev-button') || target.classList.contains('next-button')) {
+      return; //버튼을 클릭할 경우 터치 이벤트 무시
+    }
+    setTouchStartX(e.touches[0].clientX); //터치 시작 지점 기록
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.touches[0].clientX); //터치 이동 중 지점 기록
+  };
+
+  const handleTouchEnd = () => {
+    //터치 이동한 거리 차이로 슬라이드 방향 판단
+    if (touchStartX - touchEndX > 50) {
+      handleNext(); //다음 이미지로 이동
+    }
+
+    if (touchEndX - touchStartX > 50) {
+      handlePrev(); //이전 이미지로 이동
+    }
+  };
+
+
   useEffect(() => {
     const fetchFeedData = async () => {
       try {
@@ -177,126 +206,121 @@ function FeedDetail() {
 
   return (
     <div className="base-div">
-      <SearchBar />
-        <div className="card-div">
-          <button onClick={() => navigate(-1)} className="back-button1">
-            <img src="/images/previous_button.png" alt="Previous" className="icon" />
-          </button>
-          <div className="sns-detail">
-            <div className="user-info-feed">
-              <div className="profile-container-feed">
-                <div className="profile-image1">
-                  <img src={author.image || "/images/default_profile.png"} alt={author.username || "User"} className="profile-image1" />
-                </div>
-                <span className="username">{author.username || "Unknown User"}</span>
-              </div>
-              {sessionUserId === currentFeed.userId && (
-                <div className="edit-container" style={{ position: "relative" }}>
-                  <button className="edit-button1" onClick={toggleDropdown}>
-                    <img src="/images/etc-btn.png" alt="Edit Options1" />
-                  </button>
-                  {showDropdown && (
-                    <div className="dropdown-menu">
-                      <button className="dropdown-item" onClick={handleEdit}>
-                        feed 수정
-                      </button>
-                      <button className="dropdown-item" onClick={handleDelete}>
-                        feed 삭제
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+  <SearchBar />
+  <div className="card-div">
+    {/* 뒤로가기 버튼 */}
+    <button onClick={() => navigate(-1)} className="sns-detail-back-button">
+      <img src="/images/previous_button.png" alt="Previous" className="icon" />
+    </button>
 
-            {/* 이미지 Carousel */}
-            {images.length > 0 && (
-              <div className="carousel-container">
-                <div className="carousel">
-                  {images.length > 1 && (
-                    <>
-                      <button className="prev-button" onClick={handlePrev}>
-                        ❮
-                      </button>
-                      <button className="next-button" onClick={handleNext}>
-                        ❯
-                      </button>
-                    </>
-                  )}
-                  <img src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="carousel-image" />
-                  {/* 이미지 번호 표시 */}
-                  <span className="image-counter">
-                    {currentIndex + 1} / {images.length}
-                  </span>
-                </div>
-                {images.length > 1 && (
-                  <div className="indicator-container">
-                    {images.map((_, index) => (
-                      <span key={index} className={`indicator-dot ${currentIndex === index ? "active" : ""}`} />
-                    ))}
-                  </div>
-                )}
+    <div className="sns-detail">
+      {/* 사용자 정보 */}
+      <div className="user-info-feed">
+        <div className="profile-container-feed">
+          <div className="profile-image1">
+            <img src={author.image || "/images/default_profile.png"} alt={author.username || "User"} className="profile-image1" />
+          </div>
+          <span className="sns-username">{author.username || "Unknown User"}</span>
+        </div>
+        {sessionUserId === currentFeed.userId && (
+          <div className="edit-container">
+            <button className="edit-button1" onClick={toggleDropdown}>
+              <img src="/images/etc-btn.png" alt="Edit Options1" />
+            </button>
+            {showDropdown && (
+              <div className="dropdown-menu">
+                <button className="dropdown-item" onClick={handleEdit}>feed 수정</button>
+                <button className="dropdown-item" onClick={handleDelete}>feed 삭제</button>
               </div>
             )}
-
-            <div className="content">
-              <span className="likes-comments">
-                <img src={isLiked ? "/images/feed_like_do.png" : "/images/feed_like_undo.png"} alt="Like Icon" onClick={handleLikeToggle} style={{ cursor: "pointer" }} />
-                <span>{likesCount}</span>
-
-                <button className="comment-button" onClick={toggleComments}>
-                  <img src="/images/feed_comment.png" alt="Comment Icon" />
-                </button>
-                <span>{comments.length}</span>
-              </span>
-              <div className="hash-tag-area">
-                <p>
-                  <strong>#{currentFeed.foodName}</strong>
-                </p>
-                {isRecipe ? (
-                  <p>
-                    <strong>#{currentFeed.recipeListResponseDto.recipeTitle}</strong>
-                  </p>
-                ) : null}
-              </div>
-
-              <hr />
-              <p className="description">
-                <strong>{author.username || "Unknown User"}</strong> {currentFeed.content}
-              </p>
-              {isRecipe ? (
-                <div className="linked-recipe-area" style={{ display: "flex", flexDirection: "column" }}>
-                  <div className="recipe-image-container">
-                    <img src="/images/mainlogo.jpg" alt="Main Logo" className="recipe-main-image" />
-                    <div className="recipe-tooltip" onClick={() => setShowRecipeModal(true)}>
-                      <h1>참고한 레시피가 있어요! click!</h1>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-            </div>
           </div>
-        </div>
+        )}
+      </div>
 
-        <RecipeModal show={showRecipeModal} onHide={() => setShowRecipeModal(false)} recipe={currentFeed.recipeListResponseDto} />
+      {/* 메인 컨텐츠 (이미지 + 내용) */}
+      <div className="main-content">
+        {/* 이미지 Carousel */}
+        {images.length > 0 && (
+          <div className="carousel-container"
+                onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+            <div className="carousel">
+              {/* {images.length > 1 && (
+                <>
+                  <button className="prev-button" onClick={handlePrev}>❮</button>
+                  <button className="next-button" onClick={handleNext}>❯</button>
+                </>
+              )} */}
+              <img src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="carousel-image" />
+              <span className="image-counter">
+                {currentIndex + 1} / {images.length}
+              </span>
+            </div>
+            {images.length > 1 && (
+              <div className="indicator-container">
+                {images.map((_, index) => (
+                  <span key={index} className={`indicator-dot ${currentIndex === index ? "active" : ""}`} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
-        <AnimatePresence>
-          {showComments && (
-            <motion.div
-              initial={{ y: "100%", opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: "100%", opacity: 0 }}
-              transition={{
-                y: { type: "spring", stiffness: 300, damping: 30, duration: 1 },
-                opacity: { duration: 1 },
-              }}
-              className="comment-slide"
-            >
-              <FeedCommentSection comments={comments} onClose={toggleComments} onAddComment={handleAddComment} feedId={id} />
-            </motion.div>
+        {/* 컨텐츠 */}
+        <div className="content">
+          <span className="likes-comments">
+            <img src={isLiked ? "/images/feed_like_do.png" : "/images/feed_like_undo.png"} alt="Like Icon" onClick={handleLikeToggle} style={{ cursor: "pointer" }} />
+            <span>{likesCount}</span>
+
+            <button className="comment-button" onClick={toggleComments}>
+              <img src="/images/feed_comment.png" alt="Comment Icon" />
+            </button>
+            <span>{comments.length}</span>
+          </span>
+          <div className="hash-tag-area">
+            <p><strong>#{currentFeed.foodName}</strong></p>
+            {isRecipe && <p><strong>#{currentFeed.recipeListResponseDto.recipeTitle}</strong></p>}
+          </div>
+
+          <hr />
+          <p className="description">
+            <strong>{author.username || "Unknown User"}</strong> {currentFeed.content}
+          </p>
+
+          {isRecipe && (
+            <div className="linked-recipe-area">
+              <div className="recipe-image-container">
+                <img src="/images/mainlogo.jpg" alt="Main Logo" className="recipe-main-image" />
+                <div className="recipe-tooltip" onClick={() => setShowRecipeModal(true)}>
+                  <h1>참고한 레시피가 있어요! click!</h1>
+                </div>
+              </div>
+            </div>
           )}
-        </AnimatePresence>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <RecipeModal show={showRecipeModal} onHide={() => setShowRecipeModal(false)} recipe={currentFeed.recipeListResponseDto} />
+
+  <AnimatePresence>
+    {showComments && (
+      <motion.div
+        initial={{ y: "100%", opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: "100%", opacity: 0 }}
+        transition={{
+          y: { type: "spring", stiffness: 300, damping: 30, duration: 1 },
+          opacity: { duration: 1 },
+        }}
+        className="comment-slide"
+      >
+        <FeedCommentSection comments={comments} onClose={toggleComments} onAddComment={handleAddComment} feedId={id} />
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
+
   )
 }
 
