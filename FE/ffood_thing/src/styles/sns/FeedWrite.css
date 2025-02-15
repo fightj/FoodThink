@@ -66,7 +66,7 @@ form {
   margin-bottom: 20px;
 }
 
-/* 참고한 레시피 */
+/* 참고한 레시피 (02.14) */
 .reference-recipe {
   margin-top: 25px;
 }
@@ -76,26 +76,7 @@ form {
   gap: 10px;
 }
 
-/* Add other styles as needed */
-/* .card-div-write {
-  background-color: rgb(255, 255, 255);
-  width: 95%;
-  padding: 20px 0;
-  display: flex;
-  justify-content: center; 
-  border-radius: 50px; 
-  height: auto;
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3);
-} */
-
-.recipe-badge {
-  position: relative;
-  display: inline-block;
-  font-size: 1.2rem; /* 뱃지의 크기를 키웁니다 */
-  margin-bottom: 10px;
-}
-
-.recipe-badge .close-button {
+.close-button {
   position: absolute;
   top: 0;
   right: 0;
@@ -103,5 +84,5 @@ form {
   font-size: 1rem; /* 'x' 표시의 크기 */
   border: none;
   background: transparent;
-  color: white; /* 필요에 따라 색상 조정 */
+  color: white;
 }

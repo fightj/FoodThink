@@ -28,7 +28,7 @@ function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
   return (
     <Modal show onHide={closeModal} centered dialogClassName="modal-dialog" className="feed-recipe-bookmark">
       <Modal.Header closeButton>
-        <Modal.Title>내 북마크 레시피</Modal.Title>
+        <Modal.Title className="my-bookmark-modal-title">나의 북마크 레시피</Modal.Title>
       </Modal.Header>
       <Modal.Body
         style={{

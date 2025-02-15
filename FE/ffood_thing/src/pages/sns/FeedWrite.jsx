@@ -7,6 +7,7 @@ import Swal from "sweetalert2"
 import "../../styles/sns/FeedWrite.css"
 import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
 import { UserContext } from "../../contexts/UserContext"
+import "../../styles/base/global.css" //텍스트 문제
 
 function FeedWrite() {
   const navigate = useNavigate()
@@ -277,16 +278,17 @@ function FeedWrite() {
               <hr className="featurette-divider" />
 
               <h5 className="context-h5">음식명</h5>
-              <Form.Control className="feed-wirte-text" size="lg" type="text" placeholder="예) 김치찌개, 오므라이스, ..." value={foodName} onChange={(e) => setFoodName(e.target.value)} />
+              <Form.Control className="feed-wirte-text" type="text" placeholder="예) 김치찌개, 오므라이스, ..." value={foodName} onChange={(e) => setFoodName(e.target.value)} />
               <br />
               <h5 className="context-h5">한줄평</h5>
-              <Form.Control className="feed-wirte-text" size="lg" type="text" placeholder="내용을 작성해주세요." value={description} onChange={(e) => setDescription(e.target.value)} />
+              <Form.Control className="feed-wirte-text" type="text" placeholder="내용을 작성해주세요." value={description} onChange={(e) => setDescription(e.target.value)} />
+              
               <div className="reference-recipe">
                 <h5 className="context-h5">참고한 레시피</h5>
                 {/* 레시피 타이틀 뱃지 */}
                 {recipeTitle && (
                   <div className="recipe-badge" style={{ display: "flex", alignItems: "center" }}>
-                    <Badge bg="dark" style={{ fontSize: "1.25em", padding: "0.5em 1em" }}>
+                    <Badge className="sns-reference-recipe">
                       {recipeTitle}
                       <span style={{ cursor: "pointer", marginLeft: "0.5em" }} onClick={handleRecipeRemove}>
                         &times;
