@@ -171,29 +171,6 @@
   object-fit: cover; /* 이미지 비율 유지하면서 잘 맞추기 */
 }
 
-/* 이미지 좌우 방향 버튼 삭제 (02.15) */
-/* .prev-button,
-.next-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.3);
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 50%;
-  z-index: 1;
-}
-
-.prev-button {
-  left: 10px;
-}
-
-.next-button {
-  right: 10px;
-} */
-
 .indicator-container {
   display: flex;
   justify-content: center;
@@ -366,24 +343,11 @@ hr {
   font-size: 1.3rem;
 }
 
-/* 이미지 컨테이너 스타일 */
-/* .recipe-image-container {
-  margin-top: 10%;
-  position: relative;
-  display: flex;
-  align-items: center;
-} */
-
-/* .recipe-main-image {
-  width: 30%;
-  height: auto;
-} */
-
 /* 댓글 토글 위치 조정 문제 (02.16) */
 .comment-slide {
   position: fixed; /* 화면 상단에서 고정된 위치로 표시되도록 */
-  top: 3%;
-  right: 0.5%;
+  top: 4%;
+  right: 3%;
   width: 100%;
   max-width: 35rem;
   height: 100vh;
@@ -393,10 +357,9 @@ hr {
 
 @media screen and (max-width: 800px) {
   .comment-slide {
-    left: 0;
-    top: 45%;
-    width: 100%;
-    max-width: 100%;
+    left: 3%;
+    top: 35%;
+    max-width: 94%;
   }
 
   .carousel-container {

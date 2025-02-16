@@ -283,12 +283,6 @@ const handleTouchEnd = () => {
               <div className="carousel-container"
                     onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
                 <div className="carousel">
-                  {/* {images.length > 1 && (
-                    <>
-                      <button className="prev-button" onClick={handlePrev}>❮</button>
-                      <button className="next-button" onClick={handleNext}>❯</button>
-                    </>
-                  )} */}
                   <img src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="carousel-image" />
                   <span className="image-counter">
                     {currentIndex + 1} / {images.length}
@@ -331,7 +325,6 @@ const handleTouchEnd = () => {
 
               {isRecipe && (
                   <div className="recipe-image-container">
-                    {/* <img src="/images/mainlogo.jpg" alt="Main Logo" className="recipe-main-image" /> */}
                     <div className="recipe-tooltip" onClick={() => setShowRecipeModal(true)}>
                       <p>참고 레시피</p>
                     </div>
