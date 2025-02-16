@@ -2,14 +2,16 @@ import React, { useState, useRef, useEffect, useContext } from "react"
 import axios from "axios"
 import imageIcon from "../../assets/image.svg"
 import { Form, Badge } from "react-bootstrap"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import Swal from "sweetalert2"
 import "../../styles/sns/FeedWrite.css"
 import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
 import { UserContext } from "../../contexts/UserContext"
+import "../../styles/base/global.css" // 텍스트 문제
 
 function FeedWrite() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [selectedImages, setSelectedImages] = useState([])
   const [checkedImages, setCheckedImages] = useState([])
@@ -17,23 +19,10 @@ function FeedWrite() {
   const [description, setDescription] = useState("")
   const [showBookmarkModal, setShowBookmarkModal] = useState(false)
   const [bookmarkData, setBookmarkData] = useState([])
-  const [selectedRecipeId, setSelectedRecipeId] = useState(null) // 추가된 상태
-  const [recipeTitle, setRecipeTitle] = useState("") // 추가된 상태
-
+  const [selectedRecipeId, setSelectedRecipeId] = useState(location.state?.recipeId || null)
+  const [recipeTitle, setRecipeTitle] = useState(location.state?.recipeTitle || "")
   const fileInputRef = useRef()
-
   const { user } = useContext(UserContext)
-
-  const fetchRecipeTitle = async (recipeId) => {
-    try {
-      const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${recipeId}`)
-      const { recipeTitle } = response.data
-      setRecipeTitle(recipeTitle)
-    } catch (error) {
-      console.error("Error fetching recipe details:", error)
-      Swal.fire("오류 발생!", "레시피 정보를 가져오는 중 오류가 발생했습니다.", "error")
-    }
-  }
 
   useEffect(() => {
     if (user) {
@@ -67,7 +56,7 @@ function FeedWrite() {
     const savedImages = localStorage.getItem("selectedImages")
     const savedCheckedImages = localStorage.getItem("checkedImages")
     const savedSelectedRecipeId = localStorage.getItem("selectedRecipeId")
-    const savedRecipeTitle = localStorage.getItem("recipeTitle") // 추가된 부분
+    const savedRecipeTitle = localStorage.getItem("recipeTitle")
 
     if (savedFoodName || savedDescription || savedImages || savedCheckedImages || savedSelectedRecipeId || savedRecipeTitle) {
       Swal.fire({
@@ -85,7 +74,7 @@ function FeedWrite() {
           if (savedSelectedRecipeId) {
             setSelectedRecipeId(JSON.parse(savedSelectedRecipeId))
           }
-          if (savedRecipeTitle) setRecipeTitle(savedRecipeTitle) // 레시피 타이틀 불러오기
+          if (savedRecipeTitle) setRecipeTitle(savedRecipeTitle)
           Swal.fire("불러오기 완료!", "", "success")
         } else if (result.isDenied) {
           localStorage.removeItem("foodName")
@@ -93,10 +82,16 @@ function FeedWrite() {
           localStorage.removeItem("selectedImages")
           localStorage.removeItem("checkedImages")
           localStorage.removeItem("selectedRecipeId")
-          localStorage.removeItem("recipeTitle") // 레시피 타이틀 제거
+          localStorage.removeItem("recipeTitle")
           Swal.fire("임시 저장 데이터를 삭제했습니다.", "", "info")
         }
       })
+    }
+
+    // capturedImage가 존재할 경우 selectedImages에 추가
+    const { capturedImage } = location.state || {}
+    if (capturedImage) {
+      setSelectedImages((prev) => [...prev, { id: Date.now().toString(), dataURL: capturedImage, isCaptured: true }])
     }
   }, [])
 
@@ -118,8 +113,8 @@ function FeedWrite() {
     localStorage.setItem("checkedImages", JSON.stringify(checkedImages))
     localStorage.setItem("foodName", foodName)
     localStorage.setItem("description", description)
-    localStorage.setItem("selectedRecipeId", JSON.stringify(selectedRecipeId)) // 추가된 부분
-    localStorage.setItem("recipeTitle", recipeTitle) // 레시피 타이틀 저장
+    localStorage.setItem("selectedRecipeId", JSON.stringify(selectedRecipeId))
+    localStorage.setItem("recipeTitle", recipeTitle)
     console.log("임시저장 완료")
   }
 
@@ -158,6 +153,18 @@ function FeedWrite() {
     setRecipeTitle("")
   }
 
+  const addImagesToFormData = async (imagesToUpload, formData) => {
+    for (const img of imagesToUpload) {
+      if (img.isCaptured) {
+        // 캡처된 이미지를 Blob 형태로 변환하여 추가
+        const blob = await (await fetch(img.dataURL)).blob()
+        formData.append("images", blob, `${img.id}.png`)
+      } else {
+        formData.append("images", img.file, img.file.name)
+      }
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -177,7 +184,7 @@ function FeedWrite() {
     console.log(accessToken)
 
     const formData = new FormData()
-    imagesToUpload.forEach((img) => formData.append("images", img.file, img.file.name))
+    await addImagesToFormData(imagesToUpload, formData)
 
     const feedRequestDto = {
       foodName: foodName,
@@ -231,7 +238,7 @@ function FeedWrite() {
                 imageAlt: "Custom image",
                 icon: "success",
               })
-              .then(() => navigate(-1))
+              .then(() => navigate("/sns")) // 피드 전체 목록 페이지로 리디렉트
           } catch (error) {
             console.error("Error uploading images:", error)
             swalWithBootstrapButtons.fire({
@@ -252,73 +259,64 @@ function FeedWrite() {
 
   return (
     <div className="base-div">
-      <div className="parent-container">
-        <div className="card-div-write">
-          <div className="div-80">
-            <button onClick={handleBack} className="back-button1">
-              <img src="/images/previous_button.png" alt="Previous" className="icon" /> 이전
-            </button>
-            <form onSubmit={handleSubmit}>
-              <div className="preview-container">
-                {selectedImages.map((image) => (
-                  <div key={image.id} className="preview-image">
-                    <div className="square">
-                      <img src={image.id} alt="미리보기" />
-                    </div>
-                    <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
-                  </div>
-                ))}
-              </div>
-
-              <div className="file-upload" onClick={() => fileInputRef.current.click()}>
-                <img src={imageIcon} alt="이미지 아이콘" />
-                <p>이미지 선택</p>
-                <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
-              </div>
-
-              <hr className="featurette-divider" />
-
-              <Form.Control size="lg" type="text" placeholder="음식명" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
-              <br />
-              <Form.Control type="text" placeholder="문구 추가..." value={description} onChange={(e) => setDescription(e.target.value)} />
-
-              <div className="recipe-section">
-                <h5>참고한 레시피</h5>
-                {/* 레시피 타이틀 뱃지 */}
-                {recipeTitle && (
-                  <div className="recipe-badge" style={{ display: "flex", alignItems: "center" }}>
-                    <Badge bg="dark" style={{ fontSize: "1.25em", padding: "0.5em 1em" }}>
-                      {recipeTitle}
-                      <span style={{ cursor: "pointer", marginLeft: "0.5em" }} onClick={handleRecipeRemove}>
-                        &times;
-                      </span>
-                    </Badge>
-                  </div>
-                )}
-                <div className="button-container">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowBookmarkModal(true)}>
-                    내 북마크에서 찾기
-                  </button>
+      <div className="card-div">
+        <button onClick={handleBack} className="back-button1">
+          <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
+        </button>
+        <form onSubmit={handleSubmit}>
+          <div className="preview-container">
+            {selectedImages.map((image) => (
+              <div key={image.id} className="preview-image">
+                <div className="square">
+                  <img src={image.isCaptured ? image.dataURL : image.id} alt="미리보기" />
                 </div>
+                <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
               </div>
-
-              <div className="submit-button">
-                <button type="submit" className="btn btn-primary">
-                  작성 완료
-                </button>
-              </div>
-            </form>
+            ))}
           </div>
-        </div>
+
+          <div className="file-upload" onClick={() => fileInputRef.current.click()}>
+            <img src={imageIcon} alt="이미지 아이콘" />
+            <p>이미지 선택</p>
+            <input type="file" ref={fileInputRef} id="imageUpload" name="imageUpload" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageChange} />
+          </div>
+
+          <hr className="featurette-divider" />
+
+          <h5 className="context-h5">음식명</h5>
+          <Form.Control className="feed-wirte-text" type="text" placeholder="예) 김치찌개, 오므라이스, ..." value={foodName} onChange={(e) => setFoodName(e.target.value)} />
+          <br />
+          <h5 className="context-h5">한줄평</h5>
+          <Form.Control className="feed-wirte-text" type="text" placeholder="내용을 작성해주세요." value={description} onChange={(e) => setDescription(e.target.value)} />
+
+          <div className="reference-recipe">
+            <h5 className="context-h5">참고한 레시피</h5>
+            {recipeTitle && (
+              <div className="recipe-badge" style={{ display: "flex", alignItems: "center" }}>
+                <Badge className="sns-reference-recipe">
+                  {recipeTitle}
+                  <span style={{ cursor: "pointer", marginLeft: "0.5em" }} onClick={handleRecipeRemove}>
+                    &times;
+                  </span>
+                </Badge>
+              </div>
+            )}
+            <div className="button-container">
+              <button type="button" className="btn btn-secondary" onClick={() => setShowBookmarkModal(true)}>
+                내 북마크에서 찾기
+              </button>
+            </div>
+          </div>
+
+          <div className="submit-button">
+            <button type="submit" className="btn btn-primary">
+              작성 완료
+            </button>
+          </div>
+        </form>
       </div>
 
-      {showBookmarkModal && (
-        <UserBookmarkRecipe
-          closeModal={() => setShowBookmarkModal(false)}
-          bookmarks={bookmarkData}
-          onBookmarkSelect={handleBookmarkSelect} // 선택된 레시피 ID를 설정
-        />
-      )}
+      {showBookmarkModal && <UserBookmarkRecipe closeModal={() => setShowBookmarkModal(false)} bookmarks={bookmarkData} onBookmarkSelect={handleBookmarkSelect} />}
     </div>
   )
 }
