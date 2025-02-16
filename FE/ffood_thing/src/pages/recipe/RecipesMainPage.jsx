@@ -225,37 +225,42 @@ const RecipesMainPage = () => {
         )}
 
         <div>
-          <div className="sort-filters2">
-            <span className={`sort-filter2 ${sortType === "조회순" ? "selected" : ""}`} onClick={() => handleSortClick("조회순")}>
+          <div className="main-sort-filters">
+            <span className={`main-sort-filter ${sortType === "조회순" ? "selected" : ""}`} onClick={() => handleSortClick("조회순")}>
               조회순
             </span>
-            <span className={`sort-filter2 ${sortType === "최신순" ? "selected" : ""}`} onClick={() => handleSortClick("최신순")}>
+            <span className={`main-sort-filter ${sortType === "최신순" ? "selected" : ""}`} onClick={() => handleSortClick("최신순")}>
               최신순
             </span>
-            <span className={`sort-filter2 ${sortType === "북마크순" ? "selected" : ""}`} onClick={() => handleSortClick("북마크순")}>
+            <span className={`main-sort-filter ${sortType === "북마크순" ? "selected" : ""}`} onClick={() => handleSortClick("북마크순")}>
               북마크순
             </span>
           </div>
-          <div className="recipe-list2">
+          <div className="main-recipe-list">
             {allRecipes.map((recipe, index) => (
               <div
                 key={`${recipe.recipeId}-${index}`}
                 ref={allRecipes.length === index + 1 ? lastRecipeElementRef : null}
-                className="recipe-card2 recipe-card2-small"
+                className="main-recipe-card"
                 onClick={() => handleDetailClick(recipe.recipeId)}
               >
-                <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
-                <div className="recipe-info2">
-                  <h2>{recipe.recipeTitle}</h2>
-                  <div className="profile-info">
-                    <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
-                    <p>{recipe.nickname}</p>
+                <img src={recipe.image} alt={recipe.recipeTitle} className="main-recipe-image" />
+                <div className="main-recipe-info">
+                  <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="main-profile-image" />
+                  <div className="main-profile-info">
+                    <div className="main-recipe-info-title">{recipe.recipeTitle}</div>
+                      <div className="main-profile-stats">{recipe.nickname}</div>
+                      <div className="main-profile-stats">
+                        👁 {recipe.hits} ·
+                        <img src="/images/do-Bookmark.png" alt="북마크 아이콘" className="main-page-bookmark-icon" />
+                        {recipe.bookMarkCount}
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
-            {loading && <p>로딩 중...</p>}
-            {allRecipes.length === 0 && !loading && <p>레시피가 없습니다.</p>}
+            {loading && <h4>로딩 중...</h4>}
+            {allRecipes.length === 0 && !loading && <h4>레시피가 없습니다.</h4>}
           </div>
         </div>
       </div>

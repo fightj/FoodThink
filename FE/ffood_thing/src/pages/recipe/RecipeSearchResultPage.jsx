@@ -96,30 +96,35 @@ const RecipeSearchResultPage = () => {
               <img src="/images/previous_button.png" alt="Previous" className="icon" />
               이전
             </button>
-            <h3>
+            <h4>
               "{searchQuery}"에 대한 검색 결과가 총 {totalResults}개 있습니다.
-            </h3>
+            </h4>
           </div>
-          <div className="recipe-list2">
+          <div className="main-recipe-list">
             {filteredRecipes.map((recipe, index) => (
               <div
                 key={recipe.recipeId}
                 ref={filteredRecipes.length === index + 1 ? lastRecipeElementRef : null}
-                className="recipe-card2 recipe-card2-small"
+                className="main-recipe-card"
                 onClick={() => handleDetailClick(recipe.recipeId)}
               >
-                <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
-                <div className="recipe-info2">
-                  <h2>{recipe.recipeTitle}</h2>
-                  <div className="profile-info">
-                    <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
-                    <p>{recipe.nickname}</p>
+                <img src={recipe.image} alt={recipe.recipeTitle} className="main-recipe-image" />
+                <div className="main-recipe-info">
+                  <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="main-profile-image" />
+                  <div className="main-profile-info">
+                    <div className="main-recipe-info-title">{recipe.recipeTitle}</div>
+                      <div className="main-profile-stats">{recipe.nickname}</div>
+                      <div className="main-profile-stats">
+                        👁 {recipe.hits} ·
+                        <img src="/images/do-Bookmark.png" alt="북마크 아이콘" className="main-page-bookmark-icon" />
+                        {recipe.bookMarkCount}
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
             {loading && <p>로딩 중...</p>}
-            {filteredRecipes.length === 0 && !loading && <p>검색 결과가 없습니다.</p>}
+            {filteredRecipes.length === 0 && !loading && <h4>검색 결과가 없습니다.</h4>}
           </div>
         </div>
       </div>
