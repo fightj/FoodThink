@@ -274,7 +274,8 @@ function FeedWrite() {
                 {selectedImages.map((image) => (
                   <div key={image.id} className="preview-image">
                     <div className="square">
-                      <img src={image.id} alt="미리보기" />
+                    <img src={image.isCaptured ? image.dataURL : image.id} alt="미리보기" />
+                      {/* <img src={image.id} alt="미리보기" /> */}
                     </div>
                     <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
                   </div>
