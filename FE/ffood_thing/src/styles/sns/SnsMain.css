@@ -167,10 +167,33 @@
   margin-right: 10px;
 }
 
+/* 글자 편집 여기 (02.16) */
 .user-info span {
   font-weight: bold;
   color: white;
 }
+
+@media (max-width: 800px) {
+  .user-info img {
+    display: none;
+  }
+
+  .user-info span {
+    display: none;
+  }
+
+  .feed-write-button {
+    width: 2rem;
+    margin-bottom: 15px;
+  }
+
+  .image-icon img {
+    /* width: 1.2rem; */
+    /* height: 1.2rem; */
+    display: none;
+  }
+}
+
 .search-result-title {
   text-align: center; /* 텍스트 중앙 정렬 */
   flex-grow: 1; /* 나머지 공간을 차지하게 하여 제목을 중앙에 위치시킴 */

@@ -206,7 +206,7 @@ function FeedDetail() {
 
   return (
     <div className="base-div">
-  <SearchBar />
+  {/* <SearchBar /> */}
   <div className="card-div">
     {/* 뒤로가기 버튼 */}
     <button onClick={() => navigate(-1)} className="sns-detail-back-button">
@@ -277,30 +277,26 @@ function FeedDetail() {
             <span>{comments.length}</span>
           </span>
 
-
-          {/* 텍스트부터 밀어야 한다. SNS 내용 넣는 거 변경 할까? 고민됨...
-          참고 레시피 링크 연결도 해야 해. 바로 가기 버튼?
-          댓글 전면 수정 필요해. */}
-
           <hr />
-          <p className="description">
-            <strong>{author.username || "Unknown User"}</strong> {currentFeed.content}
-          </p>
-
-          <div className="hash-tag-area">
-            <p>#나의_요리는_{currentFeed.foodName}</p>
-            {isRecipe && <p>#참고한_레시피는_{currentFeed.recipeListResponseDto.recipeTitle}</p>}
-          </div>
+          
+          <div className="feed-detail-my-text">
+            <p className="description">
+              <strong>{author.username || "Unknown User"}</strong> {currentFeed.content}
+            </p>
+            <p className="hash-tage-recipe-name">#나의_요리는_{currentFeed.foodName}</p>
+          </div>          
+          {/* <div className="hash-tag-area"> */}
+            {/* <p>#나의_요리는_{currentFeed.foodName}</p> */}
+            {/* {isRecipe && <p>#참고한_레시피는_{currentFeed.recipeListResponseDto.recipeTitle}</p>} */}
+          {/* </div> */}
 
           {isRecipe && (
-            <div className="linked-recipe-area">
               <div className="recipe-image-container">
-                <img src="/images/mainlogo.jpg" alt="Main Logo" className="recipe-main-image" />
+                {/* <img src="/images/mainlogo.jpg" alt="Main Logo" className="recipe-main-image" /> */}
                 <div className="recipe-tooltip" onClick={() => setShowRecipeModal(true)}>
-                  <h1>참고한 레시피가 있어요! click!</h1>
+                  <p>참고 레시피</p>
                 </div>
               </div>
-            </div>
           )}
         </div>
       </div>

@@ -270,17 +270,14 @@
 .comment {
   margin-bottom: 15px;
 }
+
 /* 음식 이름 스타일 */
-p {
-  font-size: 2rem; /* 기본 단락 글자 크기 */
-}
+/* p {
+  font-size: 2rem;
+} */
 
 hr {
   margin: 1rem 0; /* 구분선 여백 조정 */
-}
-
-.description {
-  font-size: 1.5rem; /* 설명 글자 크기 */
 }
 
 /* 피드 수정 및 삭제 관련 */
@@ -330,9 +327,6 @@ hr {
 }
 
 
-.linked-recipe-area {
-  padding: 20px;
-}
 .linked-recipe {
   flex-direction: column;
 }
@@ -351,51 +345,49 @@ hr {
   padding-right: 20px;
 }
 
-/* 요리명 및 참고한 레시피 내용 (해시태그 표시) */
-.hash-tag-area {
-  display: flex;
-  flex-direction: column;
+/* 레시피 디테일 내용 폰트 (02.16) */
+.feed-detail-my-text p {
+  font-size: 2rem;
 }
 
-.hash-tag-area p {
-  margin: 0;
+.hash-tage-recipe-name {
   color: #044778;
 }
 
-/* 말풍선 스타일 */
 .recipe-tooltip {
-  position: absolute;
-  top: -20%;
-  left: 25%;
-  transform: translate(0, 0);
+  /* transform: translate(0, 0); */
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: #8c9f58;
   color: white;
   border-radius: 30px;
-  cursor: pointer;
-  max-width: 200px;
+  max-width: 11rem;
   text-align: center;
   z-index: 10;
 }
 
-.recipe-tooltip h1 {
+.recipe-tooltip:active {
+  background-color: #e0ecbb;
+  color: #8c9f58;
+}
+
+/* 참고한 레시피 */
+.recipe-tooltip p {
   margin: 0;
-  font-size: 24px;
+  font-size: 1.4rem;
 }
 
 /* 이미지 컨테이너 스타일 */
-.recipe-image-container {
+/* .recipe-image-container {
   margin-top: 10%;
   position: relative;
   display: flex;
-  /* justify-content: center; */
   align-items: center;
-}
+} */
 
-.recipe-main-image {
+/* .recipe-main-image {
   width: 30%;
   height: auto;
-}
+} */
 
 @media screen and (max-width: 800px) {
   .main-content {
@@ -435,5 +427,18 @@ hr {
   .likes-comments span {
     font-size: 1.2rem;
     font-weight: bold;
+  }
+
+  .feed-detail-my-text p {
+    font-size: 1.5rem;
+  }
+
+  .recipe-tooltip p {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  
+  .recipe-tooltip {
+    max-width: 8rem;
   }
 }
