@@ -1,9 +1,111 @@
 .cooking-done-container {
   background-image: url("/images/backgroundImage.png");
-  background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
+  background-size: cover;
   display: flex;
-  flex-direction: column; /* 상단의 헤더와 좌우 컨텐츠를 분리하기 위해 컬럼 방향으로 정렬 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  height: 100vh; /* 전체 화면 높이로 설정 */
-  overflow: hidden; /* 전체 컨테이너에서 넘치는 내용 숨김 */
+  height: 100vh;
+  overflow: hidden;
+  padding: 2vh;
+  text-align: center;
+  color: #fff;
+}
+
+.cooking-done-container h2 {
+  font-size: 2.5vw; /* 반응형 글꼴 크기 */
+  margin-bottom: 2vh;
+  text-shadow: 0.2vw 0.2vw 0.4vw #000000; /* 반응형 텍스트 그림자 */
+}
+
+.feedwrite-done-button {
+  background-color: #ff9800;
+  color: #fff;
+  border: none;
+  border-radius: 3vw; /* 반응형 테두리 반경 */
+  padding: 2vh 4vw; /* 반응형 패딩 */
+  font-size: 1.2vw; /* 반응형 글꼴 크기 */
+  cursor: pointer;
+  margin: 1vh;
+  box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1); /* 반응형 그림자 */
+  transition: background-color 0.3s ease;
+}
+
+.feedwrite-done-button:hover {
+  background-color: #e68900;
+}
+
+.feedwrite-done-button:active {
+  background-color: #d67c00;
+}
+
+.cooking-done-container button {
+  background-color: #009688;
+  color: #fff;
+  border: none;
+  border-radius: 3vw; /* 반응형 테두리 반경 */
+  padding: 2vh 4vw; /* 반응형 패딩 */
+  font-size: 1.2vw; /* 반응형 글꼴 크기 */
+  cursor: pointer;
+  margin: 1vh;
+  box-shadow: 0 0.4vw 0.6vw rgba(0, 0, 0, 0.1); /* 반응형 그림자 */
+  transition: background-color 0.3s ease;
+}
+
+.cooking-done-container button:hover {
+  background-color: #00796b;
+}
+
+.cooking-done-container button:active {
+  background-color: #00695c;
+}
+
+.comparison-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2vh;
+}
+
+.representative-image,
+.cooked-dish-image {
+  width: 40vw; /* 반응형 너비 */
+  height: 45vh; /* 반응형 높이 */
+  border-radius: 1vw; /* 반응형 테두리 반경 */
+  margin: 1vh;
+  opacity: 0.5; /* 50% 투명도 */
+}
+
+.cooked-dish-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-frame {
+  width: 40vw; /* 반응형 너비 */
+  height: 45vh; /* 반응형 높이 */
+  border: 0.1vw solid #ccc; /* 얇은 틀 */
+  border-radius: 1vw; /* 반응형 테두리 반경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.file-input {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+}
+
+.cooked-dish-canvas {
+  width: 40vw; /* 반응형 너비 */
+  height: 45vh; /* 반응형 높이 */
+  border-radius: 1vw; /* 반응형 테두리 반경 */
+  margin: 1vh;
 }
