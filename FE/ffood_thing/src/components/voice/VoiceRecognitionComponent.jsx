@@ -74,16 +74,24 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
         .then((data) => {
           console.log("서버 응답 데이터:", data) // 서버 응답 데이터 콘솔 출력
           onRecognize(data) // 서버 응답 데이터 처리
+          displayListeningMessage()
         })
         .catch((error) => {
           console.error("오류:", error)
         })
     }
 
+    const displayListeningMessage = () => {
+      console.log("Listening for commands...")
+      setTimeout(displayListeningMessage, 5000) // 5초마다 메시지 출력
+    }
+
+    displayListeningMessage() // 초기 메시지 출력
+
     return () => {
       recognition.stop()
     }
-  }, [recipeId, token])
+  }, [recipeId, token, onStopAlarm, onRecognize])
 
   return (
     <div>
