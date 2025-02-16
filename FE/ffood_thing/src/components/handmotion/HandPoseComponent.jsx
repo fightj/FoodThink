@@ -358,114 +358,108 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
     const timelineItems = [];
 
     for (let i = 0; i < totalPages; i++) {
-      const isActive = i < currentStep;
-
-      timelineItems.push(
-        <li key={i} className="flex-1 text-center">
-          <hr className={`border-t-2 ${isActive ? 'border-blue-500' : 'border-gray-300'}`} />
-          <div className="flex justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className={`h-5 w-5 ${isActive ? 'text-blue-500' : 'text-gray-400'}`}
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <div className="timeline-box mt-2">{i + 1}</div>
-        </li>
-      );
+        const isActive = i < currentStep + 1;
+        timelineItems.push(
+            <li key={i} className={isActive ? "active-tl" : ""}>
+                
+            </li>
+        );
     }
 
-    return <ul className="timeline-horizontal flex">{timelineItems}</ul>;
-  };
+    return <ul className="timeline">{timelineItems}</ul>;
+};
 
-  return (
-    <div className="handpose-container3" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+
+return (
+  <div className="handpose-container3" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
       <video ref={videoRef} style={{ display: "none" }} autoPlay playsInline />
       <canvas ref={canvasRef} className="handpose-canvas" />
 
       <div className="card-div7">
-        
           <div className="process-item3">
-            <h2 className="steps-h23">
-              {spokenText && <div className="spoken-text">{spokenText}</div>}
-              {isTimerModalOpen && (
-                <div className="timer-modal">
-                  <h2>타이머 설정</h2>
-                  <label>
-                    분:
-                    <input type="number" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} />
-                  </label>
-                  <label>
-                    초:
-                    <input type="number" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} />
-                  </label>
-                  <button onClick={handleSetTimer}>설정</button>
-                  <button onClick={() => setIsTimerModalOpen(false)}>취소</button>
-                </div>
-              )}
-              {currentProcess.processOrder}. {currentProcess.processExplain}
-            </h2>
+              <h2 className="steps-h23">
+                  {spokenText && <div className="spoken-text">{spokenText}</div>}
+                  {isTimerModalOpen && (
+                      <div className="timer-modal">
+                          <h2>타이머 설정</h2>
+                          <label>
+                              분:
+                              <input type="number" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} />
+                          </label>
+                          <label>
+                              초:
+                              <input type="number" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} />
+                          </label>
+                          <div className="timer-btn-area">
+                          <button className="timer-modal-btn" onClick={handleSetTimer}>설정</button>
+                          <button className="timer-modal-btn" onClick={() => setIsTimerModalOpen(false)}>취소</button>
+                          </div>
+                          
+                      </div>
+                  )}
+                  {currentProcess.processExplain}
+              </h2>
           </div>
           <div className="process-image-container3">
-            {currentProcess.images &&
-              currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
-            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>재료보기</button>
-            {isSidebarOpen && (
-              <div className="sidebar">
-                <h2>재료 정보</h2>
-                <ul>
-                  {recipe.ingredients.map((ingredient, index) => (
-                    <li key={index}>
-                      {ingredient.ingreName}: {ingredient.amount}
-                    </li>
+              {currentProcess.images &&
+                  currentProcess.images.map((image, imgIndex) => (
+                      <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />
                   ))}
-                </ul>
-              </div>
-            )}
+              
+                  <button className="ingredient-button" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+                    <img src="/images/ingredient-btn.png" alt="" />
+                  </button>
+                  <img
+              className="timer-image3"
+              src={isTimerRunning ? "/images/do-timer.gif" : "/images/undo-timer.png"}
+              alt="Timer"
+              onClick={handleTimerIconClick}
+          />
+              
+              {isSidebarOpen && (
+                  <div className="ingredient-sidebar open">
+                      <h2>재료 정보</h2>
+                      <ul>
+                          {recipe.ingredients.map((ingredient, index) => (
+                              <li key={index}>
+                                  {ingredient.ingreName}: {ingredient.amount}
+                              </li>
+                          ))}
+                      </ul>
+                      
+                  </div>
+              )}
           </div>
           <hr />
-          <div className="timeline-container">
-            {renderTimeline()}
+          <div className="timer-container">
+              {renderTimeline()}
           </div>
-        
       </div>
       {swipeMessage && <div className="swipe-message">{swipeMessage}</div>}
       <div className="timer3">
-        <img
-          className="timer-image3"
-          src={isTimerRunning ? "/images/do-timer.gif" : "/images/undo-timer.gif"}
-          alt="Timer"
-          onClick={handleTimerIconClick}
-        />
-        {String(Math.floor(timer / 60)).padStart(2, '0')}:{String(timer % 60).padStart(2, '0')}
-        <button onClick={isTimerRunning ? stopTimer : startTimer} disabled={timer === 0} style={{ border: "none", background: "none", padding: "0" }}>
-        <img
-            src={isTimerRunning ? "/images/timer-stop-btn.png" : "/images/timer-start-btn.png"}
-            alt={isTimerRunning ? "타이머 정지" : "타이머 시작"}
-            className="timer-button-image"
-          />
-        </button>
+          
+          {String(Math.floor(timer / 60)).padStart(2, '0')}:{String(timer % 60).padStart(2, '0')}
+          <button onClick={isTimerRunning ? stopTimer : startTimer} disabled={timer === 0} style={{ border: "none", background: "none", padding: "0" }}>
+              <img
+                  src={isTimerRunning ? "/images/timer-stop-btn.png" : "/images/timer-start-btn.png"}
+                  alt={isTimerRunning ? "타이머 정지" : "타이머 시작"}
+                  className="timer-button-image"
+              />
+          </button>
       </div>
-
       {currentStep === totalPages - 1 && <div className="end-message">마지막 페이지 입니다</div>}
       <VoiceRecognitionComponent onRecognize={handleResponse} onStopAlarm={stopAlarm} recipeId={recipeId} token={token} />
-    </div>
-  );
+  </div>
+);
 };
+
 
 HandPoseComponent.propTypes = {
-  currentStep: PropTypes.number.isRequired,
-  onNextStep: PropTypes.func.isRequired,
-  onPrevStep: PropTypes.func.isRequired,
-  recipe: PropTypes.object.isRequired,
-  onClose: PropTypes.func.isRequired,
+currentStep: PropTypes.number.isRequired,
+onNextStep: PropTypes.func.isRequired,
+onPrevStep: PropTypes.func.isRequired,
+recipe: PropTypes.object.isRequired,
+onClose: PropTypes.func.isRequired,
 };
 
-export default HandPoseComponent;
+export default HandPoseComponent
