@@ -8,9 +8,11 @@ import "../../styles/recipe/RecipeComponent.css";
 import VoiceRecognitionComponent from "../voice/VoiceRecognitionComponent"; // VoiceRecognitionComponent 임포트
 import axios from "axios";
 
-const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClose }) => {
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
+
+const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClose, onNextPage }) => {
+  const videoRef = useRef(null)
+  const canvasRef = useRef(null)
+
   const swipeTrackingRef = useRef({
     startX: null,
     isTracking: false,
@@ -42,10 +44,16 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
 
   const fetchProcessData = async (recipeId, page) => {
     try {
-      const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/processes/${recipeId}/${page}`);
-      const data = response.data;
-      const process = data.processes[0];
-      setCurrentProcess(process);
+
+      if (page >= totalPages) {
+        onNextPage() // 총 페이지 수 이상이면 다음 페이지로 이동
+        return
+      }
+
+      const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/processes/${recipeId}/${page}`)
+      const data = response.data
+      const process = data.processes[0]
+      setCurrentProcess(process)
 
       if (process.minutes !== 0 || process.seconds !== 0) {
         const totalSeconds = process.minutes * 60 + process.seconds;
@@ -113,7 +121,8 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
       if (currentStep < totalPages - 1) {
         onNextStep();
       } else {
-        setSwipeMessage("마지막 페이지 입니다");
+        setSwipeMessage("조리가 완료되었습니다")
+        onNextPage() // 마지막 페이지에서 onNextPage 호출
       }
     } else if (direction === "이전 페이지") {
       if (currentStep > 0) {
@@ -168,7 +177,10 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
           onNextStep();
           setSwipeMessage("다음 페이지");
         } else {
-          setSwipeMessage("마지막 페이지 입니다");
+
+          setSwipeMessage("마지막 페이지 입니다")
+          onNextPage() // 마지막 페이지에서 onNextPage 호출
+
         }
         break;
       case "종료하기":
@@ -455,11 +467,14 @@ return (
 
 
 HandPoseComponent.propTypes = {
+
 currentStep: PropTypes.number.isRequired,
 onNextStep: PropTypes.func.isRequired,
 onPrevStep: PropTypes.func.isRequired,
 recipe: PropTypes.object.isRequired,
 onClose: PropTypes.func.isRequired,
+onNextPage: PropTypes.func.isRequired, // 추가된 propTypes
 };
+
 
 export default HandPoseComponent
