@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react"
+import React, { useState, useContext, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { UserContext } from "../../contexts/UserContext"
 import BackgroundEffect from "./BackgroundEffect"
@@ -172,14 +172,26 @@ const ProfileHeaderMe = () => {
 
   // ✅ 프로필 이미지 변경 핸들러
   const handleImageUpload = (event) => {
+    console.log("파일 선택됨:", event.target.files[0]); // 선택된 파일 출력
     const file = event.target.files[0]
     if (file) {
+      console.log("파일이 선택되었습니다:", file); // 로그 추가
       setSelectedImage(file)
     }
   }
 
+  // useEffect - selectedImage가 변경될 때마다 uploadProfileImage 실행
+  useEffect(() => {
+    if (selectedImage) {
+      console.log("이미지가 선택되었습니다:", selectedImage);
+      uploadProfileImage(); // 이미지 선택 후 자동으로 업로드
+    }
+  }, [selectedImage]); // selectedImage 상태가 변경될 때마다 실행
+  
+
   // ✅ 프로필 이미지 업로드 요청
   const uploadProfileImage = async () => {
+    console.log("selectedImage: " + selectedImage)
     if (!selectedImage) {
       Swal.fire("엥?", "이미지 업로드를 해주세요!", "warning")
       return
@@ -223,6 +235,11 @@ const ProfileHeaderMe = () => {
       Swal.fire("실패! 😢", "이미지를 선택해주세요!", "error")
     }
   }
+
+  // 버튼 클릭 시 파일 선택 창 열기
+  const triggerFileInput = () => {
+    document.getElementById("file-upload").click(); // input의 click 이벤트 호출
+  };
 
   // ✅ 회원 탈퇴
   const handleDeleteAccount = async () => {
@@ -337,9 +354,10 @@ const ProfileHeaderMe = () => {
         {/* 프로필 이미지 */}
         <div className="profile-avatar-container">
           <img src={user?.image ? `${user.image}?timestamp=${new Date().getTime()}` : "/images/default_profile.png"} alt="프로필" className="profile-avatar" />
-          <button className="edit-icon" onClick={() => setIsImageEditing(true)}>
+          <button className="edit-icon" onClick={triggerFileInput}>
             ✏️
           </button>
+          <input type="file" accept="image/*" id="file-upload" onChange={handleImageUpload}  style={{display: "none"}} />
         </div>
 
         <div className="profile-details">
