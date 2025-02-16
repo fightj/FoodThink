@@ -1,4 +1,3 @@
-// VoiceRecognitionComponent.js
 import React, { useEffect, useState } from "react"
 
 const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }) => {
