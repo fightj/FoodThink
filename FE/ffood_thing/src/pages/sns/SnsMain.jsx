@@ -1,37 +1,37 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import SearchBar from "../../components/base/SearchBar";
-import Swal from "sweetalert2";
-import "../../styles/sns/SnsMain.css";
-import PageSlide from "../../components/base/PageSlide";
+import React, { useState, useEffect, useRef, useCallback } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import SearchBar from "../../components/base/SearchBar"
+import Swal from "sweetalert2"
+import "../../styles/sns/SnsMain.css"
+import PageSlide from "../../components/base/PageSlide"
 
 function SnsMain() {
-  const [query, setQuery] = useState("");
-  const [feedData, setFeedData] = useState([]);
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [isFetching, setIsFetching] = useState(false);
-  const observer = useRef();
-  const navigate = useNavigate();
+  const [query, setQuery] = useState("")
+  const [feedData, setFeedData] = useState([])
+  const [page, setPage] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+  const [isFetching, setIsFetching] = useState(false)
+  const observer = useRef()
+  const navigate = useNavigate()
 
   const fetchData = async (pageNum) => {
-    if (isFetching) return; // 중복 요청 방지
-    setIsFetching(true);
-    try {
-      const response = await fetch(
-        `https://i12e107.p.ssafy.io/api/feed/read/latest?page=${pageNum}&size=12`
-      );
-      const data = await response.json();
-      if (data.content.length === 0) {
-        setHasMore(false); // 더 이상 불러올 데이터 없음
-      } else {
-        setFeedData((prev) => [...prev, ...data.content]);
+      if (isFetching) return; // 중복 요청 방지
+      setIsFetching(true);
+      try {
+        const response = await fetch(
+          `https://i12e107.p.ssafy.io/api/feed/read/latest?page=${pageNum}&size=12`
+        );
+        const data = await response.json();
+        if (data.content.length === 0) {
+          setHasMore(false); // 더 이상 불러올 데이터 없음
+        } else {
+          setFeedData((prev) => [...prev, ...data.content]);
+        }
+      } catch (error) {
+        console.error("Error fetching feed data:", error);
       }
-    } catch (error) {
-      console.error("Error fetching feed data:", error);
-    }
-    setIsFetching(false);
-  };
+      setIsFetching(false);
+    };
 
   useEffect(() => {
     fetchData(page);
@@ -42,16 +42,16 @@ function SnsMain() {
   }, []);
 
   const handleSearch = (query) => {
-    setQuery(query);
+    setQuery(query)
     if (query.length > 0) {
-      navigate(`/search-results?query=${query}`);
+      navigate(`/search-results?query=${query}`)
     }
-  };
+  }
 
   const handleWriteClick = () => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken")
     if (accessToken) {
-      navigate("/feed/write");
+      navigate("/feed/write")
     } else {
       Swal.fire({
         title: "로그인이 필요합니다",
@@ -64,11 +64,11 @@ function SnsMain() {
         cancelButtonText: "취소",
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate("/login");
+          navigate("/login")
         }
-      });
+      })
     }
-  };
+  }
 
   const lastFeedElementRef = useCallback(
     (node) => {
@@ -152,7 +152,7 @@ function SnsMain() {
       </div>
       {/* </div> */}
     </PageSlide>
-  );
+  )
 }
 
-export default SnsMain;
+export default SnsMain
