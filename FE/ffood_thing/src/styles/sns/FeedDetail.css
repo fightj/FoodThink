@@ -55,8 +55,8 @@
 }
 
 .profile-image1 {
-  width: 4em;
-  height: 4em;
+  width: 3em;
+  height: 3em;
   border-radius: 50%;
   overflow: hidden;
 }
@@ -67,7 +67,7 @@
 }
 
 .sns-username {
-  font-size: 2.8rem; /* 사용자 이름의 폰트 크기 설정 */
+  font-size: 2rem; /* 사용자 이름의 폰트 크기 설정 */
   /* font-weight: bold; */
 }
 
@@ -93,17 +93,6 @@
   padding: 5px 10px;
   border-radius: 10px;
   font-size: 0.8rem;
-}
-
-.content {
-  border-radius: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  background-color: #fff;
-  padding: 20px;
-
-  flex: 1;
-  max-width: 50%;
 }
 
 /* 좋아요 및 댓글 */
@@ -154,9 +143,10 @@
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
-
-  flex: 1;
-  max-width: 50%;
+  
+  width: 100%;
+  max-width: 30rem;
+  aspect-ratio: 1;
 
   overflow: hidden;
 }
@@ -168,8 +158,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 800px;
-  aspect-ratio: 1 / 1; /* 정사각형 비율 유지 */
+  height: 100%;
   overflow: hidden;
   border-radius: 12px;
 
@@ -271,13 +260,14 @@
   margin-bottom: 15px;
 }
 
-/* 음식 이름 스타일 */
-/* p {
-  font-size: 2rem;
-} */
+.content {
+  width: 100%;
+  margin-top: 1rem;
+}
 
 hr {
-  margin: 1rem 0; /* 구분선 여백 조정 */
+  width: 100%;
+  margin: 1.2rem 0;
 }
 
 /* 피드 수정 및 삭제 관련 */
@@ -347,7 +337,7 @@ hr {
 
 /* 레시피 디테일 내용 폰트 (02.16) */
 .feed-detail-my-text p {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .hash-tage-recipe-name {
@@ -373,7 +363,7 @@ hr {
 /* 참고한 레시피 */
 .recipe-tooltip p {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 }
 
 /* 이미지 컨테이너 스타일 */
@@ -389,56 +379,88 @@ hr {
   height: auto;
 } */
 
-@media screen and (max-width: 800px) {
-  .main-content {
-    flex-direction: column;
-  }
+/* 댓글 토글 위치 조정 문제 (02.16) */
+.comment-slide {
+  position: fixed; /* 화면 상단에서 고정된 위치로 표시되도록 */
+  top: 3%;
+  right: 0.5%;
+  width: 100%;
+  max-width: 35rem;
+  height: 100vh;
+  z-index: 500;
+}
 
-  .carousel-container, .content {
+
+@media screen and (max-width: 800px) {
+  .comment-slide {
+    left: 0;
+    top: 45%;
+    width: 100%;
     max-width: 100%;
   }
 
+  .carousel-container {
+    max-width: 20rem;
+  }
+
   .profile-image1 {
-    width: 3em;
-    height: 3em;
+    width: 2em;
+    height: 2em;
     border-radius: 50%;
     overflow: hidden;
   }
 
   .sns-username {
-    font-size: 1.8rem;
+    font-size: 1.3rem;
     /* font-weight: bold; */
   }
 }
 
 @media screen and (max-width: 600px) {
+  .main-content {
+    flex-direction: column;
+  }
+
+  .content {
+    margin-top: 2rem;
+  }
+
+  .carousel-container {
+    max-width: 100%;
+  }
+
   .icon,
   .back-button-icon {
-    width: 2.5rem;
+    width: 1.5rem;
+    margin-bottom: 2%;
+  }
+
+  .edit-button1 {
+    width: 1.5rem;
   }
 
   .likes-comments img {
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
     vertical-align: middle;
     margin-right: 10px;
   }
   
   .likes-comments span {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
   }
 
   .feed-detail-my-text p {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 
   .recipe-tooltip p {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 0.8rem;
   }
   
   .recipe-tooltip {
-    max-width: 8rem;
+    max-width: 7rem;
   }
 }
