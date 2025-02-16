@@ -58,18 +58,18 @@ function SnsMain() {
       <div className="base-div">
         <SearchBar onSearch={handleSearch} />
         <div className="card-div">
-          {/* <div className="container px-4 px-2" id="custom-cards"> */}
           <div className="d-flex justify-content-between align-items-center mt-0">
             <h2></h2>
             <img src="/images/feed_write_button.png" alt="Feed 작성" className="feed-write-button" onClick={handleWriteClick} />
           </div>
-
-          <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4">
+          {/* row-cols-1  */}
+          <div className="row row-cols-lg-3 align-items-stretch g-2">
             {feedData.map((feedItem) => {
               const hasMultipleImages = feedItem.imageSize >= 2
 
               return (
-                <div className="col" key={feedItem.id}>
+                // col
+                <div className="col-4" key={feedItem.id}>
                   <Link to={`/feed/${feedItem.id}`} style={{ textDecoration: "none" }}>
                     <div className="card card-cover h-100 overflow-hidden rounded-4 feed-card" style={{ backgroundImage: `url(${feedItem.image})` }}>
                       {hasMultipleImages && (
@@ -91,7 +91,6 @@ function SnsMain() {
           </div>
         </div>
       </div>
-      {/* </div> */}
     </PageSlide>
   )
 }

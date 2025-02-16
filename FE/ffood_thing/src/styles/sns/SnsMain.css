@@ -88,7 +88,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.btn-bd-primary {
+/* .btn-bd-primary {
   --bd-violet-bg: #712cf9;
   --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
 
@@ -103,7 +103,7 @@
   --bs-btn-active-color: var(--bs-btn-hover-color);
   --bs-btn-active-bg: #5a23c8;
   --bs-btn-active-border-color: #5a23c8;
-}
+} */
 
 .bd-mode-toggle {
   z-index: 1500;
@@ -129,9 +129,10 @@
 /* 반응형: 모바일에서도 적절히 표시 */
 @media (max-width: 576px) {
   .feed-card {
-    aspect-ratio: 1 / 1; /* 모바일에서도 정사각형 유지 */
+    aspect-ratio: 1 / 1;
   }
 }
+
 .image-icon {
   position: absolute;
   top: 10px;
