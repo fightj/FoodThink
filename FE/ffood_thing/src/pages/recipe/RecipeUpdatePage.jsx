@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import Swal from "sweetalert2"
 import axios from "axios"
 import { DndProvider, useDrag, useDrop } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import { TouchBackend } from "react-dnd-touch-backend"
+import "../../styles/recipe/RecipeWritePage.css"
+import "../../styles/base/global.css"
 
 const ItemType = "STEP"
 
@@ -33,48 +35,62 @@ function Step({ step, index, moveStep, updateStepText, handleStepImageUpload, re
 
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
-    item: { type: ItemType, index },
+    item: () => {
+      document.body.style.overflow = 'hidden';
+      return { type: ItemType, index };
+    },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-  })
+    end: (item, monitor) => {
+      document.body.style.overflow = '';
+    },
+  });
 
   drag(drop(ref))
 
   return (
-    <div ref={ref} className="step-input-group" style={{ opacity: isDragging ? 0.5 : 1 }}>
-      <textarea className="text-area small" placeholder={`Step ${index + 1}`} value={step.processExplain} onChange={(e) => updateStepText(index, e.target.value)} />
-      <div className="step-image-upload">
-        <input type="file" id={`stepImageUpload-${index}`} accept="image/*" onChange={(e) => handleStepImageUpload(e, index)} hidden />
-        <label htmlFor={`stepImageUpload-${index}`} className="step-image-label">
-          {step.imageFile ? (
-            <>
-              <img src={URL.createObjectURL(step.imageFile)} alt={`Step ${index + 1}`} className="step-uploaded-image" />
-              <button type="button" className="remove-step-image-btn" onClick={() => removeStepImage(index)}>
-                ✖
-              </button>
-            </>
-          ) : step.imageUrl ? (
-            <>
-              <img src={step.imageUrl} alt={`Step ${index + 1}`} className="step-uploaded-image" />
-              <button type="button" className="remove-step-image-btn" onClick={() => removeStepImage(index)}>
-                ✖
-              </button>
-            </>
-          ) : (
-            "이미지 추가"
-          )}
-        </label>
+    <div ref={drag(drop(ref))}  className="recipe-write-step-input-group" 
+      style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move' }}
+    >
+      <input type="text" className="recipe-write-step-input-title" value={`Step ${index + 1}`} readOnly />
+      <textarea 
+        className="recipe-write-step-input-text" 
+        value={step.processExplain} 
+        onChange={(e) => updateStepText(index, e.target.value)} 
+      />
+      <div className="recipe-write-step-input-image-upload">
+        {step.imageFile ? (
+          <div className="recipe-write-step-image-container">
+            <img src={URL.createObjectURL(step.imageFile)} alt={`Step ${index + 1}`} className="recipe-write-step-uploaded-image" />
+            <button 
+              className="recipe-write-step-upload-image-remove-btn" 
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                removeStepImage(index);
+              }}
+            >
+              X
+            </button>
+          </div>
+        ) : (
+          <label htmlFor={`stepImageUpload-${index}`}>사진 추가하기</label>
+        )}
+        <input 
+          type="file" 
+          id={`stepImageUpload-${index}`} 
+          accept="image/*" 
+          onChange={(e) => handleStepImageUpload(e, index)} 
+          hidden 
+        />
       </div>
-      <button ref={drag} type="button" className="btn btn-outline-secondary drag-handle">
-        ⇅
-      </button>
-      <button type="button" className="btn btn-outline-danger" onClick={() => removeStep(index)}>
-        ❌
+      <button className="recipe-write-step-remove-btn" onClick={() => removeStep(index)}>
+        <img src="/images/close_icon.png" alt="삭제"/>
       </button>
     </div>
-  )
-}
+  );
+};
 
 function RecipeUpdatePage() {
   const navigate = useNavigate()
@@ -291,11 +307,13 @@ function RecipeUpdatePage() {
     return missingFields
   }
 
-  const updateRecipe = async () => {
+  // 저장 & 저장 후 공개 API 요청
+  const saveRecipe = async (isPublic) => {
     const missingFields = validateForm()
+
     if (missingFields.length > 0) {
       Swal.fire({
-        title: "입력 필요",
+        title: "입력 필요!",
         text: `다음 항목을 입력해 주세요: ${missingFields.join(", ")}`,
         icon: "warning",
       })
@@ -424,187 +442,223 @@ function RecipeUpdatePage() {
     <DndProvider backend={window.innerWidth < 768 ? TouchBackend : HTML5Backend}>
       <div className="base-div">
           <div className="recipe-write-container">
-            <div className="recipe-header">
-              <button onClick={() => navigate(-1)} className="back-button5">
+            <div className="recipe-write-header">
+              <button onClick={() => navigate(-1)} className="recipe-write-back-button">
                 <img src="/images/previous_button.png" alt="Previous" className="icon" />
               </button>
-              <div className="recipe-title">레시피 수정</div>
+              <div className="recipe-write-page-title">나만의 레시피 레시피 수정하기&nbsp;
+                <img src="/images/끼쟁이.png" />
+              </div>
+              <div className="recipe-write-page-title-blank"></div>
             </div>
-            <div className="recipe-info-container">
-              <div className="recipe-text-section">
-                <div className="recipe-title-container">
-                  <label className="form-label">레시피 제목</label>
-                  <input type="text" className="recipe-title-input" placeholder="예) 연어 포케 만들기" value={recipeTitle} onChange={(e) => setRecipeTitle(e.target.value)} />
+            <div className="recipe-write-info-container">
+              <div className="recipe-write-text-section">
+                <div className="recipe-write-title-container">
+                  <div className="recipe-write-title-container-title">
+                    <label className="recipe-write-title-text">제목</label>
+                  </div>
+                  <div className="recipe-write-title-container-input">
+                    <input type="text" className="recipe-title-input" placeholder="예) 연어 포케 만들기" value={recipeTitle} onChange={(e) => setRecipeTitle(e.target.value)} />
+                    </div>
                 </div>
-                <div className="category-container">
-                  <label className="form-label">카테고리</label>
-                  <select className="dropdown1" value={category} onChange={(e) => setCategory(e.target.value)}>
-                    <option value="" disabled>
-                      종류별
-                    </option>
-                    <option value="반찬">반찬</option>
-                    <option value="국/탕">국/탕</option>
-                    <option value="찌개">찌개</option>
-                    <option value="디저트">디저트</option>
-                    <option value="면/만두">면/만두</option>
-                    <option value="밥/죽/떡">밥/죽/떡</option>
-                    <option value="김치/젓갈/장류">김치/젓갈/장류</option>
-                    <option value="양념/소스/잼">양념/소스/잼</option>
-                    <option value="양식">양식</option>
-                    <option value="샐러드">샐러드</option>
-                    <option value="차/음료/술">차/음료/술</option>
-                    <option value="기타">기타</option>
-                  </select>
+                <div className="recipe-write-category-container">
+                  <div className="recipe-write-category-container-title">
+                    <label className="recipe-write-category-text">카테고리</label>
+                  </div>
+                  <div className="recipe-write-category-two-dropdowns">
+                    <select className="recipe-write-category-dropdown" value={category} onChange={(e) => setCategory(e.target.value)}>
+                      <option value="" disabled>
+                        종류별
+                      </option>
+                      <option value="반찬">반찬</option>
+                      <option value="국/탕">국/탕</option>
+                      <option value="찌개">찌개</option>
+                      <option value="디저트">디저트</option>
+                      <option value="면/만두">면/만두</option>
+                      <option value="밥/죽/떡">밥/죽/떡</option>
+                      <option value="김치/젓갈/장류">김치/젓갈/장류</option>
+                      <option value="양념/소스/잼">양념/소스/잼</option>
+                      <option value="양식">양식</option>
+                      <option value="샐러드">샐러드</option>
+                      <option value="차/음료/술">차/음료/술</option>
+                      <option value="기타">기타</option>
+                    </select>
 
-                  <select className="dropdown1" value={mainIngredient} onChange={(e) => setMainIngredient(e.target.value)}>
-                    <option value="" disabled>
-                      메인재료별
-                    </option>
-                    <option value="소고기">소고기</option>
-                    <option value="돼지고기">돼지고기</option>
-                    <option value="닭고기">닭고기</option>
-                    <option value="육류">육류</option>
-                    <option value="채소류">채소류</option>
-                    <option value="해물류">해물류</option>
-                    <option value="달걀/유제품">달걀/유제품</option>
-                    <option value="가공식품">가공식품</option>
-                    <option value="쌀">쌀</option>
-                    <option value="밀가루">밀가루</option>
-                    <option value="건어물류">건어물류</option>
-                    <option value="버섯류">버섯류</option>
-                    <option value="과일류">과일류</option>
-                    <option value="빵/견과류">빵/견과류</option>
-                    <option value="곡류">곡류</option>
-                    <option value="기타">기타</option>
-                  </select>
+                    <select className="recipe-write-category-dropdown" value={mainIngredient} onChange={(e) => setMainIngredient(e.target.value)}>
+                      <option value="" disabled>
+                        메인재료별
+                      </option>
+                      <option value="소고기">소고기</option>
+                      <option value="돼지고기">돼지고기</option>
+                      <option value="닭고기">닭고기</option>
+                      <option value="육류">육류</option>
+                      <option value="채소류">채소류</option>
+                      <option value="해물류">해물류</option>
+                      <option value="달걀/유제품">달걀/유제품</option>
+                      <option value="가공식품">가공식품</option>
+                      <option value="쌀">쌀</option>
+                      <option value="밀가루">밀가루</option>
+                      <option value="건어물류">건어물류</option>
+                      <option value="버섯류">버섯류</option>
+                      <option value="과일류">과일류</option>
+                      <option value="빵/견과류">빵/견과류</option>
+                      <option value="곡류">곡류</option>
+                      <option value="기타">기타</option>
+                    </select>
+                  </div>
                 </div>
+                <div className="recipe-write-cooking-info-container">
+                  <div className="recipe-write-cooking-info-container-title">
+                    <label className="recipe-write-cooking-info-text">요리정보</label>
+                  </div>
+                  <div className="recipe-write-cooking-info-three-dropdowns">
+                    <select className="recipe-write-cooking-info-dropdown" value={servings} onChange={(e) => setServings(e.target.value)}>
+                      <option value="" disabled>
+                        인분
+                      </option>
+                      <option value="1인분">1인분</option>
+                      <option value="2인분">2인분</option>
+                      <option value="3인분">3인분</option>
+                      <option value="4인분">4인분</option>
+                      <option value="5인분">5인분</option>
+                      <option value="6인분 이상">6인분 이상</option>
+                    </select>
 
-                <div className="cooking-info-container">
-                  <label className="form-label">요리정보</label>
-                  <select className="dropdown1" value={servings} onChange={(e) => setServings(e.target.value)}>
-                    <option value="" disabled>
-                      인분
-                    </option>
-                    <option value="1인분">1인분</option>
-                    <option value="2인분">2인분</option>
-                    <option value="3인분">3인분</option>
-                    <option value="4인분">4인분</option>
-                    <option value="5인분">5인분</option>
-                    <option value="6인분 이상">6인분 이상</option>
-                  </select>
+                    <select className="recipe-write-cooking-info-dropdown" value={cookingTime} onChange={(e) => setCookingTime(e.target.value)}>
+                      <option value="" disabled>
+                        시간
+                      </option>
+                      <option value="5분 이내">5분 이내</option>
+                      <option value="10분 이내">10분 이내</option>
+                      <option value="15분 이내">15분 이내</option>
+                      <option value="20분 이내">20분 이내</option>
+                      <option value="30분 이내">30분 이내</option>
+                      <option value="60분 이내">60분 이내</option>
+                      <option value="90분 이내">90분 이내</option>
+                      <option value="120분 이내">120분 이내</option>
+                      <option value="2시간 이상">2시간 이상</option>
+                    </select>
 
-                  <select className="dropdown1" value={cookingTime} onChange={(e) => setCookingTime(e.target.value)}>
-                    <option value="" disabled>
-                      시간
-                    </option>
-                    <option value="5분 이내">5분 이내</option>
-                    <option value="10분 이내">10분 이내</option>
-                    <option value="15분 이내">15분 이내</option>
-                    <option value="20분 이내">20분 이내</option>
-                    <option value="30분 이내">30분 이내</option>
-                    <option value="60분 이내">60분 이내</option>
-                    <option value="90분 이내">90분 이내</option>
-                    <option value="120분 이내">120분 이내</option>
-                    <option value="2시간 이상">2시간 이상</option>
-                  </select>
-
-                  <select className="dropdown1" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
-                    <option value="" disabled>
-                      난이도
-                    </option>
-                    <option value="하">하</option>
-                    <option value="중">중</option>
-                    <option value="상">상</option>
-                  </select>
+                    <select className="recipe-write-cooking-info-dropdown" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+                      <option value="" disabled>
+                        난이도
+                      </option>
+                      <option value="하">하</option>
+                      <option value="중">중</option>
+                      <option value="상">상</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <div className="image-upload-container">
+              <div className="recipe-write-main-image-upload-container">
                 <input type="file" id="imageUpload" accept="image/*" onChange={handleImageUpload} hidden />
                 <label htmlFor="imageUpload" className="image-upload-label">
                   {imageFile ? (
                     <>
-                      <img src={URL.createObjectURL(imageFile)} alt="요리 대표 이미지" className="uploaded-image" />
-                      <button className="remove-image-btn" onClick={removeImage}>
+                      <img src={URL.createObjectURL(imageFile)} alt="요리 대표 이미지" className="recipe-write-main-uploaded-image" />
+                      <button className="recipe-write-main-image-remove-btn" onClick={removeImage}>
                         ✖
                       </button>
                     </>
                   ) : (
-                    "요리 대표 사진을 등록해주세요."
+                    "레시피의 대표 사진은 요기!"
                   )}
                 </label>
               </div>
             </div>
 
-            <div className="ingredients-container">
-              <label className="form-label">재료정보</label>
-              {ingredients.map((ingredient, index) => (
-                <div className="ingredient-input-group" key={index}>
-                  <input
-                    type="text"
-                    className="text-input small"
-                    placeholder="예) 연어"
-                    value={ingredient.name}
-                    onChange={(e) => {
-                      const newIngredients = [...ingredients]
-                      newIngredients[index].name = e.target.value
-                      setIngredients(newIngredients)
-                    }}
-                  />
-                  <input
-                    type="text"
-                    className="text-input small"
-                    placeholder="예) 300g"
-                    value={ingredient.amount}
-                    onChange={(e) => {
-                      const newIngredients = [...ingredients]
-                      newIngredients[index].amount = e.target.value
-                      setIngredients(newIngredients)
-                    }}
-                  />
-
-                  <button type="button" className="btn btn-outline-danger" onClick={() => removeIngredient(index)}>
-                    ❌
-                  </button>
+            <div className="recipe-write-ingre-container">
+              <div className="recipe-write-ingre-container-top">
+                <div className="recipe-write-ingre-container-title">
+                  재료
                 </div>
-              ))}
-              <div className="add-ingredient-btn-wrapper">
-                <button type="button" className="btn btn-outline-primary" onClick={addIngredient}>
-                  재료 추가
+                <div className="recipe-write-ingre-input-container">
+                  {ingredients.map((ingredient, index) => (
+                    <div className="recipe-write-ingre-input-group" key={index}>
+                      <input
+                        type="text"
+                        className="recipe-write-ingre-input-text"
+                        placeholder="예) 연어"
+                        value={ingredient.name}
+                        onChange={(e) => {
+                          const newIngredients = [...ingredients]
+                          newIngredients[index].name = e.target.value
+                          setIngredients(newIngredients)
+                        }}
+                      />
+                      <input
+                        type="text"
+                        className="recipe-write-ingre-input-text"
+                        placeholder="예) 300g"
+                        value={ingredient.amount}
+                        onChange={(e) => {
+                          const newIngredients = [...ingredients]
+                          newIngredients[index].amount = e.target.value
+                          setIngredients(newIngredients)
+                        }}
+                      />
+                      <button className="recipe-write-ingre-remove-btn" onClick={() => removeIngredient(index)}>
+                        <img src="/images/close_icon.png"/>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="recipe-write-ingre-add-btn-wrapper">
+                <button className="recipe-write-ingre-add-btn" onClick={addIngredient}>
+                  <img src="/images/add_circle.png" />
                 </button>
               </div>
             </div>
-            <div className="steps-container">
-              <label className="form-label">요리 순서</label>
-              {steps.map((step, index) => (
-                <Step
-                  key={index}
-                  index={index}
-                  step={step}
-                  moveStep={moveStep}
-                  updateStepText={updateStepText}
-                  handleStepImageUpload={handleStepImageUpload}
-                  removeStepImage={removeStepImage}
-                  removeStep={removeStep}
-                />
-              ))}
-              <div className="add-ingredient-btn-wrapper">
-                <button type="button" className="btn btn-outline-primary" onClick={addStep}>
-                  순서 추가
-                </button>
-              </div>
-            </div>
+            <div className="recipe-write-step-container">
+              <div className="recipe-write-step-container-title">요리 순서</div>
+              <div className="recipe-write-step-container-input">
+                {steps.map((step, index) => (
+                  <Step
+                    key={index}
+                    step={step}
+                    index={index}
+                    moveStep={moveStep}
+                    updateStepText={updateStepText}
+                    handleStepImageUpload={handleStepImageUpload}
+                    removeStepImage={removeStepImage}
+                    removeStep={removeStep}
+                  />
+                ))}
 
-            <div className="button-group">
-              <button type="button" className="btn btn-primary" onClick={() => updateRecipe(false)}>
-                수정
-              </button>
-              <button type="button" className="btn btn-danger" onClick={handleCancel}>
-                취소
-              </button>
+              {/* 추가 버튼 */}
+              <div className="recipe-write-step-add-btn-wrapper">
+                <button className="recipe-write-step-add-btn" onClick={addStep}>
+                  <img src="/images/add_circle.png" alt="추가" />
+                </button>
+              </div>
             </div>
           </div>
-      </div>
+
+          <div className="recipe-write-btn-group">
+            <div className="recipe-write-isPublic-checkbox">
+              공개 유무 &nbsp;
+              <label className="recipe-write-isPublic-custom-checkbox">
+                <input 
+                  type="checkbox" 
+                  id="isPublic" 
+                  checked={isPublic} 
+                  onChange={(e) => setIsPublic(e.target.checked)} 
+                />
+                <span></span>
+              </label>
+            </div>
+            <button className="recipe-write-save-btn" onClick={() => saveRecipe(isPublic)}>
+              저장
+            </button>
+            <button className="recipe-write-cancel-btn" onClick={handleCancel}>
+              취소
+            </button>
+          </div>
+
+          </div>
+        </div>
     </DndProvider>
   )
 }
