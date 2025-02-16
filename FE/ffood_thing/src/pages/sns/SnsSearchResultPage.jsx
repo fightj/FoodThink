@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import PageSlide from "../../components/base/PageSlide";
 import SearchBar from "../../components/base/SearchBar";
@@ -31,65 +31,79 @@ function SnsSearchResultPage() {
   const [searchResults, setSearchResults] = useState([]); // 검색 결과 상태
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false); 
   const searchInputRef = useRef(null); // useRef로 SearchBar의 input 요소에 접근
+  const observerRef = useRef(null);
+  const lastElementRef = useRef(null); // 마지막 요소 감시
 
   // 검색 결과가 변경될 때마다 스크롤을 상단으로 이동
   useEffect(() => {
-    window.scrollTo(0, 0); // 페이지 상단으로 스크롤 이동
-  }, [searchResults]);
+    window.scrollTo(0, 0);
+  }, [query]);
+
+  // 검색 요청
+  const fetchResults = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+    
+    const data = await fetchSearchResults(query, page);
   
-  // query가 변경될 때마다 바로 검색
+    setSearchResults((prevResults) => {
+      const mergedResults = [...prevResults, ...data.content];
+      const uniqueResults = Array.from(new Map(mergedResults.map(item => [item.id, item])).values());
+      return uniqueResults;
+    });
+  
+    setTotalPages(data.totalPages);
+    setLoading(false);
+  }, [query, page, loading]);
+  
+
   useEffect(() => {
     if (query.trim()) {
-      const fetchResults = async () => {
-        const data = await fetchSearchResults(query, page);
-        setSearchResults(data.content);
-        setTotalPages(data.totalPages);
-      };
-
-      fetchResults();
-    } else {
-      setSearchResults([]);
-      setTotalPages(1);
+      setPage(0);
     }
-  }, [query, page]);
+  }, [query]);
+  
+  useEffect(() => {
+    fetchResults();
+  }, [query, page]); // page가 변경될 때만 fetchResults 실행
+  
 
-  // 검색바에서 검색어를 입력하면 query 상태를 업데이트하고 페이지를 첫 번째로 초기화
+  // Intersection Observer 적용
+  useEffect(() => {
+    if (loading || page + 1 >= totalPages) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (lastElementRef.current) {
+      observer.observe(lastElementRef.current);
+    }
+
+    return () => {
+      if (lastElementRef.current) observer.unobserve(lastElementRef.current);
+    };
+  }, [loading, totalPages]);
+
   const handleSearch = (newQuery) => {
     setQuery(newQuery);
-    setPage(0); // 새 검색 시 첫 페이지부터 시작
+    setPage(0);
+    setSearchResults([]);
     navigate(`/search-results?query=${newQuery}`);
   };
-
-  const handleChange = (e) => {
-    setQuery(e.target.value); // 입력값이 변경될 때마다 query 상태 업데이트
-  };
-
-  // 페이지네이션 처리
-  const handlePagination = (direction) => {
-    if (direction === "prev" && page > 0) {
-      setPage(page - 1);
-    } else if (direction === "next" && page < totalPages - 1) {
-      setPage(page + 1);
-    }
-  };
-
-  // 컴포넌트가 처음 렌더링될 때, 검색창에 포커스를 설정
-  useEffect(() => {
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, []); // 처음 한 번만 실행
 
   return (
     <PageSlide>
       <div className="base-div">
-        <SearchBar
-          onSearch={handleSearch}
-          initialQuery={query}
-          onChange={handleChange}
-          inputRef={searchInputRef} // ref를 전달
-        />
+        <SearchBar onSearch={handleSearch} initialQuery={query} inputRef={searchInputRef} />
+        
         <div className="card-div">
           <div className="container px-4 py-5">
             <div className="d-flex justify-content-between align-items-center pb-2">
@@ -104,11 +118,11 @@ function SnsSearchResultPage() {
 
             <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
               {searchResults.length > 0 ? (
-                searchResults.map((feedItem) => (
-                  <div className="col" key={feedItem.id}>
+                searchResults.map((feedItem, index) => (
+                  <div className="col" key={feedItem.id} ref={index === searchResults.length - 1 ? lastElementRef : null}>
                     <Link to={`/feed/${feedItem.id}`} style={{ textDecoration: "none" }}>
                       <div
-                        className="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg feed-card"
+                        className="card card-cover h-100 overflow-hidden rounded-4 feed-card"
                         style={{
                           backgroundImage: `url(${feedItem.image})`,
                         }}
@@ -121,7 +135,7 @@ function SnsSearchResultPage() {
                         <div className="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
                           <div className="user-info">
                             <img
-                              src={feedItem.userImage || "/images/default-profile.png"}
+                              src={feedItem.userImage || "/images/default_profile.png"}
                               alt={feedItem.userNickname}
                               className="profile-image-main"
                             />
@@ -133,22 +147,10 @@ function SnsSearchResultPage() {
                   </div>
                 ))
               ) : (
-                <p>검색 결과가 없습니다.</p>
+                <p className="align-items-stretch sns-search-no-result">검색 결과가 없습니다.</p>
               )}
             </div>
 
-            {/* 페이지네이션 추가 */}
-            <div className="pagination">
-              <button disabled={page === 0} onClick={() => handlePagination("prev")}>
-                이전
-              </button>
-              <span>
-                {page + 1} / {totalPages}
-              </span>
-              <button disabled={page + 1 >= totalPages} onClick={() => handlePagination("next")}>
-                다음
-              </button>
-            </div>
           </div>
         </div>
       </div>
