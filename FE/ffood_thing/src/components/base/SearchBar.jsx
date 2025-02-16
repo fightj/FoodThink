@@ -34,7 +34,7 @@ function SearchBar({ onSearch, initialQuery }) {
 
   return (
     <div className="header-all">
-      <img src="/images/메인로고.png" className="main-logo" alt="Logo" />
+      <img src="/images/메인로고.png" className="main-logo" alt="Logo" onClick={() => navigate("/")}/>
       <div className="search-bar">
         <div className="search-input-wrapper">
           <input
