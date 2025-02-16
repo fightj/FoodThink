@@ -29,11 +29,13 @@ const DemoCookingPage = () => {
   const handleSkip = () => {
     setComponentPage(4) // 스킵할 경우 조리 시작 페이지로 이동
   }
+
   const onClose = () => {
     navigate(`/recipes/${recipe.recipeId}`)
   }
-  const handleFeed = (recipe) => {
-    navigate("/feed/write", { state: { recipeId: recipe.recipeId, recipeTitle: recipe.recipeTitle } })
+
+  const handleFeed = (recipe, capturedImage) => {
+    navigate("/feed/write", { state: { recipeId: recipe.recipeId, recipeTitle: recipe.recipeTitle, capturedImage } })
   }
 
   let CurrentComponent
@@ -59,6 +61,7 @@ const DemoCookingPage = () => {
     default:
       CurrentComponent = RecipeInfo
   }
+
   return (
     <div className="cooking-container">
       <CurrentComponent

@@ -21,9 +21,7 @@ function FeedWrite() {
   const [bookmarkData, setBookmarkData] = useState([])
   const [selectedRecipeId, setSelectedRecipeId] = useState(location.state?.recipeId || null)
   const [recipeTitle, setRecipeTitle] = useState(location.state?.recipeTitle || "")
-
   const fileInputRef = useRef()
-
   const { user } = useContext(UserContext)
 
   useEffect(() => {
@@ -89,6 +87,12 @@ function FeedWrite() {
         }
       })
     }
+
+    // capturedImage가 존재할 경우 selectedImages에 추가
+    const { capturedImage } = location.state || {}
+    if (capturedImage) {
+      setSelectedImages((prev) => [...prev, { id: Date.now().toString(), dataURL: capturedImage, isCaptured: true }])
+    }
   }, [])
 
   const handleImageChange = (e) => {
@@ -149,6 +153,18 @@ function FeedWrite() {
     setRecipeTitle("")
   }
 
+  const addImagesToFormData = async (imagesToUpload, formData) => {
+    for (const img of imagesToUpload) {
+      if (img.isCaptured) {
+        // 캡처된 이미지를 Blob 형태로 변환하여 추가
+        const blob = await (await fetch(img.dataURL)).blob()
+        formData.append("images", blob, `${img.id}.png`)
+      } else {
+        formData.append("images", img.file, img.file.name)
+      }
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -168,7 +184,7 @@ function FeedWrite() {
     console.log(accessToken)
 
     const formData = new FormData()
-    imagesToUpload.forEach((img) => formData.append("images", img.file, img.file.name))
+    await addImagesToFormData(imagesToUpload, formData)
 
     const feedRequestDto = {
       foodName: foodName,
@@ -252,7 +268,7 @@ function FeedWrite() {
             {selectedImages.map((image) => (
               <div key={image.id} className="preview-image">
                 <div className="square">
-                  <img src={image.id} alt="미리보기" />
+                  <img src={image.isCaptured ? image.dataURL : image.id} alt="미리보기" />
                 </div>
                 <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
               </div>
