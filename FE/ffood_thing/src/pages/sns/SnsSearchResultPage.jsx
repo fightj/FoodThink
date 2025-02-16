@@ -105,12 +105,10 @@ function SnsSearchResultPage() {
         <SearchBar onSearch={handleSearch} initialQuery={query} inputRef={searchInputRef} />
         
         <div className="card-div">
-          <div className="container px-4 py-5">
             <div className="d-flex justify-content-between align-items-center pb-2">
               {/* 이전 버튼 클릭 시, 이전 페이지로 이동 */}
               <button onClick={() => navigate('/sns')} className="back-button">
                 <img src="/images/previous_button.png" alt="Previous" className="icon" />
-                &nbsp;&nbsp;이전
               </button>
               {/* 검색 결과 텍스트는 화면 중앙 정렬 */}
               <h2 className="search-result-title">검색 결과: "{query}"</h2>
@@ -153,7 +151,6 @@ function SnsSearchResultPage() {
 
           </div>
         </div>
-      </div>
     </PageSlide>
   );
 }
