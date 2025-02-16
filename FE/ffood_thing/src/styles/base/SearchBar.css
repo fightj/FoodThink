@@ -14,7 +14,7 @@
 }
 
 /* 검색바 스타일 */
-.search-bar {
+.search-bar { 
   display: flex;
   align-items: center;
   justify-content: flex-end;
