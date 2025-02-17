@@ -162,8 +162,6 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
 
   return (
     <div className="comment-div">
-      <h3>댓글</h3>
-
       {localComments.length > 0 ? (
         localComments.map((comment) => (
           <div key={comment.id} className="comment">
@@ -172,12 +170,15 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
               {editingCommentId === comment.id ? (
                 <div>
                   <input
+                    className="update-comment-input"
                     type="text"
                     value={editingCommentContent}
                     onChange={handleEditCommentChange}
                   />
-                  <button onClick={() => handleUpdateComment(comment.id)}>Update</button>
-                  <button onClick={() => setEditingCommentId(null)}>Cancel</button>
+                  <div>
+                    <button className="update-comment-button" onClick={() => handleUpdateComment(comment.id)}>수정</button>
+                    <button className="update-comment-button" onClick={() => setEditingCommentId(null)}>취소</button>
+                  </div>
                 </div>
               ) : (
                 <div>
@@ -186,8 +187,8 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
                   <span className="comment-time">{comment.writeTime}</span>
                   {currentUser && comment.userId === currentUser.userId && (
                     <div className="comment-actions">
-                      <button onClick={() => handleEditComment(comment.id, comment.content)}>Edit</button>
-                      <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
+                      <button onClick={() => handleEditComment(comment.id, comment.content)}>수정</button>
+                      <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
                     </div>
                   )}
                 </div>
@@ -216,8 +217,8 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
           />
         </div>
       </div>
-
-      <img src="/images/exit-btn.png" alt="닫기 버튼" className="close-button-image" onClick={onClose} />
+      {/* 닫기 버튼 제거 -> 위에서 아래로 스와이프로 변경 */}
+      {/* <img src="/images/exit-btn.png" alt="닫기 버튼" className="close-button-image" onClick={onClose} /> */}
     </div>
   );
 };

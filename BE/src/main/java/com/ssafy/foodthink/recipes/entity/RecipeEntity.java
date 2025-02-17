@@ -2,6 +2,7 @@ package com.ssafy.foodthink.recipes.entity;
 
 import com.ssafy.foodthink.foodRecommend.entity.RecipeTfIdfEntity;
 import com.ssafy.foodthink.recipeBookmark.entity.RecipeBookmarkEntity;
+import com.ssafy.foodthink.user.entity.RecipeViewHistoryEntity;
 import com.ssafy.foodthink.user.entity.UserEntity;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import jakarta.persistence.*;
@@ -69,6 +70,9 @@ public class RecipeEntity {
 
     @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<RecipeTfIdfEntity> TfIDFs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<RecipeViewHistoryEntity> views = new ArrayList<>();
 
 
 }
