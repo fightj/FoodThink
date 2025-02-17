@@ -4,6 +4,8 @@ import SearchBar from "../../components/base/SearchBar"
 import Swal from "sweetalert2"
 import "../../styles/sns/SnsMain.css"
 import PageSlide from "../../components/base/PageSlide"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
 
 function SnsMain() {
   const [query, setQuery] = useState("")
@@ -62,6 +64,9 @@ function SnsMain() {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: {
+          popup: "custom-swal-popup", // 공통 CSS 클래스 적용
+        },
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login")
@@ -83,6 +88,11 @@ function SnsMain() {
     },
     [isFetching, hasMore]
   );
+
+  // 페이지 맨 위로 스크롤하는 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth"})
+  }
 
   return (
     <PageSlide>
@@ -141,6 +151,11 @@ function SnsMain() {
               }
             })}
           </div>
+        </div>
+        {/* 페이지 맨 위로 올라가는 버튼 */}
+        <div className="sns-main-scroll-to-top-div" onClick={scrollToTop}>
+          <FontAwesomeIcon icon={faChevronUp} size="lg" />
+          <span className="sns-main-top-text">TOP</span>
         </div>
       </div>
     </PageSlide>

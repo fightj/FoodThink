@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import Swal from "sweetalert2";
 import "../../styles/profile/Preference.css";
+import "../../styles/base/global.css"
 
 const PREFERENCE_ITEMS = [
   "고수", "올리브", "블루치즈", "홍어", "마라 소스", "순대 내장",
@@ -34,7 +35,14 @@ const Preference = ({ onClose, userId }) => {
     const fetchUserPreferences = async () => {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        Swal.fire("로그인이 필요합니다.", "", "error");
+        Swal.fire({
+          title: "로그인이 필요합니다.",
+          icon: "error",
+          customClass: {
+            popup: "custom-swal-popup",
+          },
+        });
+        
         return;
       }
 
@@ -62,7 +70,11 @@ const Preference = ({ onClose, userId }) => {
         setSelectedAvoidances(dislikedIngredients); // 기피 리스트 적용
       } catch (error) {
         console.error("❌ 관심사 불러오기 실패:", error);
-        Swal.fire("오류 발생", "관심사 정보를 불러올 수 없습니다.", "error");
+        Swal.fire({title: "오류 발생", text: "관심사 정보를 불러올 수 없습니다.", icon: "error", 
+          customClass: {
+            popup: "custom-swal-popup",
+          },
+        });
       } finally {
         setLoading(false);
       }
@@ -111,11 +123,19 @@ const Preference = ({ onClose, userId }) => {
         throw new Error("저장 실패");
       }
 
-      Swal.fire("저장 완료!", "회원 관심사가 저장되었습니다.", "success");
+      Swal.fire({title : "저장 완료!", text: "회원 관심사가 저장되었습니다.", icon: "success"
+        , customClass: {
+          popup: "custom-swal-popup",
+        },
+      });
       onClose();
     } catch (error) {
       console.error("❌ 관심사 저장 실패:", error);
-      Swal.fire("오류 발생", "관심사 저장 중 오류가 발생했습니다.", "error");
+      Swal.fire({title: "오류 발생", text: "관심사 저장 중 오류가 발생했습니다.", icon: "error",
+        customClass: {
+          popup: "custom-swal-popup",
+        },
+      });
     }
   };
 
