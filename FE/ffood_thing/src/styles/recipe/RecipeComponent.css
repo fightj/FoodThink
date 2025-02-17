@@ -9,8 +9,20 @@
 
 .end-message {
   position: absolute;
-  top: 95%;
+  top: 80%;
   left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(255, 255, 255);
+  background-color: rgba(66, 66, 66, 0.7);
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 3rem;
+  z-index: 100000;
+}
+.end-cooking-btn {
+  position: absolute;
+  top: 50%;
+  left: 70%;
   transform: translate(-50%, -50%);
   color: rgb(255, 255, 255);
   background-color: rgba(66, 66, 66, 0.7);
@@ -35,6 +47,7 @@
 .process-image3 {
   width: 100%;
   max-width: 700px;
+  max-height: 450px;
   height: auto;
   border-radius: 1.5rem;
 }
@@ -52,25 +65,33 @@
 
 /* Modal 오버레이 */
 .card-div7 {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  top: 0;
+  width: 95%;
+  height: 95%;
+  margin-top: 2%;
+  /* margin-bottom: 1%; */
+  border-radius: 40px;
   left: 0;
   z-index: 20000;
   padding: 1rem; /* 내부 여유 공간 추가 */
   box-sizing: border-box; /* 패딩을 포함한 박스 크기 설정 */
   overflow: auto;
-  background-image: url("/images/backgroundImage.png");
+  background-color: #ffffff;
 }
-
+.content-image-container {
+  /* display: flex; */
+  height: 100vh;
+}
 .steps3 {
   margin-top: 1rem;
 }
 
 .steps-h23 {
+  flex-grow: 1;
+  overflow: auto; /* Optional: Allows scrolling if content overflows */
   font-size: clamp(1.5rem, 2.5vw, 3rem); /* 글자 크기 설정 */
   margin-bottom: 1rem;
   color: rgb(0, 0, 0);
@@ -83,6 +104,7 @@
 }
 
 .process-image-container3 {
+  flex-shrink: 1;
   width: 100%;
   height: auto;
   display: flex;
@@ -90,20 +112,26 @@
   align-items: center;
   margin-top: 1rem;
 }
-
+.process-exit-btn {
+  position: absolute;
+  top: 2%;
+  right: 2%;
+  width: 30px;
+  height: 30px;
+}
 .timer3 {
   position: absolute;
   bottom: 1rem;
-  right: 1rem;
+  right: 2rem;
   margin: 1rem;
   border-radius: 1rem;
-  color: rgb(0, 0, 0);
+  color: rgb(31, 31, 31);
   font-size: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 50000;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 235, 170, 0.5);
   padding: 0.5rem;
   width: auto; /* 자식 요소에 맞춰서 줄어들게 설정 */
   white-space: nowrap; /* 요소들이 한 줄에 표시되도록 설정 */
@@ -111,17 +139,8 @@
 }
 
 .timer-image3 {
-  position: absolute;
-  bottom: 13rem;
-  right: 1rem;
-  margin: 1rem;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
-  background-color: #ffffff;
-  height: auto;
-  margin-right: 1rem;
+  width: 90%;
+  height: 90%;
 }
 
 .timer-button-image {
@@ -131,75 +150,17 @@
 }
 
 /* Custom Styles for Timeline */
-
-.timer-container {
+.process-logo-img {
+  width: 100px;
+  height: 100px;
+}
+.timeline-container {
+  max-height: 100%;
+  display: flex;
+  align-items: center;
   width: 100%;
   max-width: 1200px;
-  margin: auto;
-}
-
-.timeline {
-  counter-reset: step-counter;
-  position: relative;
-  display: flex; /* Use flexbox for horizontal alignment */
-  justify-content: space-between; /* Space out items evenly */
-  padding: 0;
-  margin: 0;
-}
-
-.timeline li {
-  list-style: none;
-  width: 33.3333%;
-  position: relative;
-  text-align: center;
-  text-transform: uppercase;
-  padding: 0 10px; /* Add some padding for better spacing */
-}
-
-.timeline li:before {
-  counter-increment: step-counter;
-  content: counter(step-counter);
-  width: 50px;
-  height: 50px;
-  border: 3px solid #4caf50;
-  border-radius: 50%;
-  display: block;
-  text-align: center;
-  line-height: 50px;
-  margin: 0 auto 10px auto;
-  background: #fff;
-  color: #000;
-  transition: all ease-in-out 0.3s;
-  cursor: pointer;
-}
-
-.timeline li:after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 1px;
-  background-color: grey;
-  top: 25px;
-  left: -50%;
-  z-index: -1;
-  transition: all ease-in-out 0.3s;
-}
-
-.timeline li:first-child:after {
-  content: none;
-}
-
-.timeline li.active-tl {
-  color: #555555;
-}
-
-.timeline li.active-tl:before {
-  background: #4caf50;
-  color: #f1f1f1;
-}
-
-.timeline li.active-tl + li:after {
-  background: #4caf50;
+  /* margin: auto; */
 }
 
 /* 반응형 웹 디자인을 위한 미디어 쿼리 */
@@ -294,27 +255,64 @@
   }
 }
 /* 추가된 스타일 */
+/* 추가된 스타일 */
 .ingredient-button {
   position: absolute;
-  bottom: 19rem;
-  right: 1rem;
-  margin: 1rem;
+  bottom: 1rem;
+  left: 1rem;
   width: 80px;
   height: 80px;
   border-radius: 50%;
+  background-color: #ffffff;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  border: none;
+  border-color: #ccc;
   cursor: pointer;
   z-index: 1000;
-  transition: background-color 0.3s ease-in-out;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
 }
+
+.timer-button {
+  position: absolute;
+  bottom: 1rem;
+  left: 8rem; /* Adjust left value to provide a gap between buttons */
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  border-color: #ccc;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.ingredient-container {
+  position: absolute;
+  flex-direction: row; /* Align children horizontally */
+  margin-right: 10px;
+}
+
+.timer-container {
+  display: flex;
+  position: absolute;
+  flex-direction: row; /* Align children horizontally */
+}
+
+.ing-time-container {
+  bottom: 2%;
+  left: 2%;
+  position: absolute;
+  flex-direction: row; /* Align children horizontally */
+}
+
 .ingredient-button img {
-  width: 100%;
+  width: 90%;
   height: 90%;
 }
 
@@ -323,14 +321,13 @@
 }
 
 .ingredient-sidebar {
-  position: absolute;
-  bottom: 25rem;
-  right: 1rem;
+  margin-left: 1%;
   border-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.5); /* 약간 투명한 배경 */
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
+  background-color: rgb(253 245 232 / 40%);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* 균일한 그림자 효과 */
   padding: 20px;
   overflow-y: auto; /* 스크롤 가능하도록 설정 */
+  max-height: 450px; /* 최대 높이 설정 */
   z-index: 1000;
   transition: transform 0.3s ease-in-out; /* 애니메이션 효과 */
   transform: translateX(100%); /* 처음에는 화면 밖에 위치 */

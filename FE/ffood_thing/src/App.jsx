@@ -70,41 +70,14 @@ const App = () => {
 }
 const MainApp = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const { user, setUser } = useContext(UserContext)
-  const [tokenLoaded, setTokenLoaded] = useState(false) // UserContext를 올바르게 사용
+  const { user } = useContext(UserContext)
+  const location = useLocation() // Add the useLocation hook
 
-  // useEffect(() => {
-  //   const initializeApp = async () => {
-  //     try {
-  //       // Parse accessToken from URL parameters
+  const pagesWithoutNavbar = ["/login", "/some-other-page"] // Add paths where you want to hide the Navbar
 
-  //       const accessToken = localStorage.getItem("accessToken");
+  const hideNavbarPaths = ["/recipes/[0-9]+/cooking"] // Add regex patterns for paths where you want to hide the Navbar
 
-  //       // if (accessToken) {
-  //       //   console.log("Access Token:", accessToken); // 콘솔에 accessToken 출력
-  //       //   localStorage.setItem("accessToken", accessToken)
-  //       //   setTokenLoaded(true);
-  //       // }
-
-  //       // Initialize userInfo and fetch user details
-  //       if (accessToken) {
-  //         try {
-
-  //           //const userInfo = await fetchUserInfo();
-  //           //setUser(userInfo);
-  //           //sessionStorage.setItem("user", JSON.stringify(userInfo));
-  //           //console.log("Initial User Info:", userInfo);
-  //         } catch (error) {
-  //           console.error("Failed to fetch user info:", error);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Failed to load access token:", error);
-  //     }
-  //   };
-
-  //   initializeApp();
-  // }, [setUser]);
+  const shouldHideNavbar = pagesWithoutNavbar.includes(location.pathname) || hideNavbarPaths.some((path) => new RegExp(path).test(location.pathname))
 
   const toggleSidebar = () => setIsOpen(!isOpen)
 
@@ -112,7 +85,7 @@ const MainApp = () => {
     <>
       <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
       <AnimatedRoutes userInfo={user} />
-      <NavbarBottom />
+      {!shouldHideNavbar && <NavbarBottom />}
     </>
   )
 }
