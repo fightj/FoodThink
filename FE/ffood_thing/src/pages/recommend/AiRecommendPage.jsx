@@ -6,6 +6,7 @@ import "../../styles/base/global.css";
 import "../../styles/recommend/AiRecommendPage.css";
 import LoginCheck from "../../components/base/LoginCheck";
 import LoadingBar from "../../components/base/LoadingBar";
+import Logo from "../../components/base/Logo";
 
 // AI 캐릭터 이미지 배열 (5개)
 const aiImages = [
@@ -172,19 +173,23 @@ function AiRecommendPage() {
     }
   };
 
+
+
+  
   return (
     <div className="base-div">
       <LoginCheck />
-      <div className="parent-container">
+      {/* ✅ start 스탭이 아닐 때 로고 표시 */}
+      {/* {step !== "start" && <Logo />} */}
         <div className="card-div">
           <div className="ai-recommend-container">
             {/* ✅ 맞춤 추천받기 (최초 화면) */}
             {step === "start" && (
               <div className="start-container">
-                <h1 className="start-title">🍽 Ai맞춤 요리추천받기</h1>
-                <p className="start-description">
-                  AI가 당신의 취향을 분석해 딱 맞는 요리를 추천해드려요!
-                </p>
+                <div className="start-title">🍽 푸딩에게 추천받기</div>
+                <div className="start-description">
+                  푸딩이 당신의 취향을 분석해 딱 맞는 요리를 추천해드려요!
+                </div>
                 <button
                   className="ai-start-btn"
                   onClick={() => setStep("question")}
@@ -198,6 +203,7 @@ function AiRecommendPage() {
             {step === "question" && (
               <>
                 {/* 진행 바 */}
+                
                 <div className="progress-bar">
                   <div
                     className="progress-bar-fill"
@@ -305,7 +311,7 @@ function AiRecommendPage() {
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   );
 }
 

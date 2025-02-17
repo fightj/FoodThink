@@ -346,7 +346,7 @@ function RecipeWritePage() {
   return (
     <DndProvider backend={window.innerWidth < 768 ? TouchBackend : HTML5Backend}>
       <div className="base-div">
-          <div className="recipe-write-container">
+        <div className="card-div">
             <div className="recipe-write-header">
               <button onClick={() => navigate(-1)} className="recipe-write-back-button">
                 <img src="/images/previous_button.png" alt="Previous" className="icon" />

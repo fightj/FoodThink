@@ -291,12 +291,11 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
   }
 
   const renderTimeline = () => {
-    const timelineItems = []
-    for (let i = 0; i < totalPages; i++) {
-      const isActive = i < currentStepRef.current + 1
-      timelineItems.push(<li key={i} className={isActive ? "active-tl" : ""}></li>)
-    }
-    return <ul className="timeline">{timelineItems}</ul>
+    return (
+      <div className="progress-bar">
+        <div className="progress-bar-fill" style={{ width: `${((currentStepRef.current + 1) / totalPages) * 100}%` }}></div>
+      </div>
+    )
   }
 
   return (
@@ -307,55 +306,71 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
       <canvas ref={canvasRef} className="handpose-canvas" />
 
       <div className="card-div7">
-        <div className="process-item3">
-          <h2 className="steps-h23">
-            {spokenText && <div className="spoken-text">{spokenText}</div>}
-            {isTimerModalOpen && (
-              <div className="timer-modal">
-                <h2>타이머 설정</h2>
-                <label>
-                  분:
-                  <input type="number" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} />
-                </label>
-                <label>
-                  초:
-                  <input type="number" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} />
-                </label>
-                <div className="timer-btn-area">
-                  <button className="timer-modal-btn" onClick={handleSetTimer}>
-                    설정
-                  </button>
-                  <button className="timer-modal-btn" onClick={() => setIsTimerModalOpen(false)}>
-                    취소
-                  </button>
+        {/* <div className="logo-timeline-container"> */}
+        <div className="timeline-container">
+          <img className="process-logo-img" src="/images/샤방이.png" alt="" />
+          {renderTimeline()}
+          <img className="process-exit-btn" src="/images/exit-btn.png" alt="" onClick={onClose} />
+        </div>
+        {/* </div> */}
+        <div className="content-image-container">
+          <div className="process-item3">
+            <h2 className="steps-h23">
+              {spokenText && <div className="spoken-text">{spokenText}</div>}
+              {isTimerModalOpen && (
+                <div className="timer-modal">
+                  <h2>타이머 설정</h2>
+                  <label>
+                    분:
+                    <input type="number" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} />
+                  </label>
+                  <label>
+                    초:
+                    <input type="number" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} />
+                  </label>
+                  <div className="timer-btn-area">
+                    <button className="timer-modal-btn" onClick={handleSetTimer}>
+                      설정
+                    </button>
+                    <button className="timer-modal-btn" onClick={() => setIsTimerModalOpen(false)}>
+                      취소
+                    </button>
+                  </div>
                 </div>
+              )}
+
+              {currentProcess.processExplain}
+            </h2>
+          </div>
+          <div className="process-image-container3">
+            {currentProcess.images &&
+              currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
+
+            {isSidebarOpen && (
+              <div className="ingredient-sidebar open">
+                <ul>
+                  {recipe.ingredients.map((ingredient, index) => (
+                    <li key={index}>
+                      {ingredient.ingreName}: {ingredient.amount}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
-            {currentProcess.processExplain}
-          </h2>
+          </div>
         </div>
-        <div className="process-image-container3">
-          {currentProcess.images &&
-            currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
-          <button className="ingredient-button" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-            <img src="/images/ingredient-btn.png" alt="" />
-          </button>
-          <img className="timer-image3" src={isTimerRunning ? "/images/do-timer.gif" : "/images/undo-timer.png"} alt="Timer" onClick={handleTimerIconClick} />
-          {isSidebarOpen && (
-            <div className="ingredient-sidebar open">
-              <h2>재료 정보</h2>
-              <ul>
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index}>
-                    {ingredient.ingreName}: {ingredient.amount}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+        <div className="ing-time-container">
+          <div className="ingredient-container">
+            <button className="ingredient-button" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+              <img src="/images/ingredient-btn.png" alt="" />
+            </button>
+          </div>
+          <div className="timer-container">
+            <button className="timer-button" onClick={handleTimerIconClick}>
+              <img className="timer-image3" src={isTimerRunning ? "/images/do-timer.gif" : "/images/undo-timer.png"} alt="Timer" />
+            </button>
+          </div>
         </div>
-        <hr />
-        <div className="timer-container">{renderTimeline()}</div>
       </div>
       {swipeMessage && <div className="swipe-message">{swipeMessage}</div>}
       <div className="timer3">
@@ -365,6 +380,11 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
         </button>
       </div>
       {currentStep === totalPages - 1 && <div className="end-message">마지막 페이지 입니다</div>}
+      {currentStep === totalPages - 1 && (
+        <div className="end-cooking-btn">
+          <button>조리 끝내기</button>
+        </div>
+      )}
     </div>
   )
 }
