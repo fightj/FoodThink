@@ -233,90 +233,77 @@ const RecipeDetailPage = () => {
     <div className="base-div">
       <SearchBar />
       {/* <div className="parent-container"> */}
-        <div className="card-div">
-          <div style={{ width: "90%", margin: "0 auto" }}>
-            <button onClick={() => navigate(-1)} className="back-button">
-              <img src="/images/previous_button.png" alt="Previous" className="icon" />
-            </button>
-            <div style={{ display: "flex", gap: "2rem", marginBottom: "100px" }}>
-              <div className="recipe-main-images" style={{ flex: "0 0 60%", position: "relative" }}>
-                <img src={recipe.image} alt="Recipe Image" className="recipe-image1" />
-                <button className="bookmark-icon-btn" onClick={handleBookmarkClick}>
-                  <img src={isBookmarked ? "/images/do-Bookmark.png" : "/images/undo-Bookmark.png"} alt="북마크 아이콘" className="bookmark-icon" />
-                </button>
-                <div className="hit-eye-icon-area">
-                  <img src="/images/hit-eye.png" alt="" className="hit-eye-icon" />
-                  <p>{recipe.hits}</p>
+      <div className="card-div">
+        <div style={{ width: "90%", margin: "0 auto" }}>
+          <button onClick={() => navigate(-1)} className="back-button1">
+            <img src="/images/previous_button.png" alt="Previous" className="icon" />
+          </button>
+          <div style={{ display: "flex", gap: "2rem", marginBottom: "100px" }}>
+            <div className="recipe-main-images" style={{ flex: "0 0 60%", position: "relative" }}>
+              <img src={recipe.image} alt="Recipe Image" className="recipe-image1" />
+              <button className="bookmark-icon-btn" onClick={handleBookmarkClick}>
+                <img src={isBookmarked ? "/images/do-Bookmark.png" : "/images/undo-Bookmark.png"} alt="북마크 아이콘" className="bookmark-icon" />
+              </button>
+              <div className="hit-eye-icon-area">
+                <img src="/images/hit-eye.png" alt="" className="hit-eye-icon" />
+                <p>{recipe.hits}</p>
+              </div>
+              <img src={recipe.userImage || "/images/default_profile.png"} alt="프로필이미지" className="profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
+              <div className="nickname-container">{recipe.nickname}</div>
+            </div>
+
+            <div style={{ flex: "0 0 40%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div className="title-container">
+                <h1>{recipe.recipeTitle}</h1>
+              </div>
+              <div className="icon-container">
+                <div className="icon-item">
+                  <img src="/images/serving.png" alt="Serving" />
+                  <p>{recipe.serving}</p>
                 </div>
-                <img src={recipe.userImage || "/images/default_profile.png"} alt="프로필이미지" className="profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
-                <div className="nickname-container">{recipe.nickname}</div>
+                <div className="icon-item">
+                  <img src="/images/level.png" alt="Level" />
+                  <p>{getLevelText(recipe.level)}</p>
+                </div>
+                <div className="icon-item">
+                  <img src="/images/timerequired.png" alt="Time Required" />
+                  <p>{recipe.requiredTime}</p>
+                </div>
               </div>
 
-              <div style={{ flex: "0 0 40%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <div className="title-container">
-                  <h1>{recipe.recipeTitle}</h1>
-                </div>
-                <div className="icon-container">
-                  <div className="icon-item">
-                    <img src="/images/serving.png" alt="Serving" />
-                    <p>{recipe.serving}</p>
-                  </div>
-                  <div className="icon-item">
-                    <img src="/images/level.png" alt="Level" />
-                    <p>{getLevelText(recipe.level)}</p>
-                  </div>
-                  <div className="icon-item">
-                    <img src="/images/timerequired.png" alt="Time Required" />
-                    <p>{recipe.requiredTime}</p>
-                  </div>
-                </div>
+              <button
+                className="cook-btn"
+                onClick={() => {
+                  Swal.fire({
+                    title: "요리 하러 가보실까요?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "네",
+                    cancelButtonText: "아니요",
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      console.log("Navigating with recipe:", recipe)
+                      navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe })
+                    }
+                  })
+                }}
+              >
+                조리시작
+              </button>
+            </div>
+          </div>
 
-                <button className="cook-btn" onClick={() => setShowModal(true)}>
-                  조리시작
-                </button>
-
-                <button
-                  className="start-cooking-btn"
-                  onClick={() => {
-                    Swal.fire({
-                      title: "요리 하러 가보실까요?",
-                      icon: "question",
-                      showCancelButton: true,
-                      confirmButtonText: "네",
-                      cancelButtonText: "아니요",
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        console.log("Navigating with recipe:", recipe)
-                        navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe })
-                      }
-                    })
-                  }}
-                >
-                  요리 시작
+          {showModal && (
+            <div className="modal-overlay3">
+              <div className="modal-content3">
+                <button className="close-button3" onClick={() => setShowModal(false)}>
+                  X
                 </button>
               </div>
             </div>
-
-            {showModal && (
-              <div className="modal-overlay3">
-                <div className="modal-content3">
-                  <button className="close-button3" onClick={() => setShowModal(false)}>
-                    X
-                  </button>
-                  <HandPoseComponent
-                    currentStep={currentStep}
-                    onNextStep={() => setCurrentStep((prevStep) => prevStep + 1)}
-                    onPrevStep={() => setCurrentStep((prevStep) => Math.max(prevStep - 1, 0))}
-                    pages={recipe.processes}
-                    recipeId={recipe.recipeId}
-                    onClose={() => setShowModal(false)} // onClose 함수를 전달
-                  />
-                  <RecipeComponent pages={recipe.processes} />
-                </div>
-              </div>
-            )}
-          </div>
+          )}
         </div>
+      </div>
       {/* </div> */}
 
       <div className="card-div-firstsection">

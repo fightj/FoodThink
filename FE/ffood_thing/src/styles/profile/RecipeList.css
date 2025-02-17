@@ -125,6 +125,11 @@
   transform: scale(0.95);
 }
 
+.recipe-meta{
+  font-size: 0.9rem;
+  color: #9c9c9c;
+}
+
 
 /* 제목 스타일 */
 .recipe-title1 {

@@ -61,7 +61,8 @@ const BookmarkList = () => {
             <img src={recipe.image} alt={recipe.recipeTitle} className="mypage-recipe-image" />
             <p className="recipe-title1">{recipe.recipeTitle}</p>
             <div className="recipe-meta">
-              👁 {recipe.hits} | ⭐ {recipe.bookmarks}
+              👁 {recipe.hits} · <img src="/images/do-Bookmark.png" alt="북마크 아이콘" className="main-page-bookmark-icon" />
+               {recipe.bookmarks}
             </div>
           </Link>
         ))}
