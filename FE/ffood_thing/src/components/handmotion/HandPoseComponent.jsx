@@ -319,15 +319,20 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
               {spokenText && <div className="spoken-text">{spokenText}</div>}
               {isTimerModalOpen && (
                 <div className="timer-modal">
-                  <h2>타이머 설정</h2>
-                  <label>
-                    분:
-                    <input type="number" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} />
-                  </label>
-                  <label>
-                    초:
-                    <input type="number" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} />
-                  </label>
+                  <div className="slider-container">
+                    <div className="slider-wrapper">
+                      <div className="slider">
+                        <input type="range" min="0" max="59" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} className="range-slider vertical-slider" />
+                      </div>
+                      <div className="slider-label">분: {minutes}</div>
+                    </div>
+                    <div className="slider-wrapper">
+                      <div className="slider">
+                        <input type="range" min="0" max="59" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} className="range-slider vertical-slider" />
+                      </div>
+                      <div className="slider-label">초: {seconds}</div>
+                    </div>
+                  </div>
                   <div className="timer-btn-area">
                     <button className="timer-modal-btn" onClick={handleSetTimer}>
                       설정
@@ -343,9 +348,6 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
             </h2>
           </div>
           <div className="process-image-container3">
-            {currentProcess.images &&
-              currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
-
             {isSidebarOpen && (
               <div className="ingredient-sidebar open">
                 <ul>
@@ -357,6 +359,8 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
                 </ul>
               </div>
             )}
+            {currentProcess.images &&
+              currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
           </div>
         </div>
         <div className="ing-time-container">
@@ -381,9 +385,9 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
       </div>
       {currentStep === totalPages - 1 && <div className="end-message">마지막 페이지 입니다</div>}
       {currentStep === totalPages - 1 && (
-        <div className="end-cooking-btn">
-          <button>조리 끝내기</button>
-        </div>
+        <button className="end-cooking-btn" onClick={onNextPage}>
+          조리 끝내기
+        </button>
       )}
     </div>
   )
