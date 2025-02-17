@@ -2,7 +2,7 @@
 .sidebar-container {
   position: fixed;
   bottom: -100%;
-  left: 10px;
+  left: 2rem;
   max-height: calc(100vh - 40px);
   width: 220px;
   z-index: 900;
@@ -10,7 +10,7 @@
 }
 
 .sidebar-container.show {
-  bottom: 0px;
+  bottom: 6rem;
   z-index: 1001;
 }
 

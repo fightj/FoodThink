@@ -113,7 +113,7 @@ const MainApp = () => {
   };
 
   const closeSidebar = (e) => {
-    console.log("Clicked element:", e.target);
+    // console.log("Clicked element:", e.target);
     if (isOpen && !e.target.closest(".sidebar-container") && !e.target.closest(".toggle-button")) {
       setIsOpen(false);
     }
