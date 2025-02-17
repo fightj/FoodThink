@@ -6,6 +6,7 @@
   justify-content: center;
   width: 100%;
   min-height: 80vh;
+  padding: clamp(10px, 3vw, 30px);
 }
 
 /* lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll */
@@ -64,7 +65,7 @@
 
 /* ✅ 진행 바 (Progress Bar) */
 .progress-bar {
-  width: 80%;
+  width: 90%;
   height: 8px;
   background: #ddd;
   border-radius: 5px;
@@ -83,12 +84,13 @@
 /* ✅ 질문지 (말풍선) */
 .speech-bubble {
   background: #ffcc80;
-  padding: 2% 3%;
+  padding: clamp(10px, 2vw, 20px) clamp(15px, 3vw, 30px); /* 반응형 패딩 */
   border-radius: 30px;
   text-align: center;
-  font-size: 2.5rem;
+  font-size: clamp(1.2rem, 3vw, 2.5rem); /* 반응형 폰트 크기 */
   font-weight: bold;
   width: auto;
+  max-width: 90%; /* ✅ 너무 커지지 않도록 제한 */
   margin-top: 2%;
 }
 
@@ -98,8 +100,6 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  /* margin-top: 2%; */
-  /* gap: 5%; */
 }
 
 /* 왼쪽: AI 캐릭터 */
@@ -134,7 +134,7 @@
   flex-direction: column;
   align-items: center;
   width: 50%;
-  gap: 50px;
+  gap: clamp(30px, 3vw, 50px);
 }
 
 /* 대답 버튼 3개 */
@@ -148,20 +148,17 @@
   
 }
 
-
-
 /* 선택 버튼 */
 .choice-btn {
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 2.5vw, 1.5rem); /* ✅ 반응형 폰트 크기 */
   background: #7a4f3c;
   color: white;
   border: none;
-  padding: 12px;
+  padding: clamp(8px, 1.5vw, 12px);
   border-radius: 10%;
   font-weight: bold;
   width: auto;
-  height: 80px;
-  /* min-height: ; */
+  height: clamp(50px, 7vh, 80px); /* ✅ 높이 반응형 */
   min-width: 20%; /* 버튼 크기 제한 */
   cursor: pointer;
   text-align: center;
@@ -177,10 +174,9 @@
 .selected-answers {
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: center; */
-  gap: 10px;
-  width: 90%;
-  padding: 20px;
+  gap: clamp(5px, 1vw, 10px);
+  width: 85%; /* ✅ 너무 넓어지지 않도록 제한 */
+  padding: clamp(10px, 2vw, 20px);
   background: #fff7e0;
   border-radius: 8px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
@@ -191,10 +187,11 @@
   background: #ff9800;
   color: white;
   font-weight: bold;
-  padding: 10px 15px;
+  padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
   border-radius: 5px;
   text-align: center;
   width: auto;
+  max-width: 90%; /* ✅ 너무 길어지지 않도록 */
   opacity: 0;
   transform: scale(0.5);
   animation: fadeInScale 0.5s ease-in-out forwards;
@@ -206,8 +203,8 @@
   justify-content: flex-end;
   align-items: center;
   width: 100%;
-  gap: 10px;
-  margin: 20px;
+  gap: clamp(5px, 2vw, 10px);
+  margin: clamp(10px, 2vw, 20px);
   padding: 0% 5%;
 }
 
