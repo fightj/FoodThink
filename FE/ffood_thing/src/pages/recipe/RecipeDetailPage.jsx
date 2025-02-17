@@ -237,7 +237,6 @@ const RecipeDetailPage = () => {
         <div style={{ width: "90%", margin: "0 auto" }}>
           <button onClick={() => navigate(-1)} className="back-button1">
             <img src="/images/previous_button.png" alt="Previous" className="icon" />
-            이전
           </button>
           <div style={{ display: "flex", gap: "2rem", marginBottom: "100px" }}>
             <div className="recipe-main-images" style={{ flex: "0 0 60%", position: "relative" }}>
