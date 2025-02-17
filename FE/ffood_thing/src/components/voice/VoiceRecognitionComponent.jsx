@@ -83,7 +83,7 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
 
     const displayListeningMessage = () => {
       console.log("Listening for commands...")
-      setTimeout(displayListeningMessage, 5000) // 5초마다 메시지 출력
+      setTimeout(displayListeningMessage, 10000) // 5초마다 메시지 출력
     }
 
     displayListeningMessage() // 초기 메시지 출력
