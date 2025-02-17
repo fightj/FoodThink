@@ -77,19 +77,17 @@ const MainApp = () => {
 
   const { user, setUser } = useContext(UserContext)
   const [tokenLoaded, setTokenLoaded] = useState(false) // UserContext를 올바르게 사용
-  const pagesWithoutNavbar = ["/login", "/some-other-page"] // Add paths where you want to hide the Navbar
-
-  const hideNavbarPaths = ["/recipes/[0-9]+/cooking"] // Add regex patterns for paths where you want to hide the Navbar
-
-  const shouldHideNavbar = pagesWithoutNavbar.includes(location.pathname) || hideNavbarPaths.some((path) => new RegExp(path).test(location.pathname))
+  // const pagesWithoutNavbar = ["/login", "/some-other-page"]
+  // const hideNavbarPaths = ["/recipes/[0-9]+/cooking"]
+  // const shouldHideNavbar = pagesWithoutNavbar.includes(location.pathname) || hideNavbarPaths.some((path) => new RegExp(path).test(location.pathname))
 
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
   };
 
   const closeSidebar = (e) => {
-    if (isOpen && !e.target.closest(".sidebar") && !e.target.closest(".app-toggle-menu")) {
-      setIsOpen(false)
+    if (isOpen && !e.target.closest(".sidebar-container") && !e.target.closest(".toggle-button")) {
+      setIsOpen(false);
     }
   }
 
