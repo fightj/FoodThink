@@ -107,12 +107,12 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
 
   const handleTouchEnd = (index) => {
     setIsDragging(false)
-
+    console.log(itemTransforms[index])
     // 슬라이드 이동 처리
     if (itemTransforms[index] > 50) {
-      slideLeft(index) // 오른쪽으로 슬라이드
+      slideRight(index) // 오른쪽으로 슬라이드
     } else if (itemTransforms[index] < -50) {
-      slideRight(index) // 왼쪽으로 슬라이드
+      slideLeft(index) // 왼쪽으로 슬라이드
     }
 
     // 이동 거리 초기화
