@@ -313,12 +313,11 @@ const handleTouchEnd = () => {
                 <p className="description">
                   <strong>{author.username || "Unknown User"}</strong> {currentFeed.content}
                 </p>
-                <p className="hash-tage-recipe-name">#나의_요리는_{currentFeed.foodName}</p>
+                <p className="hash-tage-recipe-name">#나의_요리는_{currentFeed.foodName.replace(/\s+/g, "_")}</p>
               </div>
               {isRecipe && (
                   <div className="recipe-image-container">
-                    <div className="recipe-tooltip"
-                      onClick={() => navigate(`/recipes/${currentFeed.recipeListResponseDto.recipeId}`)}>
+                    <div className="recipe-tooltip" onClick={() => navigate(`/recipes/${currentFeed.recipeListResponseDto.recipeId}`)}>
                       <p>참고 레시피</p>
                     </div>
                   </div>
