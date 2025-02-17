@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { UserContext } from "../../contexts/UserContext"
-import RecipeComponent from "../../components/recipe/RecipeComponent"
-import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
+// import RecipeComponent from "../../components/recipe/RecipeComponent"
+// import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 import SearchBar from "../../components/base/SearchBar"
 import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
@@ -11,17 +11,16 @@ import "../../styles/recipe/RecipeDetailPage.css"
 const RecipeDetailPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { user, setUser } = useContext(UserContext)
+  const { user } = useContext(UserContext)
   const [recipe, setRecipe] = useState(null)
   const [showModal, setShowModal] = useState(false)
-  const [currentStep, setCurrentStep] = useState(0)
+  // const [currentStep, setCurrentStep] = useState(0)
   const [activeSection, setActiveSection] = useState("ingredients")
   const [isBookmarked, setIsBookmarked] = useState(false)
-
   const ingredientsRef = useRef(null)
   const stepsRef = useRef(null)
-  const completedRef = useRef(null)
   const feedRef = useRef(null)
+  const completedRef = useRef(null)
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -229,45 +228,52 @@ const RecipeDetailPage = () => {
     setActiveSection(section)
     document.getElementById(section).scrollIntoView({ behavior: "smooth" })
   }
+
   return (
     <div className="base-div">
       <SearchBar />
-      {/* <div className="parent-container"> */}
       <div className="card-div">
-        <div style={{ width: "90%", margin: "0 auto" }}>
-          <button onClick={() => navigate(-1)} className="back-button1">
+        <div className="recipe-detail-container">
+          <button onClick={() => navigate(-1)} className="back-button">
             <img src="/images/previous_button.png" alt="Previous" className="icon" />
           </button>
-          <div style={{ display: "flex", gap: "2rem", marginBottom: "100px" }}>
-            <div className="recipe-main-images" style={{ flex: "0 0 60%", position: "relative" }}>
-              <img src={recipe.image} alt="Recipe Image" className="recipe-image1" />
-              <button className="bookmark-icon-btn" onClick={handleBookmarkClick}>
-                <img src={isBookmarked ? "/images/do-Bookmark.png" : "/images/undo-Bookmark.png"} alt="북마크 아이콘" className="bookmark-icon" />
-              </button>
-              <div className="hit-eye-icon-area">
-                <img src="/images/hit-eye.png" alt="" className="hit-eye-icon" />
-                <p>{recipe.hits}</p>
-              </div>
-              <img src={recipe.userImage || "/images/default_profile.png"} alt="프로필이미지" className="profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
-              <div className="nickname-container">{recipe.nickname}</div>
-            </div>
 
-            <div style={{ flex: "0 0 40%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div className="title-container">
-                <h1>{recipe.recipeTitle}</h1>
+          <div className="recipe-detail-header">
+            <div className="recipe-detail-header-left">
+              <div className="recipe-detail-main-images">
+                <img src={recipe.image} alt="Recipe" className="recipe-detail-main-image" />
+                </div>
+                <div className="recipe-detail-user-info">
+                  <div className="recipe-detail-nickname">{recipe.nickname}</div>
+                  <img src={recipe.userImage || "/images/default_profile.png"} alt="Profile" className="recipe-detail-profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
+                </div>
+                <div className="hit-eye-icon-area">
+                  <img src="/images/hit-eye.png" alt="조회수" className="hit-eye-icon" />
+                  <div className="recipe-detail-hits">{recipe.hits}</div>
               </div>
-              <div className="icon-container">
-                <div className="icon-item">
-                  <img src="/images/serving.png" alt="Serving" />
-                  <p>{recipe.serving}</p>
+            </div>
+          
+
+
+            <div className="recipe-detail-header-right">
+              <div className="recipe-detail-title-container">
+                <div className="recipe-detail-title">{recipe.recipeTitle}</div>
+                <button className="bookmark-icon-btn" onClick={handleBookmarkClick}>
+                <img src={isBookmarked ? "/images/do-Bookmark.png" : "/images/undo-Bookmark.png"} alt="Bookmark Icon" className="bookmark-icon" />
+                </button>
+              </div>
+              <div className="recipe-detail-info-container">
+        <div className="recipe-detail-info-item">
+                  <img src="/images/serving.png" alt="Serving" className="recipe-detail-info-icon" />
+                  <div className="recipe-detail-info-text">{recipe.serving}</div>
                 </div>
-                <div className="icon-item">
-                  <img src="/images/level.png" alt="Level" />
-                  <p>{getLevelText(recipe.level)}</p>
+                <div className="recipe-detail-info-item">
+                  <img src="/images/level.png" alt="Level" className="recipe-detail-info-icon" />
+                  <div className="recipe-detail-info-text">{getLevelText(recipe.level)}</div>
                 </div>
-                <div className="icon-item">
-                  <img src="/images/timerequired.png" alt="Time Required" />
-                  <p>{recipe.requiredTime}</p>
+                <div className="recipe-detail-info-item">
+                  <img src="/images/timerequired.png" alt="Time Required" className="recipe-detail-info-icon" />
+                  <div className="recipe-detail-info-text">{recipe.requiredTime}</div>
                 </div>
               </div>
 
