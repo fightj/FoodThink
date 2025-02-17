@@ -4,7 +4,7 @@ import FeedCommentSection from "../../components/sns/FeedCommentSection"
 import "../../styles/sns/FeedDetail.css"
 import { motion, AnimatePresence } from "framer-motion"
 import Swal from "sweetalert2"
-import RecipeModal from "../../components/sns/RecipeModal" // 모달 컴포넌트 추가
+import RecipeModal from "../../components/sns/RecipeModal"
 
 function FeedDetail() {
   const { id } = useParams()
@@ -16,77 +16,48 @@ function FeedDetail() {
   const [currentFeed, setCurrentFeed] = useState(null)
   const [linkedRecipe, setLinkedRecipe] = useState(null)
   const [sessionUserId, setSessionUserId] = useState(null)
-  const [showRecipeModal, setShowRecipeModal] = useState(false) // 모달 상태 추가
+  const [showRecipeModal, setShowRecipeModal] = useState(false)
 
-  // 이미지 여러 장 터치 슬라이드 기능 추가
-  // const [touchStartX, setTouchStartX] = useState(0); //시작 위치
-  // const [touchEndX, setTouchEndX] = useState(0); //끝 위치
-
-  // const handleTouchStart = (e) => {
-  //   //터치 시작 시, 현재 버튼에 해당하는 영역이 터치된 경우
-  //   const target = e.target;
-  //   setTouchStartX(e.touches[0].clientX); //터치 시작 지점 기록
-  // };
-
-  // const handleTouchMove = (e) => {
-  //   setTouchEndX(e.touches[0].clientX); //터치 이동 중 지점 기록
-  // };
-
-  // const handleTouchEnd = () => {
-  //   //터치 이동한 거리 차이로 슬라이드 방향 판단
-  //   if (touchStartX - touchEndX > 50) {
-  //     handleNext(); //다음 이미지로 이동
-  //   }
-
-  //   if (touchEndX - touchStartX > 50) {
-  //     handlePrev(); //이전 이미지로 이동
-  //   }
-  // };
-
+  //이미지 및 댓글 모달에 대한 스와이프 기능
   const [touchStartX, setTouchStartX] = useState(0);
-const [touchEndX, setTouchEndX] = useState(0);
-const [touchStartY, setTouchStartY] = useState(0);
-const [touchEndY, setTouchEndY] = useState(0);
-const [isVerticalSwipe, setIsVerticalSwipe] = useState(false); // 수직 스와이프 감지 여부
+  const [touchEndX, setTouchEndX] = useState(0);
+  const [touchStartY, setTouchStartY] = useState(0);
+  const [touchEndY, setTouchEndY] = useState(0);
+  const [isVerticalSwipe, setIsVerticalSwipe] = useState(false);
 
-const handleTouchStart = (e) => {
-  setTouchStartX(e.touches[0].clientX);
-  setTouchStartY(e.touches[0].clientY);
-  setIsVerticalSwipe(false); // 초기화
-};
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+    setTouchStartY(e.touches[0].clientY);
+    setIsVerticalSwipe(false);
+  };
 
-const handleTouchMove = (e) => {
-  const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
-  const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+  const handleTouchMove = (e) => {
+    const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+    const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
 
-  if (deltaY > deltaX) {
-    setIsVerticalSwipe(true); // 수직 스와이프 감지
-  }
-
-  setTouchEndX(e.touches[0].clientX);
-  setTouchEndY(e.touches[0].clientY);
-};
-
-const handleTouchEnd = () => {
-  if (isVerticalSwipe) {
-    // 수직 스와이프 감지됨 (위아래 움직임)
-    if (touchEndY - touchStartY > 50) {
-      setShowComments(false); // 아래로 스와이프하면 댓글 닫기
+    if (deltaY > deltaX) {
+      setIsVerticalSwipe(true); //수직 스와이프 감지
     }
-  } else {
-    // 수평 스와이프 (좌우 움직임)
-    if (touchStartX - touchEndX > 50) {
-      handleNext(); // 오른쪽으로 스와이프 → 다음 이미지
-    } else if (touchEndX - touchStartX > 50) {
-      handlePrev(); // 왼쪽으로 스와이프 → 이전 이미지
+
+    setTouchEndX(e.touches[0].clientX);
+    setTouchEndY(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    if (isVerticalSwipe) {
+      //수직 스와이프 감지됨 (위아래)
+      if (touchEndY - touchStartY > 50) {
+        setShowComments(false); //아래로 스와이프하면 댓글 닫기
+      }
+    } else {
+      //수평 스와이프 (좌우)
+      if (touchStartX - touchEndX > 50) {
+        handleNext(); //오른쪽으로 스와이프 → 다음 이미지
+      } else if (touchEndX - touchStartX > 50) {
+        handlePrev(); //왼쪽으로 스와이프 → 이전 이미지
+      }
     }
-  }
-};
-
-
-
-  
-
+  };
 
   useEffect(() => {
     const fetchFeedData = async () => {
@@ -103,7 +74,6 @@ const handleTouchEnd = () => {
       }
     }
 
-    // Fetch user ID from session storage
     const storedUser = sessionStorage.getItem("user")
     if (storedUser) {
       const user = JSON.parse(storedUser)
