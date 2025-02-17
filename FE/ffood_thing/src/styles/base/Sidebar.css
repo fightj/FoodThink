@@ -10,7 +10,7 @@
 }
 
 .sidebar-container.show {
-  bottom: 20px;
+  bottom: 0px;
   z-index: 1001;
 }
 
