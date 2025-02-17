@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef, useCallback  } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import SearchBar from "../../components/base/SearchBar"
 import Swal from "sweetalert2"
@@ -8,21 +8,38 @@ import PageSlide from "../../components/base/PageSlide"
 function SnsMain() {
   const [query, setQuery] = useState("")
   const [feedData, setFeedData] = useState([])
+  const [page, setPage] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+  const [isFetching, setIsFetching] = useState(false)
+  const observer = useRef()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const fetchData = async (page = 0, size = 12) => {
+  const fetchData = async (pageNum) => {
+      if (isFetching) return; // 중복 요청 방지
+      setIsFetching(true);
       try {
-        const response = await fetch(`https://i12e107.p.ssafy.io/api/feed/read/latest?page=${page}&size=${size}`)
-        const data = await response.json()
-        setFeedData(data.content)
+        const response = await fetch(
+          `https://i12e107.p.ssafy.io/api/feed/read/latest?page=${pageNum}&size=12`
+        );
+        const data = await response.json();
+        if (data.content.length === 0) {
+          setHasMore(false); // 더 이상 불러올 데이터 없음
+        } else {
+          setFeedData((prev) => [...prev, ...data.content]);
+        }
       } catch (error) {
-        console.error("Error fetching feed data:", error)
+        console.error("Error fetching feed data:", error);
       }
-    }
+      setIsFetching(false);
+    };
 
-    fetchData()
-  }, [])
+  useEffect(() => {
+    fetchData(page);
+  }, [page]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleSearch = (query) => {
     setQuery(query)
@@ -53,6 +70,20 @@ function SnsMain() {
     }
   }
 
+  const lastFeedElementRef = useCallback(
+    (node) => {
+      if (isFetching) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isFetching, hasMore]
+  );
+
   return (
     <PageSlide>
       <div className="base-div">
@@ -64,12 +95,12 @@ function SnsMain() {
           </div>
           {/* row-cols-1  */}
           <div className="row row-cols-lg-3 align-items-stretch g-2">
-            {feedData.map((feedItem) => {
+            {feedData.map((feedItem, index) => {
               const hasMultipleImages = feedItem.imageSize >= 2
-
+            if (index === feedData.length - 1) {
               return (
                 // col
-                <div className="col-4" key={feedItem.id}>
+                <div className="col-4" key={feedItem.id} ref={lastFeedElementRef}>
                   <Link to={`/feed/${feedItem.id}`} style={{ textDecoration: "none" }}>
                     <div className="card card-cover h-100 overflow-hidden rounded-4 feed-card" style={{ backgroundImage: `url(${feedItem.image})` }}>
                       {hasMultipleImages && (
@@ -87,6 +118,27 @@ function SnsMain() {
                   </Link>
                 </div>
               )
+            } else {
+                return (
+                  <div className="col" key={feedItem.id}>
+                    <Link to={`/feed/${feedItem.id}`} style={{ textDecoration: "none" }}>
+                      <div className="card card-cover h-100 overflow-hidden rounded-4 feed-card" style={{ backgroundImage: `url(${feedItem.image})` }}>
+                        {hasMultipleImages && (
+                          <div className="image-icon">
+                            <img src="/images/pages.png" alt="Multiple images" />
+                          </div>
+                        )}
+                        <div className="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                          <div className="user-info">
+                              <img src={feedItem.userImage || "/images/default_profile.png"} alt={feedItem.userNickname} className="profile-image-main" />
+                            <span>{feedItem.userNickname}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                );
+              }
             })}
           </div>
         </div>

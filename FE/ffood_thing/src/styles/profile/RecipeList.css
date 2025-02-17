@@ -81,9 +81,9 @@
 /* 이미지 스타일 */
 .mypage-recipe-image {
   width: 100%;
-  min-width: 200px;
+  min-width: 230px;
   min-height: 230px;
-  height: 160px;
+  height: 100%;
   border-radius: 10px;
   object-fit: cover;
 }
@@ -125,12 +125,6 @@
   transform: scale(0.95);
 }
 
-/* 모바일에서 이미지 크기 조절 */
-@media (max-width: 480px) {
-  .mypage-recipe-image {
-      height: 120px;
-  }
-}
 
 /* 제목 스타일 */
 .recipe-title1 {
@@ -155,11 +149,21 @@
   max-width: 200px;
 }
 
+@media (max-width: 1024px) {
+  .mypage-recipe-image{
+    min-width: 100px;
+    min-height: 100px;
+  }
+}
+
 
 /* 모바일에서 제목 크기 줄이기 */
 @media (max-width: 480px) {
   .recipe-title1 {
       font-size: 12px;
-      max-width: 140px;
+  }
+  .mypage-recipe-image {
+    height: 200px;
+
   }
 }
