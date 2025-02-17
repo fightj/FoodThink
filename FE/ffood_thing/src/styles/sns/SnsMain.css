@@ -88,7 +88,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.btn-bd-primary {
+/* .btn-bd-primary {
   --bd-violet-bg: #712cf9;
   --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
 
@@ -103,7 +103,7 @@
   --bs-btn-active-color: var(--bs-btn-hover-color);
   --bs-btn-active-bg: #5a23c8;
   --bs-btn-active-border-color: #5a23c8;
-}
+} */
 
 .bd-mode-toggle {
   z-index: 1500;
@@ -129,9 +129,10 @@
 /* 반응형: 모바일에서도 적절히 표시 */
 @media (max-width: 576px) {
   .feed-card {
-    aspect-ratio: 1 / 1; /* 모바일에서도 정사각형 유지 */
+    aspect-ratio: 1 / 1;
   }
 }
+
 .image-icon {
   position: absolute;
   top: 10px;
@@ -166,10 +167,33 @@
   margin-right: 10px;
 }
 
+/* 글자 편집 여기 (02.16) */
 .user-info span {
   font-weight: bold;
   color: white;
 }
+
+@media (max-width: 800px) {
+  .user-info img {
+    display: none;
+  }
+
+  .user-info span {
+    display: none;
+  }
+
+  .feed-write-button {
+    width: 2rem;
+    margin-bottom: 15px;
+  }
+
+  .image-icon img {
+    /* width: 1.2rem; */
+    /* height: 1.2rem; */
+    display: none;
+  }
+}
+
 .search-result-title {
   text-align: center; /* 텍스트 중앙 정렬 */
   flex-grow: 1; /* 나머지 공간을 차지하게 하여 제목을 중앙에 위치시킴 */

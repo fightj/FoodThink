@@ -259,21 +259,28 @@ function FeedWrite() {
 
   return (
     <div className="base-div">
-      <div className="card-div">
-        <button onClick={handleBack} className="back-button1">
-          <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
-        </button>
-        <form onSubmit={handleSubmit}>
-          <div className="preview-container">
-            {selectedImages.map((image) => (
-              <div key={image.id} className="preview-image">
-                <div className="square">
-                  <img src={image.isCaptured ? image.dataURL : image.id} alt="미리보기" />
-                </div>
-                <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
-              </div>
-            ))}
+        <div className="card-div">
+          <div className="sns-write-header">
+            <button onClick={handleBack} className="back-button1">
+              <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
+            </button>
+            <div className="sns-write-title">
+                <h2 className="sns-write-title-h2">피드 작성</h2>
+                <img src="/images/시원이.png" className="sns-write-title-icon" />
+            </div>
           </div>
+            <form onSubmit={handleSubmit}>
+              <div className="preview-container">
+                {selectedImages.map((image) => (
+                  <div key={image.id} className="preview-image">
+                    <div className="square">
+                    <img src={image.isCaptured ? image.dataURL : image.id} alt="미리보기" />
+                      {/* <img src={image.id} alt="미리보기" /> */}
+                    </div>
+                    <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
+                  </div>
+                ))}
+              </div>
 
           <div className="file-upload" onClick={() => fileInputRef.current.click()}>
             <img src={imageIcon} alt="이미지 아이콘" />

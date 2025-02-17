@@ -15,7 +15,7 @@
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
   flex-direction: column; /* 자식 요소를 세로로 정렬 */
   justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  height: auto; /* 높이를 패딩에 따라 유동적으로 설정 */
+  /* height: auto; */
   margin-bottom: 30px;
   border-radius: 40px; /* 아래 두 꼭지점만 둥글게 설정 */
   margin: 0 auto 20px;
@@ -72,11 +72,23 @@ body {
 }
 
 /* SNS피드 참고한 레시피를 찾을 때 "내 북마크 레시피" 모달 제목 */
+/* 글자 조정할 때 사용하라고 여기 일단 둠 */
 .my-bookmark-modal-title {
-  /* 글자 조정할 때 사용하라고 여기 일단 둠 */
+
 }
 
-@media screen and (max-width: 800px) {
+/* SNS피드 작성 및 수정 페이지 타이틀 */
+.sns-write-title-h2 {
+  font-size: 3em;
+  margin: 0;
+}
+
+@media screen and (max-width: 600px) {
+  .card-div {
+    padding: 1rem;
+    border-radius: 25px;
+   }
+
   .context-h5 {
     font-size: 1.2rem;
   }
@@ -87,5 +99,17 @@ body {
 
   .feed-write-text {
     font-size: 0.9em;
+  }
+
+  .sns-write-title-h2 {
+    font-size: 1.8rem;
+    margin: 0;
+    margin-top: 1rem;
+  }
+  
+  /* 아이콘 가리기? (02.15) */
+  .sns-write-title-icon {
+    display: none;
+    /* width: 10px; */
   }
 }

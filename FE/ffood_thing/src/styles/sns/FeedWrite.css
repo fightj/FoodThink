@@ -1,3 +1,26 @@
+/* 피드 작성 및 수정 헤더 */
+.sns-write-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 3%;
+}
+
+/* 피드 작성 및 수정 헤더 글 내용 */
+.sns-write-title {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* 피드 작성하기 제목 아이콘 */
+.sns-write-title-icon {
+  width: 5rem;
+  animation: float 3s ease-in-out infinite;
+}
 
 form {
   width: 100%;
@@ -7,7 +30,7 @@ form {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 0.5%;
+  margin-top: 1%;
 }
 
 .preview-image {

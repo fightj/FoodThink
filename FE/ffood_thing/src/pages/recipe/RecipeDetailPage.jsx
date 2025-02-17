@@ -232,8 +232,8 @@ const RecipeDetailPage = () => {
   return (
     <div className="base-div">
       <SearchBar />
-      <div className="parent-container">
-        <div className="card-div-topsection">
+      {/* <div className="parent-container"> */}
+        <div className="card-div">
           <div style={{ width: "90%", margin: "0 auto" }}>
             <button onClick={() => navigate(-1)} className="back-button1">
               <img src="/images/previous_button.png" alt="Previous" className="icon" />
@@ -318,7 +318,7 @@ const RecipeDetailPage = () => {
             )}
           </div>
         </div>
-      </div>
+      {/* </div> */}
 
       <div className="card-div-firstsection">
         <button className={activeSection === "ingredients" ? "active" : ""} onClick={() => scrollToSection("ingredients")}>
