@@ -25,14 +25,6 @@
   }
 }
 
-/* 모바일에서 카드 크기 조절 */
-/* @media (max-width: 480px) {
-  .recipe-grid {
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 15px;
-  }
-} */
-
 /* 레시피 카드 */
 .recipe-card {
   display: flex;
