@@ -16,8 +16,7 @@ function LoginPage() {
           <div className="content-wrapper">
             <h2>Food Think</h2>
             <div className="image-wrapper">
-              <img src="/images/login-page-img.png" alt="Food Think Logo" className="main-image" />
-              <img src="/images/mainlogo.jpg" alt="Food Think Logo" className="overlay-image" />
+              <img src="/images/꾸덕이.png" alt="Food Think Logo" className="main-image" />
             </div>
             <h1>지금 Food Think와 요리를 시작하세요!</h1>
             <br />
