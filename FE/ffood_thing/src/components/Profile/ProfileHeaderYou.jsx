@@ -3,6 +3,7 @@ import BackgroundEffect from "./BackgroundEffect";
 import { UserContext } from "../../contexts/UserContext";
 import "../../styles/profile/ProfileHeader.css";
 import Swal from "sweetalert2";
+import "../../styles/base/global.css"
 
 const ProfileHeaderYou = ({ nickname }) => {
   const { user } = useContext(UserContext);
