@@ -1,5 +1,19 @@
+.recipe-page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; /* ✅ 내부 요소를 양쪽 정렬 */
+  align-items: center; /* ✅ 세로 중앙 정렬 */
+  margin-bottom: 1rem; /* ✅ 하단 여백 */
+}
+
+.back-button {
+  align-self: flex-start; /* ✅ 모바일에서도 왼쪽 정렬 유지 */
+}
+
+
 .category-onoff-button {
-  background-color: #fdb13f;
+  /* background-color: #fdb13f; */
+  background-color: #fb923c;
   color: white;
   border: none;
   border-radius: 5px;
@@ -42,7 +56,8 @@
 
 .category-title {
   font-size: 1.7rem;
-  color: #ff9900;
+  /* color: #ff9900; */
+  color: #ea580c;
   padding: 0.5rem 1rem 1rem 1rem;
   border-radius: 10rem;
   white-space: nowrap;
@@ -224,22 +239,47 @@
 
 .main-recipe-list {
   display: flex;
-  /* justify-content: start; */
-  width: 100%;
-  gap: 1rem;
   flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
+  width: 100%;
+  margin: 0 auto;
 }
 
 /* 레시피 카드 */
 .main-recipe-card {
   display: flex;
   flex-direction: column;
-  /* justify-self: space-between; */
-  width: 23%;
+  justify-self: space-between;
+  /* width: 23%; */
+  width: calc(25% - 0.75rem); /* ✅ 기본 4개씩 */
+  max-width: 280px;
   height: 265px;
   border-radius: 10px;
   background-color: #fff;
   overflow: hidden;
+  /* margin: auto; */
+}
+
+/* 🔹 반응형 미디어 쿼리 */
+@media (max-width: 1024px) { /* 태블릿 */
+  .main-recipe-card {
+    width: calc(33.3% - 0.75rem); /* ✅ 한 줄에 3개 */
+  }
+}
+
+@media (max-width: 768px) { /* 작은 태블릿 */
+  .main-recipe-card {
+    width: calc(50% - 0.75rem); /* ✅ 한 줄에 2개 */
+  }
+}
+
+@media (max-width: 480px) { /* 모바일 */
+  .main-recipe-card {
+    width: 90%; /* ✅ 한 줄에 1개 */
+    max-width: 320px; /* ✅ 최대 크기 제한 */
+    margin: auto;
+  }
 }
 
 /* 이미지 스타일 */
@@ -291,6 +331,44 @@
   width: 17px; /* 너비 조정 */
   height: 18px; /* 높이 조정 */
   margin-bottom: 3px;
+}
+
+.main-recipe-text-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-recipe-text {
+  margin-top: 5vh;
+  font-size: 2rem;
+}
+
+.search-page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; /* ✅ 내부 요소를 양쪽 정렬 */
+  align-items: center; /* ✅ 세로 중앙 정렬 */
+  margin-bottom: 1rem; /* ✅ 하단 여백 */
+}
+
+/* 🔹 모바일 화면(세로 모드)에서 column 정렬 */
+@media (max-width: 768px) {
+  .search-page-header {
+    flex-direction: column; /* ✅ 세로 정렬 */
+    justify-content: flex-start; /* ✅ 중앙 정렬 유지 */
+    gap: 0.5rem; /* ✅ 요소 간 간격 추가 */
+  }
+  .search-page-text {
+    width: 100%;
+    text-align: left;
+  }
+}
+
+.search-page-text {
+  width: 85%;
+  text-align: right;
 }
 
 .recipe-main-page-scroll-to-top-div {

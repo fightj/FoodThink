@@ -98,13 +98,13 @@ const RecipeSearchResultPage = () => {
       <SearchBarRecipe onSearch={handleSearch} initialQuery={searchQuery} />
       {/* <div className="recipe-parent-div"> */}
         <div className="card-div">
-          <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
-            <button onClick={() => navigate(-1)} className="back-button1">
+          <div className="search-page-header">
+            <button onClick={() => navigate(-1)} className="back-button">
               <img src="/images/previous_button.png" alt="Previous" className="icon" />
             </button>
-            <h4>
+            <div className="search-page-text">
               "{searchQuery}"에 대한 검색 결과가 총 {totalResults}개 있습니다.
-            </h4>
+            </div>
           </div>
           <div className="main-recipe-list">
             {filteredRecipes.map((recipe, index) => (
@@ -129,8 +129,10 @@ const RecipeSearchResultPage = () => {
                 </div>
               </div>
             ))}
-            {loading && <p>로딩 중...</p>}
-            {filteredRecipes.length === 0 && !loading && <h4>검색 결과가 없습니다.</h4>}
+            <div className="main-recipe-text-container">
+            {loading && <div className="main-recipe-text">로딩 중...</div>}
+            {filteredRecipes.length === 0 && !loading && <div className="main-recipe-text">검색 결과가 없습니다.</div>}
+            </div>
           </div>
         </div>
         {/* 페이지 맨 위로 올라가는 버튼 */}
