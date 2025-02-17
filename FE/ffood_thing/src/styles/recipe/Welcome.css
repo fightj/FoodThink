@@ -1,54 +1,70 @@
+.card-div-welcome {
+  background-color: rgb(255, 255, 255);
+  width: 95%; /* 수평 공간 전체를 차지 */
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  flex-direction: column; /* 자식 요소를 세로로 정렬 */
+  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-radius: 40px; /* 아래 두 꼭지점만 둥글게 설정 */
+  margin: 0 auto 20px;
+  padding: 2rem;
+}
+
 .welcome-container {
-  background-image: url("/images/backgroundImage.png");
-  background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
   display: flex;
-  flex-direction: column; /* 상단의 헤더와 좌우 컨텐츠를 분리하기 위해 컬럼 방향으로 정렬 */
+  flex-direction: column;
+  align-items: center; /* 모든 요소를 중앙 정렬 */
+  justify-content: center;
   width: 100%;
-  height: 100vh; /* 전체 화면 높이로 설정 */
-  overflow: hidden; /* 전체 컨테이너에서 넘치는 내용 숨김 */
+  min-height: 80vh;
+  background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
+  border-radius: 20px;
+  text-align: center;
 }
 
-.welcome-comment {
-  display: flex;
-  position: absolute;
-  top: 15%;
-  left: 10%;
-  align-items: center; /* 수직 중앙 정렬 */
-}
-
+/* ✅ 이미지 스타일 */
 .cooking-image-welcome {
-  width: 100%; /* 너비를 100%로 설정하여 화면의 전체 너비를 차지 */
-  height: 100%; /* 높이를 100%로 설정하여 화면의 전체 높이를 차지 */
-  object-fit: cover; /* 이미지가 화면을 덮도록 비율 조정 */
-  opacity: 50%;
-  position: relative;
-}
-
-.welcome-comment p {
-  margin-top: 0; /* 위쪽 여백 제거 */
-  margin-bottom: 0; /* 아래쪽 여백 제거 */
-  padding: 20px 0; /* 상하 패딩 추가 */
-  font-size: 4vw; /* 폰트 사이즈 업 */
-}
-
-.ready-for-cooking p {
-  position: absolute;
-  bottom: 10%;
-  left: 5%;
-}
-
-.welcome-image-knife {
-  width: 10%;
+  width: 50%;
   height: auto;
-  position: absolute;
-  bottom: 15%;
-  right: 5%;
+  margin-bottom: 20px;
+  animation: float 3s infinite ease-in-out;
 }
 
-.welcome-image-shaker {
-  width: 10%;
-  height: auto;
-  position: absolute;
-  top: 5%;
-  right: 5%;
+/* AI 이미지 부드럽게 움직이는 애니메이션 */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* 🔹 제목 스타일 */
+.start-title {
+  font-size: 5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-bottom: 5%;
+}
+
+/* 🔹 설명 스타일 */
+.start-description {
+  font-size: 1.5rem;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+
+/* 🔹 터치 안내문 스타일 */
+.ready-for-cooking {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  background: #ff9800;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin-top: 20px;
 }
