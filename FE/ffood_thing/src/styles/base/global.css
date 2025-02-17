@@ -22,6 +22,14 @@
   padding: 2rem;
   /* box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); 상단 그림자 더 강조 */
 }
+.back-button {
+  align-self: flex-start; /* ✅ 모바일에서도 왼쪽 정렬 유지 */
+}
+.new-write-button{
+  background: none;
+  border: none;
+  align-self: flex-end;
+}
 
 @font-face {
   font-family: "MyCustomFont";

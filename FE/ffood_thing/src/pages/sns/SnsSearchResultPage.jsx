@@ -4,6 +4,7 @@ import PageSlide from "../../components/base/PageSlide";
 import SearchBar from "../../components/base/SearchBar";
 import "../../styles/sns/SnsMain.css";
 import "../../styles/sns/SnsSearchResultPage.css"
+import "../../styles/base/global.css"
 
 // 검색 결과를 가져오는 함수
 const fetchSearchResults = async (searchQuery, pageNumber = 0, size = 12) => {
@@ -105,13 +106,15 @@ function SnsSearchResultPage() {
         <SearchBar onSearch={handleSearch} initialQuery={query} inputRef={searchInputRef} />
         
         <div className="card-div">
-            <div className="d-flex justify-content-between align-items-center pb-2">
+            <div className="sns-search-result-header" >
               {/* 이전 버튼 클릭 시, 이전 페이지로 이동 */}
               <button onClick={() => navigate('/sns')} className="back-button">
                 <img src="/images/previous_button.png" alt="Previous" className="icon" />
               </button>
               {/* 검색 결과 텍스트는 화면 중앙 정렬 */}
-              <h2 className="search-result-title">검색 결과: "{query}"</h2>
+              <h2 className="search-result-title" >
+                "{query}"에 대한 검색 결과가 총 {searchResults.length}개 있습니다.
+              </h2>
             </div>
 
             <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">

@@ -348,7 +348,7 @@ function RecipeWritePage() {
       <div className="base-div">
         <div className="card-div">
             <div className="recipe-write-header">
-              <button onClick={() => navigate(-1)} className="recipe-write-back-button">
+              <button onClick={() => navigate(-1)} className="back-button">
                 <img src="/images/previous_button.png" alt="Previous" className="icon" />
               </button>
               <div className="recipe-write-page-title">나만의 레시피 만들기&nbsp;

@@ -5,6 +5,7 @@ import "../../styles/sns/FeedDetail.css"
 import { motion, AnimatePresence } from "framer-motion"
 import Swal from "sweetalert2"
 import RecipeModal from "../../components/sns/RecipeModal" // 모달 컴포넌트 추가
+import "../../styles/base/global.css"
 
 function FeedDetail() {
   const { id } = useParams()
@@ -248,7 +249,7 @@ const handleTouchEnd = () => {
     <div className="base-div">
       <div className="card-div">
         {/* 뒤로가기 버튼 */}
-        <button onClick={() => navigate(-1)} className="sns-detail-back-button">
+        <button onClick={() => navigate(-1)} className="back-button">
           <img src="/images/previous_button.png" alt="Previous" className="icon" />
         </button>
 

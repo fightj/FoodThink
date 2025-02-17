@@ -91,7 +91,9 @@ function SnsMain() {
         <div className="card-div">
           <div className="d-flex justify-content-between align-items-center mt-0">
             <h2></h2>
-            <img src="/images/feed_write_button.png" alt="Feed 작성" className="feed-write-button" onClick={handleWriteClick} />
+            <button className="new-write-button" onClick={handleWriteClick} style={{ marginBottom: '20px' }}>
+              <img src="/images/feed_write_button.png" alt="Feed 작성" className="icon" />
+            </button>
           </div>
           {/* row-cols-1  */}
           <div className="row row-cols-lg-3 align-items-stretch g-2">

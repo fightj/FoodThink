@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
 import SearchBarRecipe from "../../components/base/SearchBarRecipe"
-import "../../styles/recipe/RecipesMainPage.css"
+import "../../styles/base/global.css" // 백버튼
 
 function useQuery() {
   return new URLSearchParams(useLocation().search)
