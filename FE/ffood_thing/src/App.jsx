@@ -70,87 +70,63 @@ const App = () => {
 }
 const MainApp = () => {
   const [isOpen, setIsOpen] = useState(false)
+
+  const location = useLocation() // Add the useLocation hook
+
   const { user, setUser } = useContext(UserContext)
   const [tokenLoaded, setTokenLoaded] = useState(false) // UserContext를 올바르게 사용
-  const [showButton, setShowButton] = useState(true); // 버튼 표시 여부
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
+  const [showButton, setShowButton] = useState(true) // 버튼 표시 여부
+  const touchStartX = useRef(0)
+  const touchEndX = useRef(0)
 
-  const touchStartY = useRef(0);
-  const touchEndY = useRef(0);
+  const touchStartY = useRef(0)
+  const touchEndY = useRef(0)
 
-  // useEffect(() => {
-  //   const initializeApp = async () => {
-  //     try {
-  //       // Parse accessToken from URL parameters
+  const pagesWithoutNavbar = ["/login", "/some-other-page"] // Add paths where you want to hide the Navbar
 
-  //       const accessToken = localStorage.getItem("accessToken");
+  const hideNavbarPaths = ["/recipes/[0-9]+/cooking"] // Add regex patterns for paths where you want to hide the Navbar
 
-  //       // if (accessToken) {
-  //       //   console.log("Access Token:", accessToken); // 콘솔에 accessToken 출력
-  //       //   localStorage.setItem("accessToken", accessToken)
-  //       //   setTokenLoaded(true);
-  //       // }
-
-  //       // Initialize userInfo and fetch user details
-  //       if (accessToken) {
-  //         try {
-
-  //           //const userInfo = await fetchUserInfo();
-  //           //setUser(userInfo);
-  //           //sessionStorage.setItem("user", JSON.stringify(userInfo));
-  //           //console.log("Initial User Info:", userInfo);
-  //         } catch (error) {
-  //           console.error("Failed to fetch user info:", error);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Failed to load access token:", error);
-  //     }
-  //   };
-
-  //   initializeApp();
-  // }, [setUser]);
+  const shouldHideNavbar = pagesWithoutNavbar.includes(location.pathname) || hideNavbarPaths.some((path) => new RegExp(path).test(location.pathname))
 
   const toggleSidebar = () => {
-    setIsOpen((prev) => !prev);
-    if (!isOpen) setShowButton(false); // 사이드바 열릴 때 버튼 숨김
-  };
+    setIsOpen((prev) => !prev)
+    if (!isOpen) setShowButton(false) // 사이드바 열릴 때 버튼 숨김
+  }
 
   const closeSidebar = (e) => {
     if (isOpen && !e.target.closest(".sidebar") && !e.target.closest(".app-toggle-menu")) {
-      setIsOpen(false);
+      setIsOpen(false)
     }
-  };
+  }
 
   useEffect(() => {
-    document.addEventListener("mousedown", closeSidebar);
+    document.addEventListener("mousedown", closeSidebar)
     return () => {
-      document.removeEventListener("mousedown", closeSidebar);
-    };
-  }, [isOpen]);
+      document.removeEventListener("mousedown", closeSidebar)
+    }
+  }, [isOpen])
 
   // 애니메이션 종료 후 버튼 표시
   const handleTransitionEnd = () => {
     if (!isOpen) {
-      setShowButton(true);
+      setShowButton(true)
     }
-  };
+  }
 
   // 터치 시작 지점 기록
   const handleTouchStart = (e) => {
     // touchStartX.current = e.touches[0].clientX; //
-    touchStartY.current = e.touches[0].clientY;
-  };
+    touchStartY.current = e.touches[0].clientY
+  }
 
   // 터치 이동 거리 측정
   const handleTouchMove = (e) => {
     // touchEndX.current = e.touches[0].clientX; //
-    touchStartY.current = e.touches[0].clientY;
-  };
+    touchStartY.current = e.touches[0].clientY
+  }
 
-   // 터치 종료 시 스와이프 거리 체크
-   const handleTouchEnd = () => {
+  // 터치 종료 시 스와이프 거리 체크
+  const handleTouchEnd = () => {
     // const swipeDistance = touchEndX.current - touchStartX.current; //
     // if (swipeDistance > 100) {
     //   // 오른쪽으로 스와이프하면 사이드바 열기
@@ -161,45 +137,50 @@ const MainApp = () => {
     //   setIsOpen(false);
     // }
 
-    const swipeDistance = touchStartY.current - touchEndY.current;
+    const swipeDistance = touchStartY.current - touchEndY.current
     if (swipeDistance > 100) {
-      setIsOpen(true);
+      setIsOpen(true)
     } else if (swipeDistance < -100) {
-      setIsOpen(false);
+      setIsOpen(false)
     }
-  };
+  }
 
   const handleMouseDown = (e) => {
     // touchStartX.current = e.clientX; //
-    touchStartY.current = e.clientY;
-  };
-  
+    touchStartY.current = e.clientY
+  }
+
   const handleMouseMove = (e) => {
     // touchEndX.current = e.clientX; //
-    touchStartY.current = e.clientY;
-  };
+    touchStartY.current = e.clientY
+  }
 
   const handleMouseUp = () => {
     // const swipeDistance = touchEndX.current - touchStartX.current; //
-    const swipeDistance = touchStartY.current - touchEndY.current;
+    const swipeDistance = touchStartY.current - touchEndY.current
     if (swipeDistance > 100) {
-      setIsOpen(true);
+      setIsOpen(true)
       // setShowButton(false); //
     } else if (swipeDistance < -100) {
-      setIsOpen(false);
+      setIsOpen(false)
     }
-  };
-  
+  }
 
   return (
     <>
-      <div className="app-container"onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
-
-      </div>
-      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} onTransitionEnd={handleTransitionEnd}/>
+      <div
+        className="app-container"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      ></div>
+      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} onTransitionEnd={handleTransitionEnd} />
       <AnimatedRoutes userInfo={user} />
-      {/* <NavbarBottom /> */}
-      <button className="app-toggle-menu" onClick={toggleSidebar}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+
+      {!shouldHideNavbar && <NavbarBottom />}
     </>
 
     // <div className="app-container" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
@@ -216,8 +197,8 @@ const MainApp = () => {
     //   {/* Main content */}
     //   <AnimatedRoutes userInfo={user} />
     // </div>
-  );
-};
+  )
+}
 
 // Animated Routes component
 const AnimatedRoutes = ({ userInfo }) => {
