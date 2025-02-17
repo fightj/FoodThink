@@ -3,119 +3,41 @@
   flex-direction: column; /* 세로로 정렬 */
   width: 100%;
   height: 100%;
-  background-image: url("/images/backgroundImage.png");
+  background-image: url("/images/voicetutorial.gif");
   background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
   justify-content: center; /* 가로 정렬 */
   align-items: center; /* 세로 정렬 */
   background-position: center; /* 배경 이미지 가운데 정렬 */
+  position: relative; /* for absolute positioning of children */
 }
 
-.voice-tutorial-left,
-.voice-tutorial-right {
-  width: 100%;
-  height: 50%; /* 높이를 각각 절반으로 설정 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5em;
-  padding: 0.5em;
-}
-
-.voice-tutorial-left {
-  display: flex;
-  flex-direction: row; /* 가로로 정렬 */
-  justify-content: center;
-  align-items: center;
-}
-
-.voice-tutorial-info-left,
-.voice-tutorial-info-right {
-  width: 50%; /* 좌우 각각 절반 차지 */
-  height: 100%;
-  display: flex;
-  flex-direction: column; /* 세로로 정렬 */
-  justify-content: center;
-  align-items: flex-start; /* 좌측 정렬 */
-}
-
-.voice-tutorial-info-left p {
-  color: white;
-  position: relative;
-  z-index: 1005;
-  text-align: left; /* 좌측 정렬 */
-  margin: 0; /* 여백 제거 */
-  padding: 0; /* 패딩 제거 */
-}
-
-.voice-tutorial-info-right p {
-  color: transparent; /* 텍스트 투명하게 설정 */
-  -webkit-text-stroke: 1px white; /* 텍스트 테두리를 하얀색으로 설정 */
-  position: relative;
-  z-index: 1005;
-  text-align: left; /* 좌측 정렬 */
-  margin: 0; /* 여백 제거 */
-  padding: 0; /* 패딩 제거 */
-}
-
-.voice-tutorial-left .handmotion-div,
-.voice-tutorial-left .handmotion-info-div {
-  width: 100%;
-  height: 50%; /* 각 요소가 높이의 절반을 차지 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column; /* 세로 정렬 */
-}
-
-.tutorial-right .speaking-div,
-.tutorial-right .speaking-info-div {
-  width: 100%;
-  height: 50%; /* 각 요소가 높이의 절반을 차지 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column; /* 세로 정렬 */
-}
-
-.speaking-gif {
-  width: 100%;
-  height: 100%;
-  transform: scaleX(-1); /* 반전 효과 */
-}
-
-.speaking-info-div-left,
-.speaking-info-div-right {
-  /* 추가 스타일 정의 가능 */
-}
-
-.speaking-mic-image {
-  width: 20%;
-  z-index: 1005;
-}
-
-.voice-tutorial-info p {
-  color: white;
-  position: relative;
-  z-index: 1005;
-}
-
-.hidden-button1 {
-  display: none;
-}
-
-.tuto-skip-button {
-  z-index: 1009;
-  background-color: transparent;
+.arrow-button {
+  background: none;
   border: none;
-  padding: 0;
   position: absolute;
-  top: 5%;
-  right: 2%;
-  width: 5%;
+  top: 50%; /* Vertical center */
+  transform: translateY(-50%); /* Adjust for exact center */
 }
 
-.tuto-skip-button img {
-  background-color: transparent;
-  width: 100%;
-  height: auto;
+.prev-arrow {
+  left: 10px; /* Adjust as necessary */
+}
+
+.next-arrow {
+  right: 10px; /* Adjust as necessary */
+}
+
+.voicetuto-skip-button {
+  background-color: #e66363; /* Light gray background */
+  border: 2 solid #000000; /* Darker gray border */
+  color: black; /* Black text */
+  position: absolute;
+  bottom: 16%; /* Adjust as necessary */
+  right: 4%; /* Adjust as necessary */
+  z-index: 1009; /* High z-index to be on top */
+  padding: 10px 20px; /* Optional padding for better appearance */
+  border-radius: 5px; /* Optional rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-family: "MyCustomFont";
+  width: 15%;
 }

@@ -122,3 +122,17 @@ body {
   }
 }
 
+/* 모바일 화면 대응 */
+@media (max-width: 768px) {
+  .custom-swal-popup {
+    width: 80vw;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-swal-popup {
+    width: 80vw;
+    font-size: 12px;
+  }
+}

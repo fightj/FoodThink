@@ -5,6 +5,8 @@ import axios from "axios"
 import "../../styles/recipe/RecipesMainPage.css"
 import SearchBarRecipeMain from "../../components/base/SearchBarRecipeMain"
 import AnniversaryApiModal from "../../components/anniversary/anniversaryApiModal"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
 
 const RecipesMainPage = () => {
   const navigate = useNavigate()
@@ -148,6 +150,11 @@ const RecipesMainPage = () => {
     }
   }, [])
 
+  // 페이지 맨 위로 스크롤하는 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth"})
+  }
+
   return (
     <div className="base-div">
       <AnniversaryApiModal />
@@ -266,6 +273,11 @@ const RecipesMainPage = () => {
             </div>
           </div>
         </div>
+      </div>
+      {/* 페이지 맨 위로 올라가는 버튼 */}
+      <div className="recipe-main-page-scroll-to-top-div" onClick={scrollToTop}>
+        <FontAwesomeIcon icon={faChevronUp} size="lg" />
+        <span className="recipe-main-page-top-text">TOP</span>
       </div>
     </div>
     // </div>

@@ -4,6 +4,8 @@ import PageSlide from "../../components/base/PageSlide";
 import SearchBar from "../../components/base/SearchBar";
 import "../../styles/sns/SnsMain.css";
 import "../../styles/sns/SnsSearchResultPage.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
 import "../../styles/base/global.css"
 
 // 검색 결과를 가져오는 함수
@@ -100,6 +102,12 @@ function SnsSearchResultPage() {
     navigate(`/search-results?query=${newQuery}`);
   };
 
+
+  // 페이지 맨 위로 스크롤하는 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth"})
+  }
+
   return (
     <PageSlide>
       <div className="base-div">
@@ -151,8 +159,12 @@ function SnsSearchResultPage() {
                 <p className="align-items-stretch sns-search-no-result">검색 결과가 없습니다.</p>
               )}
             </div>
-
           </div>
+        </div>
+        {/* 페이지 맨 위로 올라가는 버튼 */}
+        <div className="sns-main-scroll-to-top-div" onClick={scrollToTop}>
+          <FontAwesomeIcon icon={faChevronUp} size="lg" />
+          <span className="sns-main-top-text">TOP</span>
         </div>
     </PageSlide>
   );
