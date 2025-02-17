@@ -64,6 +64,9 @@ function SnsMain() {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: {
+          popup: "custom-swal-popup", // 공통 CSS 클래스 적용
+        },
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login")

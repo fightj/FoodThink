@@ -124,7 +124,7 @@ body {
 
 @media (max-width: 480px) {
   .custom-swal-popup {
-    width: 90vw;
+    width: 80vw;
     font-size: 12px;
   }
 }
