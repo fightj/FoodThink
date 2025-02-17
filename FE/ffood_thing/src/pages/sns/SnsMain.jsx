@@ -115,12 +115,13 @@ function SnsMain() {
                         </div>
                       </div>
                     </div>
+
                   </Link>
                 </div>
               )
             } else {
                 return (
-                  <div className="col" key={feedItem.id}>
+                  <div className="col-4" key={feedItem.id}>
                     <Link to={`/feed/${feedItem.id}`} style={{ textDecoration: "none" }}>
                       <div className="card card-cover h-100 overflow-hidden rounded-4 feed-card" style={{ backgroundImage: `url(${feedItem.image})` }}>
                         {hasMultipleImages && (
