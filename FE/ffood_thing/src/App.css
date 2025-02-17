@@ -5,3 +5,18 @@
   70% { transform: scale(1.05, 0.95); } /* 살짝 반동 */
   100% { transform: scale(1); } /* 원래 크기 */
 }
+
+/* .app-toggle-menu {
+  position: fixed;
+  left: 5%;
+  top: 98%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  padding: 5px 20px;
+  background-color: #343a40;
+  border: none;
+  border-radius: 10px 10px 0px 0px;
+  cursor: pointer;
+  opacity: 0.9;
+} */
+
