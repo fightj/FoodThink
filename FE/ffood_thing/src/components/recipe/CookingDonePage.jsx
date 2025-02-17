@@ -46,44 +46,46 @@ const CookingDonePage = ({ recipe, handleFeed, onClose }) => {
   }
 
   return (
-    <div className="cooking-done-container">
-      <h2>맛있는 결과물 완성</h2>
-      <div className="comparison-container">
-        <img src={representativeImage} alt="Representative Recipe" className="representative-image" />
-        <div className="cooked-dish-container">
-          {capturedImage ? (
-            <div className="image-frame">
-              <img src={capturedImage} alt="Your Cooked Dish" className="cooked-dish-image" />
-              {overlayVisible && (
-                <div className="image-overlay">
-                  <button className="overlay-button" onClick={handleFeedWithImage}>
-                    업로드하기
-                    <img src="/images/feedicon.png" alt="나만의 요리 기록하기" className="button-image" />
-                  </button>
-                  <button className="overlay-button" onClick={handleEditImage}>
-                    사진 다시 고르기
-                    <img src="/images/edit-icon.png" alt="이미지 다시 고르기" />
-                  </button>
-                </div>
-              )}
+    <div className="card-div-done">
+      <div className="cooking-done-container">
+        <h2>맛있는 결과물 완성</h2>
+        <div className="comparison-container">
+          <img src={representativeImage} alt="Representative Recipe" className="representative-image" />
+          <div className="cooked-dish-container">
+            {capturedImage ? (
+              <div className="image-frame">
+                <img src={capturedImage} alt="Your Cooked Dish" className="cooked-dish-image" />
+                {overlayVisible && (
+                  <div className="image-overlay">
+                    <button className="overlay-button" onClick={handleFeedWithImage}>
+                      업로드하기
+                      <img src="/images/feedicon.png" alt="나만의 요리 기록하기" className="button-image" />
+                    </button>
+                    <button className="overlay-button" onClick={handleEditImage}>
+                      사진 다시 고르기
+                      <img src="/images/edit-icon.png" alt="이미지 다시 고르기" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="image-frame">
+                {defaultImageVisible && <img src="/images/camera-icon.png" alt="Camera Icon" className="camera-icon" />}
+                <input type="file" accept="image/*" capture="environment" onChange={handleImageUpload} className="file-input" />
+                <canvas ref={canvasRef} className="cooked-dish-canvas" />
+              </div>
+            )}
+            <div className="finish-cook-text">
+              <p>내가 완성한 요리를 사진으로 남겨봐요!</p>
             </div>
-          ) : (
-            <div className="image-frame">
-              {defaultImageVisible && <img src="/images/camera-icon.png" alt="Camera Icon" className="camera-icon" />}
-              <input type="file" accept="image/*" capture="environment" onChange={handleImageUpload} className="file-input" />
-              <canvas ref={canvasRef} className="cooked-dish-canvas" />
-            </div>
-          )}
-          <div className="finish-cook-text">
-            <p>내가 완성한 요리를 사진으로 남겨봐요!</p>
           </div>
         </div>
-      </div>
-      <div className="done-button-container">
-        <button className="done-close-button" onClick={onClose}>
-          back to recipe
-          <img src="/images/recipe-icon.png" alt="레시피로 복귀" className="button-image" />
-        </button>
+        <div className="done-button-container">
+          <button className="done-close-button" onClick={onClose}>
+            back to recipe
+            <img src="/images/recipe-icon.png" alt="레시피로 복귀" className="button-image" />
+          </button>
+        </div>
       </div>
     </div>
   )
