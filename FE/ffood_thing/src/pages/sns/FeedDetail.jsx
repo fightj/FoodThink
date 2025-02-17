@@ -303,29 +303,22 @@ const handleTouchEnd = () => {
               <span className="likes-comments">
                 <img src={isLiked ? "/images/feed_like_do.png" : "/images/feed_like_undo.png"} alt="Like Icon" onClick={handleLikeToggle} style={{ cursor: "pointer" }} />
                 <span>{likesCount}</span>
-
                 <button className="comment-button" onClick={toggleComments}>
                   <img src="/images/feed_comment.png" alt="Comment Icon" />
                 </button>
                 <span>{comments.length}</span>
               </span>
-
               <hr />
-              
               <div className="feed-detail-my-text">
                 <p className="description">
                   <strong>{author.username || "Unknown User"}</strong> {currentFeed.content}
                 </p>
                 <p className="hash-tage-recipe-name">#나의_요리는_{currentFeed.foodName}</p>
-              </div>          
-              {/* <div className="hash-tag-area"> */}
-                {/* <p>#나의_요리는_{currentFeed.foodName}</p> */}
-                {/* {isRecipe && <p>#참고한_레시피는_{currentFeed.recipeListResponseDto.recipeTitle}</p>} */}
-              {/* </div> */}
-
+              </div>
               {isRecipe && (
                   <div className="recipe-image-container">
-                    <div className="recipe-tooltip" onClick={() => setShowRecipeModal(true)}>
+                    <div className="recipe-tooltip"
+                      onClick={() => navigate(`/recipes/${currentFeed.recipeListResponseDto.recipeId}`)}>
                       <p>참고 레시피</p>
                     </div>
                   </div>
