@@ -36,10 +36,27 @@ const VoiceTutorial = ({ onPrevPage, onNextPage, onSkip }) => {
   return (
     <div className="voice-tutorial-container" onClick={handleHighlightStep}>
       <div className="voice-tutorial-left" onClick={onPrevPage}>
-        <div className="voice-tutorial-info">
-          <p>음성 인식 = "하이 푸딩"으로 시작</p>
-          <p>알람 끄기 = "알람 꺼"</p>
-          {/* 추가적인 음성 인식 정보 */}
+        <div className="voice-tutorial-info-left">
+          <p>음성 인식</p>
+          <p>이전 페이지</p>
+          <p>다음 페이지</p>
+          <p>현재 페이지 읽어주기</p>
+          <p>재료 보기</p>
+          <p>타이머 제어(설정, 시작, 중지)</p>
+          <p>알람 끄기</p>
+          <p>대체 재료 추천</p>
+          <p>조리 종료</p>
+        </div>
+        <div className="voice-tutorial-info-right">
+          <p>ex) "하이 푸딩"으로 시작</p>
+          <p>ex) "이전 페이지로 넘어가줘"</p>
+          <p>ex) "다음 페이지로 넘어가줘"</p>
+          <p>ex) "현재 페이지 읽어줘"</p>
+          <p>ex) "재료 보여줘"</p>
+          <p>ex) "타이머 X분 X초 설정해줘"</p>
+          <p>ex) "알람 꺼"</p>
+          <p>ex) "~ 대신 ~ 어때?", "~ 대체 재료 추천해줘"</p>
+          <p>ex) "요리 끝내줘"</p>
         </div>
       </div>
       <div className="voice-tutorial-right" onClick={onNextPage}>
@@ -54,7 +71,7 @@ const VoiceTutorial = ({ onPrevPage, onNextPage, onSkip }) => {
       </button>
       <button
         className="tuto-skip-button"
-        style={{ zIndex: 1009, backgroundColor: "transparent", border: "none", padding: 0, position: "absolute", top: "5%", right: "2%", width: "5%" }} // 항상 스킵 버튼을 누를 수 있도록 z-index 조정
+        style={{ zIndex: 1009, backgroundColor: "transparent", border: "none", padding: 0, position: "absolute", top: "5%", right: "2%", width: "5%" }}
         onClick={onSkip}
       >
         <img src="/images/skipbutton.png" alt="스킵하기" style={{ backgroundColor: "transparent", width: "100%", height: "auto" }} />
