@@ -5,6 +5,8 @@ import axios from "axios"
 import "../../styles/recipe/RecipesMainPage.css"
 import SearchBarRecipeMain from "../../components/base/SearchBarRecipeMain"
 import AnniversaryApiModal from "../../components/anniversary/anniversaryApiModal"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
 
 const RecipesMainPage = () => {
   const navigate = useNavigate()
@@ -148,12 +150,17 @@ const RecipesMainPage = () => {
     }
   }, [])
 
+  // 페이지 맨 위로 스크롤하는 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth"})
+  }
+
   return (
     <div className="base-div">
       <AnniversaryApiModal />
       <SearchBarRecipeMain onSearch={handleSearch} />
       <div className="card-div">
-        <div className="d-flex justify-content-between align-items-center mt-0" style={{ marginBottom: "1rem" }}>
+        <div className="recipe-page-header">
           <button className="category-onoff-button" onClick={() => setIsCategoryListVisible(prev => !prev)}>
             {isCategoryListVisible ? "카테고리 닫기 ⩓" : "카테고리 열기 ⩔"}
           </button>
@@ -259,10 +266,18 @@ const RecipesMainPage = () => {
                 </div>
               </div>
             ))}
-            {loading && <h4>로딩 중...</h4>}
-            {allRecipes.length === 0 && !loading && <h4>레시피가 없습니다.</h4>}
+            <div className="main-recipe-text-container">
+            {loading && <div className="main-recipe-text">로딩 중...</div>}
+            {allRecipes.length === 0 && !loading && <div className="main-recipe-text">레시피가 없습니다.</div>}
+
+            </div>
           </div>
         </div>
+      </div>
+      {/* 페이지 맨 위로 올라가는 버튼 */}
+      <div className="recipe-main-page-scroll-to-top-div" onClick={scrollToTop}>
+        <FontAwesomeIcon icon={faChevronUp} size="lg" />
+        <span className="recipe-main-page-top-text">TOP</span>
       </div>
     </div>
     // </div>
