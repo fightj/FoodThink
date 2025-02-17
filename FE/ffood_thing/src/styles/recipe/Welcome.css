@@ -1,12 +1,13 @@
 .card-div-welcome {
   background-color: rgb(255, 255, 255);
-  width: 95%; /* 수평 공간 전체를 차지 */
-  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
-  flex-direction: column; /* 자식 요소를 세로로 정렬 */
-  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  margin-top: 30px;
+  width: 95%; /* Occupy the entire horizontal space */
+  max-width: 100vw; /* Prevents overflow */
+  display: flex; /* Flexbox for child alignment */
+  flex-direction: column; /* Align children vertically */
+  justify-content: center; /* Center children horizontally */
+  margin-top: 20px !important;
   margin-bottom: 30px;
-  border-radius: 40px; /* 아래 두 꼭지점만 둥글게 설정 */
+  border-radius: 40px; /* Rounded bottom corners */
   margin: 0 auto 20px;
   padding: 2rem;
 }
@@ -14,24 +15,24 @@
 .welcome-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* 모든 요소를 중앙 정렬 */
+  align-items: center; /* Center all elements */
   justify-content: center;
   width: 100%;
   min-height: 80vh;
-  background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
+  background: linear-gradient(135deg, #fad6a0, #d97742); /* Warm orange gradient */
   border-radius: 20px;
   text-align: center;
 }
 
-/* ✅ 이미지 스타일 */
+/* ✅ Image style */
 .cooking-image-welcome {
-  width: 50%;
+  width: 30%;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 2em;
   animation: float 3s infinite ease-in-out;
 }
 
-/* AI 이미지 부드럽게 움직이는 애니메이션 */
+/* AI image smooth floating animation */
 @keyframes float {
   0%,
   100% {
@@ -42,7 +43,7 @@
   }
 }
 
-/* 🔹 제목 스타일 */
+/* 🔹 Title style */
 .start-title {
   font-size: 5rem;
   font-weight: bold;
@@ -50,21 +51,32 @@
   padding-bottom: 5%;
 }
 
-/* 🔹 설명 스타일 */
-.start-description {
-  font-size: 1.5rem;
-  font-weight: 500;
-  opacity: 0.9;
-  margin-bottom: 20px;
-}
-
-/* 🔹 터치 안내문 스타일 */
-.ready-for-cooking {
+/* 🔹 Button style */
+.ready-for-cooking button {
+  background: #fff;
+  color: #d97742;
   font-size: 1.5rem;
   font-weight: bold;
-  color: white;
-  background: #ff9800;
-  padding: 10px 20px;
+  padding: 15px 30px;
   border-radius: 50px;
-  margin-top: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .start-title {
+    font-size: 3rem;
+  }
+
+  .cooking-image-welcome {
+    width: 50%;
+  }
+
+  .ready-for-cooking button {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
 }
