@@ -8,15 +8,19 @@
 
 /* .app-toggle-menu {
   position: fixed;
-  left: 5%;
-  top: 98%;
-  transform: translateY(-50%);
+  left: -18.5%;
+  top: 50%;
+  transform: translateY(-100%);
   z-index: 1000;
-  padding: 5px 20px;
+  padding: 10%;
   background-color: #343a40;
   border: none;
-  border-radius: 10px 10px 0px 0px;
-  cursor: pointer;
-  opacity: 0.9;
+  border-radius: 0px 10px 10px 0px;
+  opacity: 0.8;
+}
+
+@media (max-witdth:800px) {
+  .app-toggle-menu {
+  }
 } */
 
