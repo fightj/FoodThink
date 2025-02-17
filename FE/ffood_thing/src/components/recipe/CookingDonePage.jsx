@@ -50,8 +50,10 @@ const CookingDonePage = ({ recipe, handleFeed, onClose }) => {
       <div className="cooking-done-container">
         <h2>맛있는 결과물 완성</h2>
         <div className="comparison-container">
-          <img src={representativeImage} alt="Representative Recipe" className="representative-image" />
           <div className="cooked-dish-container">
+            <div className="finish-cook-text">
+              <p>내가 완성한 요리를 사진으로 남겨봐요!</p>
+            </div>
             {capturedImage ? (
               <div className="image-frame">
                 <img src={capturedImage} alt="Your Cooked Dish" className="cooked-dish-image" />
@@ -75,9 +77,6 @@ const CookingDonePage = ({ recipe, handleFeed, onClose }) => {
                 <canvas ref={canvasRef} className="cooked-dish-canvas" />
               </div>
             )}
-            <div className="finish-cook-text">
-              <p>내가 완성한 요리를 사진으로 남겨봐요!</p>
-            </div>
           </div>
         </div>
         <div className="done-button-container">

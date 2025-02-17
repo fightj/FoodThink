@@ -29,7 +29,6 @@
   font-size: 3.5vw; /* 반응형 글꼴 크기 */
   color: #000000;
   margin-bottom: 10vh; /* 텍스트를 위로 조정하기 위해 여백 조정 */
-  text-shadow: 0.2vw 0.2vw 0.4vw #000000; /* 반응형 텍스트 그림자 */
 }
 
 .done-button-container {
@@ -121,10 +120,10 @@
 .finish-cook-text p {
   position: absolute;
   font-family: "MyCustomFont";
-  top: 23%;
-  right: 18%;
+  top: 60%;
+  right: 38%;
   color: #000000;
-  font-size: 2vw; /* 폰트 사이즈 줄임 */
+  font-size: 1.5vw; /* 폰트 사이즈 줄임 */
 }
 
 .done-button-container button {
