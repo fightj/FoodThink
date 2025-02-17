@@ -17,7 +17,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  height: 80vh;
   background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
   border-radius: 20px;
   text-align: center; 
@@ -25,27 +25,29 @@
 
 /* 🔹 제목 스타일 */
 .start-title {
-  font-size: 5rem;
+  font-size: clamp(3.5rem, 5vw, 4.5rem); /* 화면 크기에 따라 유동적인 크기 */
   font-weight: bold;
   margin-bottom: 10px;
   padding-bottom: 5%;
+  width: 70%;
 }
 
 /* 🔹 설명 스타일 */
 .start-description {
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
   font-weight: 500;
   opacity: 0.9;
   margin-bottom: 20px;
+  width: 80%;
 }
 
 /* 🔹 버튼 스타일 */
 .ai-start-btn {
   background: #fff;
   color: #d97742;
-  font-size: 1.5rem;
   font-weight: bold;
-  padding: 15px 30px;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  padding: clamp(10px, 2vh, 15px) clamp(20px, 5vw, 30px);
   border-radius: 50px;
   border: none;
   cursor: pointer;

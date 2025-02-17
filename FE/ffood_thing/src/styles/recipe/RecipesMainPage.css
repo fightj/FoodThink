@@ -224,22 +224,46 @@
 
 .main-recipe-list {
   display: flex;
-  /* justify-content: start; */
-  width: 100%;
-  gap: 1rem;
   flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
+  width: 100%;
+  margin: 0 auto;
 }
 
 /* 레시피 카드 */
 .main-recipe-card {
   display: flex;
   flex-direction: column;
-  /* justify-self: space-between; */
-  width: 23%;
+  justify-self: space-between;
+  /* width: 23%; */
+  width: calc(25% - 0.75rem); /* ✅ 기본 4개씩 */
+  max-width: 280px;
   height: 265px;
   border-radius: 10px;
   background-color: #fff;
   overflow: hidden;
+  margin: auto;
+}
+
+/* 🔹 반응형 미디어 쿼리 */
+@media (max-width: 1024px) { /* 태블릿 */
+  .main-recipe-card {
+    width: calc(33.3% - 0.75rem); /* ✅ 한 줄에 3개 */
+  }
+}
+
+@media (max-width: 768px) { /* 작은 태블릿 */
+  .main-recipe-card {
+    width: calc(50% - 0.75rem); /* ✅ 한 줄에 2개 */
+  }
+}
+
+@media (max-width: 480px) { /* 모바일 */
+  .main-recipe-card {
+    width: 90%; /* ✅ 한 줄에 1개 */
+    max-width: 320px; /* ✅ 최대 크기 제한 */
+  }
 }
 
 /* 이미지 스타일 */
