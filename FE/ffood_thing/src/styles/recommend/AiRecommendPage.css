@@ -292,29 +292,29 @@
 }
 
 
-/* 메시지 박스 (왼쪽) */
+/* ✅ 메시지 박스 (닉네임 포함) */
 .ai-result-message {
   background-color: #ffcc80; /* 배경색 */
   border-radius: 10px;
-  padding: 15px 5%; /* 좌우 5% 여백 추가 */
-  font-size: 2rem;
+  padding: 15px 5%;
+  font-size: clamp(0.5rem, 3vw, 2rem); /* 반응형 폰트 크기 */
   font-weight: bold;
   color: #333;
   border: 2px solid #ccc;
-  width: fit-content;
-  max-width: 600px;
+  width: 100%; /* ✅ 모바일에서도 적절한 크기 유지 */
+  text-align: center;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* 닉네임이 길면 ... 처리 */
   display: flex;
   align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis; /* ✅ 닉네임이 길면 ... 처리 */
   justify-content: center;
 }
 
 
 /* 🔹 닉네임 부분만 따로 스타일 적용 */
 .nickname-ellipsis {
-  max-width: 50%; /* 닉네임 부분이 차지할 최대 너비 */
+  max-width: clamp(30%, 50%, 70%); /* ✅ 반응형으로 닉네임 길이 조정 */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -324,14 +324,16 @@
 
 /* AI 캐릭터 컨테이너 (오른쪽) */
 .ai-character-container {
-  display: absolute;
+  display: flex;
   align-items: center;
   justify-content: flex-end;
+  width: 100%;
+  max-width: 250px; /* ✅ AI 캐릭터 크기 제한 */
 }
 
 /* AI 캐릭터 */
 .ai-result-image {
-  width: 250px;
+  width: clamp(120px, 20vw, 250px); /* ✅ 최소 120px, 최대 250px */
   height: auto;
   animation: float 3s infinite ease-in-out;
 }
@@ -340,10 +342,11 @@
 .ai-recipe-list {
   display: flex;
   flex-direction: row;
-  gap: 30px;
+  gap: 2rem;
   justify-content: center;
   flex-wrap: wrap;
   padding: 3%;
+  width: 100%;
 }
 
 /* 레시피 카드 스타일 */
@@ -377,4 +380,38 @@
   font-weight: bold;
   padding: 10px;
   color: #333;
+}
+
+/* ✅ 모바일 최적화 */
+@media (max-width: 768px) {
+  .ai-character-container {
+    justify-content: center; /* ✅ 모바일에서는 중앙 정렬 */
+    max-width: 180px; /* ✅ 크기 줄이기 */
+  }
+
+  .ai-recipe-list {
+    gap: 1rem; /* ✅ 모바일에서는 카드 간격 줄이기 */
+  }
+
+  .ai-recipe-card {
+    width: clamp(140px, 40vw, 200px); /* ✅ 모바일에서는 조금 작게 */
+  }
+
+  .ai-recipe-image {
+    height: clamp(100px, 18vw, 200px); /* ✅ 모바일에서 이미지 크기 조정 */
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-character-container {
+    max-width: 150px; /* ✅ 작은 화면에서 AI 캐릭터 크기 축소 */
+  }
+
+  .ai-recipe-card {
+    width: 90%; /* ✅ 모바일에서는 한 줄에 한 개 */
+  }
+
+  .ai-recipe-image {
+    height: 150px; /* ✅ 모바일에서는 고정 높이 적용 */
+  }
 }
