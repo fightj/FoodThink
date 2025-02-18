@@ -1,26 +1,30 @@
 .base-div {
   background: #f7b05b;
   min-height: 100vh;
+  height: auto;
   padding-top: 3vh;
-  box-sizing: border-box; /* 패딩 포함 높이 계산 */
+  box-sizing: border-box;
   padding-bottom: 3vh;
+  overflow-y: auto;
 }
+
 .parent-container {
   display: flex;
   justify-content: center;
 }
+
 .card-div {
   background-color: rgb(255, 255, 255);
   width: 95%; /* 수평 공간 전체를 차지 */
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
   flex-direction: column; /* 자식 요소를 세로로 정렬 */
-  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  /* height: auto; */
+  justify-content: center;
+  height: auto;
   margin-bottom: 30px;
   border-radius: 40px; /* 아래 두 꼭지점만 둥글게 설정 */
   margin: 0 auto 20px;
   padding: 2rem;
-  /* box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); 상단 그림자 더 강조 */
+  /* overflow-y: auto; */
 }
 .back-button {
   align-self: flex-start; /* ✅ 모바일에서도 왼쪽 정렬 유지 */
@@ -208,6 +212,8 @@ body {
   .card-div {
     padding: 1rem;
     border-radius: 25px;
+    /* 임시방편 */
+    overflow-y: auto;
   }
 
   .context-h5 {
@@ -239,21 +245,11 @@ body {
     width: 80vw;
     font-size: 14px;
   }
-   .card-div {
-    /* height:85vh; */
-  }
 }
 /*모바일 세로 화면 대응*/
 @media (max-width: 480px) {
   .custom-swal-popup {
     width: 80vw;
     font-size: 12px;
-  }
-}
-
-/*모바일 가로 화면 대응*/
-@media (max-height: 500px) {
-  .card-div {
-    height: 65vh;
   }
 }
