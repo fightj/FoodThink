@@ -148,7 +148,7 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
       <div className="today-recommend-card" onClick={(e) => e.stopPropagation()}>
         <div className="today-header">
           
-          <button className="today-refresh-btn" onClick={refreshRecommendations} disabled={loading}>
+          <button className="today-refresh-btn" onClick={refreshRecommendations} disabled={loading} >
             <img src="/images/rotate_right.png" alt="새로고침" />
           </button>
           <div className="today-title">

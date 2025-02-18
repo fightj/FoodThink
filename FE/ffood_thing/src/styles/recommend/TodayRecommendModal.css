@@ -62,8 +62,8 @@
   border-radius: 50%;
 }
 .today-refresh-btn img{
-  width: 50%;
-  height:50%;
+  width: 48px;
+  height:48px;
   filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(-20deg) brightness(100%) contrast(100%);
 }
 /* 📌 닫기 버튼 스타일 (우선순위 조정) */
@@ -80,8 +80,8 @@
 }
 
 .today-close-btn img{
-  width: 50%;
-  height:50%;
+  width: 48px;
+  height:48px;
   filter: invert(20%) sepia(100%) saturate(5000%) hue-rotate(-10deg) brightness(100%) contrast(120%);
 }
 
@@ -152,6 +152,7 @@
   text-align: center;
   width:90%;
   min-width: 0;
+  
 }
 /* 📌반응형: 태블릿 세로 버전 */
 @media (max-width: 800px) {
@@ -174,8 +175,8 @@
     width:30%;
   }
   .today-refresh-btn img{
-    width: 40%;
-    height:40%;
+    width: 48px;
+  height:48px;
   }
   .today-close-btn {
     width:30%;
@@ -184,8 +185,8 @@
     justify-content: right;
   }
   .today-close-btn img {
-    width: 40%;
-    height:40%;
+    width: 48px;
+    height:48px;
   }
   .today-carousel {
     height: 55%;
@@ -244,17 +245,17 @@
 /* 📌반응형: 모바일 세로 */
 @media (max-width: 500px) {
   .today-recommend-card {
-    width: 90%;
-    height: 40%;
+    width: 85%;
+    height: 35%;
   }
   .today-header{
     width:100%;
     height: 20%;
   }
   .today-title {
-    font-size: 150%;
-    height: 10%;
-    width:50%;
+    font-size: 160%;
+    height: 100%;
+    width:70%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -266,8 +267,8 @@
     width:30%;
   }
   .today-refresh-btn img{
-    width: 40%;
-    height:40%;
+    width: 36px;
+    height:36px;
   }
   .today-close-btn {
     width:30%;
@@ -276,8 +277,8 @@
     justify-content: right;
   }
   .today-close-btn img {
-    width: 40%;
-    height:40%;
+    width: 36px;
+    height:36px;
   }
   .today-carousel {
     height: 60%;
@@ -289,8 +290,8 @@
   
   .today-recipe-list {
     display: flex;
-    justify-content: center; /* 아이템 간 간격 균등 배치 */
-    width: 100%; /* 가로 공간을 꽉 채움 */
+    justify-content: center; 
+    width: 100%; 
     height: 75%;
   }
   .today-recipe-item {
@@ -326,9 +327,9 @@
     height: 20%;
   }
   .today-title {
-    font-size: 130%;
-    height: 10%;
-    width:50%;
+    font-size: 150%;
+    height: 100%;
+    width:70%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -340,8 +341,8 @@
     width:30%;
   }
   .today-refresh-btn img{
-    width: 40%;
-    height:40%;
+    width: 36px;
+    height:36px;
   }
   .today-close-btn {
     width:30%;
@@ -350,8 +351,8 @@
     justify-content: right;
   }
   .today-close-btn img {
-    width: 40%;
-    height:40%;
+    width: 36px;
+    height:36px;
   }
   .today-carousel {
     height: 60%;
@@ -359,33 +360,32 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 3%;
   }
   
   .today-recipe-list {
     display: flex;
-    justify-content: center; /* 아이템 간 간격 균등 배치 */
-    width: 100%; /* 가로 공간을 꽉 채움 */
+    justify-content: center; 
+    width: 100%; 
     height: 75%;
   }
   .today-recipe-item {
-    margin: 0 -25%;
+    width:30%;
   }
   .today-recipe-item.active {
     transform: scale(1.2);
   }
-
   .today-recipe-image {
     width: 100%;
-    height: 100%;
+    height: 90%;
   }
   .today-recipe-title-container {
     height: 20%;
   }
   .today-recipe-title-main {
     width:90%;
-    font-size: 20px;
+    font-size: 115%;
     height:70%;
+    margin-top: 5%;
   }
 }
 
