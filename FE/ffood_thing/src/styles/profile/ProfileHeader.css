@@ -99,9 +99,9 @@
   padding: clamp(4px, 1vw, 6px) clamp(12px, 3vw, 18px);
   font-weight: bold;
   color: white;
-  background-color: #FF7F00;
-  border: 2px solid #FF7F00;
-  border-radius: 8px;
+  background-color: #382ca4;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
   text-decoration: none;
@@ -112,22 +112,24 @@
   font-size: 18px;
 }
 
-
 .profile-actions {
   position: absolute;
   bottom: 10px;
   right: 10px;
 }
 
+
 .delete-btn {
-  background-color: #d9534f;
-  color: white;
+  background-color: transparent;
+  color: #d9534f;
   border: none;
   padding: 8px 12px;
-  border-radius: 5px;
   cursor: pointer;
   font-family: 'omyu_pretty';
   font-size: 18px;
+  text-decoration: underline; 
+  text-decoration-color: #d9534f;
+  text-underline-offset: 3px;
 }
 
 /* 📌 Profile 버튼 */
