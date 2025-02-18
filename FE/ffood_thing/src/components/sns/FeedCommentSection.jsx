@@ -107,6 +107,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");
@@ -162,6 +163,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");
