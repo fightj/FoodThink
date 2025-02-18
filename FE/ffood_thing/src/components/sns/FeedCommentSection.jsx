@@ -10,7 +10,6 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    // Retrieve user information from session storage
     const storedUser = sessionStorage.getItem("user");
     console.log(storedUser)
     if (storedUser) {
@@ -62,7 +61,20 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
       });
 
       if (response.ok) {
-        window.location.reload(); // Automatically refresh the page after adding a comment
+        // window.location.reload();
+        const newCommentData = await response.text();
+
+        // 댓글 추가 후, 댓글 목록을 다시 fetch
+        const updatedCommentsResponse = await fetch(`https://i12e107.p.ssafy.io/api/feed/comment/read/${feedId}`);
+        console.log(updatedCommentsResponse)
+        if (updatedCommentsResponse.ok) {
+          const updatedComments = await updatedCommentsResponse.json();
+          setLocalComments(updatedComments);  // 새 댓글 목록으로 갱신
+        }
+
+        setNewComment(""); // 댓글 입력란 초기화
+        // setLocalComments((prevComments) => [...prevComments, newCommentData]);
+        // setNewComment("");
       } else {
         console.error("Error adding comment");
       }
@@ -112,7 +124,21 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
       });
 
       if (response.ok) {
-        window.location.reload(); // Automatically refresh the page after updating a comment
+        //window.location.reload(); // Automatically refresh the page after updating a comment
+
+        // 서버에서 업데이트된 댓글 목록을 가져오는 대신,
+        // 로컬 상태에서 수정된 댓글만 업데이트
+        setLocalComments((prevComments) => {
+          return prevComments.map((comment) =>
+            comment.id === commentId
+              ? { ...comment, content: editingCommentContent } // 수정된 댓글만 반영
+              : comment
+          );
+        });
+
+        setEditingCommentId(null);  // 수정 모드 종료
+        setEditingCommentContent(""); // 입력란 초기화
+
       } else {
         console.error("Error updating comment");
       }
@@ -151,7 +177,11 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
       });
 
       if (response.status === 204) {
-        window.location.reload(); // Automatically refresh the page after deleting a comment
+        // window.location.reload(); // Automatically refresh the page after deleting a comment
+        // 댓글 삭제가 성공했으면 localComments 상태에서 해당 댓글을 삭제
+        setLocalComments((prevComments) =>
+          prevComments.filter((comment) => comment.id !== commentId)
+        );
       } else {
         console.error("Error deleting comment");
       }
