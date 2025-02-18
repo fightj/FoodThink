@@ -119,15 +119,18 @@
   right: 10px;
 }
 
+
 .delete-btn {
-  background-color: #d9534f;
-  color: white;
+  background-color: transparent;
+  color: #d9534f;
   border: none;
   padding: 8px 12px;
-  border-radius: 5px;
   cursor: pointer;
   font-family: 'omyu_pretty';
   font-size: 18px;
+  text-decoration: underline; 
+  text-decoration-color: #d9534f;
+  text-underline-offset: 3px;
 }
 
 /* 📌 Profile 버튼 */
