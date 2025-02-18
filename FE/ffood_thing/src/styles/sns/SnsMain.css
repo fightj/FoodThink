@@ -145,7 +145,8 @@
 /* 글자 편집 여기 (02.16) */
 .user-info span {
   font-weight: bold;
-  color: white;
+  color: black;
+  font-family: 'SOYO Maple Regular';
 }
 
 @media (max-width: 800px) {

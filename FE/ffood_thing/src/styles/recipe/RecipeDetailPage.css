@@ -44,6 +44,32 @@
   width: 100%;
 }
 
+/* 🔹 수정 / 삭제 버튼 컨테이너 */
+.button-container {
+  display: flex;
+  gap: clamp(5px, 2vw, 15px);
+}
+
+/* 🔹 개별 버튼 스타일 */
+.edit-button,
+.delete-button {
+  padding: clamp(5px, 1.5vw, 10px) clamp(10px, 2vw, 15px); /* 🔥 반응형 패딩 */
+  font-size: clamp(0.6rem, 2vw, 1rem); /* 🔥 반응형 폰트 크기 */
+  border: none;
+  border-radius: clamp(3px, 1vw, 5px); /* 🔥 반응형 둥근 모서리 */
+  cursor: pointer;
+}
+
+.edit-button {
+  background-color: #4caf50; /* 초록색 */
+  color: white;
+}
+
+.delete-button {
+  background-color: #f44336; /* 빨간색 */
+  color: white;
+}
+
 /* 🔹 전체 헤더 컨테이너 */
 .recipe-detail-header {
   display: flex;
@@ -124,6 +150,8 @@
 }
 
 .recipe-detail-title {
+  font-size: clamp(1rem, 2.8vw, 2.8rem);
+  font-family: 'ImcreSoojin';
   flex: 0 0 85%;
   font-size: clamp(1.5rem, 2.8vw, 2.8rem);
   font-weight: bold;
@@ -169,6 +197,7 @@
 
 .recipe-detail-info-text {
   font-size: clamp(0.8rem, 1.8vw, 1.2rem);
+  font-family: 'PTBandocheB';
 }
 
 .recipe-detail-info-end {
@@ -202,6 +231,7 @@
 /* 🔹 닉네임 */
 .recipe-detail-nickname {
   font-size: clamp(1rem, 1.5vw, 2rem); /* 반응형 글자 크기 */
+  font-family: 'SOYO Maple Regular';
   font-weight: bold;
   color: #ff7f00;
 }
@@ -223,6 +253,7 @@
   border-radius: 15px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
+  font-family: 'omyu_pretty';
 }
 
 @media (max-width: 768px) {  /* 태블릿 & 모바일에서 적용 */
@@ -280,6 +311,7 @@
   width: 100%;
   flex-wrap: nowrap; /* 줄바꿈 방지 */
   margin-bottom: 15px;
+  font-family: 'omyu_pretty';
 }
 
 /* 🔹 개별 탭 버튼 */
@@ -343,6 +375,7 @@
   width: 100%;
   align-items: center;
   text-align: center;
+  font-family: 'Binggrae';
 }
 
 /* 🔹 개별 재료 아이템 (왼쪽, 오른쪽) */
@@ -416,6 +449,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  font-family: 'KCC-Hanbit';
 }
 
 /* 🔹 오른쪽 - 조리 과정 이미지 */
@@ -496,6 +530,7 @@
   color: #999;
   padding: 20px;
   text-align: center;
+  font-family: 'PTBandocheB';
 }
 
 /* ✅ 📌 반응형 설정 */
