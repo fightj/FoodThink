@@ -89,7 +89,7 @@ header {
 
 .info-left p {
   font-family: "BlackswordFont";
-  font-size: 5rem;
+  font-size: 3.5rem;
   color: rgb(117, 17, 17);
   position: absolute;
   top: 4%; /* 원하는 위치에 따라 값 조정 */
@@ -99,15 +99,14 @@ header {
 .recipe-details h1 {
   font-size: 4rem;
   font-weight: bolder;
-  padding-left: 22%; /* 좌우 여백을 추가 */
+
   box-sizing: border-box; /* 패딩을 포함한 전체 너비 계산 */
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 1; /* 최대 한 줄까지만 표시 */
   -webkit-box-orient: vertical; /* 수직 박스 오리엔트 설정 */
-
-  text-align: left; /* 좌측 정렬 */
+  text-align: center; /* 좌측 정렬 */
 }
 
 .recipe-image {
