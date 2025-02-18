@@ -97,7 +97,7 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
     <div>
       {isRecordingModalVisible && (
         <div className="recording-modal">
-          <img className="recording-gif" src="/images/record.gif" alt="Recording..." />
+          <img className="recording-gif" src="/images/recording.gif" alt="Recording..." />
         </div>
       )}
     </div>

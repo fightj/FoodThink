@@ -172,7 +172,7 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
           speakText(currentText)
           setSpokenText(currentText)
 
-          const charReadingTime = 0.14 * 1000 // 글자당 0.14초 (1000ms)
+          const charReadingTime = 0.16 * 1000 // 글자당 0.14초 (1000ms)
           const displayTime = Math.max(currentText.length * charReadingTime, 4000) // 최소 4초
 
           setTimeout(() => setSpokenText(""), displayTime)
@@ -215,19 +215,23 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
           break
         case "대체재료추천1":
           const alternatives1 = responseData.alternativeIngredients?.join(", ") || "No alternatives"
-          const recommendation1 = `다음 재료를 추천합니다: ${alternatives1}`
+          const recommendation1 = ` 대체 제료로 ${alternatives1} 추천합니다!`
           console.log(recommendation1)
           speakText(recommendation1)
           setSpokenText(recommendation1)
-          setTimeout(() => setSpokenText(""), 3000)
+          const charReadingTime2 = 0.16 * 1000 // 글자당 0.14초 (1000ms)
+          const rec1DisplayTime = Math.max(recommendation1.length * charReadingTime2, 4000) // 최소 4초
+          setTimeout(() => setSpokenText(""), rec1DisplayTime)
           break
         case "대체재료추천2":
           const alternatives2 = responseData.alternativeIngredients?.join(", ") || "No alternatives"
-          const recommendation2 = `다음 재료를 추천합니다: ${alternatives2}. ${responseData.message || "No additional message"}`
+          const recommendation2 = `대체재료로 ${alternatives2} 추천합니다!. ${responseData.message || "No additional message"}`
           console.log(recommendation2)
           speakText(recommendation2)
           setSpokenText(recommendation2)
-          setTimeout(() => setSpokenText(""), 3000)
+          const charReadingTime3 = 0.16 * 1000 // 글자당 0.14초 (1000ms)
+          const rec2DisplayTime = Math.max(recommendation2.length * charReadingTime3, 4000) // 최소 4초
+          setTimeout(() => setSpokenText(""), rec2DisplayTime)
           break
         case "재료보기":
           setIsSidebarOpen(true)
@@ -238,6 +242,8 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
         default:
           console.log("알 수 없는 intent:", intent)
       }
+
+      setTimeout(() => setSwipeMessage(""), 1000)
     },
     [onNextStep, onPrevStep, onNextPage, stopTimer]
   )
@@ -305,73 +311,36 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
       <video ref={videoRef} style={{ display: "none" }} autoPlay playsInline />
       <canvas ref={canvasRef} className="handpose-canvas" />
 
-      <div className="card-div7">
-        {/* <div className="logo-timeline-container"> */}
-        <div className="timeline-container">
-          <img className="process-logo-img" src="/images/샤방이.png" alt="" />
-          {renderTimeline()}
-          <img className="process-exit-btn" src="/images/exit-btn.png" alt="" onClick={onClose} />
-        </div>
-        {/* </div> */}
-        <div className="content-image-container">
-          <div className="process-item3">
-            <h2 className="steps-h23">
-              {spokenText && <div className="spoken-text">{spokenText}</div>}
-              {isTimerModalOpen && (
-                <div className="timer-modal">
-                  <h2>타이머 설정</h2>
-                  <label>
-                    분:
-                    <input type="number" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} />
-                  </label>
-                  <label>
-                    초:
-                    <input type="number" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} />
-                  </label>
-                  <div className="timer-btn-area">
-                    <button className="timer-modal-btn" onClick={handleSetTimer}>
-                      설정
-                    </button>
-                    <button className="timer-modal-btn" onClick={() => setIsTimerModalOpen(false)}>
-                      취소
-                    </button>
-                  </div>
-                </div>
-              )}
+      {/* <div className="logo-timeline-container"> */}
+      <div className="timeline-container">
+        <img className="process-logo-img" src="/images/샤방이.png" alt="" />
+        {renderTimeline()}
+        <img className="process-exit-btn" src="/images/exit-btn.png" alt="" onClick={onClose} />
+      </div>
+      <div className="process-item3">
+        <h2 className="steps-h23">{currentProcess.processExplain}</h2>
+      </div>
 
-              {currentProcess.processExplain}
-            </h2>
-          </div>
-          <div className="process-image-container3">
-            {currentProcess.images &&
-              currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
-
-            {isSidebarOpen && (
-              <div className="ingredient-sidebar open">
-                <ul>
-                  {recipe.ingredients.map((ingredient, index) => (
-                    <li key={index}>
-                      {ingredient.ingreName}: {ingredient.amount}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="ing-time-container">
-          <div className="ingredient-container">
-            <button className="ingredient-button" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-              <img src="/images/ingredient-btn.png" alt="" />
-            </button>
-          </div>
-          <div className="timer-container">
-            <button className="timer-button" onClick={handleTimerIconClick}>
-              <img className="timer-image3" src={isTimerRunning ? "/images/do-timer.gif" : "/images/undo-timer.png"} alt="Timer" />
-            </button>
-          </div>
+      <div className="content-image-container">
+        <div className="process-image-container3">
+          {currentProcess.images &&
+            currentProcess.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${currentProcess.processOrder}`} className="process-image3" />)}
         </div>
       </div>
+
+      <div className="ing-time-container">
+        <div className="ingredient-container">
+          <button className="ingredient-button" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+            <img src="/images/ingredient-btn.png" alt="" />
+          </button>
+        </div>
+        <div className="timer-container">
+          <button className="timer-button" onClick={handleTimerIconClick}>
+            <img className="timer-image3" src={isTimerRunning ? "/images/do-timer.gif" : "/images/undo-timer.png"} alt="Timer" />
+          </button>
+        </div>
+      </div>
+
       {swipeMessage && <div className="swipe-message">{swipeMessage}</div>}
       <div className="timer3">
         {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
@@ -381,8 +350,46 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
       </div>
       {currentStep === totalPages - 1 && <div className="end-message">마지막 페이지 입니다</div>}
       {currentStep === totalPages - 1 && (
-        <div className="end-cooking-btn">
-          <button>조리 끝내기</button>
+        <button className="end-cooking-btn" onClick={onNextPage}>
+          조리 끝내기
+        </button>
+      )}
+      {isSidebarOpen && (
+        <div className="ingredient-sidebar open">
+          <ul>
+            {recipe.ingredients.map((ingredient, index) => (
+              <li key={index}>
+                {ingredient.ingreName}: {ingredient.amount}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {spokenText && <div className="spoken-text">{spokenText}</div>}
+      {isTimerModalOpen && (
+        <div className="timer-modal">
+          <div className="slider-container">
+            <div className="slider-wrapper">
+              <div className="slider">
+                <input type="range" min="0" max="59" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} className="range-slider vertical-slider" />
+              </div>
+              <div className="slider-label">분: {minutes}</div>
+            </div>
+            <div className="slider-wrapper">
+              <div className="slider">
+                <input type="range" min="0" max="59" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} className="range-slider vertical-slider" />
+              </div>
+              <div className="slider-label">초: {seconds}</div>
+            </div>
+          </div>
+          <div className="timer-btn-area">
+            <button className="timer-modal-btn" onClick={handleSetTimer}>
+              설정
+            </button>
+            <button className="timer-modal-btn" onClick={() => setIsTimerModalOpen(false)}>
+              취소
+            </button>
+          </div>
         </div>
       )}
     </div>
