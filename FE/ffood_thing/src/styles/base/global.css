@@ -51,6 +51,50 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+  src: url("/fonts/Hakgyoansim Dunggeunmiso TTF B.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Ownglyph_ParkDaHyun";
+  src: url("/fonts/온글잎 박다현체.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "insungit Cutelively jisu Regular";
+  src: url("/fonts/insungit Cutelively jisu Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "NPSfont_regularr";
+  src: url("/fonts/NPSfont_regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "KCC-Hanbit";
+  src: url("public/fonts/KCC-Hanbit.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Cafe24Syongsyong-v2.0";
+  src: url("/fonts/Cafe24Syongsyong-v2.0.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Dovemayo_gothic";
+  src: url("/fonts/Dovemayo_gothic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
 @font-face {
   font-family: "rider";
@@ -124,17 +168,27 @@ body {
   }
 }
 
-/* 모바일 화면 대응 */
-@media (max-width: 768px) {
+/* 태블릿 세로 화면 대응 */
+@media (max-width: 800px) {
   .custom-swal-popup {
     width: 80vw;
     font-size: 14px;
   }
+  .card-div {
+    height: 85vh;
+  }
 }
-
+/*모바일 세로 화면 대응*/
 @media (max-width: 480px) {
   .custom-swal-popup {
     width: 80vw;
     font-size: 12px;
+  }
+}
+
+/*모바일 가로 화면 대응*/
+@media (max-height: 500px) {
+  .card-div {
+    height: 65vh;
   }
 }
