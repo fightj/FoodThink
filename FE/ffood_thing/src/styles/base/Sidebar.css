@@ -59,6 +59,10 @@
   padding-top: 0;
   font-family: 'PTBandocheB';
 }
+.profile-button strong{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .profile-img {
   width: 2rem;
