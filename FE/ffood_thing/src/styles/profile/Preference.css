@@ -85,6 +85,12 @@
   flex: 1;
 }
 
+/* 선호 음식 / 기피 재료 글씨 */
+.preference-section h4,
+.avoidance-section h4 {
+  margin-bottom: 1rem;
+}
+
 /* ✅ 리스트 스타일 */
 .preference-list,
 .avoidance-list {
@@ -105,19 +111,19 @@
   color: #333;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.5s, color 0.5s;
   min-width: 70px;
 }
 
 /* ✅ 선호 음식 버튼 선택 시 색 변경 */
 .preference-btn.selected {
-  background-color: #4caf50;
+  background-color: #36ba3a;
   color: white;
 }
 
 /* ✅ 기피 재료 버튼 선택 시 색 변경 */
 .avoidance-btn.selected {
-  background-color: #ff4d4d;
+  background-color: #ff6060;
   color: white;
 }
 
@@ -126,14 +132,19 @@
   display: block;
   margin-top: 20px;
   padding: 12px 24px;
-  background-color: #007bff;
+  background-color: #1c87de;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s;
   min-width: 120px; /* ✅ 가변 크기 적용 */
   text-align: center;
+}
+
+.save-btn:hover {
+  background-color: #0f5e9f;
+  transform: scale(1.05); /* ✅ 호버 시 살짝 커짐 */
 }
 
 .save-btn:hover {
