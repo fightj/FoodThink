@@ -218,8 +218,8 @@ function AiRecommendPage() {
           {/* ✅ 맞춤 추천받기 (최초 화면) */}
           {step === "start" && (
             <div className="start-container">
-              <div className="start-title">🍽 푸딩에게 추천받기</div>
-              <div className="start-description">푸딩이 당신의 취향을 분석해 딱 맞는 요리를 추천해드려요!</div>
+              <div className="start-title">🍽 푸띵이에게 추천받기</div>
+              <div className="start-description">푸띵이 당신의 취향을 분석해 딱 맞는 요리를 추천해드려요!</div>
               <button className="ai-start-btn" onClick={() => setStep("question")}>
                 시작하기 🚀
               </button>

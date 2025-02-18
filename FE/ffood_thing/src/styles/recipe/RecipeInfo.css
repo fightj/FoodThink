@@ -44,7 +44,7 @@ header {
 }
 
 .recipe-info-details h1 {
-  font-family: "MyCustomFont";
+  font-family: 'KCC-Hanbit';
   font-size: 3.5rem;
   font-weight: 300;
   margin-top: 0;
@@ -98,17 +98,17 @@ header {
 }
 
 .recipe-ingredients p {
-  font-family: "rider";
-  font-size: 2rem;
-  font-weight: 100;
+  font-family: 'PTBandocheB';
+  font-size: 2.5rem;
+  font-weight: bold;
 }
 
 .recipe-ingredients ul {
-  font-family: "rider";
+  font-family: 'PTBandocheB';
   list-style-type: none;
   margin: 0;
   padding: 0;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 100;
 }
 
