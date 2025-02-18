@@ -50,7 +50,8 @@
   justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
   align-items: center; /* 자식 요소를 수직 가운데 정렬 */
   gap: 80px; /* 버튼들 간의 간격 */
-  font-size: 1.5rem; /* 글자 크기 추가 */
+  font-size: 1.8rem; 
+  font-family: 'omyu_pretty';
 }
 
 .card-div-firstsection button {
@@ -153,6 +154,8 @@
   margin: 0 0 0 5px; /* 왼쪽 여백 추가 */
 }
 .nickname-container {
+  font-family: 'SOYO Maple Regular';
+  font-weight: bold;
   position: absolute;
   bottom: -90px;
   text-align: center;
@@ -197,17 +200,20 @@
 }
 
 .icon-item p {
+  font-family: 'PTBandocheB';
   margin-top: 8px;
   font-size: 25px;
 }
 
 .title-container {
+  font-family: 'Gosanja';
   margin-top: 50px;
   width: 100%; /* Ensure the container takes up the full width */
   text-align: center; /* Center the text */
 }
 
 .cook-btn {
+  font-family: 'omyu_pretty';
   margin-top: 50px;
   border-radius: 15px; /* Apply rounded corners */
   background-color: #fdb13f; /* Apply the specified background color */
@@ -247,7 +253,7 @@
   position: absolute;
   left: 10%;
   transform: translateX(-50%);
-
+  font-family: 'IM_Hyemin-Bold';
   z-index: 20;
   margin-bottom: 30px;
 }
@@ -269,6 +275,7 @@
 }
 
 .process-item h2 {
+  font-family: 'KCC-Hanbit';
   white-space: wrap;
   font-size: 1.5rem; /* 글자 크기 설정 */
   margin-top: 10px;

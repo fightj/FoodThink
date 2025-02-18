@@ -3,6 +3,7 @@ import "../../styles/home/HomeBigButton.css"
 import { Link } from "react-router-dom"
 import TodayRecommendModal from "./TodayRecommendModal" // 모달 컴포넌트 import
 import "../../index.css"
+import "../../styles/base/global.css"
 
 const HomeBigButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false) // 모달 상태 관리
@@ -20,15 +21,16 @@ const HomeBigButton = () => {
                   </div>
                 </div>
               </Link>
-
+              <Link to="/ai-recommend" className="card-link">
               <div className="card card-aiRecommend" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(/images/포케.jpg)`,opacity: 0.85,}}>
-                <Link to="/ai-recommend" className="card-link">
+                
                   <div className="content home">
                     <h1>AI 음식 추천</h1>
                     <h4>내 맞춤 음식 추천을 받아보세요.</h4>
                   </div>
-                </Link>
+                
               </div>
+              </Link>
             </div>
 
             <div className="col">
