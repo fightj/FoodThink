@@ -1,15 +1,13 @@
 .card-div-done {
-  background-color: rgb(255, 255, 255);
-  width: 95%;
-  height: 95%;
-  max-width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 20px !important;
-  margin-bottom: 30px;
-  border-radius: 40px;
-  margin: 0 auto 20px;
+  background-image: url("/images/frame.png"); /* 이미지 경로 설정 */
+  background-size: 97% 96%; /* 이미지를 페이지 크기에 맞게 조절 */
+  background-position: center; /* 이미지를 중앙에 위치 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  width: 100%; /* Occupy the entire horizontal space */
+  height: 100%;
+  display: flex; /* Flexbox 추가 */
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: center; /* 수평 가운데 정렬 */
   padding: 2rem;
 }
 
