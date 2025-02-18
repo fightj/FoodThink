@@ -287,7 +287,7 @@ function FeedDetail() {
             )}
 
             {/* 컨텐츠 */}
-            <div className="content">
+            <div className="contents">
               <span className="likes-comments">
                 <img src={isLiked ? "/images/feed_like_do.png" : "/images/feed_like_undo.png"} alt="Like Icon" onClick={handleLikeToggle} style={{ cursor: "pointer" }} />
                 <span>{likesCount}</span>
