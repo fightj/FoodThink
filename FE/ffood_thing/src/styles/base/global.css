@@ -252,4 +252,11 @@ body {
     width: 80vw;
     font-size: 12px;
   }
+
+  .chevron-left-back-button{
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
