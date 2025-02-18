@@ -1,12 +1,30 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import "../../styles/recipe/CookingDonePage.css"
 
-const CookingDonePage = ({ recipe, handleFeed, onClose }) => {
+const CookingDonePage = ({ recipe, handleFeed, onClose, onPrevPage }) => {
   const representativeImage = recipe.image || "/default-image.png"
   const canvasRef = useRef(null)
   const [capturedImage, setCapturedImage] = useState(null)
   const [defaultImageVisible, setDefaultImageVisible] = useState(true)
   const [overlayVisible, setOverlayVisible] = useState(false)
+
+  useEffect(() => {
+    if (canvasRef.current && capturedImage) {
+      const img = new Image()
+      img.onload = () => {
+        const context = canvasRef.current.getContext("2d")
+        const canvas = canvasRef.current
+        const hRatio = canvas.width / img.width
+        const vRatio = canvas.height / img.height
+        const ratio = Math.max(hRatio, vRatio)
+        const centerX = (canvas.width - img.width * ratio) / 2
+        const centerY = (canvas.height - img.height * ratio) / 2
+        context.clearRect(0, 0, canvas.width, canvas.height)
+        context.drawImage(img, 0, 0, img.width, img.height, centerX, centerY, img.width * ratio, img.height * ratio)
+      }
+      img.src = capturedImage
+    }
+  }, [capturedImage])
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0]
@@ -16,19 +34,6 @@ const CookingDonePage = ({ recipe, handleFeed, onClose }) => {
         setCapturedImage(reader.result)
         setDefaultImageVisible(false)
         setOverlayVisible(true)
-        const img = new Image()
-        img.onload = () => {
-          const context = canvasRef.current.getContext("2d")
-          const canvas = canvasRef.current
-          const hRatio = canvas.width / img.width
-          const vRatio = canvas.height / img.height
-          const ratio = Math.max(hRatio, vRatio)
-          const centerX = (canvas.width - img.width * ratio) / 2
-          const centerY = (canvas.height - img.height * ratio) / 2
-          context.clearRect(0, 0, canvas.width, canvas.height)
-          context.drawImage(img, 0, 0, img.width, img.height, centerX, centerY, img.width * ratio, img.height * ratio)
-        }
-        img.src = reader.result
       }
       reader.readAsDataURL(file)
     }
@@ -53,6 +58,7 @@ const CookingDonePage = ({ recipe, handleFeed, onClose }) => {
             {capturedImage ? (
               <div className="image-frame">
                 <img src={capturedImage} alt="Your Cooked Dish" className="cooked-dish-image" />
+                <canvas ref={canvasRef} className="cooked-dish-canvas" />
                 {overlayVisible && (
                   <div className="image-overlay">
                     <button className="overlay-button" onClick={handleFeedWithImage}>
@@ -80,11 +86,12 @@ const CookingDonePage = ({ recipe, handleFeed, onClose }) => {
             )}
           </div>
         </div>
+        <div className="back-to-recipe-button" onClick={onPrevPage}>
+          back to recipe
+          <img src="/images/recipe-icon.png" alt="레시피로 복귀" className="button-image" />
+        </div>
         <div className="done-button-container">
-          <button className="done-close-button" onClick={onClose}>
-            back to recipe
-            <img src="/images/recipe-icon.png" alt="레시피로 복귀" className="button-image" />
-          </button>
+          <img className="process-exit-btn" src="/images/exit-btn.png" alt="" onClick={onClose} />
         </div>
       </div>
     </div>
