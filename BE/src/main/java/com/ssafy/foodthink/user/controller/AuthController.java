@@ -52,7 +52,7 @@ public class AuthController {
     @PostMapping("/kakao")
     public ResponseEntity<?> kakaoLogin(@RequestBody MultiValueMap<String, String> requestBody) {
         String code = requestBody.getFirst("code"); // JSON에서 code 추출
-
+        isNewUser = false;
         if (code == null || code.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of(
                     "type", "about:blank",
@@ -77,7 +77,7 @@ public class AuthController {
                     .orElseGet(() -> {
                         UserEntity newUser = new UserEntity();
                         newUser.setEmail(userInfo.getEmail());
-                        newUser.setNickname(userInfo.getNickname());
+                        newUser.setNickname(userInfo.getEmail());
                         newUser.setSocialId(userInfo.getId());
                         newUser.setSocialType("KAKAO");
                         newUser.setRole("ROLE_USER");
@@ -107,6 +107,7 @@ public class AuthController {
             responseBody.put("isNewUser", isNewUser);
 
             log.info("==로그인 성공!!!!!==");
+            log.info("==isNewUser:",isNewUser);
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(responseBody);
