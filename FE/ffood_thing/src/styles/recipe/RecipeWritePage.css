@@ -223,7 +223,7 @@
 /*📌재료*/
 .recipe-write-ingre-container{
   display: flex;
-  gap: 20px; 
+  /* gap: 10px;  */
   margin-top: 10px;
   flex-direction: column;
 }
@@ -263,51 +263,43 @@
 .recipe-write-ingre-remove-btn{
   border: none;
   background: none;
-  border-radius: 20%;
-  width: 8%;
   height: 100%;
   display:flex;
   align-items: center;
-  justify-content: right;
+  padding: 0;
+}
 
-}
-.recipe-write-ingre-remove-btn img{
-  width: 4vw;
-  aspect-ratio: 1 / 1; 
-  filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
-}
 /*재료 추가 버튼*/
-.recipe-write-ingre-add-btn-wrapper {
+.recipe-write-ingre-add-btn-wrapper,
+.recipe-write-step-add-btn-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%; 
-  height: 50px;
 }
 
-.recipe-write-ingre-add-btn {
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
+.recipe-write-ingre-add-btn,
+.recipe-write-step-add-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 4%;
-  height: 100%;
-}
-
-.recipe-write-ingre-add-btn img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* 이미지 비율 유지 */
-  filter: invert(27%) sepia(100%) saturate(1000%) hue-rotate(190deg) brightness(100%) contrast(97%);
+  width: 10%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  border: none;
+  border-radius:25px; /* ✅ 둥근 버튼 */
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 /*📌요리순서*/
 .recipe-write-step-container{
   display: flex;
-  gap: 20px;
+  /* gap: 20px; */
   height:10%;
   margin-top: 10px;
   flex-direction: column;
@@ -398,7 +390,6 @@
   width: 10%;
   height: 10%;
   font-size: 16px;
-  color: #ff0000;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -409,47 +400,15 @@
 .recipe-write-step-remove-btn{
   border: none;
   background: none;
-  border-radius: 20%;
-  width: 8%;
   height: 100%;
   display:flex;
   align-items: center;
-  justify-content: right;
-}
-.recipe-write-step-remove-btn img{
-  width: 4vw;
-  height: 7vh;
-  filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
-}
-/*요리 단계 추가 버튼*/
-.recipe-write-step-add-btn-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-.recipe-write-step-add-btn {
-  border: none;
-  background: none;
   padding: 0;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 4%;
-  height: 5%; 
-}
-.recipe-write-step-add-btn img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* 이미지 비율 유지 */
-  filter: invert(27%) sepia(100%) saturate(1000%) hue-rotate(190deg) brightness(100%) contrast(97%);
 }
 
 /*📌레시피 버튼 그룹(공개유무, 저장, 취소)*/
 .recipe-write-btn-group{
-  height: 10vh;
+  /* height: 10vh; */
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -535,18 +494,18 @@
 
 /* 레시피 작성 수정 버튼 : RecipeUpdatePage.jsx */
 .recipe-write-update-btn {
-  padding: 0.4rem;
-  padding-right: 0.6rem;
+  padding: 0.7rem 1rem;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  background: linear-gradient(135deg, #8bc1ff, #66a2e6);
+  background: linear-gradient(135deg, #8bc1ff, #5899e3);
   color: white;
   border: none;
-  border-radius: 25px;
+  border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  font-family: 'omyu_pretty';
 }
 
 /*반응형: 태블릿 세로 */
@@ -708,33 +667,29 @@
   
   /*재료 삭제 버튼*/
   .recipe-write-ingre-remove-btn{
-    width: 10%;
     padding:0;
   }
-  .recipe-write-ingre-remove-btn img{
-    width: 80%;
-    height: 80%;
-  }
+
   /*재료 추가 버튼*/
-  .recipe-write-ingre-add-btn-wrapper {
+  .recipe-write-ingre-add-btn-wrapper,
+  .recipe-write-step-add-btn-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 4vh; 
   }
-  
-  .recipe-write-ingre-add-btn {
-    width: 10%;
+
+  .recipe-write-ingre-add-btn,
+  .recipe-write-step-add-btn {
+    width: 12%;
     height: 100%;
+    padding: 0.5rem;
+    font-size: 0.7rem;
   }
-  
-  .recipe-write-ingre-add-btn img {
- }
   
   /*📌요리순서*/
   .recipe-write-step-container{
-    gap: 1%;
+    /* gap: 1%; */
   }
   .recipe-write-step-container-title{
     width:100%;
@@ -797,31 +752,11 @@
   }
   /*요리 단계 삭제 버튼*/
   .recipe-write-step-remove-btn{
-    width: 10%;
     height: 100%;
     display:flex;
-    justify-content: center;
+    padding: 0;
   }
-  .recipe-write-step-remove-btn img{
-    width: 100%;
-    height: 100%;
-    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
-  }
-  /*요리 단계 추가 버튼*/
-  .recipe-write-step-add-btn-wrapper {
-    height: 3rem;
-  }
-  .recipe-write-step-add-btn {
-    width: 10%;
-    height: 100%; 
-  }
-  .recipe-write-step-add-btn img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* 이미지 비율 유지 */
-    filter: invert(27%) sepia(100%) saturate(1000%) hue-rotate(190deg) brightness(100%) contrast(97%);
-  }
-  
+
   /*📌레시피 버튼 그룹(공개유무, 저장, 취소)*/
   .recipe-write-btn-group{
     margin-bottom: 20px;
@@ -996,7 +931,6 @@
   /*📌재료*/
   .recipe-write-ingre-container{
     display: flex;
-    gap: 10px; 
     margin-top: 10px;
     flex-direction: column;
   }
@@ -1025,33 +959,28 @@
   
   /*재료 삭제 버튼*/
   .recipe-write-ingre-remove-btn{
-    width: 10%;
     padding:0;
   }
-  .recipe-write-ingre-remove-btn img{
-    width: 9vw;
-    height: 6vh;
-  }
+
   /*재료 추가 버튼*/
-  .recipe-write-ingre-add-btn-wrapper {
+  .recipe-write-ingre-add-btn-wrapper,
+  .recipe-write-step-add-btn-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 4vh; 
   }
   
-  .recipe-write-ingre-add-btn {
-    width: 10%;
+  .recipe-write-ingre-add-btn,
+  .recipe-write-step-add-btn {
+    width: 20%;
     height: 100%;
+    padding: 0.5rem;
+    font-size: 0.7rem;
   }
-  
-  .recipe-write-ingre-add-btn img {
- }
   
   /*📌요리순서*/
   .recipe-write-step-container{
-    gap: 8px;
     margin-top: 10px;
   }
   .recipe-write-step-container-title{
@@ -1109,35 +1038,15 @@
   /*요리 단계 삭제 버튼*/
   .recipe-write-step-remove-btn{
     width: 100%;
-    height: 8%;
     display:flex;
     justify-content: center;
-  }
-  .recipe-write-step-remove-btn img{
-    width: 10%;
-    height: 100%;
-    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
-  }
-  /*요리 단계 추가 버튼*/
-  .recipe-write-step-add-btn-wrapper {
-    height: 5%;
-  }
-  .recipe-write-step-add-btn {
-    width: 10%;
-    height: 100%; 
-  }
-  .recipe-write-step-add-btn img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* 이미지 비율 유지 */
-    filter: invert(27%) sepia(100%) saturate(1000%) hue-rotate(190deg) brightness(100%) contrast(97%);
+    padding: 0;
   }
   
   /*📌레시피 버튼 그룹(공개유무, 저장, 취소)*/
   .recipe-write-btn-group{
     margin-bottom: 20px;
     margin-top:10px;
-    /* height: 3vh; */
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -1317,7 +1226,6 @@
   /*📌재료*/
   .recipe-write-ingre-container{
     display: flex;
-    gap: 10px; 
     margin-top: 10px;
     flex-direction: column;
   }
@@ -1347,34 +1255,28 @@
   }
   /*재료 삭제 버튼*/
   .recipe-write-ingre-remove-btn{
-    width: 11%;
     padding:0;
-    
   }
-  .recipe-write-ingre-remove-btn img{
-    width: 100%;
-    aspect-ratio: 1 / 1; 
-  }
+ 
   /*재료 추가 버튼*/
-  .recipe-write-ingre-add-btn-wrapper {
+  .recipe-write-ingre-add-btn-wrapper,
+  .recipe-write-step-add-btn-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 8vh; 
   }
-  
-  .recipe-write-ingre-add-btn {
+
+  .recipe-write-ingre-add-btn,
+  .recipe-write-step-add-btn {
     width: 10%;
     height: 100%;
+    padding: 0.5rem;
+    font-size: 0.7rem;
   }
-  
-  .recipe-write-ingre-add-btn img {
- }
   
   /*📌요리순서*/
   .recipe-write-step-container{
-    gap: 8px;
     margin-top: 10px;
   }
   .recipe-write-step-container-title{
@@ -1432,32 +1334,10 @@
   }
   /*요리 단계 삭제 버튼*/
   .recipe-write-step-remove-btn{
-    width: 6%;
     height: 8%;
     display:flex;
     justify-content: center;
-  }
-  .recipe-write-step-remove-btn img{
-    width: 100%;
-    height: 100%;
-    filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
-  }
-  /*요리 단계 추가 버튼*/
-  .recipe-write-step-add-btn-wrapper {
-    height: 5%;
-  }
-  .recipe-write-step-add-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 8vh; 
-  }
-  .recipe-write-step-add-btn img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* 이미지 비율 유지 */
-    filter: invert(27%) sepia(100%) saturate(1000%) hue-rotate(190deg) brightness(100%) contrast(97%);
+    padding: 0;
   }
   
   /*📌레시피 버튼 그룹(공개유무, 저장, 취소)*/

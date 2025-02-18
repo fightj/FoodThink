@@ -92,8 +92,7 @@ const Step = ({ step, index, moveStep, updateStepText, handleStepImageUpload, re
         />
       </div>
       <button className="recipe-write-step-remove-btn" onClick={() => removeStep(index)}>
-        {/* <img src="/images/close_icon.png" alt="삭제"/> */}
-        <FontAwesomeIcon icon={faX} size="2xl" style={{color: "#fe5868",}} />
+        ❌
       </button>
     </div>
   );
@@ -468,7 +467,7 @@ function RecipeWritePage() {
                     <>
                       <img src={URL.createObjectURL(imageFile)} alt="요리 대표 이미지" className="recipe-write-main-uploaded-image" />
                       <button className="recipe-write-main-image-remove-btn" onClick={removeImage}>
-                        ✖
+                      ❌
                       </button>
                     </>
                   ) : (
@@ -509,7 +508,7 @@ function RecipeWritePage() {
                         }}
                       />
                       <button className="recipe-write-ingre-remove-btn" onClick={() => removeIngredient(index)}>
-                        <FontAwesomeIcon icon={faX} size="2xl" style={{color: "#fe5868",}} />
+                      ❌
                       </button>
                     </div>
                   ))}
@@ -517,8 +516,7 @@ function RecipeWritePage() {
               </div>
               <div className="recipe-write-ingre-add-btn-wrapper">
                 <button className="recipe-write-ingre-add-btn" onClick={addIngredient}>
-                  {/* <img src="/images/add_circle.png" /> */}
-                  <FontAwesomeIcon icon={faPlus} size="2x"  style={{ color: "#74C0FC",  fontWeight: "bold"}} />
+                  ➕
                 </button>
               </div>
             </div>
@@ -542,8 +540,7 @@ function RecipeWritePage() {
               {/* 추가 버튼 */}
               <div className="recipe-write-step-add-btn-wrapper">
                 <button className="recipe-write-step-add-btn" onClick={addStep}>
-                  {/* <img src="/images/add_circle.png" alt="추가" /> */}
-                  <FontAwesomeIcon icon={faPlus} size="2x"  style={{ color: "#74C0FC",  fontWeight: "bold"}} />
+                  ➕
                 </button>
               </div>
             </div>
