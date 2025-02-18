@@ -3,6 +3,7 @@ import "../../styles/home/HomeBigButton.css"
 import { Link } from "react-router-dom"
 import TodayRecommendModal from "./TodayRecommendModal" // 모달 컴포넌트 import
 import "../../index.css"
+import "../../styles/base/global.css"
 
 const HomeBigButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false) // 모달 상태 관리
@@ -31,18 +32,14 @@ const HomeBigButton = () => {
           </Link>
         </div>
 
-        <div className="col">
-          {/* 오른쪽 열 */}
-          <div
-            className="card card-todayRecommend"
-            style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(/images/피자.jpg)`, opacity: 0.85 }}
-            onClick={() => setIsModalOpen(true)}
-          >
-            <div className="content home">
-              <h1>오늘 뭐 먹지?</h1>
-              <h4>오늘 먹을 음식을 추천받아보세요.</h4>
-            </div>
-          </div>
+            <div className="col">
+              {/* 오른쪽 열 */}
+              <div className="card card-todayRecommend" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(/images/피자.jpg)`,opacity: 0.85,}}onClick={() => setIsModalOpen(true)}>
+                <div className="content home">
+                  <h1>오늘 뭐 먹지?</h1>
+                  <h4>오늘 먹을 음식을 추천받아보세요.</h4>
+                </div>
+              </div>
 
           <Link to="/sns" className="card-link">
             <div className="card card-sns" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url(/images/메인페이지4.jpg)` }}>

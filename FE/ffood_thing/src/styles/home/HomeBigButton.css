@@ -83,7 +83,6 @@
   display: block;
   text-decoration: none;
 }
-
 .home h1 {
   font-family: "HakgyoansimDunggeunmisoTTF-B", sans-serif;
   font-size: 3rem;
@@ -93,7 +92,7 @@
 
 .home h4 {
   font-family: "NPSfont_regular", sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color:rgb(255, 255, 255);
   font-weight: bold;
 }
