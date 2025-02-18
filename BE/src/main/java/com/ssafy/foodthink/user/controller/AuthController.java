@@ -77,7 +77,7 @@ public class AuthController {
                     .orElseGet(() -> {
                         UserEntity newUser = new UserEntity();
                         newUser.setEmail(userInfo.getEmail());
-                        newUser.setNickname(userInfo.getNickname());
+                        newUser.setNickname(userInfo.getEmail());
                         newUser.setSocialId(userInfo.getId());
                         newUser.setSocialType("KAKAO");
                         newUser.setRole("ROLE_USER");
