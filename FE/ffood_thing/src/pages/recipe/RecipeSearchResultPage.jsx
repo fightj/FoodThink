@@ -137,9 +137,9 @@ const RecipeSearchResultPage = () => {
           </div>
         </div>
         {/* 페이지 맨 위로 올라가는 버튼 */}
-          <div className="sns-main-scroll-to-top-div" onClick={scrollToTop}>
+          <div className="recipe-main-page-scroll-to-top-div" onClick={scrollToTop}>
             <FontAwesomeIcon icon={faChevronUp} size="lg" />
-            <span className="sns-main-top-text">TOP</span>
+            <span className="recipe-main-page-top-text">TOP</span>
           </div>
       </div>
     // </div>
