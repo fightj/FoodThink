@@ -81,17 +81,6 @@
   font-size: 1rem;
 }
 
-/* .close-button-image {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  z-index: 20;
-} */
-
 .comment-input-wrapper {
   display: flex;
   width: 100%;
@@ -112,30 +101,73 @@
   color: #282828;
 }
 
-/* 댓글 작성하기 버튼 관련 배경 확인용으로 넣어둔 것 (02.16) */
-.add-comment-btn-image {
-  width: 1.5rem;
-  /* height: 1.5rem; */
-  transition: transform 0.2s ease;
-  background-color: #282828;
+.add-comment-button {
+  padding: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #ffdba8, #ffbe63);
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
-.btn-background {
-  background-color: #ff7f00;
-  border-radius: 12px; /* 모서리 둥글게 */
-  padding: 10px;
-  transition: transform 0.2s ease; /* 마우스 호버 시 확대 효과 */
+.add-comment-button:active {
+  background: linear-gradient(135deg, #ffbe63, #ffdba8);
+  transform: scale(1.05);
 }
 
 /* 댓글 수정하기 기능 */
 .update-comment-input {
-  padding: 5px;
+  padding: 4px;
   border: 1px solid #ddd;
   border-radius: 10px;
   font-size: 1rem;
   background-color: #fff;
   color: #282828;
   margin-bottom: 0.5rem;
+  margin-right: 0.7rem;
+}
+
+.update-comment-button {
+  padding: 0.4rem;
+  padding-right: 0.6rem;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #8bc1ff, #66a2e6);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.update-comment-button:active {
+  background: linear-gradient(135deg, #66a2e6, #8bc1ff);
+  transform: scale(1.05);
+}
+
+.delete-comment-button {
+  padding: 0.4rem;
+  padding-right: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  margin-left: 0.7rem;
+}
+
+.delete-comment-button:active {
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  transform: scale(1.05);
 }
 
 @media (max-width:800px) {
