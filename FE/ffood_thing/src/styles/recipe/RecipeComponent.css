@@ -45,10 +45,11 @@
   color: rgb(255, 255, 255);
   padding: 0.5rem;
   border-radius: 3rem;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
   z-index: 1000;
   border: none; /* Remove the border */
+  font-family: 'omyu_pretty';
 }
 
 .handpose-canvas {
@@ -108,6 +109,7 @@
   color: rgb(0, 0, 0);
   white-space: wrap;
   box-sizing: border-box; /* padding과 border를 포함하도록 설정 */
+  font-family: 'IM_Hyemin-Bold';
 }
 
 .process-image-container3 {
@@ -399,6 +401,7 @@
 .ingredient-sidebar li {
   margin-bottom: 10px;
   font-size: 1.2rem;
+  font-family: 'LotteMartDream';
 }
 
 /* 타이머 설정 모달 */
@@ -438,6 +441,7 @@
 .slider-label {
   font-size: 2rem;
   margin-bottom: 10px;
+  font-family: 'LotteMartDream';
 }
 
 .slider {
@@ -485,13 +489,14 @@
   justify-content: space-between;
   width: 100%;
   gap: 20px;
+  
 }
 
 .timer-modal-btn {
   display: block;
   width: 40%;
   padding: 10px;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   margin-top: 20px;
   background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
   color: white;
@@ -500,4 +505,5 @@
   cursor: pointer;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'omyu_pretty';
 }

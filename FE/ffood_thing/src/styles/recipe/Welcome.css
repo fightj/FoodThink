@@ -26,7 +26,7 @@
 
 /* ✅ Image style */
 .cooking-image-welcome {
-  width: 20%;
+  width: 25%;
   height: auto;
   margin-bottom: 2em;
   animation: float 3s infinite ease-in-out;
@@ -51,6 +51,7 @@
   margin-bottom: 10px;
   padding-bottom: 5%;
   width: 90%; /* Increased width to accommodate long text */
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
 
 /* 🔹 Button style */
