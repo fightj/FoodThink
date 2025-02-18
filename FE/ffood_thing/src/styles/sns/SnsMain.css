@@ -194,6 +194,25 @@
   }
 }
 
+@media (max-width: 500px) {
+  .row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .col-4 {
+    width: 100%;
+  }
+
+  .user-info img {
+    display: block;
+  }
+
+  .user-info span {
+    display: block;
+  }
+}
+
 .search-result-title {
   text-align: right; 
 }

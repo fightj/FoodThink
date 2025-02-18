@@ -15,7 +15,6 @@ function Sidebar({ isOpen, toggleSidebar }) {
   const sessionUser = JSON.parse(sessionStorage.getItem("user"));
   const sessionUserNickname = user?.nickname || sessionUser?.nickname || "User";
 
-
   // ✅ 로그인 여부를 localStorage에서 확인
   const isLoggedIn = localStorage.getItem("kakaoAuthProcessed") === "true";
 
@@ -28,7 +27,8 @@ function Sidebar({ isOpen, toggleSidebar }) {
 
   // ✅ 페이지 이동 시 사이드바 & 드롭다운 닫기
   useEffect(() => {
-    if (isOpen) toggleSidebar(false);
+    // if (isOpen) toggleSidebar(false);
+    if(isOpen) setIsOpen(false);
     setDropdownOpen(false);
   }, [location.pathname]);
 
@@ -39,9 +39,9 @@ function Sidebar({ isOpen, toggleSidebar }) {
       const isScrollingDown = currentScrollPos > prevScrollPos.current;
 
       if (isScrollingDown) {
-        toggleSidebar(false);
+        // toggleSidebar(false);
+        setIsOpen(false);
       }
-
       prevScrollPos.current = currentScrollPos;
     };
 
