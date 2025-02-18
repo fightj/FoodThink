@@ -648,11 +648,11 @@ function RecipeUpdatePage() {
                   <span></span>
                 </label>
               </div>
-              <button className="recipe-write-save-btn" onClick={() => saveRecipe(isPublic)}>
-                저장
+              <button className="recipe-write-update-btn" onClick={() => saveRecipe(isPublic)}>
+              ✏️ 수정 완료
               </button>
               <button className="recipe-write-cancel-btn" onClick={handleCancel}>
-                취소
+              🔙 취소
               </button>
             </div>
           </div>

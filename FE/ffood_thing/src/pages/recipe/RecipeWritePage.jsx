@@ -563,10 +563,10 @@ function RecipeWritePage() {
               </label>
             </div>
             <button className="recipe-write-save-btn" onClick={() => saveRecipe(isPublic)}>
-              저장
+            ⭐ 저장
             </button>
             <button className="recipe-write-cancel-btn" onClick={handleCancel}>
-              취소
+            🔙 취소
             </button>
           </div>
 
