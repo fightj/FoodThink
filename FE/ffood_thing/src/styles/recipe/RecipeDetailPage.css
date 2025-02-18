@@ -72,7 +72,6 @@
   justify-content: space-between;
   width: 100%;
   margin: 1rem 0 2rem 0;
-
   gap: 2.5rem; /* ✅ left와 right 사이의 간격 유지 */
 }
 
@@ -95,7 +94,7 @@
   width: 100%;
   max-height: 500px;
   display: block;
-  border-radius: 10px;
+  border-radius: 15px;
   object-fit: cover;
 }
 
@@ -137,20 +136,28 @@
 
 /* 🔹 제목 & 북마크 */
 .recipe-detail-title-container {
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #E0E0E0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
 }
 
 .recipe-detail-title {
   font-size: clamp(1rem, 2.8vw, 2.8rem);
+  font-family: 'ImcreSoojin';
+  flex: 0 0 85%;
+  font-size: clamp(1.5rem, 2.8vw, 2.8rem);
   font-weight: bold;
+  text-align: center;
 }
 
 /* 🔹 북마크 버튼 */
 .bookmark-icon-btn {
+  flex: 1;
   align-self: flex-start;
+  justify-content: flex-end;
   background: none;
   border: none;
 }
@@ -167,7 +174,9 @@
   align-items: center;
   width: 100%;
   gap: clamp(1rem, 3vw, 5rem);
-  margin: clamp(1rem, 3.5vw, 10rem) 0;
+  margin: clamp(1rem, 3.5vw, 10rem) 0 0 0;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #E0E0E0;
 }
 
 .recipe-detail-info-item {
@@ -183,6 +192,7 @@
 
 .recipe-detail-info-text {
   font-size: clamp(0.8rem, 1.8vw, 1.2rem);
+  font-family: 'PTBandocheB';
 }
 
 .recipe-detail-info-end {
@@ -190,6 +200,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  padding-top: 1rem;
   margin-top: auto;
 }
 
@@ -215,6 +226,7 @@
 /* 🔹 닉네임 */
 .recipe-detail-nickname {
   font-size: clamp(1rem, 1.5vw, 2rem); /* 반응형 글자 크기 */
+  font-family: 'SOYO Maple Regular';
   font-weight: bold;
   color: #ff7f00;
 }
@@ -233,9 +245,10 @@
   align-items: center;
   text-align: center;
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
+  font-family: 'omyu_pretty';
 }
 
 @media (max-width: 768px) {  /* 태블릿 & 모바일에서 적용 */
@@ -285,12 +298,15 @@
 
 /* 🔹 탭 컨테이너 */
 .recipe-tabs {
+  padding-top: clamp(1rem, 2vw, 3rem);
+  border-top: 2px solid #ffd494;
   display: flex;
   justify-content: center;
   background-color: #fff;
   width: 100%;
   flex-wrap: nowrap; /* 줄바꿈 방지 */
   margin-bottom: 15px;
+  font-family: 'omyu_pretty';
 }
 
 /* 🔹 개별 탭 버튼 */
@@ -321,7 +337,8 @@
     justify-content: flex-start;
     width: 100%;
     overflow-x: auto; /* 🔥 모바일에서는 스크롤 가능하게 */
-    padding: 5px 10px;
+    padding: 1rem 0.5rem;
+    /* padding-top: clamp(1rem, 2vw, 3rem); */
   }
 
   .recipe-tabs button {
@@ -349,6 +366,7 @@
   width: 100%;
   align-items: center;
   text-align: center;
+  font-family: 'Binggrae';
 }
 
 /* 🔹 개별 재료 아이템 (왼쪽, 오른쪽) */
@@ -362,7 +380,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-bottom: 1px solid #ddd; /* 🔥 수평 구분선 추가 */
+  border-bottom: 1px solid #E0E0E0; /* 🔥 수평 구분선 추가 */
 }
 
 /* 🔹 빈칸이 있는 경우에는 밑줄 제거 */
@@ -372,7 +390,7 @@
 
 /* 🔹 가운데 수직 구분선 */
 .ingredient-separator {
-  border-right: 1px solid #ddd; /* 🔥 가운데 구분선 */
+  border-right: 1px solid #E0E0E0; /* 🔥 가운데 구분선 */
   height: 100%;
   width: 1px;
 }
@@ -410,7 +428,7 @@
   gap: clamp(10px, 2vw, 20px);
   padding: clamp(10px, 2vw, 20px);
   background: white;
-  border-bottom: 2px solid #ddd; /* 🔥 수평 구분선 추가 */
+  border-bottom: 2px solid #E0E0E0; /* 🔥 수평 구분선 추가 */
 }
 
 /* 🔹 왼쪽 - 조리 설명 */
@@ -422,6 +440,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  font-family: 'KCC-Hanbit';
 }
 
 /* 🔹 오른쪽 - 조리 과정 이미지 */
@@ -502,6 +521,7 @@
   color: #999;
   padding: 20px;
   text-align: center;
+  font-family: 'PTBandocheB';
 }
 
 /* ✅ 📌 반응형 설정 */

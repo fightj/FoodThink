@@ -71,6 +71,7 @@
 .sns-username {
   font-size: 2rem; /* 사용자 이름의 폰트 크기 설정 */
   font-weight: bold;
+  font-family: 'SOYO Maple Regular';
 }
 
 .image-container1 {
@@ -118,6 +119,10 @@
 .description {
   font-size: 1rem;
   margin-bottom: 20px;
+  font-family: 'KCC-Hanbit';
+}
+.description strong{
+  font-family: 'SOYO Maple Regular';
 }
 
 .comment-author {
@@ -201,6 +206,12 @@
   display: inline-flex;
   align-items: center;
 }
+.comment-button span{
+  font-family: 'KCC-Hanbit';
+}
+.likes-comments span{
+  font-family: 'KCC-Hanbit';
+}
 
 .comment-button img {
   width: 50px;
@@ -270,12 +281,14 @@ hr {
 }
 
 .dropdown-item {
-  font-size: 1.2em;
+  font-size: 1.45em;
+  text-align: center;
   padding: 10px 12px;
   cursor: pointer;
   white-space: nowrap;
   touch-action: manipulation;
   display: block;
+  font-family: 'omyu_pretty';
 }
 
 .dropdown-item:active {
@@ -308,6 +321,7 @@ hr {
 
 .hash-tage-recipe-name {
   color: #044778;
+  font-family: 'LotteMartDream';
 }
 
 .recipe-tooltip {
@@ -330,7 +344,8 @@ hr {
 /* 참고한 레시피 */
 .recipe-tooltip p {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.6rem;
+  font-family: 'omyu_pretty';
 }
 
 /* 댓글 토글 위치 조정 문제 */
@@ -380,6 +395,7 @@ hr {
 
   .sns-username {
     font-size: 1.3rem;
+    
     /* font-weight: bold; */
   }
 

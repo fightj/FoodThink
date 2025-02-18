@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, Fragment } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../../contexts/UserContext";
-import SearchBar from "../../components/base/SearchBar";
+import Logo from "../../components/base/Logo";
 import Swal from "sweetalert2";
 import "../../styles/recipe/RecipeDetailPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,6 +18,7 @@ const RecipeDetailPage = () => {
   const [activeTab, setActiveTab] = useState("ingredients"); // 🔥 선택된 탭 상태 관리
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showModal, setShowModal] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false)
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -212,6 +213,10 @@ const RecipeDetailPage = () => {
     }
   };
 
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown)
+  }
+
   // 페이지 맨 위로 스크롤하는 함수
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -219,7 +224,7 @@ const RecipeDetailPage = () => {
 
   return (
     <div className="base-div">
-      <SearchBar />
+      <Logo />
 
       <div className="card-div">
         <div className="recipe-detail-container">
@@ -228,13 +233,16 @@ const RecipeDetailPage = () => {
               <img src="/images/previous_button.png" alt="Previous" className="icon" />
             </button>
             {user && user.nickname === recipe.nickname && (
-              <div className="button-container">
-                <button onClick={handleEditClick} className="edit-button">
-                  수정
+              <div className="edit-container">
+                <button className="edit-button1" onClick={toggleDropdown}>
+                  <img src="/images/etc-btn.png" alt="Edit Options1" />
                 </button>
-                <button onClick={handleDeleteClick} className="delete-button">
-                  삭제
-                </button>
+                {showDropdown && (
+                  <div className="dropdown-menu">
+                    <button className="dropdown-item" onClick={handleEditClick}>레시피 수정</button>
+                    <button className="dropdown-item" onClick={handleDeleteClick}>레시피 삭제</button>
+                  </div>
+                )}
               </div>
             )}
           </div>

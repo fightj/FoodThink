@@ -12,10 +12,10 @@ const RecipeInfo = ({ recipe, onNextPage }) => {
     <div className="card-div-info">
       <div className="recipeInfo-container">
         <header>
+          <div className="info-badge-div">
+            <img src="/images/후라이팬.gif" alt="후라이팬" />
+          </div>
           <div className="recipe-info-details">
-            <div className="info-badge-div">
-              <img src="/images/후라이팬.gif" alt="후라이팬" />
-            </div>
             <h1>{recipe.recipeTitle}</h1>
           </div>
         </header>

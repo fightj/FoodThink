@@ -1,26 +1,30 @@
 .base-div {
   background: #f7b05b;
   min-height: 100vh;
+  height: auto;
   padding-top: 3vh;
-  box-sizing: border-box; /* 패딩 포함 높이 계산 */
+  box-sizing: border-box;
   padding-bottom: 3vh;
+  overflow-y: auto;
 }
+
 .parent-container {
   display: flex;
   justify-content: center;
 }
+
 .card-div {
   background-color: rgb(255, 255, 255);
   width: 95%; /* 수평 공간 전체를 차지 */
   display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
   flex-direction: column; /* 자식 요소를 세로로 정렬 */
-  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  /* height: auto; */
+  justify-content: center;
+  height: auto;
   margin-bottom: 30px;
   border-radius: 40px; /* 아래 두 꼭지점만 둥글게 설정 */
   margin: 0 auto 20px;
   padding: 2rem;
-  /* box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3); 상단 그림자 더 강조 */
+  /* overflow-y: auto; */
 }
 .back-button {
   align-self: flex-start; /* ✅ 모바일에서도 왼쪽 정렬 유지 */
@@ -78,8 +82,8 @@
   font-style: normal;
 }
 @font-face {
-  font-family: "KCC-Hanbit";
-  src: url("public/fonts/KCC-Hanbit.ttf") format("truetype");
+  font-family: 'KCC-Hanbit';
+  src: url('/fonts/KCC-Hanbit.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -95,11 +99,59 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'Cafe24Dongdong-v2.0';
+  src: url('/fonts/Cafe24Dongdong-v2.0.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'SOYO Maple Regular';
+  src: url('/fonts/SOYO Maple Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'LotteMartDream';
+  font-style: normal;
+  font-weight: 400;
+  src: url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff2') format('woff2'), url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff') format('woff');
+}
+@font-face {
+  font-family: 'omyu_pretty';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'IM_Hyemin-Bold';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'PTBandocheB';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/PTBandocheB.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Gosanja';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/Gosanja.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
 @font-face {
   font-family: "rider";
   src: url("/fonts/BMDOHYEON_otf.otf") format("truetype");
   font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'MangoDdobak-B';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/MangoDdobak-B.woff2') format('woff2');
+  font-weight: 700;
   font-style: normal;
 }
 
@@ -109,7 +161,18 @@
   font-weight: 100;
   font-style: normal;
 }
-
+@font-face {
+  font-family: 'ImcreSoojin';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.3/ImcreSoojin.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Binggrae';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Binggrae.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 body {
   font-family: "Pretendard-Regular", sans-serif;
 }
@@ -149,6 +212,8 @@ body {
   .card-div {
     padding: 1rem;
     border-radius: 25px;
+    /* 임시방편 */
+    overflow-y: auto;
   }
 
   .context-h5 {
@@ -180,9 +245,6 @@ body {
     width: 80vw;
     font-size: 14px;
   }
-   .card-div {
-    /* height:85vh; */
-  }
 }
 /*모바일 세로 화면 대응*/
 @media (max-width: 480px) {
@@ -196,12 +258,5 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-}
-
-/*모바일 가로 화면 대응*/
-@media (max-height: 500px) {
-  .card-div {
-    height: 65vh;
   }
 }
