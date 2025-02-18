@@ -1,22 +1,40 @@
 /* 토글 버튼 CSS */
 .toggle-button {
     position: fixed;
-    bottom: 20px;
-    left: 45px;
-    background-color: #3498db;
+    bottom: 2rem;
+    left: 4.5rem;
+    background-color: #fff3d4;
     border-radius: 50%;
     border: none;
-    width: 60px;
-    height: 60px;
+    width: 4rem;
+    height: 4rem;
     transition: all 0.5s ease-in-out;
     user-select: none;
     z-index: 2000;
-    font-size: 30px;
+    font-size: 2rem;
     font-weight: bold;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
   .toggle-button:active {
+    transform: scale(1.1);
+    animation: shake 0.3s ease;
+  }
 
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    75% { transform: translateX(-3px); }
+    100% { transform: translateX(0); }
+  }
+
+  @media screen and (max-width:600px) {
+    .toggle-button {
+      left: 2rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 1.2rem;
+    }
   }
   
