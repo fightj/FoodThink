@@ -261,7 +261,7 @@ function FeedWrite() {
     <div className="base-div">
         <div className="card-div">
           <div className="sns-write-header">
-            <button onClick={handleBack} className="back-button1">
+            <button onClick={handleBack} className="back-button">
               <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
             </button>
             <div className="sns-write-title">
