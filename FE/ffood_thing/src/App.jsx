@@ -31,6 +31,8 @@ import { UserProvider, UserContext } from "./contexts/UserContext" // 올바르�
 
 import KakaoCallback from "./pages/login/KakaoCallback"
 
+import ToggleButton from "./components/base/ToggleButton"
+
 // Function to fetch user info
 // const fetchUserInfo = async () => {
 //   try {
@@ -75,132 +77,39 @@ const MainApp = () => {
 
   const { user, setUser } = useContext(UserContext)
   const [tokenLoaded, setTokenLoaded] = useState(false) // UserContext를 올바르게 사용
-  const [showButton, setShowButton] = useState(true) // 버튼 표시 여부
-  const touchStartX = useRef(0)
-  const touchEndX = useRef(0)
-
-  const touchStartY = useRef(0)
-  const touchEndY = useRef(0)
-
-  const pagesWithoutNavbar = ["/login", "/some-other-page"] // Add paths where you want to hide the Navbar
-
-  const hideNavbarPaths = ["/recipes/[0-9]+/cooking"] // Add regex patterns for paths where you want to hide the Navbar
-
-  const shouldHideNavbar = pagesWithoutNavbar.includes(location.pathname) || hideNavbarPaths.some((path) => new RegExp(path).test(location.pathname))
+  // const pagesWithoutNavbar = ["/login", "/some-other-page"]
+  // const hideNavbarPaths = ["/recipes/[0-9]+/cooking"]
+  // const shouldHideNavbar = pagesWithoutNavbar.includes(location.pathname) || hideNavbarPaths.some((path) => new RegExp(path).test(location.pathname))
 
   const toggleSidebar = () => {
-    setIsOpen((prev) => !prev)
-    if (!isOpen) setShowButton(false) // 사이드바 열릴 때 버튼 숨김
-  }
+    setIsOpen((prev) => !prev);
+  };
 
   const closeSidebar = (e) => {
-    if (isOpen && !e.target.closest(".sidebar") && !e.target.closest(".app-toggle-menu")) {
-      setIsOpen(false)
+    if (isOpen && !e.target.closest(".sidebar-container") && !e.target.closest(".toggle-button")) {
+      setIsOpen(false);
     }
   }
 
   useEffect(() => {
-    document.addEventListener("mousedown", closeSidebar)
+    document.addEventListener("click", closeSidebar);
     return () => {
-      document.removeEventListener("mousedown", closeSidebar)
-    }
-  }, [isOpen])
-
-  // 애니메이션 종료 후 버튼 표시
-  const handleTransitionEnd = () => {
-    if (!isOpen) {
-      setShowButton(true)
-    }
-  }
-
-  // 터치 시작 지점 기록
-  const handleTouchStart = (e) => {
-    // touchStartX.current = e.touches[0].clientX; //
-    touchStartY.current = e.touches[0].clientY
-  }
-
-  // 터치 이동 거리 측정
-  const handleTouchMove = (e) => {
-    // touchEndX.current = e.touches[0].clientX; //
-    touchStartY.current = e.touches[0].clientY
-  }
-
-  // 터치 종료 시 스와이프 거리 체크
-  const handleTouchEnd = () => {
-    // const swipeDistance = touchEndX.current - touchStartX.current; //
-    // if (swipeDistance > 100) {
-    //   // 오른쪽으로 스와이프하면 사이드바 열기
-    //   setIsOpen(true);
-    //   setShowButton(false);
-    // } else if (swipeDistance < -100) {
-    //   // 왼쪽으로 스와이프하면 사이드바 닫기
-    //   setIsOpen(false);
-    // }
-
-    const swipeDistance = touchStartY.current - touchEndY.current
-    if (swipeDistance > 100) {
-      setIsOpen(true)
-    } else if (swipeDistance < -100) {
-      setIsOpen(false)
-    }
-  }
-
-  const handleMouseDown = (e) => {
-    // touchStartX.current = e.clientX; //
-    touchStartY.current = e.clientY
-  }
-
-  const handleMouseMove = (e) => {
-    // touchEndX.current = e.clientX; //
-    touchStartY.current = e.clientY
-  }
-
-  const handleMouseUp = () => {
-    // const swipeDistance = touchEndX.current - touchStartX.current; //
-    const swipeDistance = touchStartY.current - touchEndY.current
-    if (swipeDistance > 100) {
-      setIsOpen(true)
-      // setShowButton(false); //
-    } else if (swipeDistance < -100) {
-      setIsOpen(false)
-    }
-  }
+      document.removeEventListener("click", closeSidebar);
+    };
+  }, [isOpen]);
+  
 
   return (
     <>
-      <div
-        className="app-container"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      ></div>
-      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} onTransitionEnd={handleTransitionEnd} />
+      {/* 사이드바를 토글 버튼으로 변경 */}
+      <ToggleButton toggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null}/>
       <AnimatedRoutes userInfo={user} />
-
-      {!shouldHideNavbar && <NavbarBottom />}
     </>
+  );
+};
 
-    // <div className="app-container" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
-    //   {/* 사이드바 */}
-    //   <div className={`sidebar ${isOpen ? "open" : ""}`}>
-    //     <Sidebar isOpen={isOpen} userId={user ? user.userId : null} />
-    //   </div>
 
-    //   {/* 사이드바가 화면 하단에 부분적으로 보이도록 설정 */}
-    //   {/* <div className="app-toggle-menu">
-    //     <span className="toggle-icon">토글아이콘</span>
-    //   </div> */}
-
-    //   {/* Main content */}
-    //   <AnimatedRoutes userInfo={user} />
-    // </div>
-  )
-}
-
-// Animated Routes component
 const AnimatedRoutes = ({ userInfo }) => {
   const location = useLocation()
 
