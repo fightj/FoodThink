@@ -11,22 +11,20 @@
     transition: all 0.5s ease-in-out;
     user-select: none;
     z-index: 2000;
+    color: #271c00;
     font-size: 2rem;
     font-weight: bold;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
   .toggle-button:active {
-    transform: scale(1.1);
-    animation: shake 0.3s ease;
+    animation: growAndShrink 0.7s ease;
   }
-
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-3px); }
-    50% { transform: translateX(3px); }
-    75% { transform: translateX(-3px); }
-    100% { transform: translateX(0); }
+  
+  @keyframes growAndShrink {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
   }
 
   @media screen and (max-width:600px) {
