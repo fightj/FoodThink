@@ -120,6 +120,8 @@
 .recipe-meta{
   font-size: 0.9rem;
   color: #9c9c9c;
+  font-family: 'SOYO Maple Regular';
+  font-weight: bold;
 }
 
 
@@ -133,6 +135,7 @@
   text-overflow: ellipsis;
   width: 100%;
   max-width: 200px;
+  font-family: 'LotteMartDream';
 }
 
 .mypage-recipe-title1 {
@@ -144,6 +147,7 @@
   text-overflow: ellipsis;
   width: 100%;
   max-width: 200px;
+  font-family: 'LotteMartDream';
 }
 
 @media (max-width: 1024px) {

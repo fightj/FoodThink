@@ -14,6 +14,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
 
 /* 피드 작성하기 제목 아이콘 */
@@ -70,6 +71,7 @@ form {
   text-align: center;
   cursor: pointer;
   margin-top: 20px;
+  font-family: 'MangoDdobak-B';
 }
 
 .file-upload img {
@@ -87,6 +89,7 @@ form {
   justify-content: center;
   margin-top: 20px;
   margin-bottom: 20px;
+  font-family: 'omyu_pretty';
 }
 
 /* 참고한 레시피 (02.14) */
@@ -97,6 +100,7 @@ form {
 .button-container {
   display: flex;
   gap: 10px;
+  font-family: 'omyu_pretty';
 }
 
 .close-button {
@@ -134,4 +138,8 @@ form {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  font-family: 'PTBandocheB';
+}
+.context-h5{
+  font-family: "NPSfont_regular";
 }
