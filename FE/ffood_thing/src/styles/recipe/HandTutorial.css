@@ -30,12 +30,12 @@
   border: 2 solid #000000; /* Darker gray border */
   color: black; /* Black text */
   position: absolute;
-  bottom: 16%; /* Adjust as necessary */
+  bottom: 18%; /* Adjust as necessary */
   right: 4%; /* Adjust as necessary */
   z-index: 1009; /* High z-index to be on top */
   padding: 10px 20px; /* Optional padding for better appearance */
   border-radius: 5px; /* Optional rounded corners */
   cursor: pointer; /* Pointer cursor on hover */
   font-family: "MyCustomFont";
-  width: 15%;
+  width: 14%;
 }
