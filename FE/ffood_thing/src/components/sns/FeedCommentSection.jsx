@@ -181,8 +181,6 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
       });
 
       if (response.status === 204) {
-        // window.location.reload(); // Automatically refresh the page after deleting a comment
-        // 댓글 삭제가 성공했으면 localComments 상태에서 해당 댓글을 삭제
         setLocalComments((prevComments) =>
           prevComments.filter((comment) => comment.id !== commentId)
         );
@@ -196,6 +194,24 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
 
   return (
     <div className="comment-div">
+      <div className="comment-input-wrapper">
+        <input
+          type="text"
+          className="comment-input"
+          value={newComment}
+          onChange={handleCommentChange}
+          placeholder="댓글을 입력하세요..."
+        />
+        <div className="btn-background">
+          <img
+            src="/images/up-arrow.png"
+            alt="댓글 추가"
+            className="add-comment-btn-image"
+            onClick={handleAddComment}
+          />
+        </div>
+      </div>
+
       {localComments.length > 0 ? (
         localComments.map((comment) => (
           <div key={comment.id} className="comment">
@@ -216,7 +232,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
                 </div>
               ) : (
                 <div>
-                  <span className="comment-author-name">{comment.username || "Unknown User"}</span>
+                  <p className="comment-author-name">{comment.username || "Unknown User"}</p>
                   <p className="comment-content">{comment.content}</p>
                   <span className="comment-time">{comment.writeTime}</span>
                   {currentUser && comment.userId === currentUser.userId && (
@@ -233,24 +249,6 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
       ) : (
         <p className="no-comments">댓글이 없습니다.</p>
       )}
-
-      <div className="comment-input-wrapper">
-        <input
-          type="text"
-          className="comment-input"
-          value={newComment}
-          onChange={handleCommentChange}
-          placeholder="댓글을 입력하세요..."
-        />
-        <div className="btn-background">
-          <img
-            src="/images/up-arrow.png"
-            alt="댓글 추가"
-            className="add-comment-btn-image"
-            onClick={handleAddComment}
-          />
-        </div>
-      </div>
       {/* 닫기 버튼 제거 -> 위에서 아래로 스와이프로 변경 */}
       {/* <img src="/images/exit-btn.png" alt="닫기 버튼" className="close-button-image" onClick={onClose} /> */}
     </div>
