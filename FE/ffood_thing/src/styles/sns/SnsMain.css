@@ -194,6 +194,25 @@
   }
 }
 
+@media (max-width: 500px) {
+  .row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .col-4 {
+    width: 100%;
+  }
+
+  .user-info img {
+    display: block;
+  }
+
+  .user-info span {
+    display: block;
+  }
+}
+
 .search-result-title {
   text-align: center; /* 텍스트 중앙 정렬 */
   flex-grow: 1; /* 나머지 공간을 차지하게 하여 제목을 중앙에 위치시킴 */
