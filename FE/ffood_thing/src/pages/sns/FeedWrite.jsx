@@ -8,6 +8,8 @@ import "../../styles/sns/FeedWrite.css"
 import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
 import { UserContext } from "../../contexts/UserContext"
 import "../../styles/base/global.css" // 텍스트 문제
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronLeft} from '@fortawesome/free-solid-svg-icons'
 
 function FeedWrite() {
   const navigate = useNavigate()
@@ -261,7 +263,7 @@ function FeedWrite() {
       <div className="card-div">
         <div className="sns-write-header">
           <button onClick={handleBack} className="back-button1">
-            <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
+              <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
           </button>
           <div className="sns-write-title">
             <h2 className="sns-write-title-h2">피드 작성</h2>
@@ -328,3 +330,5 @@ function FeedWrite() {
 }
 
 export default FeedWrite
+
+
