@@ -4,7 +4,7 @@ import axios from "axios"
 import SearchBarRecipe from "../../components/base/SearchBarRecipe"
 import "../../styles/recipe/RecipesMainPage.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import { faChevronUp, faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 import "../../styles/base/global.css" // 백버튼
 
 function useQuery() {
@@ -101,7 +101,7 @@ const RecipeSearchResultPage = () => {
         <div className="card-div">
           <div className="search-page-header">
             <button onClick={() => navigate(-1)} className="back-button">
-              <img src="/images/previous_button.png" alt="Previous" className="icon" />
+              <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
             </button>
             <div className="search-page-text">
               "{searchQuery}"에 대한 검색 결과가 총 {totalResults}개 있습니다.
