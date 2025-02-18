@@ -126,7 +126,7 @@
 }
 
 .ai-image {
-  width: 70%;
+  width: clamp(20rem, 20vw, 30rem);
   height: auto;
   object-fit: contain;
   animation: float 3s infinite ease-in-out;
@@ -149,7 +149,7 @@
   flex-direction: column;
   align-items: center;
   width: 50%;
-  gap: clamp(30px, 3vw, 50px);
+  gap: clamp(3rem, 3vw, 5rem);
 }
 
 /* 대답 버튼 3개 */
@@ -177,6 +177,7 @@
   cursor: pointer;
   text-align: center;
   transition: background 0.3s, transform 0.2s;
+  animation: fadeInScale 0.5s ease-in-out forwards;
 }
 
 .choice-btn:active {
@@ -269,6 +270,8 @@
     width: 100%;
   }
 
+
+
   .answer-section {
     width: 100%;
     align-items: center;
@@ -281,6 +284,12 @@
   .skip-btn,
   .end-btn {
     width: 45%;
+  }
+}
+
+@media (max-width: 780px) {
+  .ai-image {
+    width: 180px;
   }
 }
 
