@@ -118,6 +118,7 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
       if (direction === "다음 페이지") {
         if (currentStepRef.current < totalPages - 1) {
           onNextStep()
+          setSwipeMessage("다음 페이지")
         } else {
           setSwipeMessage("조리가 완료되었습니다")
           onNextPage()
@@ -125,6 +126,7 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
       } else if (direction === "이전 페이지") {
         if (currentStepRef.current > 0) {
           onPrevStep()
+          setSwipeMessage("이전 페이지")
         } else {
           setSwipeMessage("첫 페이지 입니다")
         }
