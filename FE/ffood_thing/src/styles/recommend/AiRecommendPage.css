@@ -9,6 +9,19 @@
   padding: clamp(10px, 3vw, 30px);
 }
 
+.card-div-ai {
+  background-image: url("/images/frame.png"); /* 이미지 경로 설정 */
+  background-size: 97% 96%; /* 이미지를 페이지 크기에 맞게 조절 */
+  background-position: center; /* 이미지를 중앙에 위치 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  width: 100%; /* Occupy the entire horizontal space */
+  height: 100%;
+  display: flex; /* Flexbox 추가 */
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  padding: 2rem;
+}
+
 /* lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll */
 
 /* 🔹 전체 컨테이너 스타일 */
@@ -17,11 +30,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 97%;
   height: 80vh;
   background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
   border-radius: 20px;
-  text-align: center; 
+  text-align: center;
+  margin-left: 3%;
 }
 
 /* 🔹 제목 스타일 */
@@ -120,7 +134,8 @@
 
 /* AI 이미지 부드럽게 움직이는 애니메이션 */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -145,7 +160,6 @@
   gap: 5%;
   width: 100%;
   align-items: center; /* 버튼 중앙 정렬 */
-  
 }
 
 /* 선택 버튼 */
@@ -168,7 +182,6 @@
 .choice-btn:active {
   animation: jellyEffect 0.5s ease-in-out;
 }
-
 
 /* 선택된 답변 카드 */
 .selected-answers {
@@ -265,11 +278,11 @@
     justify-content: center;
   }
 
-  .skip-btn, .end-btn {
+  .skip-btn,
+  .end-btn {
     width: 45%;
   }
 }
-
 
 /* 결과 페이지 전체 레이아웃 (세로 정렬) */
 .ai-result-container {
@@ -291,7 +304,6 @@
   gap: 5%;
 }
 
-
 /* ✅ 메시지 박스 (닉네임 포함) */
 .ai-result-message {
   background-color: #ffcc80; /* 배경색 */
@@ -311,7 +323,6 @@
   justify-content: center;
 }
 
-
 /* 🔹 닉네임 부분만 따로 스타일 적용 */
 .nickname-ellipsis {
   max-width: clamp(30%, 50%, 70%); /* ✅ 반응형으로 닉네임 길이 조정 */
@@ -320,7 +331,6 @@
   text-overflow: ellipsis;
   display: inline-block;
 }
-
 
 /* AI 캐릭터 컨테이너 (오른쪽) */
 .ai-character-container {

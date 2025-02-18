@@ -47,6 +47,10 @@ const CookingDonePage = ({ recipe, handleFeed, onClose, onPrevPage }) => {
     setCapturedImage(null)
     setDefaultImageVisible(true)
     setOverlayVisible(false)
+    if (canvasRef.current) {
+      const context = canvasRef.current.getContext("2d")
+      context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+    }
   }
 
   return (
@@ -55,35 +59,28 @@ const CookingDonePage = ({ recipe, handleFeed, onClose, onPrevPage }) => {
         <h2>맛있는 결과물 완성</h2>
         <div className="comparison-container">
           <div className="cooked-dish-container">
-            {capturedImage ? (
-              <div className="image-frame">
-                <img src={capturedImage} alt="Your Cooked Dish" className="cooked-dish-image" />
-                <canvas ref={canvasRef} className="cooked-dish-canvas" />
-                {overlayVisible && (
-                  <div className="image-overlay">
-                    <button className="overlay-button" onClick={handleFeedWithImage}>
-                      업로드하기
-                      <img src="/images/feedicon.png" alt="나만의 요리 기록하기" className="button-image" />
-                    </button>
-                    <button className="overlay-button" onClick={handleEditImage}>
-                      사진 다시 고르기
-                      <img src="/images/edit-icon.png" alt="이미지 다시 고르기" />
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="image-frame">
-                {defaultImageVisible && (
-                  <>
-                    <img src="/images/camera-icon.png" alt="Camera Icon" className="camera-icon" />
-                    <p className="camera-text">내가 완성한 요리를 사진으로 남겨봐요!</p>
-                  </>
-                )}
-                <input type="file" accept="image/*" capture="environment" onChange={handleImageUpload} className="file-input" />
-                <canvas ref={canvasRef} className="cooked-dish-canvas" />
-              </div>
-            )}
+            <div className="image-frame">
+              {!capturedImage && defaultImageVisible && (
+                <>
+                  <img src="/images/camera-icon.png" alt="Camera Icon" className="camera-icon" />
+                  <p className="camera-text">내가 완성한 요리를 사진으로 남겨봐요!</p>
+                </>
+              )}
+              <input type="file" accept="image/*" capture="environment" onChange={handleImageUpload} className="file-input" />
+              <canvas ref={canvasRef} className="cooked-dish-canvas" />
+              {capturedImage && overlayVisible && (
+                <div className="image-overlay">
+                  <button className="overlay-button" onClick={handleFeedWithImage}>
+                    업로드하기
+                    <img src="/images/feedicon.png" alt="나만의 요리 기록하기" className="button-image" />
+                  </button>
+                  <button className="overlay-button" onClick={handleEditImage}>
+                    사진 다시 고르기
+                    <img src="/images/edit-icon.png" alt="이미지 다시 고르기" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="back-to-recipe-button" onClick={onPrevPage}>

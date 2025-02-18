@@ -15,25 +15,30 @@
 }
 
 header {
-  flex-shrink: 0; /* 헤더가 크기를 줄이지 않도록 설정 */
-  padding: 1%;
-  text-align: left; /* 좌측 정렬 */
-  padding-left: 2em; /* 좌측 여백 추가 */
-}
-
-.info-badge-div {
   display: flex;
-  align-items: center; /* 이미지가 제목과 수직 중앙에 정렬 */
+  flex-wrap: nowrap; /* Prevent wrapping of children */
+  align-items: center; /* Vertical alignment */
+  justify-content: space-between; /* Ensures proper spacing between elements */
+  padding: 1%;
+  text-align: left; /* Ensures child elements have their own text alignment */
+  padding-left: 2em; /* Left padding */
 }
 
 .info-badge-div img {
-  width: 40%;
-  margin-left: 40%;
+  display: flex;
+  align-items: center; /* 이미지가 제목과 수직 중앙에 정렬 */
+  width: 10%;
+  border-radius: 10px;
+  position: absolute;
+  top: 5%;
+  left: 10%;
 }
 
 .recipe-info-details {
-  display: flex; /* flexbox를 사용하여 이미지와 제목을 나란히 배치 */
-  align-items: center;
+  flex: 1; /* Flexibly grow to use available space */
+  display: flex;
+  justify-content: center; /* Horizontal alignment */
+  align-items: center; /* Vertical alignment */
   width: 88%;
   margin-top: 5%;
 }
@@ -46,10 +51,11 @@ header {
   box-sizing: border-box; /* 패딩을 포함한 전체 너비 계산 */
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1; /* 최대 한 줄까지만 표시 */
-  -webkit-box-orient: vertical; /* 수직 박스 오리엔트 설정 */
-  text-align: left; /* 좌측 정렬 */
+  white-space: nowrap; /* Prevent text from wrapping to the next line */
+  width: 100%; /* Adjust this width if necessary */
+  max-width: 20ch; /* Set the maximum width to 15 characters */
+  display: inline-block;
+  text-align: center;
 }
 
 .recipe-details {
@@ -135,7 +141,13 @@ header {
 }
 
 .info-ingredient-item {
-  flex: 0 0 50%; /* Each item takes up 50% of the width */
+  flex: 0 0 50%; /* 각 아이템의 너비를 50%로 설정 */
   box-sizing: border-box;
   padding: 5px;
+  overflow: hidden; /* 내용이 넘칠 경우 숨기기 */
+  display: -webkit-box; /* 플렉스박스 형식 설정 */
+  -webkit-line-clamp: 2; /* 최대 2줄까지만 표시 */
+  -webkit-box-orient: vertical; /* 플렉스 방향을 수직으로 설정 */
+  text-overflow: ellipsis; /* 넘치는 텍스트는 ...으로 표시 */
+  white-space: normal; /* 줄 바꿈을 허용 */
 }
