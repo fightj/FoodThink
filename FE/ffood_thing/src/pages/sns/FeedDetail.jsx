@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import FeedCommentSection from "../../components/sns/FeedCommentSection"
 import "../../styles/sns/FeedDetail.css"
@@ -60,6 +60,7 @@ function FeedDetail() {
   };
 
   useEffect(() => {
+
     const fetchFeedData = async () => {
       try {
         const token = localStorage.getItem("accessToken")
@@ -101,13 +102,21 @@ function FeedDetail() {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
   }
 
-  const toggleComments = () => {
+  const toggleComments = (e) => {
+    e.stopPropagation();
     setShowComments(!showComments)
   }
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown)
   }
+
+  const handleClickOutsideComments = (e) => {
+    // 댓글 영역을 제외한 부분을 클릭하면 닫히도록 처리
+    if (!e.target.closest(".comment-slide")) {
+      setShowComments(false);
+    }
+  };
 
   const handleDelete = () => {
     Swal.fire({
@@ -215,7 +224,7 @@ function FeedDetail() {
   }
 
   return (
-    <div className="base-div">
+    <div className="base-div" onClick={handleClickOutsideComments}>
       <div className="card-div">
         {/* 뒤로가기 버튼 */}
         <button onClick={() => navigate(-1)} className="sns-detail-back-button">
@@ -313,6 +322,7 @@ function FeedDetail() {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
+            onClick={(e) => e.stopPropagation()}
             >
             <FeedCommentSection comments={comments} onClose={toggleComments} onAddComment={handleAddComment} feedId={id} />
           </motion.div>

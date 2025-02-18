@@ -30,8 +30,8 @@
 }
 
 .profile-image-com {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.7rem;
+  height: 2.7rem;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
@@ -53,14 +53,18 @@
 /* 댓글 작성자 닉네임 */
 .comment-author-name {
   color: #ffffff;
+  font-style: bold;
+  font-size: 1.1rem;
+  margin: 0;
+  text-decoration: underline;
 }
 
 /* 댓글 내용 */
 .comment-content {
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: #ffffff;
   margin-top: 0.2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .comment-time {
@@ -90,10 +94,10 @@
 .comment-input-wrapper {
   display: flex;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 1rem;
   align-items: center;
   justify-content: center;
-  padding-bottom: 8rem;
+  padding-bottom: 1.2rem;
   gap: 1rem;
 }
 
@@ -134,10 +138,6 @@
 }
 
 @media (max-width:800px) {
-  .comment-input-wrapper {
-    margin-bottom: 19rem;
-  }
-
   .profile-image-com {
     width: 2rem;
     height: 2rem;
