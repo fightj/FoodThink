@@ -11,7 +11,7 @@ function LoginPage() {
 
   return (
     <div className="base-div">
-      <div className="parent-container">
+      <div className="parent-container"> 
         <div className="card-div">
           <div className="content-wrapper">
             <h2>Food Think</h2>
