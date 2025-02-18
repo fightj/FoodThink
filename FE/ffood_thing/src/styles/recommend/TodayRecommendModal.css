@@ -155,6 +155,21 @@
   min-width: 0;
   
 }
+
+.icon-close {
+  color: #fe8686;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2.2rem;
+}
+
+.icon-refresh {
+  color: #8a86fe;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2.2rem;
+}
+
 /* 📌반응형: 태블릿 세로 버전 */
 @media (max-width: 800px) {
   .today-recommend-card {
@@ -388,6 +403,19 @@
     height:70%;
     margin-top: 5%;
   }
+  .icon-close,
+  .icon-refresh {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  } 
+}
+
+@media screen and (max-width:500px) {
+  .icon-close,
+  .icon-refresh {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }  
 }
 
 
