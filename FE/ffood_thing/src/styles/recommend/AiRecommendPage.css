@@ -9,6 +9,19 @@
   padding: clamp(10px, 3vw, 30px);
 }
 
+.card-div-ai {
+  background-image: url("/images/frame.png"); /* 이미지 경로 설정 */
+  background-size: 97% 96%; /* 이미지를 페이지 크기에 맞게 조절 */
+  background-position: center; /* 이미지를 중앙에 위치 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  width: 100%; /* Occupy the entire horizontal space */
+  height: 100%;
+  display: flex; /* Flexbox 추가 */
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  padding: 2rem;
+}
+
 /* lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll */
 
 /* 🔹 전체 컨테이너 스타일 */
@@ -17,20 +30,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 97%;
   height: 80vh;
   background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
   border-radius: 20px;
-  text-align: center; 
+  text-align: center;
+  margin-left: 3%;
 }
 
 /* 🔹 제목 스타일 */
 .start-title {
   font-size: clamp(3.5rem, 5vw, 4.5rem); /* 화면 크기에 따라 유동적인 크기 */
-  font-weight: bold;
   margin-bottom: 10px;
   padding-bottom: 5%;
   width: 70%;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
 
 /* 🔹 설명 스타일 */
@@ -40,6 +54,7 @@
   opacity: 0.9;
   margin-bottom: 20px;
   width: 80%;
+  font-family: 'PTBandocheB';
 }
 
 /* 🔹 버튼 스타일 */
@@ -54,6 +69,7 @@
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  font-family: "MyCustomFont";
 }
 
 /* 🔹 버튼 클릭 효과 */
@@ -92,6 +108,7 @@
   width: auto;
   max-width: 90%; /* ✅ 너무 커지지 않도록 제한 */
   margin-top: 2%;
+  font-family: 'Binggrae';
 }
 
 /* ✅ AI 캐릭터 + 대답 컨테이너 */
@@ -112,7 +129,7 @@
 }
 
 .ai-image {
-  width: 70%;
+  width: clamp(20rem, 20vw, 30rem);
   height: auto;
   object-fit: contain;
   animation: float 3s infinite ease-in-out;
@@ -120,7 +137,8 @@
 
 /* AI 이미지 부드럽게 움직이는 애니메이션 */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -134,7 +152,7 @@
   flex-direction: column;
   align-items: center;
   width: 50%;
-  gap: clamp(30px, 3vw, 50px);
+  gap: clamp(3rem, 3vw, 5rem);
 }
 
 /* 대답 버튼 3개 */
@@ -145,7 +163,6 @@
   gap: 5%;
   width: 100%;
   align-items: center; /* 버튼 중앙 정렬 */
-  
 }
 
 /* 선택 버튼 */
@@ -163,12 +180,13 @@
   cursor: pointer;
   text-align: center;
   transition: background 0.3s, transform 0.2s;
+  animation: fadeInScale 0.5s ease-in-out forwards;
+  font-family: 'SOYO Maple Regular';
 }
 
 .choice-btn:active {
   animation: jellyEffect 0.5s ease-in-out;
 }
-
 
 /* 선택된 답변 카드 */
 .selected-answers {
@@ -180,6 +198,7 @@
   background: #fff7e0;
   border-radius: 8px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'PTBandocheB';
 }
 
 /* ✅ 개별 답변 카드 */
@@ -231,6 +250,7 @@
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
   width: 12%;
+  font-family: 'PTBandocheB';
 }
 
 .end-btn {
@@ -243,6 +263,7 @@
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
   width: 12%;
+  font-family: 'PTBandocheB';
 }
 
 /* ✅ 반응형 디자인 (태블릿 및 모바일 최적화) */
@@ -256,6 +277,8 @@
     width: 100%;
   }
 
+
+
   .answer-section {
     width: 100%;
     align-items: center;
@@ -265,11 +288,17 @@
     justify-content: center;
   }
 
-  .skip-btn, .end-btn {
+  .skip-btn,
+  .end-btn {
     width: 45%;
   }
 }
 
+@media (max-width: 780px) {
+  .ai-image {
+    width: 180px;
+  }
+}
 
 /* 결과 페이지 전체 레이아웃 (세로 정렬) */
 .ai-result-container {
@@ -291,7 +320,6 @@
   gap: 5%;
 }
 
-
 /* ✅ 메시지 박스 (닉네임 포함) */
 .ai-result-message {
   background-color: #ffcc80; /* 배경색 */
@@ -309,8 +337,8 @@
   overflow: hidden;
   text-overflow: ellipsis; /* ✅ 닉네임이 길면 ... 처리 */
   justify-content: center;
+  font-family: 'Binggrae';
 }
-
 
 /* 🔹 닉네임 부분만 따로 스타일 적용 */
 .nickname-ellipsis {
@@ -320,7 +348,6 @@
   text-overflow: ellipsis;
   display: inline-block;
 }
-
 
 /* AI 캐릭터 컨테이너 (오른쪽) */
 .ai-character-container {
@@ -380,6 +407,7 @@
   font-weight: bold;
   padding: 10px;
   color: #333;
+  font-family: 'LotteMartDream';
 }
 
 /* ✅ 모바일 최적화 */

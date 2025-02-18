@@ -410,7 +410,7 @@ const ProfileHeaderMe = () => {
 
           {/* 회원 탈퇴 버튼 */}
           <div className="profile-actions">
-            <button className="btn btn-danger delete-btn" onClick={handleDeleteAccount}>
+            <button className="delete-btn" onClick={handleDeleteAccount}>
               회원 탈퇴
             </button>
           </div>

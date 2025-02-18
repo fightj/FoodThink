@@ -6,6 +6,8 @@ import { HTML5Backend } from "react-dnd-html5-backend"
 import { TouchBackend } from "react-dnd-touch-backend"
 import "../../styles/recipe/RecipeWritePage.css"
 import "../../styles/base/global.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPlus, faX, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 
 const ItemType = "STEP"
 
@@ -90,7 +92,7 @@ const Step = ({ step, index, moveStep, updateStepText, handleStepImageUpload, re
         />
       </div>
       <button className="recipe-write-step-remove-btn" onClick={() => removeStep(index)}>
-        <img src="/images/close_icon.png" alt="삭제"/>
+        ❌
       </button>
     </div>
   );
@@ -349,7 +351,7 @@ function RecipeWritePage() {
         <div className="card-div">
             <div className="recipe-write-header">
               <button onClick={() => navigate(-1)} className="back-button">
-                <img src="/images/previous_button.png" alt="Previous" className="icon" />
+                <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
               </button>
               <div className="recipe-write-page-title">나만의 레시피 만들기&nbsp;
                 <img src="/images/끼쟁이.png" />
@@ -465,7 +467,7 @@ function RecipeWritePage() {
                     <>
                       <img src={URL.createObjectURL(imageFile)} alt="요리 대표 이미지" className="recipe-write-main-uploaded-image" />
                       <button className="recipe-write-main-image-remove-btn" onClick={removeImage}>
-                        ✖
+                      ❌
                       </button>
                     </>
                   ) : (
@@ -506,7 +508,7 @@ function RecipeWritePage() {
                         }}
                       />
                       <button className="recipe-write-ingre-remove-btn" onClick={() => removeIngredient(index)}>
-                        <img src="/images/close_icon.png"/>
+                      ❌
                       </button>
                     </div>
                   ))}
@@ -514,7 +516,7 @@ function RecipeWritePage() {
               </div>
               <div className="recipe-write-ingre-add-btn-wrapper">
                 <button className="recipe-write-ingre-add-btn" onClick={addIngredient}>
-                  <img src="/images/add_circle.png" />
+                  ➕
                 </button>
               </div>
             </div>
@@ -538,7 +540,7 @@ function RecipeWritePage() {
               {/* 추가 버튼 */}
               <div className="recipe-write-step-add-btn-wrapper">
                 <button className="recipe-write-step-add-btn" onClick={addStep}>
-                  <img src="/images/add_circle.png" alt="추가" />
+                  ➕
                 </button>
               </div>
             </div>
@@ -558,10 +560,10 @@ function RecipeWritePage() {
               </label>
             </div>
             <button className="recipe-write-save-btn" onClick={() => saveRecipe(isPublic)}>
-              저장
+            ⭐ 저장
             </button>
             <button className="recipe-write-cancel-btn" onClick={handleCancel}>
-              취소
+            🔙 취소
             </button>
           </div>
 

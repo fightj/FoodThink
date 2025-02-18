@@ -6,8 +6,10 @@
   margin-bottom: 1rem; /* ✅ 하단 여백 */
 }
 
-.back-button {
-  align-self: flex-start; /* ✅ 모바일에서도 왼쪽 정렬 유지 */
+.recipe-detail-back-button {
+  align-self: flex-start;
+  background: none;
+  border: none;
 }
 
 
@@ -18,7 +20,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.2rem;
   padding: 0.5rem 1rem;
   /* 크기 자동 조정 */
   display: flex;
@@ -26,6 +28,7 @@
   align-items: center;
   white-space: nowrap;
   margin-left: 0.7rem;
+  font-family: 'omyu_pretty';
 }
 
 .write-recipe-button5 {
@@ -61,6 +64,8 @@
   padding: 0.5rem 1rem 1rem 1rem;
   border-radius: 10rem;
   white-space: nowrap;
+  font-family: 'Binggrae';
+  font-weight: 600;
 }
 
 .category-items2 {
@@ -70,6 +75,9 @@
   /* justify-content: center; */
   align-items: center;
   text-align: center;
+  font-family: "Dovemayo_gothic";
+  font-weight: 500;
+  font-size: 20px;
 }
 
 .category-item2,
@@ -112,6 +120,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   padding: 2rem 1rem 0rem 1rem;
+  font-family: "NPSfont_regular";
 }
 
 .carousel2 {
@@ -187,8 +196,10 @@
 }
 
 .popular-hit-eye-count {
-  font-size: 1rem; /* 폰트 크기 설정 */
-  color: black; /* 폰트 색상 설정 */
+  font-size: 1rem;
+  color: black; 
+  font-family: 'SOYO Maple Regular';
+  font-weight: bold;
 }
 
 .popular-card-info {
@@ -206,12 +217,15 @@
   text-overflow: ellipsis;
   line-height: 1.2rem; /* 줄 간격 조정 */
   height: 3rem; /* 정확하게 2줄을 차지하도록 고정 */
+  font-family: 'LotteMartDream';
 }
 
 .main-sort-filters {
   display: flex;
   justify-content: right;
   margin: 1rem 0;
+  font-family: 'omyu_pretty';
+  font-size: 20px;
 }
 
 .main-sort-filter {
@@ -319,12 +333,15 @@
   -webkit-box-orient: vertical;
   text-overflow: ellipsis; /* 넘치는 내용 ...으로 표시 */
   white-space: normal;
-
+  
+  font-family: 'LotteMartDream';
 }
 
 .main-profile-stats {
   font-size: 0.9rem;
   color: #9c9c9c;
+  font-family: 'SOYO Maple Regular';
+  font-weight: bold;
 }
 
 .main-page-bookmark-icon {
@@ -343,6 +360,7 @@
 .main-recipe-text {
   margin-top: 5vh;
   font-size: 2rem;
+  font-family: 'IM_Hyemin-Bold';
 }
 
 .search-page-header {
@@ -369,25 +387,28 @@
 .search-page-text {
   width: 85%;
   text-align: right;
+  font-family: 'PTBandocheB';
 }
 
 .recipe-main-page-scroll-to-top-div {
   position: fixed;
-  bottom: 20px;
-  right: 45px;
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
+  bottom: 2rem;
+  right: 4.5rem;
+  background-color: #ff7f00;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-radius: 50%;
-  width: 60px;  /* 원의 크기 */
-  height: 60px; /* 원의 크기 */
-  padding: 10px; /* 아이콘과 텍스트를 위한 패딩 */
-  z-index: 2000;
+  width: 4rem;
+  height: 4rem;
+  padding: 10px;
+  z-index: 1000;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease-in-out;
 }
 
 .recipe-main-page-scroll-to-top-btn .recipe-main-page-top-text {

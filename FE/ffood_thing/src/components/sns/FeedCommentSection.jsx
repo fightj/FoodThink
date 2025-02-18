@@ -202,14 +202,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
           onChange={handleCommentChange}
           placeholder="댓글을 입력하세요..."
         />
-        <div className="btn-background">
-          <img
-            src="/images/up-arrow.png"
-            alt="댓글 추가"
-            className="add-comment-btn-image"
-            onClick={handleAddComment}
-          />
-        </div>
+        <button className="add-comment-button" onClick={handleAddComment}>🚀</button>
       </div>
 
       {localComments.length > 0 ? (
@@ -225,10 +218,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
                     value={editingCommentContent}
                     onChange={handleEditCommentChange}
                   />
-                  <div>
-                    <button className="update-comment-button" onClick={() => handleUpdateComment(comment.id)}>수정</button>
-                    <button className="update-comment-button" onClick={() => setEditingCommentId(null)}>취소</button>
-                  </div>
+                  <button className="update-comment-button" onClick={() => handleUpdateComment(comment.id)}>✏️ 수정 완료</button>
                 </div>
               ) : (
                 <div>
@@ -237,8 +227,8 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
                   <span className="comment-time">{comment.writeTime}</span>
                   {currentUser && comment.userId === currentUser.userId && (
                     <div className="comment-actions">
-                      <button onClick={() => handleEditComment(comment.id, comment.content)}>수정</button>
-                      <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
+                      <button className="update-comment-button" onClick={() => handleEditComment(comment.id, comment.content)}>✏️ 수정</button>
+                      <button className="delete-comment-button" onClick={() => handleDeleteComment(comment.id)}>🗑️ 삭제</button>
                     </div>
                   )}
                 </div>
@@ -247,7 +237,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
           </div>
         ))
       ) : (
-        <p className="no-comments">댓글이 없습니다.</p>
+        <p className="no-comments">📌 댓글이 없습니다. 😯</p>
       )}
       {/* 닫기 버튼 제거 -> 위에서 아래로 스와이프로 변경 */}
       {/* <img src="/images/exit-btn.png" alt="닫기 버튼" className="close-button-image" onClick={onClose} /> */}

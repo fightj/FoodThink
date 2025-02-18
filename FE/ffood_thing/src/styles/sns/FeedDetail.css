@@ -71,6 +71,7 @@
 .sns-username {
   font-size: 2rem; /* 사용자 이름의 폰트 크기 설정 */
   font-weight: bold;
+  font-family: 'SOYO Maple Regular';
 }
 
 .image-container1 {
@@ -118,6 +119,10 @@
 .description {
   font-size: 1rem;
   margin-bottom: 20px;
+  font-family: 'KCC-Hanbit';
+}
+.description strong{
+  font-family: 'SOYO Maple Regular';
 }
 
 .comment-author {
@@ -201,6 +206,12 @@
   display: inline-flex;
   align-items: center;
 }
+.comment-button span{
+  font-family: 'KCC-Hanbit';
+}
+.likes-comments span{
+  font-family: 'KCC-Hanbit';
+}
 
 .comment-button img {
   width: 50px;
@@ -238,8 +249,8 @@ hr {
 
 /* 피드 수정 및 삭제 관련 */
 .edit-button1 {
-  width: 40px;
-  height: 40px;
+  width: 2rem;
+  height: 2rem;
   background: none;
   border: none;
   padding: 0;
@@ -270,16 +281,18 @@ hr {
 }
 
 .dropdown-item {
-  font-size: 1.2em;
+  font-size: 1.45em;
+  text-align: center;
   padding: 10px 12px;
   cursor: pointer;
   white-space: nowrap;
   touch-action: manipulation;
   display: block;
+  font-family: 'omyu_pretty';
 }
 
 .dropdown-item:active {
-  background: #ffaaaa; /* 클릭할 때 색상 변경 */
+  background: #fef6ff; /* 클릭할 때 색상 변경 */
 }
 
 
@@ -308,29 +321,36 @@ hr {
 
 .hash-tage-recipe-name {
   color: #044778;
+  font-family: 'LotteMartDream';
 }
 
 .recipe-tooltip {
-  /* 오른쪽 정렬 하고 싶으면 아래 것 */
-  /* float: right; */
-  padding: 0.3rem;
-  background-color: #8c9f58;
+  float: right;
+  padding: 0.6rem;
+  padding-right: 1rem;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #b3c77e, #8c9f58);
   color: white;
-  border-radius: 30px;
-  max-width: 9rem;
-  text-align: center;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
   z-index: 10;
 }
 
 .recipe-tooltip:active {
-  background-color: #e0ecbb;
-  color: #8c9f58;
+  background: linear-gradient(135deg, #8c9f58, #b3c77e);
+  transform: scale(1.05);
 }
 
 /* 참고한 레시피 */
 .recipe-tooltip p {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.6rem;
+  font-family: 'omyu_pretty';
 }
 
 /* 댓글 토글 위치 조정 문제 */
@@ -380,6 +400,7 @@ hr {
 
   .sns-username {
     font-size: 1.3rem;
+    
     /* font-weight: bold; */
   }
 
@@ -396,7 +417,7 @@ hr {
   }
 
   .edit-button1 {
-    width: 1.5rem;
+    width: 1.3rem;
   }
 
   .likes-comments img {
@@ -422,7 +443,7 @@ hr {
   }
   
   .recipe-tooltip {
-    max-width: 6rem;
+    max-width: 10rem;
   }
 
   .carousel-image {

@@ -1,0 +1,62 @@
+.first-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 전체 화면 높이 */
+  background-color: rgba(0, 0, 0, 0.7); /* 배경 어둡게 */
+}
+
+.tutorial-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  text-align: center;
+}
+
+.tutorial-content img {
+  max-width: 80%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.button-container button {
+  flex: 1;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button-container button:first-child {
+  background-color: #4caf50;
+  color: white;
+  margin-right: 10px;
+}
+
+.button-container button:first-child:hover {
+  background-color: #45a049;
+}
+
+.button-container button:last-child {
+  background-color: #ccc;
+  color: black;
+}
+
+.button-container button:last-child:hover {
+  background-color: #bbb;
+}

@@ -6,7 +6,7 @@ import "../../styles/recipe/RecipesMainPage.css"
 import SearchBarRecipeMain from "../../components/base/SearchBarRecipeMain"
 import AnniversaryApiModal from "../../components/anniversary/anniversaryApiModal"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import { faChevronUp, faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 
 const RecipesMainPage = () => {
   const navigate = useNavigate()
@@ -165,7 +165,8 @@ const RecipesMainPage = () => {
             {isCategoryListVisible ? "카테고리 닫기 ⩓" : "카테고리 열기 ⩔"}
           </button>
           <button href="/recipes/write" className="new-write-button" onClick={() => navigate("/recipes/write")}>
-            <img src="/images/feed_write_button.png" alt="Recipe 작성" className="icon" />
+          <FontAwesomeIcon icon={faPenToSquare} className="recipe-write-button" />
+            {/* <img src="/images/feed_write_button.png" alt="Recipe 작성" className="icon" /> */}
           </button>
         </div>
 

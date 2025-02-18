@@ -1,92 +1,80 @@
 /* ======== 전체 사이드바 컨테이너 ======== */
 .sidebar-container {
   position: fixed;
-  bottom: -100%;
-  left: 2rem;
-  max-height: calc(100vh - 40px);
-  width: 220px;
+  bottom: 6rem;
+  left: -101%;
+  margin-bottom: 1rem;
+  width: 12rem;
   z-index: 900;
-  transition: bottom 0.4s ease-in-out;
+  transition: left 0.4s ease-in-out;
 }
 
 .sidebar-container.show {
-  bottom: 6rem;
+  left: 4rem;
   z-index: 1001;
 }
 
 /* ======== 기본 사이드바 스타일 ======== */
 .sidebar {
   position: relative;
-  background-color: #343a40;
+  background-color: rgb(255, 238, 196); 
   border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 0.3rem;
+  box-shadow: 0 4px 10px rgba(87, 87, 87, 0.2);
   transition: transform 0.3s ease-in-out;
   z-index: 1000;
 }
 
 .sidebar .home-link {
   display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  color: white;
-  text-decoration: none;
-  font-size: 1.2rem;
+  color: #372800;
+  font-size: 1.5rem;
+  padding-top: 0.5rem;
 }
 
 .sidebar .nav-list {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.sidebar .nav-list li {
-  margin: 5px 0;
+  font-family: 'PTBandocheB';
 }
 
 .sidebar .nav-list li a {
-  color: white;
+  color: #372800;
   text-decoration: none;
-  padding: 10px;
+  padding: 0.5rem;
   display: block;
-  border-radius: 5px;
-  transition: background 0.2s;
-}
-
-.sidebar .nav-list li a:hover {
-  background: rgba(255, 255, 255, 0.1);
 }
 
 /* ======== 프로필 버튼 스타일 ======== */
 .profile-button {
   background: none;
   border: none;
-  cursor: pointer;
   display: flex;
   align-items: center;
   width: 100%;
   text-align: left;
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-  transition: background 0.2s;
+  color: #372800;
+  padding: 0.5rem;
+  padding-top: 0;
+  font-family: 'PTBandocheB';
 }
-
-.profile-button:hover {
-  background: rgba(255, 255, 255, 0.1);
+.profile-button strong{
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .profile-img {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 0.8rem;
 }
 
 /* ✅ 드롭다운 아이콘 스타일 */
 .dropdown-arrow {
-  margin-left: auto; /* 오른쪽 끝 정렬 */
-  font-size: 20px;
+  margin-left: auto;
+  font-size: 1.5rem;
   transition: transform 0.3s ease-in-out;
 }
 
@@ -99,51 +87,97 @@
 .profile-dropdown {
   position: absolute;
   top: 0;
-  left: 0; 
-  width: 220px;
-  background-color: #343a40;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  left: -4%; 
+  width: 12rem;
+  background-color: rgb(255, 238, 196);
+  border-radius: 0 10px 10px 0;
+  padding: 0.3rem;
   transform: translateX(0);
-  z-index: 800; /* 처음에는 사이드바 뒤에 숨겨짐 */
+  z-index: 800;
   transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
-  opacity: 0; /* 기본적으로 숨김 */
+  opacity: 0;
   visibility: hidden;
-  
 }
 
 .profile-dropdown.open {
-  transform: translateX(220px); /* 오른쪽으로 이동 */
+  transform: translateX(12rem);
   z-index: 1002; /* 사이드바보다 앞쪽으로 배치 */
   opacity: 1;
   visibility: visible;
+  font-family: 'PTBandocheB';
 }
 
 .profile-dropdown a {
   display: block;
-  color: white;
-  padding: 8px 12px;
+  color: #372800;
+  padding: 0.5rem 1rem;
   text-decoration: none;
-  border-radius: 5px;
-  transition: background 0.2s;
-}
-
-.profile-dropdown a:hover {
-  background: rgba(255, 255, 255, 0.1);
 }
 
 .home-link {
   display: flex;
   align-items: center; /* ✅ 세로 중앙 정렬 */
   width: 100%; /* 부모 요소의 전체 너비 사용 */
-  height: 40px; /* 필요에 따라 높이 지정 */
   text-align: left; /* ✅ 가로 정렬 (왼쪽 정렬) */
-  font-size: 20px; /* ✅ 글자 크기 조절 */
-  font-weight: bold; /* ✅ 글자 두껍게 */
+  /* font-size: 3rem; */
+  font-weight: bold;
   text-decoration: none; /* 링크 밑줄 제거 */
-  color: white; /* ✅ 글자 색상 */
-  padding-left: 15px; /* ✅ 왼쪽 여백 추가 (바짝 붙지 않도록) */
+  color: #372800; /* ✅ 글자 색상 */
+  padding-left: 0.8rem;
+  font-family: 'PTBandocheB';
 }
 
+.profile-dropdown hr {
+  margin: 0.2rem;
+}
 
+.home-icon {
+  margin-right: 0.5rem;
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.login-btn {
+  display: flex;
+  width: 100%;
+  color: #372800; /* ✅ 글자 색상 */
+  padding-bottom: 0.8rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+@media screen and (max-width:1000px) {
+  .sidebar-container {
+    bottom: 1rem;
+  }
+  .sidebar-container.show {
+    left: 9rem;
+  }
+  .profile-dropdown.open {
+    left: -5%;
+    max-width: 11rem;
+  }
+}
+
+@media screen and (max-width:600px) {
+  .sidebar-container {
+    bottom: 1rem;
+  }
+  
+  .sidebar-container.show {
+    left: 5rem;
+  }
+
+  .sidebar {
+    max-width: 10rem;
+  }
+
+  .profile-dropdown.open {
+    left: -20%;
+    max-width: 9rem;
+  }
+}

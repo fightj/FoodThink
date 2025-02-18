@@ -1,31 +1,24 @@
-import { useState, useEffect, useRef, useContext } from "react"
+import { useState, useEffect, useContext, Fragment } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { UserContext } from "../../contexts/UserContext"
-import RecipeComponent from "../../components/recipe/RecipeComponent"
-import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
-import SearchBar from "../../components/base/SearchBar"
+import Logo from "../../components/base/Logo"
 import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
-import "../../styles/base/global.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import { faChevronUp, faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 import "../../styles/base/global.css"
 
 const RecipeDetailPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { user, setUser } = useContext(UserContext)
+  const { user } = useContext(UserContext)
   const [recipe, setRecipe] = useState(null)
-  const [showModal, setShowModal] = useState(false)
-  const [currentStep, setCurrentStep] = useState(0)
-  const [activeSection, setActiveSection] = useState("ingredients")
+  const [feedData, setFeedData] = useState([])
+  const [activeTab, setActiveTab] = useState("ingredients") // 🔥 선택된 탭 상태 관리
   const [isBookmarked, setIsBookmarked] = useState(false)
-
-  const ingredientsRef = useRef(null)
-  const stepsRef = useRef(null)
-  const completedRef = useRef(null)
-  const feedRef = useRef(null)
+  const [showModal, setShowModal] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -80,38 +73,29 @@ const RecipeDetailPage = () => {
     fetchRecipe()
   }, [id, navigate, user])
 
+  const fetchFeedData = async () => {
+    try {
+      const response = await axios.get(`https://i12e107.p.ssafy.io/api/feed/read/inRecipe/${id}`)
+      console.log("불러온 Feed 데이터:", response.data) // 🔥 API 응답 데이터 확인
+      setFeedData(response.data)
+    } catch (error) {
+      console.error("Feed 데이터를 불러오는 중 오류 발생:", error)
+    }
+  }
+
   useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.6,
+    if (activeTab === "feed") {
+      fetchFeedData() // ✅ Feed 탭이 활성화될 때만 호출
     }
-
-    const handleIntersection = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id)
-        }
-      })
-    }
-
-    const observer = new IntersectionObserver(handleIntersection, options)
-
-    if (ingredientsRef.current) observer.observe(ingredientsRef.current)
-    if (stepsRef.current) observer.observe(stepsRef.current)
-    if (completedRef.current) observer.observe(completedRef.current)
-    if (feedRef.current) observer.observe(feedRef.current)
-
-    return () => {
-      if (ingredientsRef.current) observer.unobserve(ingredientsRef.current)
-      if (stepsRef.current) observer.unobserve(stepsRef.current)
-      if (completedRef.current) observer.unobserve(completedRef.current)
-      if (feedRef.current) observer.unobserve(feedRef.current)
-    }
-  }, [])
+  }, [activeTab, id]) // ✅ id도 의존성에 추가 (레시피가 변경될 수도 있음)
 
   if (!recipe) {
     return <div>Loading...</div>
+  }
+
+  // ✅ 탭을 클릭하면 해당 탭만 보이도록 설정
+  const handleTabClick = (tab) => {
+    setActiveTab(tab)
   }
 
   // 북마크 상태가 변경될 때 로컬 스토리지 업데이트
@@ -229,80 +213,108 @@ const RecipeDetailPage = () => {
     }
   }
 
-  const scrollToSection = (section) => {
-    setActiveSection(section)
-    document.getElementById(section).scrollIntoView({ behavior: "smooth" })
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown)
   }
 
   // 페이지 맨 위로 스크롤하는 함수
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth"})
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   return (
     <div className="base-div">
-      <SearchBar />
-      {/* <div className="parent-container"> */}
+      <Logo />
+
       <div className="card-div">
-        <div style={{ width: "90%", margin: "0 auto" }}>
-          <button onClick={() => navigate(-1)} className="back-button">
-            <img src="/images/previous_button.png" alt="Previous" className="icon" />
-          </button>
-          <div style={{ display: "flex", gap: "2rem", marginBottom: "100px" }}>
-            <div className="recipe-main-images" style={{ flex: "0 0 60%", position: "relative" }}>
-              <img src={recipe.image} alt="Recipe Image" className="recipe-image1" />
-              <button className="bookmark-icon-btn" onClick={handleBookmarkClick}>
-                <img src={isBookmarked ? "/images/do-Bookmark.png" : "/images/undo-Bookmark.png"} alt="북마크 아이콘" className="bookmark-icon" />
-              </button>
-              <div className="hit-eye-icon-area">
-                <img src="/images/hit-eye.png" alt="" className="hit-eye-icon" />
-                <p>{recipe.hits}</p>
+        <div className="recipe-detail-container">
+          <div className="recipe-back-edit-delete">
+            <button onClick={() => navigate(-1)} className="recipe-detail-back-button">
+                      <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
+                    </button>
+            {/* <button onClick={() => navigate(-1)} className="back-button">
+              <img src="/images/previous_button.png" alt="Previous" className="icon" />
+            </button> */}
+            {user && user.nickname === recipe.nickname && (
+              <div className="edit-container">
+                <button className="edit-button1" onClick={toggleDropdown}>
+                  <img src="/images/etc-btn.png" alt="Edit Options1" />
+                </button>
+                {showDropdown && (
+                  <div className="dropdown-menu">
+                    <button className="dropdown-item" onClick={handleEditClick}>
+                      레시피 수정
+                    </button>
+                    <button className="dropdown-item" onClick={handleDeleteClick}>
+                      레시피 삭제
+                    </button>
+                  </div>
+                )}
               </div>
-              <img src={recipe.userImage || "/images/default_profile.png"} alt="프로필이미지" className="profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
-              <div className="nickname-container">{recipe.nickname}</div>
+            )}
+          </div>
+
+          <div className="recipe-detail-header">
+            <div className="recipe-detail-header-left">
+              <div className="recipe-detail-main-images">
+                <img src={recipe.image} alt="Recipe" className="recipe-detail-main-image" />
+                <div className="hit-eye-icon-area">
+                  <img src="/images/hit-eye.png" alt="조회수" className="hit-eye-icon" />
+                  <div className="recipe-detail-hits">{recipe.hits}</div>
+                </div>
+              </div>
             </div>
 
-            <div style={{ flex: "0 0 40%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div className="title-container">
-                <h1>{recipe.recipeTitle}</h1>
+            <div className="recipe-detail-header-right">
+              <div className="recipe-detail-title-container">
+                <div className="recipe-detail-title">{recipe.recipeTitle}</div>
+                <button className="bookmark-icon-btn" onClick={handleBookmarkClick}>
+                  <img src={isBookmarked ? "/images/do-Bookmark.png" : "/images/undo-Bookmark.png"} alt="Bookmark Icon" className="bookmark-icon" />
+                </button>
               </div>
-              <div className="icon-container">
-                <div className="icon-item">
-                  <img src="/images/serving.png" alt="Serving" />
-                  <p>{recipe.serving}</p>
+              <div className="recipe-detail-info-container">
+                <div className="recipe-detail-info-item">
+                  <img src="/images/serving.png" alt="Serving" className="recipe-detail-info-icon" />
+                  <div className="recipe-detail-info-text">{recipe.serving}</div>
                 </div>
-                <div className="icon-item">
-                  <img src="/images/level.png" alt="Level" />
-                  <p>{getLevelText(recipe.level)}</p>
+                <div className="recipe-detail-info-item">
+                  <img src="/images/level.png" alt="Level" className="recipe-detail-info-icon" />
+                  <div className="recipe-detail-info-text">{getLevelText(recipe.level)}</div>
                 </div>
-                <div className="icon-item">
-                  <img src="/images/timerequired.png" alt="Time Required" />
-                  <p>{recipe.requiredTime}</p>
+                <div className="recipe-detail-info-item">
+                  <img src="/images/timerequired.png" alt="Time Required" className="recipe-detail-info-icon" />
+                  <div className="recipe-detail-info-text">{recipe.requiredTime}</div>
                 </div>
               </div>
 
-              <button
-                className="cook-btn"
-                onClick={() => {
-                  Swal.fire({
-                    title: "요리 하러 가보실까요?",
-                    icon: "question",
-                    showCancelButton: true,
-                    confirmButtonText: "네",
-                    cancelButtonText: "아니요",
-                    customClass: {
-                      popup: "custom-swal-popup", // 공통 CSS 클래스 적용
-                    },
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      console.log("Navigating with recipe:", recipe)
-                      navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe })
-                    }
-                  })
-                }}
-              >
-                조리시작
-              </button>
+              <div className="recipe-detail-info-end">
+                <div className="recipe-detail-user-info">
+                  <img src={recipe.userImage || "/images/default_profile.png"} alt="Profile" className="recipe-detail-profile-image" onClick={() => navigate(`/profile/${recipe.nickname}`)} />
+                  <div className="recipe-detail-nickname">{recipe.nickname}</div>
+                </div>
+                <button
+                  className="cook-btn"
+                  onClick={() => {
+                    Swal.fire({
+                      title: "요리 하러 가보실까요?",
+                      icon: "question",
+                      showCancelButton: true,
+                      confirmButtonText: "네",
+                      cancelButtonText: "아니요",
+                      customClass: {
+                        popup: "custom-swal-popup", // 공통 CSS 클래스 적용
+                      },
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        console.log("Navigating with recipe:", recipe)
+                        navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe })
+                      }
+                    })
+                  }}
+                >
+                  요리시작
+                </button>
+              </div>
             </div>
           </div>
 
@@ -316,92 +328,93 @@ const RecipeDetailPage = () => {
             </div>
           )}
         </div>
-      </div>
-      {/* 페이지 맨 위로 올라가는 버튼 */}
-      <div className="recipe-detail-page-scroll-to-top-div" onClick={scrollToTop}>
-        <FontAwesomeIcon icon={faChevronUp} size="lg" />
-        <span className="recipe-detail-page-top-text">TOP</span>
-      </div>
 
-      {/* </div> */}
-
-      <div className="card-div-firstsection">
-        <button className={activeSection === "ingredients" ? "active" : ""} onClick={() => scrollToSection("ingredients")}>
-          재료
-        </button>
-        <button className={activeSection === "steps" ? "active" : ""} onClick={() => scrollToSection("steps")}>
-          조리순서
-        </button>
-        <button className={activeSection === "feed" ? "active" : ""} onClick={() => scrollToSection("feed")}>
-          FEED
-        </button>
-      </div>
-
-      <div className="parent-container">
-        <div id="ingredients" ref={ingredientsRef} className="card-div-section">
-          <h1 className="section-title">재료</h1>
-          <div className="left-half">
-            {recipe.ingredients.map((ingredient, index) => {
-              if (index % 2 === 0) {
-                return (
-                  <div key={index} className="ingredient-item">
-                    <span className="ingredient-name">{ingredient.ingreName}</span>
-                    <span>{ingredient.amount}</span>
-                  </div>
-                )
-              }
-              return null
-            })}
-          </div>
-          <div className="right-half">
-            {recipe.ingredients.map((ingredient, index) => {
-              if (index % 2 !== 0) {
-                return (
-                  <div key={index} className="ingredient-item">
-                    <span className="ingredient-name">{ingredient.ingreName}</span>
-                    <span>{ingredient.amount}</span>
-                  </div>
-                )
-              }
-              return null
-            })}
-          </div>
+        {/* 페이지 맨 위로 올라가는 버튼 */}
+        <div className="recipe-detail-page-scroll-to-top-div" onClick={scrollToTop}>
+          <FontAwesomeIcon icon={faChevronUp} size="lg" />
+          <span className="recipe-detail-page-top-text">TOP</span>
         </div>
-      </div>
 
-      <div className="parent-container">
-        <div id="steps" ref={stepsRef} className="card-div-section">
-          <h1 className="section-title">조리순서</h1>
-          <div className="steps">
-            {recipe.processes.map((process, index) => (
-              <div key={index} className="process-item">
-                <h2>
-                  {process.processOrder}. {process.processExplain}
-                </h2>
-                {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
-                <hr />
+        {/* 🔹 탭 버튼 */}
+        <div className="recipe-tabs">
+          <button className={activeTab === "ingredients" ? "active" : ""} onClick={() => handleTabClick("ingredients")}>
+            재료
+          </button>
+          <button className={activeTab === "steps" ? "active" : ""} onClick={() => handleTabClick("steps")}>
+            조리순서
+          </button>
+          <button className={activeTab === "feed" ? "active" : ""} onClick={() => handleTabClick("feed")}>
+            피드
+          </button>
+        </div>
+
+        {/* 🔹 탭 컨텐츠 */}
+        {activeTab === "ingredients" && (
+          <div className="ingredients-section">
+            <div className="ingredient-list">
+              {recipe.ingredients
+                .filter((_, index) => index % 2 === 0) // ✅ 짝수 번째 인덱스만 필터링
+                .map((ingredient, index) => (
+                  <Fragment key={index}>
+                    {" "}
+                    {/* ✅ key 추가 */}
+                    {/* 왼쪽 아이템 */}
+                    <div key={`left-${ingredient.ingreName}`} className="ingredient-item left">
+                      <span className="ingredient-name">{ingredient.ingreName}</span>
+                      <span>{ingredient.amount}</span>
+                    </div>
+                    {/* 구분선 */}
+                    <div key={`separator-${ingredient.ingreName}`} className="ingredient-separator"></div>
+                    {/* 오른쪽 아이템이 존재하는 경우만 렌더링 */}
+                    {recipe.ingredients[index * 2 + 1] && (
+                      <div key={`right-${recipe.ingredients[index * 2 + 1].ingreName}`} className="ingredient-item right">
+                        <span className="ingredient-name">{recipe.ingredients[index * 2 + 1].ingreName}</span>
+                        <span>{recipe.ingredients[index * 2 + 1].amount}</span>
+                      </div>
+                    )}
+                  </Fragment>
+                ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === "steps" && (
+          <div className="step-section">
+            <div className="step-list">
+              {recipe.processes.map((process, index) => (
+                <div key={index} className="process-item">
+                  <div className="process-description">
+                    {process.processOrder}. {process.processExplain}
+                  </div>
+                  {process.images && process.images.map((image, imgIndex) => <img key={imgIndex} src={image.imageUrl} alt={`Process ${process.processOrder}`} className="process-image" />)}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === "feed" && (
+          <div className="feed-section">
+            {feedData.length > 0 ? (
+              <div className="feed-list">
+                {feedData.map((feed) => (
+                  <div key={`feed-${feed.id}`} className="feed-item">
+                    <img src={feed.image} alt="Feed" className="feed-image" />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="recipe-detail-no-feed">관련된 피드가 없습니다.</div>
+            )}
           </div>
+        )}
+
+        {/* 🔹 페이지 맨 위로 스크롤 버튼 */}
+        <div className="recipe-detail-page-scroll-to-top-div" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+          <FontAwesomeIcon icon={faChevronUp} size="lg" />
+          <span className="recipe-detail-page-top-text">TOP</span>
         </div>
       </div>
-
-      <div className="parent-container">
-        <div id="feed" ref={feedRef} className="card-div-section">
-          <h1 className="section-title">관련 Feed</h1>
-        </div>
-      </div>
-
-      {user && user.nickname === recipe.nickname && (
-        <div className="button-container">
-          <button onClick={handleEditClick} className="edit-button">
-            수정
-          </button>
-          <button onClick={handleDeleteClick} className="delete-button">
-            삭제
-          </button>
-        </div>
-      )}
     </div>
   )
 }

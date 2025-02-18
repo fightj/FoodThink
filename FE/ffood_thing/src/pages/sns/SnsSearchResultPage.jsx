@@ -5,7 +5,7 @@ import SearchBar from "../../components/base/SearchBar";
 import "../../styles/sns/SnsMain.css";
 import "../../styles/sns/SnsSearchResultPage.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import { faChevronUp, faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 import "../../styles/base/global.css"
 
 // 검색 결과를 가져오는 함수
@@ -117,7 +117,8 @@ function SnsSearchResultPage() {
             <div className="sns-search-result-header" >
               {/* 이전 버튼 클릭 시, 이전 페이지로 이동 */}
               <button onClick={() => navigate('/sns')} className="back-button">
-                <img src="/images/previous_button.png" alt="Previous" className="icon" />
+                {/* <img src="/images/previous_button.png" alt="Previous" className="icon" /> */}
+                <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
               </button>
               {/* 검색 결과 텍스트는 화면 중앙 정렬 */}
               <div className="search-result-title" >

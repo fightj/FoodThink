@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import Swal from "sweetalert2"
 import RecipeModal from "../../components/sns/RecipeModal" // 모달 컴포넌트 추가
 import "../../styles/base/global.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronLeft, faEllipsis } from '@fortawesome/free-solid-svg-icons'
 
 function FeedDetail() {
   const { id } = useParams()
@@ -128,6 +130,7 @@ function FeedDetail() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Delete!",
+      customClass: { popup: "custom-swal-popup"}
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -145,6 +148,7 @@ function FeedDetail() {
               title: "삭제!",
               text: "피드가 삭제되었습니다.",
               icon: "success",
+              customClass: { popup: "custom-swal-popup"}
             }).then(() => {
               navigate("/sns") // Redirect to home or another page after deletion
             })
@@ -154,6 +158,7 @@ function FeedDetail() {
               title: "Error!",
               text: "피드 삭제 중 오류가 발생했습니다.",
               icon: "error",
+              customClass: { popup: "custom-swal-popup"}
             })
           }
         } catch (error) {
@@ -162,6 +167,7 @@ function FeedDetail() {
             title: "Error!",
             text: "피드 삭제 중 오류가 발생했습니다.",
             icon: "error",
+            customClass: { popup: "custom-swal-popup"}
           })
         }
       }
@@ -193,6 +199,7 @@ function FeedDetail() {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login")
@@ -228,8 +235,8 @@ function FeedDetail() {
     <div className="base-div" onClick={handleClickOutsideComments}>
       <div className="card-div">
         {/* 뒤로가기 버튼 */}
-        <button onClick={() => navigate(-1)} className="back-button">
-          <img src="/images/previous_button.png" alt="Previous" className="icon" />
+        <button onClick={() => navigate(-1)} className="sns-detail-back-button">
+          <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
         </button>
 
         <div className="sns-detail">
@@ -244,6 +251,7 @@ function FeedDetail() {
             {sessionUserId === currentFeed.userId && (
               <div className="edit-container">
                 <button className="edit-button1" onClick={toggleDropdown}>
+                  {/* <FontAwesomeIcon icon={faEllipsis} className="meatballs-button" /> */}
                   <img src="/images/etc-btn.png" alt="Edit Options1" />
                 </button>
                 {showDropdown && (
@@ -298,7 +306,7 @@ function FeedDetail() {
               {isRecipe && (
                   <div className="recipe-image-container">
                     <div className="recipe-tooltip" onClick={() => navigate(`/recipes/${currentFeed.recipeListResponseDto.recipeId}`)}>
-                      <p>참고 레시피</p>
+                      <p>👀 참고 레시피 보러 가기</p>
                     </div>
                   </div>
               )}
