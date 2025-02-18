@@ -109,3 +109,29 @@ form {
   background: transparent;
   color: white;
 }
+
+/* SNS피드 작성 및 수정 참고 레시피  (02.15) */
+.sns-reference-recipe {
+  background-color: #282828 !important;
+  color: white;
+  font-size: 1.1em;
+  padding: 0.5em 1em;
+  display: flex;  /* flex 사용 */
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: space-between; /* 내용과 X 버튼을 양 끝으로 배치 */
+  overflow: hidden;
+}
+
+.feed-recipe-close-btn {
+  cursor: pointer;
+  flex-shrink: 0; /* X 버튼이 줄어들지 않도록 설정 */
+  margin-left: 0.5em; /* 텍스트와 간격 확보 */
+}
+
+.sns-reference-recipe .sns-reference-recipe-title{
+  flex-grow: 1; /* 텍스트가 가능한 만큼 차지하도록 설정 */
+  min-width: 0; /* flexbox 내에서 말줄임 처리가 가능하도록 설정 */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

@@ -6,6 +6,7 @@ import "../../styles/sns/SnsMain.css"
 import PageSlide from "../../components/base/PageSlide"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import "../../styles/base/global.css"
 
 function SnsMain() {
   const [query, setQuery] = useState("")
@@ -64,9 +65,7 @@ function SnsMain() {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
-        customClass: {
-          popup: "custom-swal-popup", // 공통 CSS 클래스 적용
-        },
+        customClass: { popup: "custom-swal-popup" },
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login")
@@ -101,9 +100,7 @@ function SnsMain() {
         <div className="card-div">
           <div className="d-flex justify-content-between align-items-center mt-0">
             <h2></h2>
-            <button className="new-write-button" onClick={handleWriteClick} style={{ marginBottom: '20px' }}>
-              <img src="/images/feed_write_button.png" alt="Feed 작성" className="icon" />
-            </button>
+            <img src="/images/feed_write_button.png" alt="Feed 작성" className="feed-write-button" onClick={handleWriteClick} />
           </div>
           {/* row-cols-1  */}
           <div className="row row-cols-lg-3 align-items-stretch g-2">

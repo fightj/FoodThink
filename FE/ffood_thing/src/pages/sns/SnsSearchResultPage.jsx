@@ -120,15 +120,15 @@ function SnsSearchResultPage() {
                 <img src="/images/previous_button.png" alt="Previous" className="icon" />
               </button>
               {/* 검색 결과 텍스트는 화면 중앙 정렬 */}
-              <h2 className="search-result-title" >
+              <div className="search-result-title" >
                 "{query}"에 대한 검색 결과가 총 {searchResults.length}개 있습니다.
-              </h2>
+              </div>
             </div>
 
             <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
               {searchResults.length > 0 ? (
                 searchResults.map((feedItem, index) => (
-                  <div className="col" key={feedItem.id} ref={index === searchResults.length - 1 ? lastElementRef : null}>
+                  <div className="col-4" key={feedItem.id} ref={index === searchResults.length - 1 ? lastElementRef : null}>
                     <Link to={`/feed/${feedItem.id}`} style={{ textDecoration: "none" }}>
                       <div
                         className="card card-cover h-100 overflow-hidden rounded-4 feed-card"
@@ -156,7 +156,7 @@ function SnsSearchResultPage() {
                   </div>
                 ))
               ) : (
-                <p className="align-items-stretch sns-search-no-result">검색 결과가 없습니다.</p>
+                <div className="align-items-stretch sns-search-no-result">검색 결과가 없습니다.</div>
               )}
             </div>
           </div>

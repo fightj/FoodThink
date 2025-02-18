@@ -11,9 +11,23 @@
   justify-content: space-between;
   padding-bottom: 0.5rem;
 }
+
+.sns-search-no-result{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5vh;
+  font-size: 2rem;
+}
+
 @media (max-width: 800px){
   .sns-search-result-header{
     display: flex;
     flex-direction: column;
   }
+  .sns-search-no-result{
+    font-size: 1.5rem;
+  }
+
 }
