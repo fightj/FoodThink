@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import Swal from "sweetalert2";
 import "../../styles/profile/Preference.css";
@@ -16,21 +17,22 @@ const AVOID_ITEMS = [
   "고등어", "게", "돼지고기", "복숭아", "토마토", "새우"
 ];
 
-const Preference = ({ onClose, userId }) => {
-  const { user } = useContext(UserContext); // ✅ 현재 로그인한 사용자 정보 가져오기
-  const [selectedPreferences, setSelectedPreferences] = useState([]); // 선호 음식 리스트
-  const [selectedAvoidances, setSelectedAvoidances] = useState([]); // 기피 재료 리스트
+const Preference = ({ onClose }) => {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+  const [selectedPreferences, setSelectedPreferences] = useState([]);
+  const [selectedAvoidances, setSelectedAvoidances] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // ✅ 모달이 열리면 스크롤 막기
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "auto"; // 모달 닫힐 때 원래대로
+      document.body.style.overflow = "auto";
     };
   }, []);
 
-  // ✅ 백엔드에서 기존 관심사 불러오기 (로컬 저장 X)
+  // ✅ 기존 관심사 불러오기
   useEffect(() => {
     const fetchUserPreferences = async () => {
       const token = localStorage.getItem("accessToken");
@@ -38,11 +40,8 @@ const Preference = ({ onClose, userId }) => {
         Swal.fire({
           title: "로그인이 필요합니다.",
           icon: "error",
-          customClass: {
-            popup: "custom-swal-popup",
-          },
+          customClass: { popup: "custom-swal-popup" },
         });
-        
         return;
       }
 
@@ -55,25 +54,23 @@ const Preference = ({ onClose, userId }) => {
           },
         });
 
-        if (!response.ok) {
-          throw new Error("관심사 불러오기 실패");
-        }
+        if (!response.ok) throw new Error("관심사 불러오기 실패");
 
         const data = await response.json();
         console.log("📌 불러온 관심사:", data);
 
-        // ✅ 기존 관심사 필터링
         const likedIngredients = data.filter(item => item.isLiked).map(item => item.ingredient);
         const dislikedIngredients = data.filter(item => !item.isLiked).map(item => item.ingredient);
 
-        setSelectedPreferences(likedIngredients); // 선호 리스트 적용
-        setSelectedAvoidances(dislikedIngredients); // 기피 리스트 적용
+        setSelectedPreferences(likedIngredients);
+        setSelectedAvoidances(dislikedIngredients);
       } catch (error) {
         console.error("❌ 관심사 불러오기 실패:", error);
-        Swal.fire({title: "오류 발생", text: "관심사 정보를 불러올 수 없습니다.", icon: "error", 
-          customClass: {
-            popup: "custom-swal-popup",
-          },
+        Swal.fire({
+          title: "오류 발생",
+          text: "관심사 정보를 불러올 수 없습니다.",
+          icon: "error",
+          customClass: { popup: "custom-swal-popup" },
         });
       } finally {
         setLoading(false);
@@ -100,17 +97,17 @@ const Preference = ({ onClose, userId }) => {
   const saveUserPreferences = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
-      Swal.fire({title: "로그인이 필요합니다.", text: "", icon: "error", 
-        customClass: {
-          popup: "custom-swal-popup", // 공통 CSS 클래스 적용
-        },
+      Swal.fire({
+        title: "로그인이 필요합니다.",
+        icon: "error",
+        customClass: { popup: "custom-swal-popup" },
       });
       return;
     }
 
     const requestBody = [
-      ...selectedPreferences.map((ingredient) => ({ ingredient, isLiked: true })), // 선호
-      ...selectedAvoidances.map((ingredient) => ({ ingredient, isLiked: false })), // 기피
+      ...selectedPreferences.map((ingredient) => ({ ingredient, isLiked: true })),
+      ...selectedAvoidances.map((ingredient) => ({ ingredient, isLiked: false })),
     ];
 
     try {
@@ -123,22 +120,29 @@ const Preference = ({ onClose, userId }) => {
         body: JSON.stringify(requestBody),
       });
 
-      if (!response.ok) {
-        throw new Error("저장 실패");
-      }
+      if (!response.ok) throw new Error("저장 실패");
 
-      Swal.fire({title : "저장 완료!", text: "회원 관심사가 저장되었습니다.", icon: "success"
-        , customClass: {
-          popup: "custom-swal-popup",
-        },
+      Swal.fire({
+        title: "저장 완료!",
+        text: "회원 관심사가 저장되었습니다.",
+        icon: "success",
+        customClass: { popup: "custom-swal-popup" },
       });
-      onClose();
+
+      // ✅ `onClose`가 전달되지 않았다면 기본적으로 `home`으로 이동
+      if (typeof onClose === "function") {
+        onClose();
+      } else {
+        console.log("✅ `onClose`가 없어서 기본적으로 `home`으로 이동");
+        navigate("/");
+      }
     } catch (error) {
       console.error("❌ 관심사 저장 실패:", error);
-      Swal.fire({title: "오류 발생", text: "관심사 저장 중 오류가 발생했습니다.", icon: "error",
-        customClass: {
-          popup: "custom-swal-popup",
-        },
+      Swal.fire({
+        title: "오류 발생",
+        text: "관심사 저장 중 오류가 발생했습니다.",
+        icon: "error",
+        customClass: { popup: "custom-swal-popup" },
       });
     }
   };
@@ -155,7 +159,7 @@ const Preference = ({ onClose, userId }) => {
       {/* 모달 창 */}
       <div className="preference-container">
         {/* 닫기 버튼 */}
-        <button className="close-btn" onClick={onClose}>×</button>
+        <button className="close-btn" onClick={onClose ? onClose : () => navigate("/")}>×</button>
 
         <div className="preference-wrapper">
           <div className="preference-section">
