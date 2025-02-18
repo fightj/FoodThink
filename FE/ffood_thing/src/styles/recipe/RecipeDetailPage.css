@@ -38,22 +38,6 @@
   width: 100%;
 }
 
-.card-div-firstsection {
-  position: -webkit-sticky; /* For Safari */
-  position: sticky;
-  top: 0;
-  z-index: 1000; /* Ensure the sticky section is above other content */
-  background-color: rgb(255, 255, 255);
-  padding: 20px; /* Add padding for spacing */
-  width: 95%;
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3);
-  margin: 50px auto 0 auto; /* 화면 전체의 가운데에 배치 */
-  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
-  justify-content: center; /* 자식 요소를 수평 가운데 정렬 */
-  align-items: center; /* 자식 요소를 수직 가운데 정렬 */
-  gap: 80px; /* 버튼들 간의 간격 */
-  font-size: 1.8rem;
-  font-family: 'omyu_pretty';
 /* 🔹 수정 / 삭제 버튼 컨테이너 */
 .button-container {
   display: flex;
@@ -157,18 +141,10 @@
   justify-content: space-between;
   width: 100%;
 }
-.nickname-container {
-  font-family: 'SOYO Maple Regular';
-  font-weight: bold;
-  position: absolute;
-  bottom: -90px;
-  text-align: center;
-  color: #ffa726;
-  font-size: 30px;
 
 .recipe-detail-title {
   font-size: clamp(1rem, 2.8vw, 2.8rem);
-  font-weight: bold;
+  font-family: 'ImcreSoojin';
 }
 
 /* 🔹 북마크 버튼 */
@@ -196,81 +172,19 @@
 .recipe-detail-info-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.icon-item img {
-  width: 70px; /* Adjust the size as needed */
-  height: 70px; /* Adjust the size as needed */
-}
-
-.icon-item p {
-  font-family: 'PTBandocheB';
-  margin-top: 8px;
-  font-size: 25px;
   gap: clamp(0.5rem, 1vw, 1rem);
 }
 
-.title-container {
-  font-family: 'Gosanja';
-  margin-top: 50px;
-  width: 100%; /* Ensure the container takes up the full width */
-  text-align: center; /* Center the text */
 .recipe-detail-info-icon {
   width: clamp(2rem, 3vw, 3rem);
   height: clamp(2rem, 3vw, 3rem);
 }
 
-.cook-btn {
-  font-family: 'omyu_pretty';
-  margin-top: 50px;
-  border-radius: 15px; /* Apply rounded corners */
-  background-color: #fdb13f; /* Apply the specified background color */
-  color: white; /* Set text color to white for better contrast */
-  padding: 0px 20px;
-  border: none; /* Remove the border */
-  cursor: pointer; /* Add a pointer cursor on hover */
-  font-size: 80px;
 .recipe-detail-info-text {
   font-size: clamp(0.8rem, 1.8vw, 1.2rem);
+  font-family: 'PTBandocheB';
 }
 
-.feed-btn {
-  margin-top: 50px;
-  border-radius: 15px; /* Apply rounded corners */
-  background-color: #ffc876; /* Apply the specified background color */
-  color: white; /* Set text color to white for better contrast */
-  padding: 0px 20px;
-  border: none; /* Remove the border */
-  cursor: pointer; /* Add a pointer cursor on hover */
-  font-size: 30px;
-}
-.left-half,
-.right-half {
-  margin-top: 50px;
-  width: 50%;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.left-half {
-  float: left;
-}
-
-.right-half {
-  float: right;
-}
-.section-title {
-  position: absolute;
-  left: 10%;
-  transform: translateX(-50%);
-  font-family: 'IM_Hyemin-Bold';
-  z-index: 20;
-  margin-bottom: 30px;
-}
-
-/* 재료 아이템 스타일 */
-.ingredient-item {
 .recipe-detail-info-end {
   width: 100%;
   display: flex;
@@ -298,16 +212,10 @@
   border: 2px solid white;
 }
 
-.process-item h2 {
-  font-family: 'KCC-Hanbit';
-  white-space: wrap;
-  font-size: 1.5rem; /* 글자 크기 설정 */
-  margin-top: 10px;
-  margin-bottom: 10px;
-  color: black;
 /* 🔹 닉네임 */
 .recipe-detail-nickname {
   font-size: clamp(1rem, 1.5vw, 2rem); /* 반응형 글자 크기 */
+  font-family: 'SOYO Maple Regular';
   font-weight: bold;
   color: #ff7f00;
 }
@@ -329,6 +237,7 @@
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
+  font-family: 'omyu_pretty';
 }
 
 @media (max-width: 768px) {  /* 태블릿 & 모바일에서 적용 */
@@ -359,7 +268,7 @@
   /* .recipe-detail-user-info {
 
   } */
-
+  
   .recipe-detail-title-container {
     justify-content: center;
   }
@@ -384,6 +293,7 @@
   width: 100%;
   flex-wrap: nowrap; /* 줄바꿈 방지 */
   margin-bottom: 15px;
+  font-family: 'omyu_pretty';
 }
 
 /* 🔹 개별 탭 버튼 */
@@ -442,6 +352,7 @@
   width: 100%;
   align-items: center;
   text-align: center;
+  font-family: 'Binggrae';
 }
 
 /* 🔹 개별 재료 아이템 (왼쪽, 오른쪽) */
@@ -475,7 +386,7 @@
   .ingredient-list {
     grid-template-columns: 1fr; /* 🔥 모바일에서는 한 줄로 정렬 */
   }
-
+  
   .ingredient-separator {
     display: none; /* 🔥 모바일에서는 | 제거 */
   }
@@ -515,6 +426,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  font-family: 'KCC-Hanbit';
 }
 
 /* 🔹 오른쪽 - 조리 과정 이미지 */
@@ -595,6 +507,7 @@
   color: #999;
   padding: 20px;
   text-align: center;
+  font-family: 'PTBandocheB';
 }
 
 /* ✅ 📌 반응형 설정 */
