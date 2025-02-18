@@ -152,8 +152,9 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
             <img src="/images/rotate_right.png" alt="새로고침" />
           </button>
           <div className="today-title">
-            오늘 뭐 먹지&nbsp;
-            <FontAwesomeIcon icon={faUtensils} bounce style={{ color: "#fdb13f", fontSize: "100%" }} />
+          <FontAwesomeIcon icon={faUtensils} beat style={{ color: "#6c4e32", fontSize: "100%" }} />
+            &nbsp;오늘 뭐 먹지?&nbsp;
+            <FontAwesomeIcon icon={faUtensils} beat style={{ color: "#6c4e32", fontSize: "100%" }} />
           </div>
           <button className="today-close-btn" onClick={onClose}>
             <img src="/images/close_icon.png" alt="닫기" />

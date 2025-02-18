@@ -36,9 +36,9 @@
 
 /* 제목 (h2) 중앙 정렬 */
 .today-title {
+  font-family: 'HakgyoansimDunggeunmisoTTF-B';
   text-align: center;
-  font-size: 250%;
-  font-weight: bold;
+  font-size: 220%;
   color: #fdb13f;
   transition: opacity 0.4s ease-in-out;
   display: flex;
@@ -143,6 +143,7 @@
   overflow: hidden;
 }
 .today-recipe-title-main {
+  font-family: 'Dovemayo_gothic';
   font-size: 180%;
   display: block;
   transition: opacity 0.4s ease-in-out;
@@ -165,8 +166,8 @@
     height: 20%;
   }
   .today-title {
-    font-size: 280%;
-    width:50%;
+    font-size: 230%;
+    width:70%;
   }
   .today-refresh-btn {
     display: flex;
@@ -253,9 +254,9 @@
     height: 20%;
   }
   .today-title {
-    font-size: 160%;
+    font-size: 130%;
     height: 100%;
-    width:70%;
+    width:80%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -327,9 +328,9 @@
     height: 20%;
   }
   .today-title {
-    font-size: 150%;
+    font-size: 130%;
     height: 100%;
-    width:70%;
+    width:80%;
     display: flex;
     align-items: center;
     justify-content: center;
