@@ -38,32 +38,6 @@
   width: 100%;
 }
 
-/* 🔹 수정 / 삭제 버튼 컨테이너 */
-.button-container {
-  display: flex;
-  gap: clamp(5px, 2vw, 15px);
-}
-
-/* 🔹 개별 버튼 스타일 */
-.edit-button,
-.delete-button {
-  padding: clamp(5px, 1.5vw, 10px) clamp(10px, 2vw, 15px); /* 🔥 반응형 패딩 */
-  font-size: clamp(0.6rem, 2vw, 1rem); /* 🔥 반응형 폰트 크기 */
-  border: none;
-  border-radius: clamp(3px, 1vw, 5px); /* 🔥 반응형 둥근 모서리 */
-  cursor: pointer;
-}
-
-.edit-button {
-  background-color: #4caf50; /* 초록색 */
-  color: white;
-}
-
-.delete-button {
-  background-color: #f44336; /* 빨간색 */
-  color: white;
-}
-
 /* 🔹 전체 헤더 컨테이너 */
 .recipe-detail-header {
   display: flex;
@@ -71,7 +45,6 @@
   justify-content: space-between;
   width: 100%;
   margin: 1rem 0 2rem 0;
-
   gap: 2.5rem; /* ✅ left와 right 사이의 간격 유지 */
 }
 
@@ -94,7 +67,7 @@
   width: 100%;
   max-height: 500px;
   display: block;
-  border-radius: 10px;
+  border-radius: 15px;
   object-fit: cover;
 }
 
@@ -136,20 +109,26 @@
 
 /* 🔹 제목 & 북마크 */
 .recipe-detail-title-container {
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #E0E0E0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
 }
 
 .recipe-detail-title {
-  font-size: clamp(1rem, 2.8vw, 2.8rem);
+  flex: 0 0 85%;
+  font-size: clamp(1.5rem, 2.8vw, 2.8rem);
   font-weight: bold;
+  text-align: center;
 }
 
 /* 🔹 북마크 버튼 */
 .bookmark-icon-btn {
+  flex: 1;
   align-self: flex-start;
+  justify-content: flex-end;
   background: none;
   border: none;
 }
@@ -166,7 +145,9 @@
   align-items: center;
   width: 100%;
   gap: clamp(1rem, 3vw, 5rem);
-  margin: clamp(1rem, 3.5vw, 10rem) 0;
+  margin: clamp(1rem, 3.5vw, 10rem) 0 0 0;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #E0E0E0;
 }
 
 .recipe-detail-info-item {
@@ -189,6 +170,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  padding-top: 1rem;
   margin-top: auto;
 }
 
@@ -232,7 +214,7 @@
   align-items: center;
   text-align: center;
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
 }
@@ -284,6 +266,8 @@
 
 /* 🔹 탭 컨테이너 */
 .recipe-tabs {
+  padding-top: clamp(1rem, 2vw, 3rem);
+  border-top: 2px solid #ffd494;
   display: flex;
   justify-content: center;
   background-color: #fff;
@@ -320,7 +304,8 @@
     justify-content: flex-start;
     width: 100%;
     overflow-x: auto; /* 🔥 모바일에서는 스크롤 가능하게 */
-    padding: 5px 10px;
+    padding: 1rem 0.5rem;
+    /* padding-top: clamp(1rem, 2vw, 3rem); */
   }
 
   .recipe-tabs button {
@@ -361,7 +346,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-bottom: 1px solid #ddd; /* 🔥 수평 구분선 추가 */
+  border-bottom: 1px solid #E0E0E0; /* 🔥 수평 구분선 추가 */
 }
 
 /* 🔹 빈칸이 있는 경우에는 밑줄 제거 */
@@ -371,7 +356,7 @@
 
 /* 🔹 가운데 수직 구분선 */
 .ingredient-separator {
-  border-right: 1px solid #ddd; /* 🔥 가운데 구분선 */
+  border-right: 1px solid #E0E0E0; /* 🔥 가운데 구분선 */
   height: 100%;
   width: 1px;
 }
@@ -409,7 +394,7 @@
   gap: clamp(10px, 2vw, 20px);
   padding: clamp(10px, 2vw, 20px);
   background: white;
-  border-bottom: 2px solid #ddd; /* 🔥 수평 구분선 추가 */
+  border-bottom: 2px solid #E0E0E0; /* 🔥 수평 구분선 추가 */
 }
 
 /* 🔹 왼쪽 - 조리 설명 */
