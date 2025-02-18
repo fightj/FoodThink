@@ -458,7 +458,7 @@
 }
 .recipe-write-isPublic-checkbox{
   width:15%;
-  height:90%;
+  height:100%;
   display: flex;
   align-items: center;
   font-size:200%;
@@ -494,7 +494,7 @@
 }
 
 .recipe-write-isPublic-custom-checkbox input[type="checkbox"]:checked + span::after {
-  content: "✔";
+  /* content: "✔"; */
   position: absolute;
   top: -2px; /* 위치 조정 */
   left: calc(50% - 6px); /* 가운데 정렬 */
@@ -1500,13 +1500,12 @@
   .recipe-write-isPublic-custom-checkbox input[type="checkbox"]:checked + span::after {
 
   }
-
-  /*레시피 작성 저장/수정/취소 버튼*/
-  .recipe-write-save-btn,
-  .recipe-write-update-btn,
-  .recipe-write-cancel-btn {
-    width: 15%;
-    height: 100%;
-    font-size: 120%;
-  }
+   /*레시피 작성 저장/수정/취소 버튼*/
+   .recipe-write-save-btn,
+   .recipe-write-update-btn,
+   .recipe-write-cancel-btn {
+     width: 15%;
+     height: 100%;
+     font-size: 120%;
+   }
 }
