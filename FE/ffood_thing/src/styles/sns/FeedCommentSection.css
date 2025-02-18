@@ -58,14 +58,16 @@
   font-size: 1.1rem;
   margin: 0;
   text-decoration: underline;
+  font-family: 'SOYO Maple Regular';
 }
 
 /* 댓글 내용 */
 .comment-content {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: #ffffff;
   margin-top: 0.2rem;
   margin-bottom: 0.2rem;
+  font-family: 'NanumSquareRound';
 }
 
 .comment-time {
@@ -73,12 +75,14 @@
   color: #ffffff;
   margin-bottom: 0.5rem;
   text-align: right;
+  font-family: 'LotteMartDream';
 }
 
 /* 댓글이 없을 때 */
 .no-comments {
   color: #ffffff;
   font-size: 1rem;
+  font-family: 'PTBandocheB';
 }
 
 /* .close-button-image {
@@ -100,6 +104,7 @@
   justify-content: center;
   padding-bottom: 1.2rem;
   gap: 1rem;
+  font-family: "KCC-Hanbit", sans-serif;
 }
 
 .comment-input {

@@ -26,12 +26,12 @@
 /* 📌레시피 등록 제목 (중앙 정렬) */
 .recipe-write-page-title {
   font-size: 40px;
-  font-weight: bold;
   width: 60%;
   text-align: center;
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
 .recipe-write-page-title-blank{
   width:6%;
@@ -72,9 +72,11 @@
   width:11vw;
   display: flex;
   align-items: center;
+  font-family: "NPSfont_regular";
 }
 .recipe-write-title-container .recipe-write-title-text{
   font-size:30px;
+  
 }
 .recipe-write-title-container-input{
   width: 90%;
@@ -83,6 +85,7 @@
   text-align: center;
   display: flex;
   align-items: center;
+  font-family: 'PTBandocheB';
 }
 .recipe-write-title-container-input .recipe-title-input{
   height: 5vh;
@@ -107,6 +110,7 @@
   width:10vw;
   display: flex;
   align-items: center;
+  font-family: "NPSfont_regular";
 }
 .recipe-write-category-container .recipe-write-category-text {
   font-size: 25px;
@@ -121,6 +125,8 @@
   align-items: center;
   justify-content: left;
   gap:20px;
+  font-family: 'omyu_pretty';
+  font-size:20px;
 }
 .recipe-write-category-dropdown{
   width: 40%;
@@ -145,6 +151,7 @@
   width:10vw;
   display: flex;
   align-items: center;
+  font-family: "NPSfont_regular";
 }
 .recipe-write-cooking-info-container .recipe-write-cooking-info-text {
   font-size: 25px;
@@ -159,6 +166,8 @@
   align-items: center;
   justify-content: left;
   gap:20px;
+  font-family: 'omyu_pretty';
+  font-size:20px;
 }
 .recipe-write-cooking-info-dropdown{
   width: 40%;
@@ -187,7 +196,8 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
-
+  font-family: 'MangoDdobak-B';
+  font-size: 17px;
 }
 .recipe-write-main-uploaded-image{
   height:100%;
@@ -227,6 +237,7 @@
   font-size: 30px;
   margin-top: 12px;
   margin-right: 10px;
+  font-family: "NPSfont_regular";
 }
 .recipe-write-ingre-input-container{
   width: 90%;
@@ -237,7 +248,7 @@
   align-items: center;
   gap: 10px; 
   height: 10vh;
-  
+  font-family: 'PTBandocheB';
 
 }
 .recipe-write-ingre-input-text{
@@ -305,6 +316,7 @@
   width:15%;
   height:100%;
   font-size: 25px;
+  font-family: "NPSfont_regular";
 }
 .recipe-write-step-container-input {
   display: flex;
@@ -330,6 +342,7 @@
   font-size:25px;
   text-align: center;
   cursor: move;
+  font-family: "Dovemayo_gothic";
 }
 /*각 단계 요리 내용*/
 .recipe-write-step-input-text {
@@ -358,6 +371,8 @@
   margin-top: 1px;
   position: relative;
   overflow: hidden;
+  font-family: 'MangoDdobak-B';
+  font-size: 17px;
 }
 .recipe-write-step-image-text{
   height: 98%;
@@ -442,11 +457,12 @@
   gap:20px;
 }
 .recipe-write-isPublic-checkbox{
-  width:13%;
+  width:15%;
   height:90%;
   display: flex;
   align-items: center;
-  font-size:150%;
+  font-size:200%;
+  font-family: 'omyu_pretty';
 }
 .recipe-write-isPublic-custom-checkbox {
   position: relative;
@@ -496,8 +512,7 @@
   font-size:150%; */
 
   padding: 12px 20px;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 20px;
   color: white;
   background: linear-gradient(135deg, #17A51A, #17A51A);
   border: none;
@@ -505,6 +520,7 @@
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  font-family: 'omyu_pretty';
 }
 /*레시피 작성 취소 버튼*/
 .recipe-write-cancel-btn{
@@ -517,8 +533,7 @@
   font-size:150%; */
 
   padding: 12px 20px;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 20px;
   color: white;
   background: linear-gradient(135deg, #EB5216, #EB5216);
   border: none;
@@ -526,6 +541,7 @@
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  font-family: 'omyu_pretty';
 }
 
 /*반응형: 태블릿 세로 */

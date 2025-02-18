@@ -55,6 +55,7 @@
   font-weight: normal;
   font-style: normal;
 }
+/*메인페이지 카드 제목, 레시피 작성페이지 제목, 피드 작성페이지 제목*/
 @font-face {
   font-family: "HakgyoansimDunggeunmisoTTF-B";
   src: url("/fonts/Hakgyoansim Dunggeunmiso TTF B.ttf") format("truetype");
@@ -75,12 +76,14 @@
   font-weight: normal;
   font-style: normal;
 }
+/*레시피 메인페이지 "인기레시피", 레시피 작성페이지 항목, 피드 작성페이지 항목*/
 @font-face {
   font-family: "NPSfont_regular";
   src: url("/fonts/NPSfont_regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
+/*레시피 상세페이지 레시피 제목, 검색창*/
 @font-face {
   font-family: 'KCC-Hanbit';
   src: url('/fonts/KCC-Hanbit.ttf') format('truetype');
@@ -93,6 +96,7 @@
   font-weight: normal;
   font-style: normal;
 }
+/*레시피 상세페이지 카테고리명, 요리 단계*/
 @font-face {
   font-family: "Dovemayo_gothic";
   src: url("/fonts/Dovemayo_gothic.ttf") format("truetype");
@@ -105,30 +109,35 @@
   font-weight: normal;
   font-style: normal;
 }
+/*레시피 상세페이지 닉네임/hits, 레시피 메인페이지 hits, 레시피 메인페이지 레시피 상태/닉네임, 피드 댓글 닉네임*/
 @font-face {
   font-family: 'SOYO Maple Regular';
   src: url('/fonts/SOYO Maple Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
+/*레시피 메인페이지 레시피 제목, 피드 댓글 시간*/
 @font-face {
   font-family: 'LotteMartDream';
   font-style: normal;
   font-weight: 400;
   src: url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff2') format('woff2'), url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff') format('woff');
 }
+/*요리시작버튼, 레시피 상세페이지 재료/조리순서/피드 탭, 레시피 메인페이지 정렬필터, 레시피 메인페이지 카테고리 닫기 버튼, 레시피 작성페이지 토글, 레시피 작성페이지 체크박스/버튼*/
 @font-face {
   font-family: 'omyu_pretty';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
+/*레시피 상세페이지 조리순서*/
 @font-face {
   font-family: 'IM_Hyemin-Bold';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');
   font-weight: normal;
   font-style: normal;
 }
+/*레시피 상세페이지 요리정보/피드없음, 레시피 작성페이지 예시, 피드 댓글없음, 피드 댓글 */
 @font-face {
   font-family: 'PTBandocheB';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/PTBandocheB.woff2') format('woff2');
@@ -148,6 +157,7 @@
   font-weight: 100;
   font-style: normal;
 }
+/*레시피 작성페이지 사진추가, 피드 작성 추가*/
 @font-face {
   font-family: 'MangoDdobak-B';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/MangoDdobak-B.woff2') format('woff2');
@@ -167,9 +177,23 @@
   font-weight: normal;
   font-style: normal;
 }
+/*레시피 상세페이지 재료 리스트, 레시피 메인페이지 카테고리 제목*/
 @font-face {
   font-family: 'Binggrae';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Binggrae.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'YiSunShinDotumM';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/YiSunShinDotumM.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+/*피드 댓글*/
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -196,6 +220,7 @@ body {
 .feed-write-text {
   font-size: 1em;
 }
+
 
 /* SNS피드 참고한 레시피를 찾을 때 "내 북마크 레시피" 모달 제목 */
 /* 글자 조정할 때 사용하라고 여기 일단 둠 */

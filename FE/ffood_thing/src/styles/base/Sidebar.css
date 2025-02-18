@@ -36,6 +36,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  font-family: 'PTBandocheB';
 }
 
 .sidebar .nav-list li a {
@@ -56,6 +57,7 @@
   color: #372800;
   padding: 0.5rem;
   padding-top: 0;
+  font-family: 'PTBandocheB';
 }
 
 .profile-img {
@@ -98,6 +100,7 @@
   z-index: 1002; /* 사이드바보다 앞쪽으로 배치 */
   opacity: 1;
   visibility: visible;
+  font-family: 'PTBandocheB';
 }
 
 .profile-dropdown a {
@@ -117,6 +120,7 @@
   text-decoration: none; /* 링크 밑줄 제거 */
   color: #372800; /* ✅ 글자 색상 */
   padding-left: 0.8rem;
+  font-family: 'PTBandocheB';
 }
 
 .profile-dropdown hr {
