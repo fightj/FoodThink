@@ -7,6 +7,9 @@ import { UserContext } from "../../contexts/UserContext"
 import SearchBar from "../../components/base/SearchBar"
 import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import "../../styles/base/global.css"
 
 const RecipeDetailPage = () => {
   const { id } = useParams()
@@ -229,6 +232,12 @@ const RecipeDetailPage = () => {
     document.getElementById(section).scrollIntoView({ behavior: "smooth" })
   }
 
+  // 페이지 맨 위로 스크롤하는 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth"})
+  }
+
+
   return (
     <div className="base-div">
       <SearchBar />
@@ -286,6 +295,9 @@ const RecipeDetailPage = () => {
                     showCancelButton: true,
                     confirmButtonText: "네",
                     cancelButtonText: "아니요",
+                    customClass: {
+                      popup: "custom-swal-popup", // 공통 CSS 클래스 적용
+                    },
                   }).then((result) => {
                     if (result.isConfirmed) {
                       console.log("Navigating with recipe:", recipe)
@@ -310,6 +322,12 @@ const RecipeDetailPage = () => {
           )}
         </div>
       </div>
+      {/* 페이지 맨 위로 올라가는 버튼 */}
+      <div className="recipe-detail-page-scroll-to-top-div" onClick={scrollToTop}>
+        <FontAwesomeIcon icon={faChevronUp} size="lg" />
+        <span className="recipe-detail-page-top-text">TOP</span>
+      </div>
+
       {/* </div> */}
 
       <div className="card-div-firstsection">

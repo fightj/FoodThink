@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
 import SearchBarRecipe from "../../components/base/SearchBarRecipe"
 import "../../styles/recipe/RecipesMainPage.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
 
 function useQuery() {
   return new URLSearchParams(useLocation().search)
@@ -86,6 +88,11 @@ const RecipeSearchResultPage = () => {
     }
   }, [page])
 
+  // 페이지 맨 위로 스크롤하는 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth"})
+  }
+
   return (
     <div className="base-div">
       <SearchBarRecipe onSearch={handleSearch} initialQuery={searchQuery} />
@@ -128,6 +135,11 @@ const RecipeSearchResultPage = () => {
             </div>
           </div>
         </div>
+        {/* 페이지 맨 위로 올라가는 버튼 */}
+          <div className="sns-main-scroll-to-top-div" onClick={scrollToTop}>
+            <FontAwesomeIcon icon={faChevronUp} size="lg" />
+            <span className="sns-main-top-text">TOP</span>
+          </div>
       </div>
     // </div>
   )

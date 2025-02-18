@@ -451,3 +451,28 @@
   text-align: center;
   margin-top: 20px;
 }
+
+.recipe-detail-page-scroll-to-top-div {
+  position: fixed;
+  bottom: 20px;
+  right: 45px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 60px;  /* 원의 크기 */
+  height: 60px; /* 원의 크기 */
+  padding: 10px; /* 아이콘과 텍스트를 위한 패딩 */
+  z-index: 2000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-detail-page-scroll-to-top-btn .recipe-detail-page-top-text {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
