@@ -161,14 +161,14 @@ function AiRecommendPage() {
 
       const data = await response.json();
       if (!Array.isArray(data)) {
-        Swal.fire("알림", "추천된 레시피가 없습니다.", "warning");
+        Swal.fire({title: "알림", text: "추천된 레시피가 없습니다.", icon: "warning", customClass: { popup: "custom-swal-popup"}});
         setStep("start");
         return;
       }
       setRecipes(data);
       setStep("result"); // 결과 화면으로 전환
     } catch (error) {
-      Swal.fire("오류 발생", "추천된 레시피를 불러오지 못했습니다.", "error");
+      Swal.fire({title: "오류 발생", text: "추천된 레시피를 불러오지 못했습니다.", icon: "error", customClass: { popup: "custom-swal-popup"}});
       setStep("start");
     }
   };

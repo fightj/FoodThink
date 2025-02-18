@@ -214,7 +214,8 @@
 }
 
 .search-result-title {
-  text-align: right; 
+  width: 85%;
+  text-align: right;
 }
 
 .sns-main-scroll-to-top-div {

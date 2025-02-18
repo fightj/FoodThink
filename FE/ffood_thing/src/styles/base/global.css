@@ -112,14 +112,6 @@ body {
   margin-bottom: 10px;
 }
 
-/* SNS피드 작성 및 수정 참고 레시피  (02.15) */
-.sns-reference-recipe {
-  background-color: #282828 !important;
-  color: white;
-  font-size: 1.1em;
-  padding: 0.5em 1em;
-}
-
 /* SNS피드 작성 및 수정 내용 넣는 부분 글자 조정 */
 .feed-write-text {
   font-size: 1em;
