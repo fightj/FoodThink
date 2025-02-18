@@ -70,7 +70,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
       {/* ✅ 기본 사이드바 */}
       <div className="sidebar">
         <a href="/" className="home-link">
-          <img src="./images/시원이.png" className="home-icon" />
+          <img src="/images/시원이.png" className="home-icon" />
           홈으로</a>
         <hr />
 
