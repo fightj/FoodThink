@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/sns/FeedCommentSection.css";
 import Swal from "sweetalert2";
+import "../../styles/base/global.css"
 
 const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
   const [newComment, setNewComment] = useState("");
@@ -10,7 +11,6 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    // Retrieve user information from session storage
     const storedUser = sessionStorage.getItem("user");
     console.log(storedUser)
     if (storedUser) {
@@ -43,6 +43,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");
@@ -62,7 +63,20 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
       });
 
       if (response.ok) {
-        window.location.reload(); // Automatically refresh the page after adding a comment
+        // window.location.reload();
+        const newCommentData = await response.text();
+
+        // 댓글 추가 후, 댓글 목록을 다시 fetch
+        const updatedCommentsResponse = await fetch(`https://i12e107.p.ssafy.io/api/feed/comment/read/${feedId}`);
+        console.log(updatedCommentsResponse)
+        if (updatedCommentsResponse.ok) {
+          const updatedComments = await updatedCommentsResponse.json();
+          setLocalComments(updatedComments);  // 새 댓글 목록으로 갱신
+        }
+
+        setNewComment(""); // 댓글 입력란 초기화
+        // setLocalComments((prevComments) => [...prevComments, newCommentData]);
+        // setNewComment("");
       } else {
         console.error("Error adding comment");
       }
@@ -93,6 +107,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");
@@ -112,7 +127,21 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
       });
 
       if (response.ok) {
-        window.location.reload(); // Automatically refresh the page after updating a comment
+        //window.location.reload(); // Automatically refresh the page after updating a comment
+
+        // 서버에서 업데이트된 댓글 목록을 가져오는 대신,
+        // 로컬 상태에서 수정된 댓글만 업데이트
+        setLocalComments((prevComments) => {
+          return prevComments.map((comment) =>
+            comment.id === commentId
+              ? { ...comment, content: editingCommentContent } // 수정된 댓글만 반영
+              : comment
+          );
+        });
+
+        setEditingCommentId(null);  // 수정 모드 종료
+        setEditingCommentContent(""); // 입력란 초기화
+
       } else {
         console.error("Error updating comment");
       }
@@ -134,6 +163,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");
@@ -151,7 +181,9 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
       });
 
       if (response.status === 204) {
-        window.location.reload(); // Automatically refresh the page after deleting a comment
+        setLocalComments((prevComments) =>
+          prevComments.filter((comment) => comment.id !== commentId)
+        );
       } else {
         console.error("Error deleting comment");
       }
@@ -162,7 +194,16 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
 
   return (
     <div className="comment-div">
-      <h3>댓글</h3>
+      <div className="comment-input-wrapper">
+        <input
+          type="text"
+          className="comment-input"
+          value={newComment}
+          onChange={handleCommentChange}
+          placeholder="댓글을 입력하세요..."
+        />
+        <button className="add-comment-button" onClick={handleAddComment}>🚀</button>
+      </div>
 
       {localComments.length > 0 ? (
         localComments.map((comment) => (
@@ -172,22 +213,22 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
               {editingCommentId === comment.id ? (
                 <div>
                   <input
+                    className="update-comment-input"
                     type="text"
                     value={editingCommentContent}
                     onChange={handleEditCommentChange}
                   />
-                  <button onClick={() => handleUpdateComment(comment.id)}>Update</button>
-                  <button onClick={() => setEditingCommentId(null)}>Cancel</button>
+                  <button className="update-comment-button" onClick={() => handleUpdateComment(comment.id)}>✏️ 수정 완료</button>
                 </div>
               ) : (
                 <div>
-                  <span className="comment-author-name">{comment.username || "Unknown User"}</span>
+                  <p className="comment-author-name">{comment.username || "Unknown User"}</p>
                   <p className="comment-content">{comment.content}</p>
                   <span className="comment-time">{comment.writeTime}</span>
                   {currentUser && comment.userId === currentUser.userId && (
                     <div className="comment-actions">
-                      <button onClick={() => handleEditComment(comment.id, comment.content)}>Edit</button>
-                      <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
+                      <button className="update-comment-button" onClick={() => handleEditComment(comment.id, comment.content)}>✏️ 수정</button>
+                      <button className="delete-comment-button" onClick={() => handleDeleteComment(comment.id)}>🗑️ 삭제</button>
                     </div>
                   )}
                 </div>
@@ -196,28 +237,10 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
           </div>
         ))
       ) : (
-        <p className="no-comments">댓글이 없습니다.</p>
+        <p className="no-comments">📌 댓글이 없습니다. 😯</p>
       )}
-
-      <div className="comment-input-wrapper">
-        <input
-          type="text"
-          className="comment-input"
-          value={newComment}
-          onChange={handleCommentChange}
-          placeholder="댓글을 입력하세요..."
-        />
-        <div className="btn-background">
-          <img
-            src="/images/up-arrow.png"
-            alt="댓글 추가"
-            className="add-comment-btn-image"
-            onClick={handleAddComment}
-          />
-        </div>
-      </div>
-
-      <img src="/images/exit-btn.png" alt="닫기 버튼" className="close-button-image" onClick={onClose} />
+      {/* 닫기 버튼 제거 -> 위에서 아래로 스와이프로 변경 */}
+      {/* <img src="/images/exit-btn.png" alt="닫기 버튼" className="close-button-image" onClick={onClose} /> */}
     </div>
   );
 };

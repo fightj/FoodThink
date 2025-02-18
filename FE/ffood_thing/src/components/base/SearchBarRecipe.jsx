@@ -25,7 +25,7 @@ function SearchBarRecipe({ initialQuery, onSearch }) {
 
   return (
     <div className="header-all">
-      <img src="/images/메인로고.png" className="main-logo" alt="Logo" />
+      <img src="/images/메인로고.png" className="main-logo" alt="Logo" onClick={() => navigate("/")}/>
       <div className="search-bar">
         <div className="search-input-wrapper">
           <input type="text" className="search-input" placeholder="제목이나 재료를 입력해주세요." value={query} onChange={handleInputChange} onKeyPress={handleKeyPress} />

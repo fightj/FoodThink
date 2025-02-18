@@ -3,6 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios"
 import SearchBarRecipe from "../../components/base/SearchBarRecipe"
 import "../../styles/recipe/RecipesMainPage.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronUp, faChevronLeft } from "@fortawesome/free-solid-svg-icons"
+import "../../styles/base/global.css" // 백버튼
 
 function useQuery() {
   return new URLSearchParams(useLocation().search)
@@ -86,44 +89,60 @@ const RecipeSearchResultPage = () => {
     }
   }, [page])
 
+  // 페이지 맨 위로 스크롤하는 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth"})
+  }
+
   return (
     <div className="base-div">
       <SearchBarRecipe onSearch={handleSearch} initialQuery={searchQuery} />
-      <div className="recipe-parent-div">
-        <div className="recipe-card-div">
-          <div className="d-flex justify-content-between align-items-center mt-0" style={{ padding: "0 20px" }}>
-            <button onClick={() => navigate(-1)} className="back-button1">
-              <img src="/images/previous_button.png" alt="Previous" className="icon" />
-              이전
+      {/* <div className="recipe-parent-div"> */}
+        <div className="card-div">
+          <div className="search-page-header">
+            <button onClick={() => navigate(-1)} className="back-button">
+              <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
             </button>
-            <h3>
+            <div className="search-page-text">
               "{searchQuery}"에 대한 검색 결과가 총 {totalResults}개 있습니다.
-            </h3>
+            </div>
           </div>
-          <div className="recipe-list2">
+          <div className="main-recipe-list">
             {filteredRecipes.map((recipe, index) => (
               <div
                 key={recipe.recipeId}
                 ref={filteredRecipes.length === index + 1 ? lastRecipeElementRef : null}
-                className="recipe-card2 recipe-card2-small"
+                className="main-recipe-card"
                 onClick={() => handleDetailClick(recipe.recipeId)}
               >
-                <img src={recipe.image} alt={recipe.recipeTitle} className="recipe-image2" />
-                <div className="recipe-info2">
-                  <h2>{recipe.recipeTitle}</h2>
-                  <div className="profile-info">
-                    <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="profile-image2" />
-                    <p>{recipe.nickname}</p>
+                <img src={recipe.image} alt={recipe.recipeTitle} className="main-recipe-image" />
+                <div className="main-recipe-info">
+                  <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="main-profile-image" />
+                  <div className="main-profile-info">
+                    <div className="main-recipe-info-title">{recipe.recipeTitle}</div>
+                      <div className="main-profile-stats">{recipe.nickname}</div>
+                      <div className="main-profile-stats">
+                        👁 {recipe.hits} ·
+                        <img src="/images/do-Bookmark.png" alt="북마크 아이콘" className="main-page-bookmark-icon" />
+                        {recipe.bookMarkCount}
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
-            {loading && <p>로딩 중...</p>}
-            {filteredRecipes.length === 0 && !loading && <p>검색 결과가 없습니다.</p>}
+            <div className="main-recipe-text-container">
+            {loading && <div className="main-recipe-text">로딩 중...</div>}
+            {filteredRecipes.length === 0 && !loading && <div className="main-recipe-text">검색 결과가 없습니다.</div>}
+            </div>
           </div>
         </div>
+        {/* 페이지 맨 위로 올라가는 버튼 */}
+          <div className="recipe-main-page-scroll-to-top-div" onClick={scrollToTop}>
+            <FontAwesomeIcon icon={faChevronUp} size="lg" />
+            <span className="recipe-main-page-top-text">TOP</span>
+          </div>
       </div>
-    </div>
+    // </div>
   )
 }
 

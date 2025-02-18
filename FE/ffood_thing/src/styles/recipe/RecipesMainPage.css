@@ -1,95 +1,109 @@
-.recipes-main-page {
-  padding: 2rem;
-  text-align: center;
+.recipe-page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; /* ✅ 내부 요소를 양쪽 정렬 */
+  align-items: center; /* ✅ 세로 중앙 정렬 */
+  margin-bottom: 1rem; /* ✅ 하단 여백 */
 }
 
-.recipe-parent-div {
+.back-button {
+  align-self: flex-start; /* ✅ 모바일에서도 왼쪽 정렬 유지 */
+}
+
+
+.category-onoff-button {
+  /* background-color: #fdb13f; */
+  background-color: #fb923c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  /* 크기 자동 조정 */
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-}
-
-.recipe-card-div {
-  background-color: rgb(255, 255, 255);
-  width: 95%;
-  padding: 30px 10px;
-  display: flex;
-  border-radius: 50px;
-  height: auto;
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.08), 0 -10px 15px rgba(0, 0, 0, 0.3);
-  flex-direction: column;
+  white-space: nowrap;
+  margin-left: 0.7rem;
+  font-family: 'omyu_pretty';
 }
 
 .write-recipe-button5 {
   background: none;
   border: none;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-
-h2 {
-  font-size: 1.5rem;
-  color: #fdb13f;
-  margin-right: 2rem;
-  padding: 1rem;
-  border-radius: 10rem;
-  white-space: nowrap;
-}
-
-h3 {
-  font-size: 1.5rem;
-  margin-top: 1.2rem;
-  margin-right: 2rem;
-  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }
 
 .categories2 {
   display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
-  margin-left: 3rem;
   flex-wrap: wrap;
+  padding: 0.3rem;
+  gap: 1rem;
 }
 
 .category-group2 {
   display: flex;
-  flex-direction: row; /* 세로 방향으로 변경 */
+  flex-direction: column; /* 세로 방향으로 변경 */
+  /* border: 1px solid #ffd494; */
+  background-color: #faead1;
+  border-radius: 1rem;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.category-title {
+  font-size: 1.7rem;
+  /* color: #ff9900; */
+  color: #ea580c;
+  padding: 0.5rem 1rem 1rem 1rem;
+  border-radius: 10rem;
+  white-space: nowrap;
+  font-family: 'Binggrae';
+  font-weight: 600;
 }
 
 .category-items2 {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem; /* 아이템 간 간격 조정 */
+  gap: 0.3rem; /* 아이템 간 간격 조정 */
+  /* justify-content: center; */
+  align-items: center;
+  text-align: center;
+  font-family: "Dovemayo_gothic";
+  font-weight: 500;
+  font-size: 20px;
 }
 
 .category-item2,
 .filter-item {
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   padding: 0.5rem 1rem;
   border-radius: 15px;
   transition: background-color 0.3s, color 0.3s;
   white-space: nowrap;
   height: 3rem;
-  margin-top: 0.5rem; /* 아이템 위쪽 여백 조정 */
+
 }
 
 .category-item2.selected,
 .filter-item.selected {
-  background-color: #fdb13f;
-  color: #ffffff;
-  margin: 1rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 3px;
+  font-weight: bold;
 }
 
 .filters2 {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin: 2rem 0;
   flex-wrap: wrap;
 }
 
@@ -100,8 +114,16 @@ h3 {
   overflow: hidden; /* 하단 스크롤바 삭제 */
 }
 
+.popular-recipe {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 2rem 1rem 0rem 1rem;
+  font-family: "NPSfont_regular";
+}
+
 .carousel2 {
   display: flex;
+  gap: 0.5rem;
   overflow-x: scroll;
   scroll-behavior: smooth;
   padding: 1rem 0; /* 카드가 잘리지 않도록 패딩 추가 */
@@ -109,289 +131,286 @@ h3 {
   scrollbar-color: #fdb13f #ddd;
 }
 
-.recipe-list2 {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  justify-content: center;
-  flex-wrap: wrap; /* 요소를 여러 줄로 감싸기 */
-}
-
-.recipe-list2 .recipe-card2 {
-  flex: 0 1 calc(25% - 4rem); /* 4개씩 한 줄에 표시, 간격 제외한 너비 계산 */
-  box-sizing: border-box; /* 패딩과 테두리를 포함한 너비 계산 */
-  aspect-ratio: 1 / 1.618; /* 황금비율로 가로 및 세로 비율 고정 */
-}
-
-.recipe-list2 h2 {
-  color: black;
-  font-size: 1rem;
-}
-
-/* 특정 부분의 카드 크기 조정 */
-.recipe-list2 .recipe-card2-small {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: calc(25% - 1rem); /* 한 줄에 4개가 들어가도록 너비 설정 */
-  height: auto;
-  flex-shrink: 0;
-  margin: 0 0.5rem;
-  aspect-ratio: 1 / 1.618; /* 황금비율로 가로 및 세로 비율 고정 */
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px; /* 버튼 간격 조절 */
-  margin-top: 20px;
-}
-
-.page-button {
+.popular-card {
   display: flex;
   flex-direction: column;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  flex: 0 1 calc(25% - 1rem);
+  box-sizing: border-box;
+  aspect-ratio: 1 / 1.3;
+  width: 330px; /* 카드 너비 조정 */
+  height: 330px;
+  transition: transform 0.3s ease-in-out;
+  padding: 1rem 0.5rem;
+}
+
+.popular-card-container {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+}
+
+.popular-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.popular-medal {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 50px; /* 아이콘 크기 */
+  height: 50px;
+}
+
+.popular-medal-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 아이콘이 깨지지 않도록 */
+}
+
+
+.popular-hit-eye-icon-area {
+  position: absolute;
+  right: 2%;
+  bottom: 2%;
+  background-color: rgba(233, 233, 233, 0.63);/* 약간 투명한 회색 배경 */
+  padding: 0px 10px; /* 내부 패딩 추가 */
+  border-radius: 30px; /* 모서리를 둥글게 설정 */
+  display: flex; /* 자식 요소 정렬을 위한 플렉스박스 */
+  justify-content: center;
   align-items: center;
+  gap: 8px;
 }
 
-.pagination button {
-  font-family: "Arial", sans-serif;
-  font-size: 24px; /* 글자 크기 조절 */
-  font-weight: bold; /* 글자 굵기 조절 */
-  color: orange;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color 0.3s;
+.popular-hit-eye-icon {
+  width: 20px;
+  height: 20px;
 }
 
-.pagination button:hover {
-  color: darkorange;
-}
-
-.pagination button.active {
-  color: crimson;
-}
-
-.pagination button:disabled {
-  color: lightgray;
-  cursor: not-allowed;
-}
-
-.page-number {
-  font-size: 12px;
-  color: black;
-}
-
-.navigation-button {
+.popular-hit-eye-count {
+  font-size: 1rem;
+  color: black; 
+  font-family: 'SOYO Maple Regular';
   font-weight: bold;
 }
 
-@media (max-width: 1200px) {
-  .recipe-list2 .recipe-card2-small {
-    flex: 0 1 calc(33.33% - 1rem); /* 줄 당 3개 표시 */
-  }
-}
-
-@media (max-width: 992px) {
-  .recipe-list2 .recipe-card2-small {
-    flex: 0 1 calc(50% - 1rem); /* 줄 당 2개 표시 */
-  }
-}
-
-@media (max-width: 768px) {
-  .recipe-list2 .recipe-card2-small {
-    flex: 0 1 calc(50% - 1rem); /* 줄 당 2개 표시 */
-  }
-}
-
-@media (max-width: 480px) {
-  .recipe-list2 .recipe-card2-small {
-    flex: 0 1 calc(100% - 1rem); /* 줄 당 1개 표시 */
-  }
-}
-
-.recipe-card2 {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 325px; /* 카드 너비 조정 */
-  height: 526px;
-  flex-shrink: 0;
-  margin: 0 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* 수직 방향으로 자리를 같은 자리에 유지 */
-}
-
-.image-container2 {
-  position: relative;
-  overflow: hidden;
-}
-
-.recipe-image2 {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.recipe-info2 {
-  padding: 1rem;
+.popular-card-info {
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  font-size: 0.9rem;
+  max-width: 100%;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 최대 2줄 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2rem; /* 줄 간격 조정 */
+  height: 3rem; /* 정확하게 2줄을 차지하도록 고정 */
+  font-family: 'LotteMartDream';
 }
 
-.recipe-info2 h2 {
-  color: black;
-  font-size: 1.5rem;
-  margin: 0.5rem 0 0; /* 제목을 위쪽으로 올리기 위한 여백 조정 */
-  overflow: hidden; /* 내용이 넘치면 숨기기 */
-  text-overflow: ellipsis; /* 넘치는 내용 ...으로 표시 */
-  white-space: nowrap; /* 줄 바꿈 없음 */
-  width: 100%; /* 부모 요소의 너비에 맞추기 */
-  display: block; /* 블록 요소로 표시 */
-  box-sizing: border-box; /* 패딩과 테두리를 포함한 너비 계산 */
+.main-sort-filters {
+  display: flex;
+  justify-content: right;
+  margin: 1rem 0;
+  font-family: 'omyu_pretty';
+  font-size: 20px;
 }
 
-.bookmark-count2 {
+.main-sort-filter {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  position: relative;
+}
+
+.main-sort-filter:not(:last-child)::after {
+  content: "|";
   position: absolute;
-  top: 10px; /* 이미지 상단에서 10px 위치 */
-  right: 10px; /* 이미지 우측에서 10px 위치 */
-  background-image: url("/images/do-Bookmark.png");
-  background-size: cover;
-  color: #000000; /* 텍스트 색상 */
-  padding: 5px 10px; /* 패딩 */
-  border-radius: 5px; /* 모서리 둥글게 */
-  font-size: 14px; /* 폰트 크기 */
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #cccccc;
+  font-size: 0.8rem;
+  font-weight: 300;
+}
+
+.main-sort-filter.selected {
+  color: #ff7b00;
+  /* border: 1px solid #000000; */
+}
+
+.main-recipe-list {
   display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
   justify-content: center;
-  align-items: center;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.bookmark-text2 {
-  font-size: 20px; /* 숫자 크기 */
-}
-
-.profile-info {
+/* 레시피 카드 */
+.main-recipe-card {
   display: flex;
-  align-items: center; /* 프로필 이미지와 닉네임을 세로로 가운데 정렬 */
-  margin-top: 0.5rem;
+  flex-direction: column;
+  justify-self: space-between;
+  /* width: 23%; */
+  width: calc(25% - 0.75rem); /* ✅ 기본 4개씩 */
+  max-width: 280px;
+  height: 265px;
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: hidden;
+  /* margin: auto; */
 }
 
-.profile-image2 {
+/* 🔹 반응형 미디어 쿼리 */
+@media (max-width: 1024px) { /* 태블릿 */
+  .main-recipe-card {
+    width: calc(33.3% - 0.75rem); /* ✅ 한 줄에 3개 */
+  }
+}
+
+@media (max-width: 768px) { /* 작은 태블릿 */
+  .main-recipe-card {
+    width: calc(50% - 0.75rem); /* ✅ 한 줄에 2개 */
+  }
+}
+
+@media (max-width: 480px) { /* 모바일 */
+  .main-recipe-card {
+    width: 90%; /* ✅ 한 줄에 1개 */
+    max-width: 320px; /* ✅ 최대 크기 제한 */
+    margin: auto;
+  }
+}
+
+/* 이미지 스타일 */
+.main-recipe-image {
+  width: 100%;
+  height: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.main-recipe-info {
+  display: flex;
+  flex-direction: row;
+  margin: 0.5rem 0 0; /* 제목을 위쪽으로 올리기 위한 여백 조정 */
+  gap: 0.5rem;
+}
+
+.main-profile-image {
   width: 40px; /* 너비 조정 */
   height: 40px; /* 높이 조정 */
   border-radius: 50%; /* 둥근 모서리 */
   object-fit: cover; /* 이미지 커버 */
-  margin-right: 0.5rem; /* 오른쪽 여백 좁히기 */
-  vertical-align: middle; /* 중간 정렬 */
 }
 
-.recipe-info2 p {
-  font-size: 1rem;
-  color: #777;
-  margin: 0; /* 닉네임 여백 조정 */
-}
-
-.detail-button2 {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
-
-.detail-button2:hover {
-  background-color: #45a049;
-}
-
-.carousel-button.left {
-  left: 10px;
-}
-
-.carousel-button.right {
-  right: 10px;
-}
-
-.sort-filters2 {
+.main-profile-info {
   display: flex;
-  justify-content: right;
-  gap: 1rem;
-  margin: 2rem 0;
-  padding: 0.5rem;
-  border-radius: 10px;
+  flex-direction: column;
+  width: 100%;
 }
 
-.sort-filter2 {
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.sort-filter2.selected {
-  background-color: #ff6b42;
-  color: #fff;
-}
-
-.sort-filter2:hover {
-  background-color: #e0e0e0;
-}
-
-.category-onoff-button {
-  background-color: #fdb13f;
-  color: white;
-  border: none;
-  margin-left: 45%;
-  margin-right: 45%;
-  border-radius: 5px;
-  cursor: pointer;
+.main-recipe-info-title {
+  color: black;
   font-size: 1rem;
-  margin-top: 1rem;
+  overflow: hidden; /* 내용이 넘치면 숨기기 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 최대 2줄 */
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis; /* 넘치는 내용 ...으로 표시 */
+  white-space: normal;
+  
+  font-family: 'LotteMartDream';
 }
 
+.main-profile-stats {
+  font-size: 0.9rem;
+  color: #9c9c9c;
+  font-family: 'SOYO Maple Regular';
+  font-weight: bold;
+}
+
+.main-page-bookmark-icon {
+  width: 17px; /* 너비 조정 */
+  height: 18px; /* 높이 조정 */
+  margin-bottom: 3px;
+}
+
+.main-recipe-text-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-recipe-text {
+  margin-top: 5vh;
+  font-size: 2rem;
+  font-family: 'IM_Hyemin-Bold';
+}
+
+.search-page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; /* ✅ 내부 요소를 양쪽 정렬 */
+  align-items: center; /* ✅ 세로 중앙 정렬 */
+  margin-bottom: 1rem; /* ✅ 하단 여백 */
+}
+
+/* 🔹 모바일 화면(세로 모드)에서 column 정렬 */
 @media (max-width: 768px) {
-  .recipe-card2 {
-    width: 150px; /* 너비 조정 */
+  .search-page-header {
+    flex-direction: column; /* ✅ 세로 정렬 */
+    justify-content: flex-start; /* ✅ 중앙 정렬 유지 */
+    gap: 0.5rem; /* ✅ 요소 간 간격 추가 */
+  }
+  .search-page-text {
+    width: 100%;
+    text-align: left;
   }
 }
 
-@media (max-width: 480px) {
-  .recipe-card2 {
-    width: 120px; /* 너비 조정 */
-  }
+.search-page-text {
+  width: 85%;
+  text-align: right;
+  font-family: 'PTBandocheB';
 }
 
-/* 예쁜 스크롤 바 스타일링 */
-.carousel2::-webkit-scrollbar {
-  height: 8px; /* 가로 스크롤 바 높이 설정 */
+.recipe-main-page-scroll-to-top-div {
+  position: fixed;
+  bottom: 2rem;
+  right: 4.5rem;
+  background-color: #ff7f00;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 4rem;
+  height: 4rem;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease-in-out;
 }
 
-.carousel2::-webkit-scrollbar-track {
-  background: #ddd; /* 기본 트랙 배경색 */
-  border-radius: 10px; /* 모서리 둥글게 */
+.recipe-main-page-scroll-to-top-btn .recipe-main-page-top-text {
+  font-size: 12px;
+  margin-top: 5px;
 }
 
-.carousel2::-webkit-scrollbar-thumb {
-  background-color: #fdb13f; /* 스크롤 바 색상 */
-  border-radius: 10px; /* 스크롤 바 모서리 둥글게 */
-  border: 2px solid #ddd; /* 기본 트랙 색상과 일치하도록 설정 */
-  transition: background-color 0.3s ease; /* 색상 전환 애니메이션 */
-}
-
-.carousel2::-webkit-scrollbar-thumb:hover {
-  background-color: #ffcc80; /* 스크롤 바 호버 시 색상 변경 */
-}
-
-.carousel2::-webkit-scrollbar-button {
-  display: none; /* 작은 화살표 숨기기 */
-}

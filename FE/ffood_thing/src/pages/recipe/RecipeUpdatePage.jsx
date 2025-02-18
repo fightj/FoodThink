@@ -7,8 +7,20 @@ import { HTML5Backend } from "react-dnd-html5-backend"
 import { TouchBackend } from "react-dnd-touch-backend"
 import "../../styles/recipe/RecipeWritePage.css"
 import "../../styles/base/global.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPlus, faX, faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 
 const ItemType = "STEP"
+// urlToFile 함수 추가
+const urlToFile = async (url, filename, mimeType) => {
+  try {
+    const response = await fetch(url)
+    const blob = await response.blob()
+    return new File([blob], filename, { type: mimeType })
+  } catch (error) {
+    console.error("Error converting URL to File:", error)
+  }
+}
 
 function Step({ step, index, moveStep, updateStepText, handleStepImageUpload, removeStepImage, removeStep }) {
   const ref = React.useRef(null)
@@ -36,39 +48,33 @@ function Step({ step, index, moveStep, updateStepText, handleStepImageUpload, re
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
     item: () => {
-      document.body.style.overflow = 'hidden';
-      return { type: ItemType, index };
+      document.body.style.overflow = "hidden"
+      return { type: ItemType, index }
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
     end: (item, monitor) => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = ""
     },
-  });
+  })
 
   drag(drop(ref))
 
   return (
-    <div ref={drag(drop(ref))}  className="recipe-write-step-input-group" 
-      style={{ opacity: isDragging ? 0.5 : 1, cursor: 'move' }}
-    >
+    <div ref={ref} className="recipe-write-step-input-group" style={{ opacity: isDragging ? 0.5 : 1, cursor: "move" }}>
       <input type="text" className="recipe-write-step-input-title" value={`Step ${index + 1}`} readOnly />
-      <textarea 
-        className="recipe-write-step-input-text" 
-        value={step.processExplain} 
-        onChange={(e) => updateStepText(index, e.target.value)} 
-      />
+      <textarea className="recipe-write-step-input-text" value={step.processExplain} onChange={(e) => updateStepText(index, e.target.value)} />
       <div className="recipe-write-step-input-image-upload">
-        {step.imageFile ? (
+        {step.imageFile || step.imageUrl ? (
           <div className="recipe-write-step-image-container">
-            <img src={URL.createObjectURL(step.imageFile)} alt={`Step ${index + 1}`} className="recipe-write-step-uploaded-image" />
-            <button 
-              className="recipe-write-step-upload-image-remove-btn" 
+            <img src={step.imageFile ? URL.createObjectURL(step.imageFile) : step.imageUrl} alt={`Step ${index + 1}`} className="recipe-write-step-uploaded-image" />
+            <button
+              className="recipe-write-step-upload-image-remove-btn"
               onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                removeStepImage(index);
+                e.stopPropagation()
+                e.preventDefault()
+                removeStepImage(index)
               }}
             >
               X
@@ -77,20 +83,14 @@ function Step({ step, index, moveStep, updateStepText, handleStepImageUpload, re
         ) : (
           <label htmlFor={`stepImageUpload-${index}`}>사진 추가하기</label>
         )}
-        <input 
-          type="file" 
-          id={`stepImageUpload-${index}`} 
-          accept="image/*" 
-          onChange={(e) => handleStepImageUpload(e, index)} 
-          hidden 
-        />
+        <input type="file" id={`stepImageUpload-${index}`} accept="image/*" onChange={(e) => handleStepImageUpload(e, index)} hidden />
       </div>
       <button className="recipe-write-step-remove-btn" onClick={() => removeStep(index)}>
-        <img src="/images/close_icon.png" alt="삭제"/>
+        <FontAwesomeIcon icon={faX} size="2xl" style={{ color: "#fe5868" }} />
       </button>
     </div>
-  );
-};
+  )
+}
 
 function RecipeUpdatePage() {
   const navigate = useNavigate()
@@ -323,7 +323,6 @@ function RecipeUpdatePage() {
     const token = localStorage.getItem("accessToken")
     const formData = new FormData()
 
-    // 레시피 데이터 준비
     const recipeData = {
       recipeTitle,
       cateType: category,
@@ -342,53 +341,47 @@ function RecipeUpdatePage() {
       })),
     }
 
+    console.log("📊 Recipe Data before sending:", recipeData) // 전송 전 recipeData 출력
+
     const recipeBlob = new Blob([JSON.stringify(recipeData)], { type: "application/json" })
     formData.append("recipe", recipeBlob)
 
-    // 기존 이미지 URL을 가져오는 부분 (기존 이미지 URL이 필요함)
-    // 예시로 existingImageUrl을 props나 state에서 가져온다고 가정합니다.
-    let existingImageUrl = "" // existingImageUrl을 올바르게 초기화합니다.
-    if (recipeData.imageUrl) {
-      existingImageUrl = recipeData.imageUrl
-    }
-
-    // 1. 대표 이미지 처리 (수정하지 않으면 기존 이미지 유지)
+    let existingImageUrl = previewImageUrl
     if (imageFile) {
-      formData.append("imageFile", imageFile) // 새 이미지를 포함
+      formData.append("imageFile", imageFile)
     } else if (existingImageUrl) {
-      formData.append("imageFile", existingImageUrl) // 기존 이미지 URL을 포함
+      const file = await urlToFile(existingImageUrl, existingImageUrl.split("/").pop(), "image/jpeg")
+      formData.append("imageFile", file)
     }
 
-    // 2. 과정 이미지 처리 (새 이미지와 기존 이미지를 혼합)
     const processOrders = []
     const processImages = []
     const existingProcessImages = []
 
     for (const [idx, step] of steps.entries()) {
       if (step.imageFile) {
-        formData.append("processImages", step.imageFile) // 새 과정 이미지를 추가
+        formData.append("processImages", step.imageFile)
         processImages.push(step.imageFile)
         processOrders.push(idx + 1)
       } else if (step.imageUrl) {
-        existingProcessImages.push(step.imageUrl) // 기존 과정 이미지를 유지
+        const file = await urlToFile(step.imageUrl, step.imageUrl.split("/").pop(), "image/jpeg")
+        formData.append("processImages", file)
         processOrders.push(idx + 1)
       }
     }
 
-    // 기존 이미지가 있을 경우 추가
     if (existingProcessImages.length > 0) {
       formData.append("existingImages", JSON.stringify(existingProcessImages))
     }
 
-    // 과정 순서 데이터 추가
     formData.append("processOrders", new Blob([JSON.stringify(processOrders)], { type: "application/json" }))
 
-    try {
-      console.log("📤 Submitting recipe data:", JSON.stringify(recipeData, null, 2))
-      console.log("🖼️ processOrders:", processOrders)
-      console.log("🖼️ processImages count:", processImages.length)
-      console.log("🖼️ existingImages count:", existingProcessImages.length)
+    console.log("📤 FormData to be submitted:")
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value)
+    })
 
+    try {
       const response = await axios.put(`https://i12e107.p.ssafy.io/api/myOwnRecipe/update/${recipeId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -397,6 +390,17 @@ function RecipeUpdatePage() {
       })
 
       if (response.status === 200) {
+        console.log("✅ Updated Recipe Data after PUT request:", recipeData) // PUT 요청 후 전송한 데이터 출력
+
+        // 수정 완료 후 GET 요청을 추가하여 최신 데이터를 받아옴
+        const updatedResponse = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${recipeId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        console.log("✅ Updated Recipe Data after GET request:", updatedResponse.data) // GET 요청 후 데이터 출력
+
         Swal.fire({
           title: "수정 완료",
           text: "레시피가 성공적으로 수정되었습니다.",
@@ -441,12 +445,14 @@ function RecipeUpdatePage() {
   return (
     <DndProvider backend={window.innerWidth < 768 ? TouchBackend : HTML5Backend}>
       <div className="base-div">
+        <div className="card-div">
           <div className="recipe-write-container">
             <div className="recipe-write-header">
-              <button onClick={() => navigate(-1)} className="recipe-write-back-button">
-                <img src="/images/previous_button.png" alt="Previous" className="icon" />
+              <button onClick={() => navigate(-1)} className="back-button">
+                <FontAwesomeIcon className="chevron-left-back-button" icon={faChevronLeft} size="3x" style={{ color: "#F7B05B" }} />
               </button>
-              <div className="recipe-write-page-title">나만의 레시피 레시피 수정하기&nbsp;
+              <div className="recipe-write-page-title">
+                나만의 레시피 수정하기&nbsp;
                 <img src="/images/끼쟁이.png" />
               </div>
               <div className="recipe-write-page-title-blank"></div>
@@ -459,7 +465,7 @@ function RecipeUpdatePage() {
                   </div>
                   <div className="recipe-write-title-container-input">
                     <input type="text" className="recipe-title-input" placeholder="예) 연어 포케 만들기" value={recipeTitle} onChange={(e) => setRecipeTitle(e.target.value)} />
-                    </div>
+                  </div>
                 </div>
                 <div className="recipe-write-category-container">
                   <div className="recipe-write-category-container-title">
@@ -570,9 +576,7 @@ function RecipeUpdatePage() {
 
             <div className="recipe-write-ingre-container">
               <div className="recipe-write-ingre-container-top">
-                <div className="recipe-write-ingre-container-title">
-                  재료
-                </div>
+                <div className="recipe-write-ingre-container-title">재료</div>
                 <div className="recipe-write-ingre-input-container">
                   {ingredients.map((ingredient, index) => (
                     <div className="recipe-write-ingre-input-group" key={index}>
@@ -599,7 +603,7 @@ function RecipeUpdatePage() {
                         }}
                       />
                       <button className="recipe-write-ingre-remove-btn" onClick={() => removeIngredient(index)}>
-                        <img src="/images/close_icon.png"/>
+                        <FontAwesomeIcon icon={faX} size="2xl" style={{ color: "#fe5868" }} />
                       </button>
                     </div>
                   ))}
@@ -607,7 +611,7 @@ function RecipeUpdatePage() {
               </div>
               <div className="recipe-write-ingre-add-btn-wrapper">
                 <button className="recipe-write-ingre-add-btn" onClick={addIngredient}>
-                  <img src="/images/add_circle.png" />
+                  <FontAwesomeIcon icon={faPlus} size="2x" style={{ color: "#74C0FC", fontWeight: "bold" }} />
                 </button>
               </div>
             </div>
@@ -627,38 +631,33 @@ function RecipeUpdatePage() {
                   />
                 ))}
 
-              {/* 추가 버튼 */}
-              <div className="recipe-write-step-add-btn-wrapper">
-                <button className="recipe-write-step-add-btn" onClick={addStep}>
-                  <img src="/images/add_circle.png" alt="추가" />
-                </button>
+                {/* 추가 버튼 */}
+                <div className="recipe-write-step-add-btn-wrapper">
+                  <button className="recipe-write-step-add-btn" onClick={addStep}>
+                    <FontAwesomeIcon icon={faPlus} size="2x" style={{ color: "#74C0FC", fontWeight: "bold" }} />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="recipe-write-btn-group">
-            <div className="recipe-write-isPublic-checkbox">
-              공개 유무 &nbsp;
-              <label className="recipe-write-isPublic-custom-checkbox">
-                <input 
-                  type="checkbox" 
-                  id="isPublic" 
-                  checked={isPublic} 
-                  onChange={(e) => setIsPublic(e.target.checked)} 
-                />
-                <span></span>
-              </label>
+            <div className="recipe-write-btn-group">
+              <div className="recipe-write-isPublic-checkbox">
+                공개 유무 &nbsp;
+                <label className="recipe-write-isPublic-custom-checkbox">
+                  <input type="checkbox" id="isPublic" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
+                  <span></span>
+                </label>
+              </div>
+              <button className="recipe-write-save-btn" onClick={() => saveRecipe(isPublic)}>
+                저장
+              </button>
+              <button className="recipe-write-cancel-btn" onClick={handleCancel}>
+                취소
+              </button>
             </div>
-            <button className="recipe-write-save-btn" onClick={() => saveRecipe(isPublic)}>
-              저장
-            </button>
-            <button className="recipe-write-cancel-btn" onClick={handleCancel}>
-              취소
-            </button>
-          </div>
-
           </div>
         </div>
+      </div>
     </DndProvider>
   )
 }

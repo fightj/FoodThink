@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import FeedCommentSection from "../../components/sns/FeedCommentSection"
-import SearchBar from "../../components/base/SearchBar"
 import "../../styles/sns/FeedDetail.css"
 import { motion, AnimatePresence } from "framer-motion"
 import Swal from "sweetalert2"
 import RecipeModal from "../../components/sns/RecipeModal" // 모달 컴포넌트 추가
+import "../../styles/base/global.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronLeft, faEllipsis } from '@fortawesome/free-solid-svg-icons'
 
 function FeedDetail() {
   const { id } = useParams()
@@ -17,9 +19,51 @@ function FeedDetail() {
   const [currentFeed, setCurrentFeed] = useState(null)
   const [linkedRecipe, setLinkedRecipe] = useState(null)
   const [sessionUserId, setSessionUserId] = useState(null)
-  const [showRecipeModal, setShowRecipeModal] = useState(false) // 모달 상태 추가
+  const [showRecipeModal, setShowRecipeModal] = useState(false)
+
+  //이미지 및 댓글 모달에 대한 스와이프 기능
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+  const [touchStartY, setTouchStartY] = useState(0);
+  const [touchEndY, setTouchEndY] = useState(0);
+  const [isVerticalSwipe, setIsVerticalSwipe] = useState(false);
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+    setTouchStartY(e.touches[0].clientY);
+    setIsVerticalSwipe(false);
+  };
+
+  const handleTouchMove = (e) => {
+    const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+    const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+
+    if (deltaY > deltaX) {
+      setIsVerticalSwipe(true); //수직 스와이프 감지
+    }
+
+    setTouchEndX(e.touches[0].clientX);
+    setTouchEndY(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    if (isVerticalSwipe) {
+      //수직 스와이프 감지됨 (위아래)
+      if (touchEndY - touchStartY > 50) {
+        setShowComments(false); //아래로 스와이프하면 댓글 닫기
+      }
+    } else {
+      //수평 스와이프 (좌우)
+      if (touchStartX - touchEndX > 50) {
+        handleNext(); //오른쪽으로 스와이프 → 다음 이미지
+      } else if (touchEndX - touchStartX > 50) {
+        handlePrev(); //왼쪽으로 스와이프 → 이전 이미지
+      }
+    }
+  };
 
   useEffect(() => {
+
     const fetchFeedData = async () => {
       try {
         const token = localStorage.getItem("accessToken")
@@ -34,7 +78,6 @@ function FeedDetail() {
       }
     }
 
-    // Fetch user ID from session storage
     const storedUser = sessionStorage.getItem("user")
     if (storedUser) {
       const user = JSON.parse(storedUser)
@@ -62,13 +105,21 @@ function FeedDetail() {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
   }
 
-  const toggleComments = () => {
+  const toggleComments = (e) => {
+    e.stopPropagation();
     setShowComments(!showComments)
   }
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown)
   }
+
+  const handleClickOutsideComments = (e) => {
+    // 댓글 영역을 제외한 부분을 클릭하면 닫히도록 처리
+    if (!e.target.closest(".comment-slide")) {
+      setShowComments(false);
+    }
+  };
 
   const handleDelete = () => {
     Swal.fire({
@@ -79,6 +130,7 @@ function FeedDetail() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Delete!",
+      customClass: { popup: "custom-swal-popup"}
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -96,6 +148,7 @@ function FeedDetail() {
               title: "삭제!",
               text: "피드가 삭제되었습니다.",
               icon: "success",
+              customClass: { popup: "custom-swal-popup"}
             }).then(() => {
               navigate("/sns") // Redirect to home or another page after deletion
             })
@@ -105,6 +158,7 @@ function FeedDetail() {
               title: "Error!",
               text: "피드 삭제 중 오류가 발생했습니다.",
               icon: "error",
+              customClass: { popup: "custom-swal-popup"}
             })
           }
         } catch (error) {
@@ -113,6 +167,7 @@ function FeedDetail() {
             title: "Error!",
             text: "피드 삭제 중 오류가 발생했습니다.",
             icon: "error",
+            customClass: { popup: "custom-swal-popup"}
           })
         }
       }
@@ -144,6 +199,7 @@ function FeedDetail() {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login")
@@ -172,62 +228,50 @@ function FeedDetail() {
   }
 
   const handleAddComment = (newComment) => {
-    // Add the new comment to the local state or send it to the server
     console.log("New comment added:", newComment)
   }
 
   return (
-    <div className="base-div">
-      <SearchBar />
-      <div className="parent-container">
-        <div className="card-div">
-          <button onClick={() => navigate(-1)} className="back-button1">
-            <img src="/images/previous_button.png" alt="Previous" className="icon" />
-            탐색 탭
-          </button>
-          <div style={{ width: "80%", margin: "0 auto" }}>
-            <div className="user-info-feed">
-              <div className="profile-container-feed">
-                <div className="profile-image1">
-                  <img src={author.image || "/images/default_profile.png"} alt={author.username || "User"} className="profile-image1" />
-                </div>
-                <span className="username">{author.username || "Unknown User"}</span>
-              </div>
-              {sessionUserId === currentFeed.userId && (
-                <div className="edit-container" style={{ position: "relative" }}>
-                  <button className="edit-button1" onClick={toggleDropdown}>
-                    <img src="/images/etc-btn.png" alt="Edit Options1" />
-                  </button>
-                  {showDropdown && (
-                    <div className="dropdown-menu">
-                      <button className="dropdown-item" onClick={handleEdit}>
-                        feed 수정
-                      </button>
-                      <button className="dropdown-item" onClick={handleDelete}>
-                        feed 삭제
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+    <div className="base-div" onClick={handleClickOutsideComments}>
+      <div className="card-div">
+        {/* 뒤로가기 버튼 */}
+        <button onClick={() => navigate(-1)} className="sns-detail-back-button">
+          <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
+        </button>
 
+        <div className="sns-detail">
+          {/* 사용자 정보 */}
+          <div className="user-info-feed">
+            <div className="profile-container-feed">
+              <div className="profile-image1">
+                <img src={author.image || "/images/default_profile.png"} alt={author.username || "User"} className="profile-image1" />
+              </div>
+              <span className="sns-username">{author.username || "Unknown User"}</span>
+            </div>
+            {sessionUserId === currentFeed.userId && (
+              <div className="edit-container">
+                <button className="edit-button1" onClick={toggleDropdown}>
+                  {/* <FontAwesomeIcon icon={faEllipsis} className="meatballs-button" /> */}
+                  <img src="/images/etc-btn.png" alt="Edit Options1" />
+                </button>
+                {showDropdown && (
+                  <div className="dropdown-menu">
+                    <button className="dropdown-item" onClick={handleEdit}>feed 수정</button>
+                    <button className="dropdown-item" onClick={handleDelete}>feed 삭제</button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* 메인 컨텐츠 (이미지 + 내용) */}
+          <div className="main-content">
             {/* 이미지 Carousel */}
             {images.length > 0 && (
-              <div className="carousel-container">
+              <div className="carousel-container"
+                    onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
                 <div className="carousel">
-                  {images.length > 1 && (
-                    <>
-                      <button className="prev-button" onClick={handlePrev}>
-                        ❮
-                      </button>
-                      <button className="next-button" onClick={handleNext}>
-                        ❯
-                      </button>
-                    </>
-                  )}
                   <img src={images[currentIndex]} alt={`Slide ${currentIndex + 1}`} className="carousel-image" />
-                  {/* 이미지 번호 표시 */}
                   <span className="image-counter">
                     {currentIndex + 1} / {images.length}
                   </span>
@@ -242,64 +286,57 @@ function FeedDetail() {
               </div>
             )}
 
+            {/* 컨텐츠 */}
             <div className="content">
               <span className="likes-comments">
                 <img src={isLiked ? "/images/feed_like_do.png" : "/images/feed_like_undo.png"} alt="Like Icon" onClick={handleLikeToggle} style={{ cursor: "pointer" }} />
                 <span>{likesCount}</span>
-
                 <button className="comment-button" onClick={toggleComments}>
                   <img src="/images/feed_comment.png" alt="Comment Icon" />
                 </button>
                 <span>{comments.length}</span>
               </span>
-              <div className="hash-tag-area">
-                <p>
-                  <strong>#{currentFeed.foodName}</strong>
-                </p>
-                {isRecipe ? (
-                  <p>
-                    <strong>#{currentFeed.recipeListResponseDto.recipeTitle}</strong>
-                  </p>
-                ) : null}
-              </div>
-
               <hr />
-              <p className="description">
-                <strong>{author.username || "Unknown User"}</strong> {currentFeed.content}
-              </p>
-              {isRecipe ? (
-                <div className="linked-recipe-area" style={{ display: "flex", flexDirection: "column" }}>
+              <div className="feed-detail-my-text">
+                <p className="description">
+                  <strong>{author.username || "Unknown User"}</strong> {currentFeed.content}
+                </p>
+                <p className="hash-tage-recipe-name">#나의_요리는_{currentFeed.foodName.replace(/\s+/g, "_")}</p>
+              </div>
+              {isRecipe && (
                   <div className="recipe-image-container">
-                    <img src="/images/mainlogo.jpg" alt="Main Logo" className="recipe-main-image" />
-                    <div className="recipe-tooltip" onClick={() => setShowRecipeModal(true)}>
-                      <h1>참고한 레시피가 있어요! click!</h1>
+                    <div className="recipe-tooltip" onClick={() => navigate(`/recipes/${currentFeed.recipeListResponseDto.recipeId}`)}>
+                      <p>👀 참고 레시피 보러 가기</p>
                     </div>
                   </div>
-                </div>
-              ) : null}
+              )}
             </div>
           </div>
         </div>
-
-        <RecipeModal show={showRecipeModal} onHide={() => setShowRecipeModal(false)} recipe={currentFeed.recipeListResponseDto} />
-
-        <AnimatePresence>
-          {showComments && (
-            <motion.div
-              initial={{ y: "100%", opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: "100%", opacity: 0 }}
-              transition={{
-                y: { type: "spring", stiffness: 300, damping: 30, duration: 1 },
-                opacity: { duration: 1 },
-              }}
-              className="comment-slide"
-            >
-              <FeedCommentSection comments={comments} onClose={toggleComments} onAddComment={handleAddComment} feedId={id} />
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      <RecipeModal show={showRecipeModal} onHide={() => setShowRecipeModal(false)} recipe={currentFeed.recipeListResponseDto} />
+
+      <AnimatePresence>
+        {showComments && (
+          <motion.div
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
+            transition={{
+              y: { type: "spring", stiffness: 300, damping: 30, duration: 1 },
+              opacity: { duration: 1 },
+            }}
+            className="comment-slide"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onClick={(e) => e.stopPropagation()}
+            >
+            <FeedCommentSection comments={comments} onClose={toggleComments} onAddComment={handleAddComment} feedId={id} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

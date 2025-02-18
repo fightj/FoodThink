@@ -233,6 +233,10 @@ public class MyOwnRecipeService {
         recipeEntity.setRequiredTime(dto.getRequiredTime());
         recipeEntity.setIsPublic(dto.getIsPublic());
 
+        for (IngredientEntity ingredient : recipeEntity.getIngredients()) {
+            ingredientRepository.delete(ingredient);
+        }
+
         // 기존 재료는 삭제하지 않고, 새 재료를 추가하는 방식으로 변경
         List<IngredientEntity> ingredientEntities = dto.getIngredients().stream()
                 .map(ingreDto -> {
@@ -245,6 +249,8 @@ public class MyOwnRecipeService {
 
         // 새 재료 저장
         ingredientRepository.saveAll(ingredientEntities);
+        ingredientRepository.flush();
+
 
         // 기존 프로세스 및 프로세스 이미지 삭제
         processRepository.deleteAll(recipeEntity.getProcesses());

@@ -1,7 +1,8 @@
 /* 📌 기본값 (태블릿/PC) */
 .profile-header {
   display: flex;
-  padding: 30px;
+  /* padding: 30px; */
+  padding: clamp(20px, 5vw, 30px); /* ✅ 반응형 패딩 */
   background: #ffe6d4; /* 기본 배경 (봄) */
   color: black;
   border-radius: 20px;
@@ -73,19 +74,20 @@
 
 /* 📌 닉네임 */
 .profile-username {
-  font-size: 35px;
+  font-size: clamp(20px, 4vw, 35px); /* ✅ 크기 자동 조절 */
   /* color: #fdb13f; */
   /* background-color: #d2d2d2; */
-
+  font-family: 'IM_Hyemin-Bold';
 }
 
 /* 📌 구독자, 게시물 */
 .profile-info {
   display: flex;
   justify-content: flex-start;
-  gap: 30px;
-  font-size: 14px;
-  margin: 25px 0px 10px 0px;
+  gap: 2vw; /* ✅ 화면 크기에 따라 간격 조정 */
+  font-size: clamp(12px, 2vw, 14px);
+  margin: 20px 0;
+  font-family: 'LotteMartDream';
 }
 
 /* 📌 Profile 버튼 */
@@ -93,20 +95,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 18px;
-  font-size: 15px;
+  font-size: clamp(12px, 2vw, 15px);
+  padding: clamp(4px, 1vw, 6px) clamp(12px, 3vw, 18px);
   font-weight: bold;
   color: white;
-  background-color: #FF7F00;
-  border: 2px solid #FF7F00;
-  border-radius: 8px;
+  background-color: #382ca4;
+  border: none;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
   text-decoration: none;
   text-align: center;
+  
   box-shadow: 0 3px 5px rgba(255, 127, 0, 0.3);
+  font-family: 'omyu_pretty';
+  font-size: 18px;
 }
-
 
 .profile-actions {
   position: absolute;
@@ -114,13 +118,18 @@
   right: 10px;
 }
 
+
 .delete-btn {
-  background-color: #d9534f;
-  color: white;
+  background-color: transparent;
+  color: #d9534f;
   border: none;
   padding: 8px 12px;
-  border-radius: 5px;
   cursor: pointer;
+  font-family: 'omyu_pretty';
+  font-size: 18px;
+  text-decoration: underline; 
+  text-decoration-color: #d9534f;
+  text-underline-offset: 3px;
 }
 
 /* 📌 Profile 버튼 */
@@ -128,8 +137,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 18px;
-  font-size: 15px;
+  font-size: clamp(12px, 2vw, 15px);
+  padding: clamp(4px, 1vw, 6px) clamp(12px, 3vw, 18px);
   font-weight: bold;
   color: white;
   background-color: #ff1e00;
@@ -168,8 +177,8 @@
   }
 
   .profile-avatar {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
   }
 
   .profile-details {
@@ -181,14 +190,16 @@
 
   .profile-info {
     justify-content: center;
-    gap: 15px;
+    gap: 10px;
   }
 
-  .preference-button {
-    font-size: 14px;
-    padding: 8px 16px;
+  .preference-button,
+  .subscriber-button {
+    font-size: 12px;
+    padding: 6px 14px;
   }
 }
+
 
 /* 📌 계절 이펙트 컨테이너 */
 .falling-container {

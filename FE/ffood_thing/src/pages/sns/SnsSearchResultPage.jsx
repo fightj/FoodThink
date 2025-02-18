@@ -1,9 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Feed, FeedImages, Users } from "./feed_data"; // feed와 feedImages를 import
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import PageSlide from "../../components/base/PageSlide";
-import SearchBar from "../../components/base/SearchBar"; // SearchBar 컴포넌트 불러오기
-import "../../styles/sns/SnsMain.css"; // 스타일 추가
+import SearchBar from "../../components/base/SearchBar";
+import "../../styles/sns/SnsMain.css";
+import "../../styles/sns/SnsSearchResultPage.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronUp, faChevronLeft } from "@fortawesome/free-solid-svg-icons"
+import "../../styles/base/global.css"
+
+// 검색 결과를 가져오는 함수
+const fetchSearchResults = async (searchQuery, pageNumber = 0, size = 12) => {
+  try {
+    const response = await fetch(
+      `https://i12e107.p.ssafy.io/api/elasticsearch/search/feed/pagenation?query=${encodeURIComponent(searchQuery)}&page=${pageNumber}&size=${size}`
+    );
+    if (!response.ok) throw new Error("검색 결과를 불러오는 데 실패했습니다.");
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("검색 요청 오류:", error);
+    return { content: [], totalPages: 1 }; // 오류 발생 시 빈 결과 반환
+  }
+};
 
 function SnsSearchResultPage() {
   const location = useLocation();
@@ -12,77 +31,142 @@ function SnsSearchResultPage() {
   const initialQuery = queryParams.get("query") || "";
 
   const [query, setQuery] = useState(initialQuery);
+  const [searchResults, setSearchResults] = useState([]); // 검색 결과 상태
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false); 
+  const searchInputRef = useRef(null); // useRef로 SearchBar의 input 요소에 접근
+  const observerRef = useRef(null);
+  const lastElementRef = useRef(null); // 마지막 요소 감시
 
-  const filteredFeeds = Feed.filter(feed => feed.food_name.includes(query));
+  // 검색 결과가 변경될 때마다 스크롤을 상단으로 이동
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [query]);
+
+  // 검색 요청
+  const fetchResults = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+    
+    const data = await fetchSearchResults(query, page);
+  
+    setSearchResults((prevResults) => {
+      const mergedResults = [...prevResults, ...data.content];
+      const uniqueResults = Array.from(new Map(mergedResults.map(item => [item.id, item])).values());
+      return uniqueResults;
+    });
+  
+    setTotalPages(data.totalPages);
+    setLoading(false);
+  }, [query, page, loading]);
+  
+
+  useEffect(() => {
+    if (query.trim()) {
+      setPage(0);
+    }
+  }, [query]);
+  
+  useEffect(() => {
+    fetchResults();
+  }, [query, page]); // page가 변경될 때만 fetchResults 실행
+  
+
+  // Intersection Observer 적용
+  useEffect(() => {
+    if (loading || page + 1 >= totalPages) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (lastElementRef.current) {
+      observer.observe(lastElementRef.current);
+    }
+
+    return () => {
+      if (lastElementRef.current) observer.unobserve(lastElementRef.current);
+    };
+  }, [loading, totalPages]);
 
   const handleSearch = (newQuery) => {
     setQuery(newQuery);
-    navigate(`/search-results?query=${newQuery}`); // 쿼리 변경 시 URL 업데이트
+    setPage(0);
+    setSearchResults([]);
+    navigate(`/search-results?query=${newQuery}`);
   };
 
-  useEffect(() => {
-    setQuery(initialQuery); // URL 변경 시 쿼리 상태 업데이트
-  }, [initialQuery]);
+
+  // 페이지 맨 위로 스크롤하는 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth"})
+  }
 
   return (
     <PageSlide>
       <div className="base-div">
-        {/* SearchBar 컴포넌트를 호출, onSearch와 초기 query 전달 */}
-        <SearchBar onSearch={handleSearch} initialQuery={query} />
+        <SearchBar onSearch={handleSearch} initialQuery={query} inputRef={searchInputRef} />
+        
         <div className="card-div">
-          <div className="container px-4 py-5" id="custom-cards">
-            <div className="d-flex justify-content-between align-items-center pb-2">
+            <div className="sns-search-result-header" >
               {/* 이전 버튼 클릭 시, 이전 페이지로 이동 */}
-              <button onClick={() => navigate(-1)} className="back-button">
-                <img src="/images/previous_button.png" alt="Previous" className="icon" />
-                이전
+              <button onClick={() => navigate('/sns')} className="back-button">
+                {/* <img src="/images/previous_button.png" alt="Previous" className="icon" /> */}
+                <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
               </button>
               {/* 검색 결과 텍스트는 화면 중앙 정렬 */}
-              <h2 className="search-result-title">검색 결과: "{query}"</h2>
+              <div className="search-result-title" >
+                "{query}"에 대한 검색 결과가 총 {searchResults.length}개 있습니다.
+              </div>
             </div>
 
             <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-              {filteredFeeds.length > 0 ? (
-                filteredFeeds.map((feedItem) => {
-                  // feedId에 맞는 이미지를 찾음
-                  const images = FeedImages.filter(image => image.feed_id === feedItem.feed_id);
-                  const hasMultipleImages = images.length > 1;
-                  // 해당 feedItem의 작성자 유저 정보 찾기
-                  const user = Users.find(user => user.user_id === feedItem.user_id);
-
-                  return (
-                    <div className="col" key={feedItem.feed_id}>
-                      <Link to={`/feed/${feedItem.feed_id}`} style={{ textDecoration: "none" }}>
-                        <div
-                          className="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg feed-card"
-                          style={{
-                            backgroundImage: `url(${images.length > 0 ? images[0].image_url : ''})`,  // 첫 번째 이미지 사용
-                          }}
-                        >
-                          {hasMultipleImages && (
-                            <div className="image-icon">
-                              <img src="/images/pages.png" alt="Multiple images" />
-                            </div>
-                          )}
-                          <div className="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                            {/* 유저의 프로필 이미지와 이름 추가 */}
-                            <div className="user-info">
-                              <img src={user?.image} alt={user?.nickname} className="profile-image-main" />
-                              <span>{user?.nickname}</span>
-                            </div>
+              {searchResults.length > 0 ? (
+                searchResults.map((feedItem, index) => (
+                  <div className="col-4" key={feedItem.id} ref={index === searchResults.length - 1 ? lastElementRef : null}>
+                    <Link to={`/feed/${feedItem.id}`} style={{ textDecoration: "none" }}>
+                      <div
+                        className="card card-cover h-100 overflow-hidden rounded-4 feed-card"
+                        style={{
+                          backgroundImage: `url(${feedItem.image})`,
+                        }}
+                      >
+                        {feedItem.imageSize > 1 && (
+                          <div className="image-icon">
+                            <img src="/images/pages.png" alt="Multiple images" />
+                          </div>
+                        )}
+                        <div className="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                          <div className="user-info">
+                            <img
+                              src={feedItem.userImage || "/images/default_profile.png"}
+                              alt={feedItem.userNickname}
+                              className="profile-image-main"
+                            />
+                            <span>{feedItem.userNickname}</span>
                           </div>
                         </div>
-                      </Link>
-                    </div>
-                  );
-                })
+                      </div>
+                    </Link>
+                  </div>
+                ))
               ) : (
-                <p>검색 결과가 없습니다.</p>
+                <div className="align-items-stretch sns-search-no-result">검색 결과가 없습니다.</div>
               )}
             </div>
           </div>
         </div>
-      </div>
+        {/* 페이지 맨 위로 올라가는 버튼 */}
+        <div className="sns-main-scroll-to-top-div" onClick={scrollToTop}>
+          <FontAwesomeIcon icon={faChevronUp} size="lg" />
+          <span className="sns-main-top-text">TOP</span>
+        </div>
     </PageSlide>
   );
 }

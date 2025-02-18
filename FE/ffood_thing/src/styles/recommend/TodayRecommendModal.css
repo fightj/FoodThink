@@ -36,9 +36,9 @@
 
 /* 제목 (h2) 중앙 정렬 */
 .today-title {
+  font-family: 'HakgyoansimDunggeunmisoTTF-B';
   text-align: center;
-  font-size: 250%;
-  font-weight: bold;
+  font-size: 220%;
   color: #fdb13f;
   transition: opacity 0.4s ease-in-out;
   display: flex;
@@ -62,8 +62,8 @@
   border-radius: 50%;
 }
 .today-refresh-btn img{
-  width: 50%;
-  height:50%;
+  width: 48px;
+  height:48px;
   filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(-20deg) brightness(100%) contrast(100%);
 }
 /* 📌 닫기 버튼 스타일 (우선순위 조정) */
@@ -80,8 +80,8 @@
 }
 
 .today-close-btn img{
-  width: 50%;
-  height:50%;
+  width: 48px;
+  height:48px;
   filter: invert(20%) sepia(100%) saturate(5000%) hue-rotate(-10deg) brightness(100%) contrast(120%);
 }
 
@@ -101,11 +101,11 @@
 }
 .today-recipe-list{
   display: flex;
-  justify-content: center; /* 아이템 간 간격 균등 배치 */
-  width: 100%; /* 가로 공간을 꽉 채움 */
+  justify-content: center; 
+  width: 100%; 
   height: 65%;
-  transition: 'transform 0.3s ease-in-out'
-
+  transition: 'transform 0.3s ease-in-out';
+  align-items: center;
 }
 /*오늘의 메뉴 개별 음식 카드*/
 /* 기본 상태: 모든 카드 */
@@ -114,7 +114,6 @@
   flex: 0 0 auto;
   opacity: 0.5; /* 흐리게 */
   cursor: pointer;
-  margin: 0 -7%; /*음식 카드 간격*/ 
 }
 
 /* 중앙 카드 (크기 확대) */
@@ -127,8 +126,8 @@
 
 /* 음식 이미지 */
 .today-recipe-image {
-  width: 100%;
-  height: 100%;
+  width: 11rem;
+  height: 11rem;
   object-fit: cover;
   border-radius: 20%;
   transition: transform 0.4s ease-in-out;
@@ -140,26 +139,139 @@
   justify-content: center;
   align-items: center;
   height: 20%;
+  width: 100%;
+  overflow: hidden;
 }
 .today-recipe-title-main {
-  font-size: 30px;
+  font-family: 'Dovemayo_gothic';
+  font-size: 180%;
+  display: block;
   transition: opacity 0.4s ease-in-out;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  width:90%;
+  min-width: 0;
+  
 }
 
-/* 반응형: 모바일에서 중앙 정렬 유지 */
-@media (max-width: 500px) {
+.icon-close {
+  color: #fe8686;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2.2rem;
+}
+
+.icon-refresh {
+  color: #8a86fe;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2.2rem;
+}
+
+/* 📌반응형: 태블릿 세로 버전 */
+@media (max-width: 800px) {
   .today-recommend-card {
-    width: 90%;
-    height: 50%;
+    width: 80%;
+    height: 40%;
   }
   .today-header{
     width:100%;
     height: 20%;
   }
   .today-title {
-    font-size: 150%;
-    height: 10%;
-    width:50%;
+    font-size: 230%;
+    width:70%;
+  }
+  .today-refresh-btn {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width:30%;
+  }
+  .today-refresh-btn img{
+    width: 48px;
+  height:48px;
+  }
+  .today-close-btn {
+    width:30%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+  .today-close-btn img {
+    width: 48px;
+    height:48px;
+  }
+  .today-carousel {
+    height: 55%;
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top:2%;
+  }
+  
+  .today-recipe-list {
+    display: flex;
+    justify-content: center; /* 아이템 간 간격 균등 배치 */
+    width: 100%; /* 가로 공간을 꽉 채움 */
+    height: 75%;
+  }
+  .today-recipe-item {
+  }
+  .today-recipe-item.active {
+    transform: scale(1.1);
+  }
+
+  .today-recipe-image {
+    width: 11rem;
+    height: 11rem;
+  }
+  .today-recipe-title-container {
+    height: 20%;
+  }
+  .today-recipe-title-main {
+    width:90%;
+    font-size: 20px;
+    height:70%;
+  }
+  .today-recipe-title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    width: 100%;
+    overflow: hidden;
+  }
+  .today-recipe-title-main {
+    font-size: 180%;
+    display: block;
+    transition: opacity 0.4s ease-in-out;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    width:90%;
+    min-width: 0;
+  }
+}
+
+/* 📌반응형: 모바일 세로 */
+@media (max-width: 500px) {
+  .today-recommend-card {
+    width: 85%;
+    height: 35%;
+  }
+  .today-header{
+    width:100%;
+    height: 20%;
+  }
+  .today-title {
+    font-size: 130%;
+    height: 100%;
+    width:80%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -171,8 +283,8 @@
     width:30%;
   }
   .today-refresh-btn img{
-    width: 40%;
-    height:40%;
+    width: 36px;
+    height:36px;
   }
   .today-close-btn {
     width:30%;
@@ -181,8 +293,8 @@
     justify-content: right;
   }
   .today-close-btn img {
-    width: 40%;
-    height:40%;
+    width: 36px;
+    height:36px;
   }
   .today-carousel {
     height: 60%;
@@ -194,29 +306,116 @@
   
   .today-recipe-list {
     display: flex;
-    justify-content: center; /* 아이템 간 간격 균등 배치 */
-    width: 100%; /* 가로 공간을 꽉 채움 */
+    justify-content: center; 
+    width: 100%; 
     height: 75%;
   }
   .today-recipe-item {
-    margin: 0 -30%;
+    width:30%;
   }
   .today-recipe-item.active {
     transform: scale(1.2);
+    
   }
 
   .today-recipe-image {
     width: 100%;
-    height: 100%;
+    height: 90%;
   }
   .today-recipe-title-container {
     height: 20%;
+    margin-top:0;
   }
   .today-recipe-title-main {
     width:90%;
     font-size: 20px;
     height:70%;
   }
+}
+/* 📌반응형: 모바일 가로 */
+@media (max-height: 500px) {
+  .today-recommend-card {
+    width: 50%;
+    height: 70%;
+  }
+  .today-header{
+    width:100%;
+    height: 20%;
+  }
+  .today-title {
+    font-size: 130%;
+    height: 100%;
+    width:80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .today-refresh-btn {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width:30%;
+  }
+  .today-refresh-btn img{
+    width: 36px;
+    height:36px;
+  }
+  .today-close-btn {
+    width:30%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+  .today-close-btn img {
+    width: 36px;
+    height:36px;
+  }
+  .today-carousel {
+    height: 60%;
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .today-recipe-list {
+    display: flex;
+    justify-content: center; 
+    width: 100%; 
+    height: 75%;
+  }
+  .today-recipe-item {
+    width:30%;
+  }
+  .today-recipe-item.active {
+    transform: scale(1.2);
+  }
+  .today-recipe-image {
+    width: 100%;
+    height: 90%;
+  }
+  .today-recipe-title-container {
+    height: 20%;
+  }
+  .today-recipe-title-main {
+    width:90%;
+    font-size: 115%;
+    height:70%;
+    margin-top: 5%;
+  }
+  .icon-close,
+  .icon-refresh {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  } 
+}
+
+@media screen and (max-width:500px) {
+  .icon-close,
+  .icon-refresh {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }  
 }
 
 

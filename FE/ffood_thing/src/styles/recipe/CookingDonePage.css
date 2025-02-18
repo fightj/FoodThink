@@ -1,39 +1,47 @@
+.card-div-done {
+  background-image: url("/images/frame.png"); /* 이미지 경로 설정 */
+  background-size: 97% 96%; /* 이미지를 페이지 크기에 맞게 조절 */
+  background-position: center; /* 이미지를 중앙에 위치 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  width: 100%; /* Occupy the entire horizontal space */
+  height: 100%;
+  display: flex; /* Flexbox 추가 */
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  padding: 2rem;
+}
+
 .cooking-done-container {
-  background-image: url("/images/backgroundImage.png");
-  background-size: cover;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  padding: 2vh;
+  min-height: 80vh;
+  border-radius: 20px;
   text-align: center;
-  color: #fff;
-  margin-top: -2vh;
 }
 
 .cooking-done-container h2 {
   font-family: "MyCustomFont";
-  font-size: 3.5vw; /* 반응형 글꼴 크기 */
+  font-size: 3.5vw;
   color: #000000;
-  margin-bottom: 10vh; /* 텍스트를 위로 조정하기 위해 여백 조정 */
-  text-shadow: 0.2vw 0.2vw 0.4vw #000000; /* 반응형 텍스트 그림자 */
+  margin-bottom: 10vh;
+  font-family: 'KCC-Hanbit';
 }
 
 .done-button-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2vw; /* 버튼 간격 */
+  gap: 2vw;
   margin-top: 2vh;
 }
 
 .done-close-button {
   background-color: transparent;
   border: none;
-  padding: 0; /* 패딩 제거 */
+  padding: 0;
   cursor: pointer;
   margin: 1vh;
   transition: transform 0.3s ease;
@@ -50,7 +58,7 @@
 }
 
 .button-image {
-  width: 5vw; /* 이미지 크기 줄임 */
+  width: 5vw;
   height: auto;
 }
 
@@ -63,9 +71,9 @@
 
 .representative-image,
 .cooked-dish-image {
-  width: 40vw; /* 반응형 너비 */
-  height: 45vh; /* 반응형 높이 */
-  border-radius: 1vw; /* 반응형 테두리 반경 */
+  width: 40vw;
+  height: 45vh;
+  border-radius: 1vw;
   margin: 1vh;
 }
 
@@ -76,21 +84,28 @@
 }
 
 .image-frame {
-  width: 40vw; /* 반응형 너비 */
-  height: 45vh; /* 반응형 높이 */
-  border: 0.1vw solid #ccc; /* 얇은 틀 */
-  border-radius: 1vw; /* 반응형 테두리 반경 */
+  width: 40vw;
+  height: 45vh;
+  border: 0.1vw solid #ccc;
+  border-radius: 1vw;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   cursor: pointer;
 }
-
 .camera-icon {
-  width: 10vw; /* 반응형 너비 */
-  height: auto; /* 비율 유지 */
+  width: 10vw;
+  height: auto;
   position: absolute;
+}
+
+.camera-text {
+  position: absolute;
+  top: 65%;
+  color: #000000;
+  font-size: 1.8vw;
+  font-family: 'omyu_pretty';
 }
 
 .file-input {
@@ -102,19 +117,10 @@
 }
 
 .cooked-dish-canvas {
-  width: 40vw; /* 반응형 너비 */
-  height: 45vh; /* 반응형 높이 */
-  border-radius: 1vw; /* 반응형 테두리 반경 */
+  width: 40vw;
+  height: 45vh;
+  border-radius: 1vw;
   margin: 1vh;
-}
-
-.finish-cook-text p {
-  position: absolute;
-  font-family: "MyCustomFont";
-  top: 25%;
-  right: 18%;
-  color: #000000;
-  font-size: 2vw; /* 폰트 사이즈 줄임 */
 }
 
 .done-button-container button {
@@ -125,14 +131,14 @@
 
 .done-edit-button {
   position: absolute;
-  top: 0%; /* 적절한 위치 조정 */
-  right: 0%; /* 적절한 위치 조정 */
+  top: 0%;
+  right: 0%;
   background-color: white;
   border: none;
   padding: 5px;
   cursor: pointer;
-  font-size: 1vw; /* 반응형 크기 */
-  border-radius: 0.5vw; /* 테두리 반경 */
+  font-size: 1vw;
+  border-radius: 0.5vw;
   transition: transform 0.3s ease;
 }
 
@@ -150,12 +156,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 1vw; /* 반응형 테두리 반경 */
+  border-radius: 1vw;
 }
 
 .overlay-button {
@@ -164,20 +170,20 @@
   padding: 10px 20px;
   margin: 10px;
   cursor: pointer;
-  font-size: 1vw; /* 반응형 크기 */
-  border-radius: 0.5vw; /* 테두리 반경 */
+  font-size: 1vw;
+  border-radius: 0.5vw;
   transition: transform 0.3s ease;
   display: flex;
   align-items: center;
-  width: 15vw; /* 버튼의 고정 너비 */
-  height: 7vh; /* 버튼의 고정 높이 */
+  width: 15vw;
+  height: 7vh;
   justify-content: center;
 }
 
 .overlay-button img {
-  width: 1.5vw; /* 이미지 크기 줄임 */
+  width: 1.5vw;
   height: auto;
-  margin-left: 10px; /* 아이콘과 텍스트 사이 간격 */
+  margin-left: 10px;
 }
 
 .overlay-button:hover {
@@ -186,4 +192,7 @@
 
 .overlay-button:active {
   transform: scale(0.9);
+}
+.back-to-recipe-button{
+  font-family: 'PTBandocheB';
 }

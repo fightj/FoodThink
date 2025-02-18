@@ -1,79 +1,43 @@
 .voice-tutorial-container {
   display: flex;
-  flex-direction: row; /* Align children horizontally */
+  flex-direction: column; /* 세로로 정렬 */
   width: 100%;
   height: 100%;
-  background-image: url("/images/backgroundImage.png");
+  background-image: url("/images/voicetutorial.gif");
   background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
-  justify-content: center; /* Center children horizontally */
-  align-items: center; /* Center children vertically */
-  background-size: cover; /* Ensure the image covers the entire container */
-  background-position: center; /* Center the background image */
+  justify-content: center; /* 가로 정렬 */
+  align-items: center; /* 세로 정렬 */
+  background-position: center; /* 배경 이미지 가운데 정렬 */
+  position: relative; /* for absolute positioning of children */
 }
 
-.voice-tutorial-right {
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5em;
-  padding: 0.5em;
-  /* background-color: aqua; */
+.arrow-button {
+  background: none;
+  border: none;
+  position: absolute;
+  top: 50%; /* Vertical center */
+  transform: translateY(-50%); /* Adjust for exact center */
 }
 
-.voice-tutorial-left {
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column; /* Align children vertically */
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5em;
-  padding: 0.5em;
-  /* background-color: rgb(255, 255, 255); */
+.prev-arrow {
+  left: 10px; /* Adjust as necessary */
 }
 
-.voice-tutorial-left .handmotion-div,
-.voice-tutorial-left .handmotion-info-div {
-  width: 100%;
-  height: 50%; /* Each takes up half the height */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.next-arrow {
+  right: 10px; /* Adjust as necessary */
 }
 
-.tutorial-right .speaking-div,
-.tutorial-right .speaking-info-div {
-  width: 100%;
-  height: 50%; /* Each takes up half the height */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  flex-direction: row;
-}
-.speaking-gif {
-  width: 100%;
-  height: 100%;
-  transform: scaleX(-1);
-}
-
-.speaking-info-div-left,
-.speaking-info-div-right {
-}
-
-.speaking-mic-image {
-  width: 20%;
-  z-index: 1005;
-}
-
-.voice-tutorial-info p {
-  color: white;
-  position: relative;
-  z-index: 1005;
+.voicetuto-skip-button {
+  background-color: #e66363; /* Light gray background */
+  border: 2 solid #000000; /* Darker gray border */
+  color: black; /* Black text */
+  position: absolute;
+  bottom: 16%; /* Adjust as necessary */
+  right: 4%; /* Adjust as necessary */
+  z-index: 1009; /* High z-index to be on top */
+  padding: 10px 20px; /* Optional padding for better appearance */
+  border-radius: 5px; /* Optional rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-family: "MyCustomFont";
+  width: 15%;
 }

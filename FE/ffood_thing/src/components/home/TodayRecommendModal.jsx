@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../../styles/recommend/TodayRecommendModal.css"
-import { FaRedo } from "react-icons/fa"
+// import { FaRedo } from "react-icons/fa"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { library } from "@fortawesome/fontawesome-svg-core"
-import { faUtensils } from "@fortawesome/free-solid-svg-icons"
-import { faQuestion } from "@fortawesome/free-solid-svg-icons"
+// import { library } from "@fortawesome/fontawesome-svg-core"
+// import { faQuestion } from "@fortawesome/free-solid-svg-icons"
+import { faUtensils, faXmark, faArrowsRotate } from "@fortawesome/free-solid-svg-icons"
 
 const API_URL = "https://i12e107.p.ssafy.io/api/today-recommend/random"
 
 const TodayRecommendModal = ({ isOpen, onClose }) => {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(1) // 초기에 선택된 아이템을 가운데로 설정
   //const [selectedRecipes, setSelectedRecipes] = useState([]);
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -75,80 +75,91 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
   //     setActiveIndex(index);
   //   }
   // };
-
+  
   const refreshRecommendations = () => {
     localStorage.removeItem("todaySelectedRecipes")
     fetchTodayRecommendations()
   }
-  const moveToCenter = (index) => {
-    if (index !== activeIndex) {
-      setActiveIndex(index)
-
-      const offset = (index - Math.floor(selectedRecipes.length / 2)) * -300 
-      const listElement = document.querySelector(".today-recipe-list")
-      if (listElement) {
-        listElement.style.transform = `translateX(${offset}px)` 
-      }
+  const handleClick = (index,recipeId) => {
+    if(activeIndex === index){ // 이미 선택된 아이템을 다시 클릭한 경우 상세페이지로 이동동
+      goToRecipeDetail(recipeId);
+    }else{ // 새로운 아이템 선택된 경우 activeIndex 업데이트 
+      setActiveIndex(index);
     }
-  }
-  const handleTouchStart = (e, index) => {
-    setStartX(e.touches[0].clientX) // 터치 시작 위치 저장
-    setIsDragging(true)
-  }
+  };
+  /*📌 터치 슬라이드를 위한 코드*/
+  // const moveToCenter = (index) => {
+  //   if (index !== activeIndex) {
+  //     setActiveIndex(index)
 
-  const handleTouchMove = (e, index) => {
-    if (!isDragging) return
-    const touchX = e.touches[0].clientX
-    const deltaX = touchX - startX
+  //     const offset = (index - Math.floor(selectedRecipes.length / 2)) * -300 
+  //     const listElement = document.querySelector(".today-recipe-list")
+  //     if (listElement) {
+  //       listElement.style.transform = `translateX(${offset}px)` 
+  //     }
+  //   }
+  // }
+  // const handleTouchStart = (e, index) => {
+  //   setStartX(e.touches[0].clientX) // 터치 시작 위치 저장
+  //   setIsDragging(true)
+  // }
 
-    // 특정 아이템의 translateX 값 업데이트
-    setItemTransforms((prevTransforms) => prevTransforms.map((transform, i) => (i === index ? deltaX : transform)))
-  }
+  // const handleTouchMove = (e, index) => {
+  //   if (!isDragging) return
+  //   const touchX = e.touches[0].clientX
+  //   const deltaX = touchX - startX
 
-  const handleTouchEnd = (index) => {
-    setIsDragging(false)
+  //   // 특정 아이템의 translateX 값 업데이트
+  //   setItemTransforms((prevTransforms) => prevTransforms.map((transform, i) => (i === index ? deltaX : transform)))
+  // }
 
-    // 슬라이드 이동 처리
-    if (itemTransforms[index] > 50) {
-      slideLeft(index) // 오른쪽으로 슬라이드
-    } else if (itemTransforms[index] < -50) {
-      slideRight(index) // 왼쪽으로 슬라이드
-    }
+  // const handleTouchEnd = (index) => {
+  //   setIsDragging(false)
+  //   console.log(itemTransforms[index])
+  //   // 슬라이드 이동 처리
+  //   if (itemTransforms[index] > 50) {
+  //     slideRight(index) // 오른쪽으로 슬라이드
+  //   } else if (itemTransforms[index] < -50) {
+  //     slideLeft(index) // 왼쪽으로 슬라이드
+  //   }
 
-    // 이동 거리 초기화
-    setItemTransforms((prevTransforms) => prevTransforms.map((transform, i) => (i === index ? 0 : transform)))
-  }
+  //   // 이동 거리 초기화
+  //   setItemTransforms((prevTransforms) => prevTransforms.map((transform, i) => (i === index ? 0 : transform)))
+  // }
 
-  const slideLeft = (index) => {
-    setSelectedRecipes((prevRecipes) => {
-      const updatedRecipes = [...prevRecipes]
-      updatedRecipes.push(updatedRecipes.shift()) // 첫 번째 요소를 맨 뒤로 이동
-      return updatedRecipes
-    })
-  }
+  // const slideLeft = (index) => {
+  //   setSelectedRecipes((prevRecipes) => {
+  //     const updatedRecipes = [...prevRecipes]
+  //     updatedRecipes.push(updatedRecipes.shift()) // 첫 번째 요소를 맨 뒤로 이동
+  //     return updatedRecipes
+  //   })
+  // }
 
-  const slideRight = (index) => {
-    setSelectedRecipes((prevRecipes) => {
-      const updatedRecipes = [...prevRecipes]
-      updatedRecipes.unshift(updatedRecipes.pop()) // 마지막 요소를 맨 앞으로 이동
-      return updatedRecipes
-    })
-  }
+  // const slideRight = (index) => {
+  //   setSelectedRecipes((prevRecipes) => {
+  //     const updatedRecipes = [...prevRecipes]
+  //     updatedRecipes.unshift(updatedRecipes.pop()) // 마지막 요소를 맨 앞으로 이동
+  //     return updatedRecipes
+  //   })
+  // }
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="today-recommend-card" onClick={(e) => e.stopPropagation()}>
         <div className="today-header">
           
-          <button className="today-refresh-btn" onClick={refreshRecommendations} disabled={loading}>
-            <img src="/images/rotate_right.png" alt="새로고침" />
+          <button className="today-refresh-btn" onClick={refreshRecommendations} disabled={loading} >
+            <FontAwesomeIcon icon={faArrowsRotate} className="icon-refresh" />
+            {/* <img src="/images/rotate_right.png" alt="새로고침" /> */}
           </button>
           <div className="today-title">
-            오늘 뭐 먹지&nbsp;
-            <FontAwesomeIcon icon={faUtensils} bounce style={{ color: "#fdb13f", fontSize: "100%" }} />
+          <FontAwesomeIcon icon={faUtensils} beat style={{ color: "#6c4e32", fontSize: "100%" }} />
+            &nbsp;오늘 뭐 먹지?&nbsp;
+            <FontAwesomeIcon icon={faUtensils} beat style={{ color: "#6c4e32", fontSize: "100%" }} />
           </div>
           <button className="today-close-btn" onClick={onClose}>
-            <img src="/images/close_icon.png" alt="닫기" />
+            <FontAwesomeIcon icon={faXmark} className="icon-close" />
+            {/* <img src="/images/close_icon.png" alt="닫기" /> */}
           </button>
         </div>
         {loading ? (
@@ -162,15 +173,8 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
                 {selectedRecipes.map((recipe, i) => (
                   <div
                     key={recipe.recipeId}
-                    className={`today-recipe-item ${i === centerIndex ? "active" : ""}`}
-                    style={{
-                      transform: `translateX(${itemTransforms[i]}px)`,
-                      transition: isDragging ? "none" : "transform 0.3s ease-in-out",
-                    }}
-                    onTouchStart={(e) => handleTouchStart(e, i)}
-                    onTouchMove={(e) => handleTouchMove(e, i)}
-                    onTouchEnd={() => handleTouchEnd(i)}
-                    onClick={() => i === centerIndex && goToRecipeDetail(recipe.recipeId)} // 중앙 아이템 클릭 시 상세 페이지로 이동
+                    className={`today-recipe-item ${activeIndex === i ? "active" : ""}`}
+                    onClick={() => handleClick(i, recipe.recipeId)}
                   >
                     <img src={recipe.image} alt={recipe.recipeTitle} className="today-recipe-image" />
                   </div>

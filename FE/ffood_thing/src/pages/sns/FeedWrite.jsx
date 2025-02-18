@@ -8,6 +8,8 @@ import "../../styles/sns/FeedWrite.css"
 import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
 import { UserContext } from "../../contexts/UserContext"
 import "../../styles/base/global.css" // 텍스트 문제
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronLeft} from '@fortawesome/free-solid-svg-icons'
 
 function FeedWrite() {
   const navigate = useNavigate()
@@ -65,6 +67,7 @@ function FeedWrite() {
         showCancelButton: true,
         confirmButtonText: "불러오기",
         denyButtonText: `불러오지 않기`,
+        customClass: { popup: "custom-swal-popup" },
       }).then((result) => {
         if (result.isConfirmed) {
           if (savedFoodName) setFoodName(savedFoodName)
@@ -75,7 +78,7 @@ function FeedWrite() {
             setSelectedRecipeId(JSON.parse(savedSelectedRecipeId))
           }
           if (savedRecipeTitle) setRecipeTitle(savedRecipeTitle)
-          Swal.fire("불러오기 완료!", "", "success")
+          Swal.fire({ title: "불러오기 완료!", text: "", icon: "success", customClass: { popup: "custom-swal-popup" } })
         } else if (result.isDenied) {
           localStorage.removeItem("foodName")
           localStorage.removeItem("description")
@@ -83,7 +86,7 @@ function FeedWrite() {
           localStorage.removeItem("checkedImages")
           localStorage.removeItem("selectedRecipeId")
           localStorage.removeItem("recipeTitle")
-          Swal.fire("임시 저장 데이터를 삭제했습니다.", "", "info")
+          Swal.fire({ title: "임시 저장 데이터를 삭제했습니다.", text: "", icon: "info", customClass: { popup: "custom-swal-popup" } })
         }
       })
     }
@@ -125,12 +128,13 @@ function FeedWrite() {
       showCancelButton: true,
       confirmButtonText: "임시저장",
       denyButtonText: `임시저장하지 않기`,
+      customClass: { popup: "custom-swal-popup" },
     }).then((result) => {
       if (result.isConfirmed) {
         temporarySave()
-        Swal.fire("임시저장!", "", "success").then(() => navigate(-1))
+        Swal.fire({ title: "임시저장!", text: "", icon: "success", customClass: { popup: "custom-swal-popup" } }).then(() => navigate(-1))
       } else if (result.isDenied) {
-        Swal.fire("임시 저장하지 않기", "", "info").then(() => navigate(-1))
+        Swal.fire({ title: "임시 저장하지 않기", text: "", icon: "info", customClass: { popup: "custom-swal-popup" } }).then(() => navigate(-1))
       }
     })
   }
@@ -144,7 +148,7 @@ function FeedWrite() {
       setRecipeTitle(recipeTitle)
     } catch (error) {
       console.error("Error fetching recipe details:", error)
-      Swal.fire("오류 발생!", "레시피 정보를 가져오는 중 오류가 발생했습니다.", "error")
+      Swal.fire({ title: "오류 발생!", text: "레시피 정보를 가져오는 중 오류가 발생했습니다.", icon: "error", customClass: { popup: "custom-swal-popup" } })
     }
   }
 
@@ -169,12 +173,12 @@ function FeedWrite() {
     e.preventDefault()
 
     if (selectedImages.length === 0) {
-      Swal.fire("사진은 필수항목입니다", "", "warning")
+      Swal.fire({ title: "사진은 필수항목입니다", text: "", icon: "warning", customClass: { popup: "custom-swal-popup" } })
       return
     }
 
     if (foodName.trim() === "") {
-      Swal.fire("제목은 필수 항목입니다", "", "warning")
+      Swal.fire({ title: "제목은 필수 항목입니다", text: "", icon: "warning", customClass: { popup: "custom-swal-popup" } })
       return
     }
 
@@ -232,10 +236,7 @@ function FeedWrite() {
               .fire({
                 title: "작성완료!",
                 text: "성공적으로 피드가 작성됐어요.",
-                imageUrl: "/images/mainlogo.jpg",
-                imageWidth: 350,
-                imageHeight: 300,
-                imageAlt: "Custom image",
+
                 icon: "success",
               })
               .then(() => navigate("/sns")) // 피드 전체 목록 페이지로 리디렉트
@@ -260,15 +261,22 @@ function FeedWrite() {
   return (
     <div className="base-div">
       <div className="card-div">
-        <button onClick={handleBack} className="back-button1">
-          <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
-        </button>
+        <div className="sns-write-header">
+          <button onClick={handleBack} className="back-button1">
+              <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
+          </button>
+          <div className="sns-write-title">
+            <h2 className="sns-write-title-h2">피드 작성하기</h2>
+            <img src="/images/시원이.png" className="sns-write-title-icon" />
+          </div>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="preview-container">
             {selectedImages.map((image) => (
               <div key={image.id} className="preview-image">
                 <div className="square">
                   <img src={image.isCaptured ? image.dataURL : image.id} alt="미리보기" />
+                  {/* <img src={image.id} alt="미리보기" /> */}
                 </div>
                 <input type="checkbox" className="checkbox" onChange={() => handleCheck(image.id)} checked={checkedImages.includes(image.id)} />
               </div>
@@ -322,3 +330,5 @@ function FeedWrite() {
 }
 
 export default FeedWrite
+
+

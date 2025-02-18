@@ -1,54 +1,75 @@
+.card-div-welcome {
+  background-image: url("/images/frame.png"); /* 이미지 경로 설정 */
+  background-size: 97% 96%; /* 이미지를 페이지 크기에 맞게 조절 */
+  background-position: center; /* 이미지를 중앙에 위치 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  width: 100%; /* Occupy the entire horizontal space */
+  height: 100%;
+  display: flex; /* Flexbox 추가 */
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  padding: 2rem;
+}
+
 .welcome-container {
-  background-image: url("/images/backgroundImage.png");
-  background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
   display: flex;
-  flex-direction: column; /* 상단의 헤더와 좌우 컨텐츠를 분리하기 위해 컬럼 방향으로 정렬 */
-  width: 100%;
-  height: 100vh; /* 전체 화면 높이로 설정 */
-  overflow: hidden; /* 전체 컨테이너에서 넘치는 내용 숨김 */
+  flex-direction: column;
+  align-items: center; /* Center all elements */
+  justify-content: center;
+  margin-left: 1.8em;
+  width: 93%;
+  height: 95%;
+  background: linear-gradient(135deg, #fad6a0, #d97742); /* Warm orange gradient */
+  border-radius: 20px;
+  text-align: center;
 }
 
-.welcome-comment {
-  display: flex;
-  position: absolute;
-  top: 15%;
-  left: 10%;
-  align-items: center; /* 수직 중앙 정렬 */
-}
-
+/* ✅ Image style */
 .cooking-image-welcome {
-  width: 100%; /* 너비를 100%로 설정하여 화면의 전체 너비를 차지 */
-  height: 100%; /* 높이를 100%로 설정하여 화면의 전체 높이를 차지 */
-  object-fit: cover; /* 이미지가 화면을 덮도록 비율 조정 */
-  opacity: 50%;
-  position: relative;
-}
-
-.welcome-comment p {
-  margin-top: 0; /* 위쪽 여백 제거 */
-  margin-bottom: 0; /* 아래쪽 여백 제거 */
-  padding: 20px 0; /* 상하 패딩 추가 */
-  font-size: 4vw; /* 폰트 사이즈 업 */
-}
-
-.ready-for-cooking p {
-  position: absolute;
-  bottom: 10%;
-  left: 5%;
-}
-
-.welcome-image-knife {
-  width: 10%;
+  width: 25%;
   height: auto;
-  position: absolute;
-  bottom: 15%;
-  right: 5%;
+  margin-bottom: 2em;
+  animation: float 3s infinite ease-in-out;
 }
 
-.welcome-image-shaker {
-  width: 10%;
-  height: auto;
-  position: absolute;
-  top: 5%;
-  right: 5%;
+/* AI image smooth floating animation */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* 🔹 Title style */
+.welcome-start-title {
+  font-family: "rider";
+  font-size: clamp(3.5rem, 5vw, 4.5rem); /* 화면 크기에 따라 유동적인 크기 */
+  font-weight: 100;
+  margin-bottom: 10px;
+  padding-bottom: 5%;
+  width: 90%; /* Increased width to accommodate long text */
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+}
+
+/* 🔹 Button style */
+.ready-for-cooking-button {
+  background: #fff;
+  color: #d97742;
+  font-family: "MyCustomFont";
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 15px 30px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive adjustments */
+/* ✅ 반응형 디자인 (태블릿 및 모바일 최적화) */
+@media (max-width: 1024px) {
 }

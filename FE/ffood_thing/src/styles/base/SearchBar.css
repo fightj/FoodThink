@@ -14,7 +14,7 @@
 }
 
 /* 검색바 스타일 */
-.search-bar {
+.search-bar { 
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -30,6 +30,7 @@
 
 /* 검색 입력창 */
 .search-input {
+  font-family: "KCC-Hanbit", sans-serif;
   width: 100%;
   padding: 10px 40px 10px 15px; /* 오른쪽 여백: 아이콘과 겹치지 않도록 설정 */
   font-size: 16px; /* 글씨 크기 조정 */

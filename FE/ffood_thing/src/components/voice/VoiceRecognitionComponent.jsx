@@ -83,7 +83,7 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
 
     const displayListeningMessage = () => {
       console.log("Listening for commands...")
-      setTimeout(displayListeningMessage, 5000) // 5초마다 메시지 출력
+      setTimeout(displayListeningMessage, 10000) // 5초마다 메시지 출력
     }
 
     displayListeningMessage() // 초기 메시지 출력
@@ -97,7 +97,7 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
     <div>
       {isRecordingModalVisible && (
         <div className="recording-modal">
-          <img className="recording-gif" src="/images/record.gif" alt="Recording..." />
+          <img className="recording-gif" src="/images/recording.gif" alt="Recording..." />
         </div>
       )}
     </div>

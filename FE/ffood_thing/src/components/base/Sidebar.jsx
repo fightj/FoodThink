@@ -15,7 +15,6 @@ function Sidebar({ isOpen, toggleSidebar }) {
   const sessionUser = JSON.parse(sessionStorage.getItem("user"));
   const sessionUserNickname = user?.nickname || sessionUser?.nickname || "User";
 
-
   // ✅ 로그인 여부를 localStorage에서 확인
   const isLoggedIn = localStorage.getItem("kakaoAuthProcessed") === "true";
 
@@ -28,7 +27,8 @@ function Sidebar({ isOpen, toggleSidebar }) {
 
   // ✅ 페이지 이동 시 사이드바 & 드롭다운 닫기
   useEffect(() => {
-    if (isOpen) toggleSidebar(false);
+    // if (isOpen) toggleSidebar(false);
+    if(isOpen) setIsOpen(false);
     setDropdownOpen(false);
   }, [location.pathname]);
 
@@ -39,9 +39,9 @@ function Sidebar({ isOpen, toggleSidebar }) {
       const isScrollingDown = currentScrollPos > prevScrollPos.current;
 
       if (isScrollingDown) {
-        toggleSidebar(false);
+        // toggleSidebar(false);
+        setIsOpen(false);
       }
-
       prevScrollPos.current = currentScrollPos;
     };
 
@@ -69,7 +69,9 @@ function Sidebar({ isOpen, toggleSidebar }) {
     <div className={`sidebar-container ${isOpen ? "show" : "hide"}`}>
       {/* ✅ 기본 사이드바 */}
       <div className="sidebar">
-        <a href="/" className="home-link">홈</a>
+        <a href="/" className="home-link">
+          <img src="./images/시원이.png" className="home-icon" />
+          홈으로</a>
         <hr />
 
         {isLoggedIn ? (
@@ -103,7 +105,8 @@ function Sidebar({ isOpen, toggleSidebar }) {
           </>
         ) : (
           <button className="login-btn" onClick={() => { navigate("/login"); toggleSidebar(false); }}>
-            로그인해주세요
+            <img src="/images/씩씩이.png" className="home-icon" />
+            로그인
           </button>
         )}
       </div>
@@ -115,7 +118,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
           <a href={`/profile/${localStorage.getItem("nickname")}?tab=recipes`} onClick={() => setDropdownOpen(false)}>내 레시피</a>
           <a href={`/profile/${localStorage.getItem("nickname")}?tab=feed`} onClick={() => setDropdownOpen(false)}>내 피드</a>
           <hr />
-          <a href="#" onClick={handleLogout}>로그아웃</a>
+          <a href="#" onClick={handleLogout} style={{ fontWeight: 'bold' }}>로그아웃</a>
         </div>
       )}
     </div>

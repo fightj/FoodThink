@@ -1,3 +1,27 @@
+/* 피드 작성 및 수정 헤더 */
+.sns-write-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 3%;
+}
+
+/* 피드 작성 및 수정 헤더 글 내용 */
+.sns-write-title {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+}
+
+/* 피드 작성하기 제목 아이콘 */
+.sns-write-title-icon {
+  width: 5rem;
+  animation: float 3s ease-in-out infinite;
+}
 
 form {
   width: 100%;
@@ -7,7 +31,7 @@ form {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 0.5%;
+  margin-top: 1%;
 }
 
 .preview-image {
@@ -47,6 +71,7 @@ form {
   text-align: center;
   cursor: pointer;
   margin-top: 20px;
+  font-family: 'MangoDdobak-B';
 }
 
 .file-upload img {
@@ -64,6 +89,7 @@ form {
   justify-content: center;
   margin-top: 20px;
   margin-bottom: 20px;
+  font-family: 'omyu_pretty';
 }
 
 /* 참고한 레시피 (02.14) */
@@ -74,6 +100,7 @@ form {
 .button-container {
   display: flex;
   gap: 10px;
+  font-family: 'omyu_pretty';
 }
 
 .close-button {
@@ -85,4 +112,34 @@ form {
   border: none;
   background: transparent;
   color: white;
+}
+
+/* SNS피드 작성 및 수정 참고 레시피  (02.15) */
+.sns-reference-recipe {
+  background-color: #282828 !important;
+  color: white;
+  font-size: 1.1em;
+  padding: 0.5em 1em;
+  display: flex;  /* flex 사용 */
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: space-between; /* 내용과 X 버튼을 양 끝으로 배치 */
+  overflow: hidden;
+}
+
+.feed-recipe-close-btn {
+  cursor: pointer;
+  flex-shrink: 0; /* X 버튼이 줄어들지 않도록 설정 */
+  margin-left: 0.5em; /* 텍스트와 간격 확보 */
+}
+
+.sns-reference-recipe .sns-reference-recipe-title{
+  flex-grow: 1; /* 텍스트가 가능한 만큼 차지하도록 설정 */
+  min-width: 0; /* flexbox 내에서 말줄임 처리가 가능하도록 설정 */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: 'PTBandocheB';
+}
+.context-h5{
+  font-family: "NPSfont_regular";
 }
