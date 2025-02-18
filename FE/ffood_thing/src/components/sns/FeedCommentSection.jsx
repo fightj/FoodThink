@@ -237,7 +237,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
           </div>
         ))
       ) : (
-        <p className="no-comments">📌 댓글이 없습니다.</p>
+        <p className="no-comments">📌 댓글이 없습니다. 😯</p>
       )}
       {/* 닫기 버튼 제거 -> 위에서 아래로 스와이프로 변경 */}
       {/* <img src="/images/exit-btn.png" alt="닫기 버튼" className="close-button-image" onClick={onClose} /> */}

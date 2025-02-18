@@ -1,37 +1,38 @@
-import React, { useEffect, useState, useContext, useRef } from "react"
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
-import { AnimatePresence } from "framer-motion"
-import axios from "axios"
-import "bootstrap-icons/font/bootstrap-icons.css"
-import "bootstrap/dist/css/bootstrap.min.css" //bootstrap
-import "bootstrap/dist/js/bootstrap.bundle.min.js" //bootstrap dropdown
-import "./App.css"
-import "./styles/base/global.css"
+import React, { useEffect, useState, useContext, useRef } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import axios from "axios";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap/dist/css/bootstrap.min.css"; //bootstrap
+import "bootstrap/dist/js/bootstrap.bundle.min.js"; //bootstrap dropdown
+import "./App.css";
+import "./styles/base/global.css";
 
-import Home from "./pages/home/Home"
-import SnsMain from "./pages/sns/SnsMain"
-import FeedDetail from "./pages/sns/FeedDetail"
-import FeedWrite from "./pages/sns/FeedWrite"
-import RecipesMainPage from "./pages/recipe/RecipesMainPage"
-import RecipeDetailPage from "./pages/recipe/RecipeDetailPage"
-import ProfilePage from "./pages/profile/ProfilePage"
-import RecipeWritePage from "./pages/recipe/RecipeWritePage"
-import RecipeUpdatePage from "./pages/recipe/RecipeUpdatePage"
-import FeedUpdatePage from "./pages/sns/FeedUpdatePage"
-import LoginPage from "./pages/login/LoginPage"
-import AiRecommendPage from "./pages/recommend/AiRecommendPage"
-import SnsSearchResultPage from "./pages/sns/SnsSearchResultPage"
-import RecipeSearchResultPage from "./pages/recipe/RecipeSearchResultPage"
-import DemoCookingPage from "./pages/recipe/DemoCookingPage"
+import Home from "./pages/home/Home";
+import SnsMain from "./pages/sns/SnsMain";
+import FeedDetail from "./pages/sns/FeedDetail";
+import FeedWrite from "./pages/sns/FeedWrite";
+import RecipesMainPage from "./pages/recipe/RecipesMainPage";
+import RecipeDetailPage from "./pages/recipe/RecipeDetailPage";
+import ProfilePage from "./pages/profile/ProfilePage";
+import RecipeWritePage from "./pages/recipe/RecipeWritePage";
+import RecipeUpdatePage from "./pages/recipe/RecipeUpdatePage";
+import FeedUpdatePage from "./pages/sns/FeedUpdatePage";
+import LoginPage from "./pages/login/LoginPage";
+import AiRecommendPage from "./pages/recommend/AiRecommendPage";
+import SnsSearchResultPage from "./pages/sns/SnsSearchResultPage";
+import RecipeSearchResultPage from "./pages/recipe/RecipeSearchResultPage";
+import DemoCookingPage from "./pages/recipe/DemoCookingPage";
+import FirstLogin from "./pages/login/FirstLogin";
 
-import NavbarBottom from "./components/base/Navbar-bottom"
-import PageSlide from "./components/base/PageSlide"
-import Sidebar from "./components/base/Sidebar"
-import { UserProvider, UserContext } from "./contexts/UserContext" // 올바르게 import
+import NavbarBottom from "./components/base/Navbar-bottom";
+import PageSlide from "./components/base/PageSlide";
+import Sidebar from "./components/base/Sidebar";
+import { UserProvider, UserContext } from "./contexts/UserContext"; // 올바르게 import
 
-import KakaoCallback from "./pages/login/KakaoCallback"
+import KakaoCallback from "./pages/login/KakaoCallback";
 
-import ToggleButton from "./components/base/ToggleButton"
+import ToggleButton from "./components/base/ToggleButton";
 
 // Function to fetch user info
 // const fetchUserInfo = async () => {
@@ -55,10 +56,10 @@ import ToggleButton from "./components/base/ToggleButton"
 // }
 
 // Function to parse URL parameters
-const getUrlParameter = (name) => {
-  const urlParams = new URLSearchParams(window.location.search)
-  return urlParams.get(name)
-}
+const getUrlParameter = name => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
+};
 
 // Main App component
 const App = () => {
@@ -68,28 +69,28 @@ const App = () => {
         <MainApp />
       </Router>
     </UserProvider>
-  )
-}
+  );
+};
 const MainApp = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
-  const location = useLocation() // Add the useLocation hook
+  const location = useLocation(); // Add the useLocation hook
 
-  const { user, setUser } = useContext(UserContext)
-  const [tokenLoaded, setTokenLoaded] = useState(false) // UserContext를 올바르게 사용
+  const { user, setUser } = useContext(UserContext);
+  const [tokenLoaded, setTokenLoaded] = useState(false); // UserContext를 올바르게 사용
   // const pagesWithoutNavbar = ["/login", "/some-other-page"]
   // const hideNavbarPaths = ["/recipes/[0-9]+/cooking"]
   // const shouldHideNavbar = pagesWithoutNavbar.includes(location.pathname) || hideNavbarPaths.some((path) => new RegExp(path).test(location.pathname))
 
   const toggleSidebar = () => {
-    setIsOpen((prev) => !prev);
+    setIsOpen(prev => !prev);
   };
 
-  const closeSidebar = (e) => {
+  const closeSidebar = e => {
     if (isOpen && !e.target.closest(".sidebar-container") && !e.target.closest(".toggle-button")) {
       setIsOpen(false);
     }
-  }
+  };
 
   useEffect(() => {
     document.addEventListener("click", closeSidebar);
@@ -97,7 +98,7 @@ const MainApp = () => {
       document.removeEventListener("click", closeSidebar);
     };
   }, [isOpen]);
-  
+
   // "/recipes/:id/cooking" 경로에서 toggle button을 숨기기 위한 조건
   const shouldHideToggleButton = location.pathname.includes("/recipes/") && location.pathname.includes("/cooking");
 
@@ -105,16 +106,15 @@ const MainApp = () => {
     <>
       {/* 사이드바를 토글 버튼으로 변경 */}
       {/* <ToggleButton toggleSidebar={toggleSidebar} /> */}
-      {!shouldHideToggleButton && <ToggleButton toggleSidebar={toggleSidebar} />}
-      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null}/>
+      {!shouldHideToggleButton && <ToggleButton toggleSidebar={toggleSidebar} />}<ToggleButton toggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
       <AnimatedRoutes userInfo={user} />
     </>
   );
 };
 
-
 const AnimatedRoutes = ({ userInfo }) => {
-  const location = useLocation()
+  const location = useLocation();
 
   return (
     <AnimatePresence mode="wait">
@@ -140,6 +140,14 @@ const AnimatedRoutes = ({ userInfo }) => {
           element={
             <PageSlide>
               <KakaoCallback />
+            </PageSlide>
+          }
+        />
+        <Route
+          path="/first-login"
+          element={
+            <PageSlide>
+              <FirstLogin />
             </PageSlide>
           }
         />
@@ -250,7 +258,7 @@ const AnimatedRoutes = ({ userInfo }) => {
         />
       </Routes>
     </AnimatePresence>
-  )
-}
+  );
+};
 
-export default App
+export default App;
