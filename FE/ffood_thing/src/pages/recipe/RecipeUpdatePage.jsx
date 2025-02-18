@@ -86,7 +86,8 @@ function Step({ step, index, moveStep, updateStepText, handleStepImageUpload, re
         <input type="file" id={`stepImageUpload-${index}`} accept="image/*" onChange={(e) => handleStepImageUpload(e, index)} hidden />
       </div>
       <button className="recipe-write-step-remove-btn" onClick={() => removeStep(index)}>
-        <FontAwesomeIcon icon={faX} size="2xl" style={{ color: "#fe5868" }} />
+      ❌
+        {/* <FontAwesomeIcon icon={faX} size="2xl" style={{ color: "#fe5868" }} /> */}
       </button>
     </div>
   )
@@ -564,7 +565,7 @@ function RecipeUpdatePage() {
                     <>
                       <img src={URL.createObjectURL(imageFile)} alt="요리 대표 이미지" className="recipe-write-main-uploaded-image" />
                       <button className="recipe-write-main-image-remove-btn" onClick={removeImage}>
-                        ✖
+                      ❌
                       </button>
                     </>
                   ) : (
@@ -603,7 +604,8 @@ function RecipeUpdatePage() {
                         }}
                       />
                       <button className="recipe-write-ingre-remove-btn" onClick={() => removeIngredient(index)}>
-                        <FontAwesomeIcon icon={faX} size="2xl" style={{ color: "#fe5868" }} />
+                      ❌
+                        {/* <FontAwesomeIcon icon={faX} size="2xl" style={{ color: "#fe5868" }} /> */}
                       </button>
                     </div>
                   ))}
@@ -611,7 +613,8 @@ function RecipeUpdatePage() {
               </div>
               <div className="recipe-write-ingre-add-btn-wrapper">
                 <button className="recipe-write-ingre-add-btn" onClick={addIngredient}>
-                  <FontAwesomeIcon icon={faPlus} size="2x" style={{ color: "#74C0FC", fontWeight: "bold" }} />
+                ➕
+                  {/* <FontAwesomeIcon icon={faPlus} size="2x" style={{ color: "#74C0FC", fontWeight: "bold" }} /> */}
                 </button>
               </div>
             </div>
@@ -634,7 +637,8 @@ function RecipeUpdatePage() {
                 {/* 추가 버튼 */}
                 <div className="recipe-write-step-add-btn-wrapper">
                   <button className="recipe-write-step-add-btn" onClick={addStep}>
-                    <FontAwesomeIcon icon={faPlus} size="2x" style={{ color: "#74C0FC", fontWeight: "bold" }} />
+                  ➕
+                    {/* <FontAwesomeIcon icon={faPlus} size="2x" style={{ color: "#74C0FC", fontWeight: "bold" }} /> */}
                   </button>
                 </div>
               </div>
@@ -648,11 +652,11 @@ function RecipeUpdatePage() {
                   <span></span>
                 </label>
               </div>
-              <button className="recipe-write-save-btn" onClick={() => saveRecipe(isPublic)}>
-                저장
+              <button className="recipe-write-update-btn" onClick={() => saveRecipe(isPublic)}>
+              ✏️ 수정
               </button>
               <button className="recipe-write-cancel-btn" onClick={handleCancel}>
-                취소
+              🔙 취소
               </button>
             </div>
           </div>
