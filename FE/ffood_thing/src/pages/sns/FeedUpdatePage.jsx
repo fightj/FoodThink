@@ -9,6 +9,8 @@ import UserBookmarkRecipe from "../../components/sns/UserBookmarkRecipe"
 import { UserContext } from "../../contexts/UserContext"
 import "../../styles/base/global.css" //텍스트 문제
 import "../../styles/sns/FeedDetail.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 
 function FeedUpdatePage() {
   const { id } = useParams()
@@ -274,7 +276,8 @@ function FeedUpdatePage() {
       <div className="card-div">
         <div className="sns-write-header">
           <button onClick={handleBack} className="back-button">
-            <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
+            {/* <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" /> */}
+            <FontAwesomeIcon className="chevron-left-back-button" icon={faChevronLeft} size="3x" style={{ color: "#F7B05B" }} />
           </button>
           <div className="sns-write-title">
             <h2 className="sns-write-title-h2">피드 수정</h2>

@@ -98,11 +98,14 @@ const MainApp = () => {
     };
   }, [isOpen]);
   
+  // "/recipes/:id/cooking" 경로에서 toggle button을 숨기기 위한 조건
+  const shouldHideToggleButton = location.pathname.includes("/recipes/") && location.pathname.includes("/cooking");
 
   return (
     <>
       {/* 사이드바를 토글 버튼으로 변경 */}
-      <ToggleButton toggleSidebar={toggleSidebar} />
+      {/* <ToggleButton toggleSidebar={toggleSidebar} /> */}
+      {!shouldHideToggleButton && <ToggleButton toggleSidebar={toggleSidebar} />}
       <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null}/>
       <AnimatedRoutes userInfo={user} />
     </>
