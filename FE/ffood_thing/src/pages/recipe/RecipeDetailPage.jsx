@@ -1,24 +1,24 @@
-import { useState, useEffect, useContext, Fragment } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { UserContext } from "../../contexts/UserContext";
-import Logo from "../../components/base/Logo";
-import Swal from "sweetalert2";
-import "../../styles/recipe/RecipeDetailPage.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import "../../styles/base/global.css";
+import { useState, useEffect, useContext, Fragment } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import axios from "axios"
+import { UserContext } from "../../contexts/UserContext"
+import Logo from "../../components/base/Logo"
+import Swal from "sweetalert2"
+import "../../styles/recipe/RecipeDetailPage.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import "../../styles/base/global.css"
 
 const RecipeDetailPage = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { user } = useContext(UserContext);
-  const [recipe, setRecipe] = useState(null);
-  const [feedData, setFeedData] = useState([]);
-  const [activeTab, setActiveTab] = useState("ingredients"); // 🔥 선택된 탭 상태 관리
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-    const [showDropdown, setShowDropdown] = useState(false)
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { user } = useContext(UserContext)
+  const [recipe, setRecipe] = useState(null)
+  const [feedData, setFeedData] = useState([])
+  const [activeTab, setActiveTab] = useState("ingredients") // 🔥 선택된 탭 상태 관리
+  const [isBookmarked, setIsBookmarked] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -29,74 +29,74 @@ const RecipeDetailPage = () => {
                 Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`, // null 체크 후 빈 문자열 대입
               }
             : {},
-        });
+        })
 
         // Check if response and response.data are valid
         if (response && response.data) {
-          setRecipe(response.data);
+          setRecipe(response.data)
         } else {
-          console.error("Recipe response data is invalid:", response);
+          console.error("Recipe response data is invalid:", response)
         }
 
         if (user) {
           const bookmarkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}` },
-          });
+          })
 
           // Check if bookmarkResponse and bookmarkResponse.data are valid
           if (bookmarkResponse && bookmarkResponse.data !== undefined) {
-            setIsBookmarked(bookmarkResponse.data);
+            setIsBookmarked(bookmarkResponse.data)
           } else {
-            console.error("Bookmark response data is invalid:", bookmarkResponse);
+            console.error("Bookmark response data is invalid:", bookmarkResponse)
           }
         }
       } catch (error) {
-        console.error("Error fetching recipe details", error);
+        console.error("Error fetching recipe details", error)
         if (error.response && error.response.status === 401) {
           Swal.fire({
             title: "인증 오류!",
             text: "로그인이 필요합니다.",
             icon: "error",
           }).then(() => {
-            navigate("/login");
-          });
+            navigate("/login")
+          })
         }
       }
-    };
-
-    // 로컬 스토리지에서 북마크 상태 불러오기
-    const bookmarkStatus = localStorage.getItem(`bookmark_${id}`);
-    if (bookmarkStatus !== null) {
-      setIsBookmarked(bookmarkStatus === "true"); // "true"이면 true, 아니면 false
     }
 
-    fetchRecipe();
-  }, [id, navigate, user]);
+    // 로컬 스토리지에서 북마크 상태 불러오기
+    const bookmarkStatus = localStorage.getItem(`bookmark_${id}`)
+    if (bookmarkStatus !== null) {
+      setIsBookmarked(bookmarkStatus === "true") // "true"이면 true, 아니면 false
+    }
+
+    fetchRecipe()
+  }, [id, navigate, user])
 
   const fetchFeedData = async () => {
     try {
-      const response = await axios.get(`https://i12e107.p.ssafy.io/api/feed/read/inRecipe/${id}`);
-      console.log("불러온 Feed 데이터:", response.data); // 🔥 API 응답 데이터 확인
-      setFeedData(response.data);
+      const response = await axios.get(`https://i12e107.p.ssafy.io/api/feed/read/inRecipe/${id}`)
+      console.log("불러온 Feed 데이터:", response.data) // 🔥 API 응답 데이터 확인
+      setFeedData(response.data)
     } catch (error) {
-      console.error("Feed 데이터를 불러오는 중 오류 발생:", error);
+      console.error("Feed 데이터를 불러오는 중 오류 발생:", error)
     }
-  };
+  }
 
   useEffect(() => {
     if (activeTab === "feed") {
-      fetchFeedData(); // ✅ Feed 탭이 활성화될 때만 호출
+      fetchFeedData() // ✅ Feed 탭이 활성화될 때만 호출
     }
-  }, [activeTab, id]); // ✅ id도 의존성에 추가 (레시피가 변경될 수도 있음)
+  }, [activeTab, id]) // ✅ id도 의존성에 추가 (레시피가 변경될 수도 있음)
 
   if (!recipe) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   // ✅ 탭을 클릭하면 해당 탭만 보이도록 설정
   const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+    setActiveTab(tab)
+  }
 
   // 북마크 상태가 변경될 때 로컬 스토리지 업데이트
   const handleBookmarkClick = async () => {
@@ -106,35 +106,35 @@ const RecipeDetailPage = () => {
         text: "북마크를 사용하려면 로그인하세요.",
         icon: "warning",
       }).then(() => {
-        navigate("/login");
-      });
-      return;
+        navigate("/login")
+      })
+      return
     }
 
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken")
     if (!accessToken) {
       Swal.fire({
         title: "인증 오류!",
         text: "로그인이 필요합니다.",
         icon: "error",
-      });
-      return;
+      })
+      return
     }
 
     try {
       const checkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      })
 
-      const isBookmarked = checkResponse.data;
+      const isBookmarked = checkResponse.data
 
-      let response;
+      let response
 
       if (isBookmarked) {
         response = await axios.delete(`https://i12e107.p.ssafy.io/api/bookmark/delete/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        if (response.status !== 200) throw new Error("북마크 삭제 실패");
+        })
+        if (response.status !== 200) throw new Error("북마크 삭제 실패")
       } else {
         response = await axios.post(
           `https://i12e107.p.ssafy.io/api/bookmark/create/${id}`,
@@ -142,39 +142,39 @@ const RecipeDetailPage = () => {
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
-        );
+        )
 
         if (![200, 201].includes(response.status)) {
-          throw new Error(`북마크 추가 실패. 상태 코드: ${response.status}`);
+          throw new Error(`북마크 추가 실패. 상태 코드: ${response.status}`)
         }
       }
 
-      const newBookmarkStatus = !isBookmarked;
-      setIsBookmarked(newBookmarkStatus);
-      localStorage.setItem(`bookmark_${id}`, newBookmarkStatus.toString()); // 로컬 스토리지에 북마크 상태 저장
+      const newBookmarkStatus = !isBookmarked
+      setIsBookmarked(newBookmarkStatus)
+      localStorage.setItem(`bookmark_${id}`, newBookmarkStatus.toString()) // 로컬 스토리지에 북마크 상태 저장
       Swal.fire({
         title: isBookmarked ? "북마크 취소!" : "북마크 완료!",
         text: isBookmarked ? "북마크에서 제거했어요." : "북마크에 추가했어요.",
         icon: "success",
-      });
+      })
     } catch (error) {
-      console.error("북마크 처리 중 오류 발생", error);
+      console.error("북마크 처리 중 오류 발생", error)
 
       if (error.response) {
-        console.error("응답 에러 상태 코드:", error.response.status);
-        console.error("응답 에러 데이터:", error.response.data);
+        console.error("응답 에러 상태 코드:", error.response.status)
+        console.error("응답 에러 데이터:", error.response.data)
       }
       Swal.fire({
         title: "오류 발생",
         text: error.response ? `상태 코드: ${error.response.status}` : "북마크 상태를 업데이트하는 데 실패했습니다.",
         icon: "error",
-      });
+      })
     }
-  };
+  }
 
   const handleEditClick = () => {
-    navigate(`/recipes/update/${id}`);
-  };
+    navigate(`/recipes/update/${id}`)
+  }
 
   const handleDeleteClick = async () => {
     try {
@@ -182,36 +182,36 @@ const RecipeDetailPage = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
-      });
+      })
       Swal.fire({
         title: "삭제 완료",
         text: "레시피가 삭제되었습니다.",
         icon: "success",
       }).then(() => {
-        navigate("/recipes");
-      });
+        navigate("/recipes")
+      })
     } catch (error) {
-      console.error("Error deleting recipe", error);
+      console.error("Error deleting recipe", error)
       Swal.fire({
         title: "삭제 실패",
         text: "레시피 삭제에 실패했습니다.",
         icon: "error",
-      });
+      })
     }
-  };
+  }
 
   const getLevelText = (level) => {
     switch (level) {
       case 1:
-        return "하";
+        return "하"
       case 2:
-        return "중";
+        return "중"
       case 3:
-        return "상";
+        return "상"
       default:
-        return level;
+        return level
     }
-  };
+  }
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown)
@@ -219,8 +219,8 @@ const RecipeDetailPage = () => {
 
   // 페이지 맨 위로 스크롤하는 함수
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
 
   return (
     <div className="base-div">
@@ -239,8 +239,12 @@ const RecipeDetailPage = () => {
                 </button>
                 {showDropdown && (
                   <div className="dropdown-menu">
-                    <button className="dropdown-item" onClick={handleEditClick}>레시피 수정</button>
-                    <button className="dropdown-item" onClick={handleDeleteClick}>레시피 삭제</button>
+                    <button className="dropdown-item" onClick={handleEditClick}>
+                      레시피 수정
+                    </button>
+                    <button className="dropdown-item" onClick={handleDeleteClick}>
+                      레시피 삭제
+                    </button>
                   </div>
                 )}
               </div>
@@ -299,10 +303,10 @@ const RecipeDetailPage = () => {
                       },
                     }).then((result) => {
                       if (result.isConfirmed) {
-                        console.log("Navigating with recipe:", recipe);
-                        navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe });
+                        console.log("Navigating with recipe:", recipe)
+                        navigate(`/recipes/${recipe.recipeId}/cooking`, { state: recipe })
                       }
-                    });
+                    })
                   }}
                 >
                   요리시작
@@ -409,7 +413,7 @@ const RecipeDetailPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RecipeDetailPage;
+export default RecipeDetailPage

@@ -15,12 +15,12 @@
 }
 
 /* 레시피 컨테이너 */
-/* .feed-container {
+.feed-container {
   padding: 20px;
   width: 100%;
   display: flex;
   justify-content: center;
-} */
+}
 
 .no-feeds-wrapper {
   display: flex;
@@ -35,7 +35,7 @@
   font-size: 18px;
   color: #555;
   margin-bottom: 10px; /* ✅ 버튼과 간격 추가 */
-  display: block; /* ✅ 텍스트를 블록 요소로 변경하여 줄바꿈 */
+  /* display: block; */
 }
 
 .write-feed-button {

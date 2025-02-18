@@ -18,7 +18,7 @@ function LoginPage() {
             <div className="image-wrapper">
               <img src="/images/꾸덕이.png" alt="Food Think Logo" className="main-image" />
             </div>
-            <h3>지금 Food Think와 요리를 시작하세요!</h3>
+            <h3>지금 푸띵이와 요리를 시작하세요!</h3>
 
             <div className="start-now">
               <p>3초만에 시작하기!</p>

@@ -266,7 +266,7 @@ function FeedWrite() {
               <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
           </button>
           <div className="sns-write-title">
-            <h2 className="sns-write-title-h2">피드 작성</h2>
+            <h2 className="sns-write-title-h2">피드 작성하기</h2>
             <img src="/images/시원이.png" className="sns-write-title-icon" />
           </div>
         </div>

@@ -163,7 +163,7 @@ const Preference = ({ onClose }) => {
 
         <div className="preference-wrapper">
           <div className="preference-section">
-            <h4>선호 음식</h4>
+            <h4>😋 선호 음식</h4>
             <div className="preference-list">
               {PREFERENCE_ITEMS.map((item) => (
                 <button
@@ -178,7 +178,7 @@ const Preference = ({ onClose }) => {
           </div>
 
           <div className="avoidance-section">
-            <h4>기피 재료</h4>
+            <h4>⚠️ 기피 재료</h4>
             <div className="avoidance-list">
               {AVOID_ITEMS.map((item) => (
                 <button
