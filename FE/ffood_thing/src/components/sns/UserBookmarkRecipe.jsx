@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal"
 import "bootstrap/dist/css/bootstrap.min.css"
 import Swal from "sweetalert2"
 import "../../styles/sns/UserBookmarkRecipe.css" // 사용자 정의 CSS 임포트
+import "../../styles/base/global.css"
 
 function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
   const [selectedBookmark, setSelectedBookmark] = useState(null)
@@ -13,6 +14,7 @@ function UserBookmarkRecipe({ closeModal, bookmarks, onBookmarkSelect }) {
       showCancelButton: true,
       confirmButtonText: "예",
       cancelButtonText: "아니오",
+      customClass: { popup: "custom-swal-popup"}
     }).then((result) => {
       if (result.isConfirmed) {
         onBookmarkSelect(bookmark.recipeId)

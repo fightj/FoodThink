@@ -6,6 +6,7 @@ import "../../styles/sns/SnsMain.css";
 import "../../styles/sns/SnsSearchResultPage.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import "../../styles/base/global.css"
 
 // 검색 결과를 가져오는 함수
 const fetchSearchResults = async (searchQuery, pageNumber = 0, size = 12) => {
@@ -101,7 +102,7 @@ function SnsSearchResultPage() {
     navigate(`/search-results?query=${newQuery}`);
   };
 
-  
+
   // 페이지 맨 위로 스크롤하는 함수
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth"})
@@ -113,19 +114,21 @@ function SnsSearchResultPage() {
         <SearchBar onSearch={handleSearch} initialQuery={query} inputRef={searchInputRef} />
         
         <div className="card-div">
-            <div className="d-flex justify-content-between align-items-center pb-2">
+            <div className="sns-search-result-header" >
               {/* 이전 버튼 클릭 시, 이전 페이지로 이동 */}
               <button onClick={() => navigate('/sns')} className="back-button">
                 <img src="/images/previous_button.png" alt="Previous" className="icon" />
               </button>
               {/* 검색 결과 텍스트는 화면 중앙 정렬 */}
-              <h2 className="search-result-title">검색 결과: "{query}"</h2>
+              <div className="search-result-title" >
+                "{query}"에 대한 검색 결과가 총 {searchResults.length}개 있습니다.
+              </div>
             </div>
 
             <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
               {searchResults.length > 0 ? (
                 searchResults.map((feedItem, index) => (
-                  <div className="col" key={feedItem.id} ref={index === searchResults.length - 1 ? lastElementRef : null}>
+                  <div className="col-4" key={feedItem.id} ref={index === searchResults.length - 1 ? lastElementRef : null}>
                     <Link to={`/feed/${feedItem.id}`} style={{ textDecoration: "none" }}>
                       <div
                         className="card card-cover h-100 overflow-hidden rounded-4 feed-card"
@@ -153,7 +156,7 @@ function SnsSearchResultPage() {
                   </div>
                 ))
               ) : (
-                <p className="align-items-stretch sns-search-no-result">검색 결과가 없습니다.</p>
+                <div className="align-items-stretch sns-search-no-result">검색 결과가 없습니다.</div>
               )}
             </div>
           </div>

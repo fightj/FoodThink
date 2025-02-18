@@ -35,7 +35,7 @@ function FeedUpdatePage() {
       setRecipeTitle(recipeTitle)
     } catch (error) {
       console.error("Error fetching recipe details:", error)
-      Swal.fire("오류 발생!", "레시피 정보를 가져오는 중 오류가 발생했습니다.", "error")
+      Swal.fire({title: "오류 발생!", text: "레시피 정보를 가져오는 중 오류가 발생했습니다.", icon: "error", customClass: { popup: "custom-swal-popup"}})
     }
   }
 
@@ -131,12 +131,13 @@ function FeedUpdatePage() {
       showCancelButton: true,
       confirmButtonText: "임시저장",
       denyButtonText: `임시저장하지 않기`,
+      customClass: { popup: "custom-swal-popup"}
     }).then((result) => {
       if (result.isConfirmed) {
         temporarySave()
-        Swal.fire("임시저장!", "", "success").then(() => navigate(-1))
+        Swal.fire({title: "임시저장!", text: "", icon: "success", customClass: { popup: "custom-swal-popup"}}).then(() => navigate(-1))
       } else if (result.isDenied) {
-        Swal.fire("임시 저장하지 않기", "", "info").then(() => navigate(-1))
+        Swal.fire({title: "임시 저장하지 않기", text: "", icon: "info", customClass: { popup: "custom-swal-popup"}}).then(() => navigate(-1))
       }
     })
   }
@@ -155,7 +156,7 @@ function FeedUpdatePage() {
       setRecipeTitle(recipeTitle)
     } catch (error) {
       console.error("Error fetching recipe details:", error)
-      Swal.fire("오류 발생!", "레시피 정보를 가져오는 중 오류가 발생했습니다.", "error")
+      Swal.fire({title: "오류 발생!", text: "레시피 정보를 가져오는 중 오류가 발생했습니다.", icon: "error", customClass: { popup: "custom-swal-popup"}})
     }
   }
 
@@ -178,12 +179,12 @@ function FeedUpdatePage() {
     e.preventDefault()
 
     if (selectedImages.length === 0) {
-      Swal.fire("사진은 필수항목입니다", "", "warning")
+      Swal.fire({title: "사진은 필수항목입니다", text: "", icon: "warning", customClass: { popup: "custom-swal-popup"}})
       return
     }
 
     if (foodName.trim() === "") {
-      Swal.fire("제목은 필수 항목입니다", "", "warning")
+      Swal.fire({title: "제목은 필수 항목입니다", text: "", icon: "warning", customClass: { popup: "custom-swal-popup"}})
       return
     }
 
@@ -276,7 +277,7 @@ function FeedUpdatePage() {
     <div className="base-div">
       <div className="card-div">
         <div className="sns-write-header">
-          <button onClick={handleBack} className="back-button1">
+          <button onClick={handleBack} className="back-button">
             <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" />
           </button>
           <div className="sns-write-title">
@@ -316,8 +317,8 @@ function FeedUpdatePage() {
                 {recipeTitle && (
                   <div className="recipe-badge" style={{ display: "flex", alignItems: "center" }}>
                     <Badge className="sns-reference-recipe">
-                      {recipeTitle}
-                      <span style={{ cursor: "pointer", marginLeft: "0.5em" }} onClick={handleRecipeRemove}>
+                      <span className="sns-reference-recipe-title">{recipeTitle}</span>
+                      <span className="feed-recipe-close-btn" style={{ cursor: "pointer" }} onClick={handleRecipeRemove}>
                         &times;
                       </span>
                     </Badge>

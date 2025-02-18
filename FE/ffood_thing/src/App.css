@@ -6,21 +6,3 @@
   100% { transform: scale(1); } /* 원래 크기 */
 }
 
-/* .app-toggle-menu {
-  position: fixed;
-  left: -18.5%;
-  top: 50%;
-  transform: translateY(-100%);
-  z-index: 1000;
-  padding: 10%;
-  background-color: #343a40;
-  border: none;
-  border-radius: 0px 10px 10px 0px;
-  opacity: 0.8;
-}
-
-@media (max-witdth:800px) {
-  .app-toggle-menu {
-  }
-} */
-

@@ -4,3 +4,30 @@
     padding: 0; /* 기본 padding 제거 */
     cursor: pointer; /* 마우스 커서 변경 */
   }
+.sns-search-result-header{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+}
+
+.sns-search-no-result{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5vh;
+  font-size: 2rem;
+}
+
+@media (max-width: 800px){
+  .sns-search-result-header{
+    display: flex;
+    flex-direction: column;
+  }
+  .sns-search-no-result{
+    font-size: 1.5rem;
+  }
+
+}
