@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../../styles/recommend/TodayRecommendModal.css"
-import { FaRedo } from "react-icons/fa"
+// import { FaRedo } from "react-icons/fa"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { library } from "@fortawesome/fontawesome-svg-core"
-import { faUtensils } from "@fortawesome/free-solid-svg-icons"
-import { faQuestion } from "@fortawesome/free-solid-svg-icons"
+// import { library } from "@fortawesome/fontawesome-svg-core"
+// import { faQuestion } from "@fortawesome/free-solid-svg-icons"
+import { faUtensils, faXmark, faArrowsRotate } from "@fortawesome/free-solid-svg-icons"
 
 const API_URL = "https://i12e107.p.ssafy.io/api/today-recommend/random"
 
@@ -149,7 +149,8 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
         <div className="today-header">
           
           <button className="today-refresh-btn" onClick={refreshRecommendations} disabled={loading} >
-            <img src="/images/rotate_right.png" alt="새로고침" />
+            <FontAwesomeIcon icon={faArrowsRotate} className="icon-refresh" />
+            {/* <img src="/images/rotate_right.png" alt="새로고침" /> */}
           </button>
           <div className="today-title">
           <FontAwesomeIcon icon={faUtensils} beat style={{ color: "#6c4e32", fontSize: "100%" }} />
@@ -157,7 +158,8 @@ const TodayRecommendModal = ({ isOpen, onClose }) => {
             <FontAwesomeIcon icon={faUtensils} beat style={{ color: "#6c4e32", fontSize: "100%" }} />
           </div>
           <button className="today-close-btn" onClick={onClose}>
-            <img src="/images/close_icon.png" alt="닫기" />
+            <FontAwesomeIcon icon={faXmark} className="icon-close" />
+            {/* <img src="/images/close_icon.png" alt="닫기" /> */}
           </button>
         </div>
         {loading ? (
