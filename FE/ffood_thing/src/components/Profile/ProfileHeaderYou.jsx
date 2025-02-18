@@ -135,7 +135,7 @@ const ProfileHeaderYou = ({ nickname }) => {
   const handleSubscribeToggle = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
-      Swal.fire("로그인 필요", "구독하려면 로그인해주세요.", "warning");
+      Swal.fire({title: "로그인 필요", text: "구독하려면 로그인해주세요.", icon: "warning", customClass: { popup: "custom-swal-popup"}});
       return;
     }
 
@@ -177,10 +177,10 @@ const ProfileHeaderYou = ({ nickname }) => {
       await fetchSubscriberCount(); // 상대방의 구독자 수 업데이트
       await fetchMySubscriptionCount();
 
-      Swal.fire("완료!", isUnsubscribing ? "구독 취소됨!" : "구독 완료!", "success");
+      Swal.fire({title: "완료!", text: isUnsubscribing ? "구독 취소됨!" : "구독 완료!", icon: "success", customClass: { popup: "custom-swal-popup"}});
     } catch (error) {
       console.error("❌ 구독 상태 변경 실패:", error);
-      Swal.fire("오류", error.message, "error");
+      Swal.fire({title: "오류", text: error.message, icon: "error", customClass: { popup: "custom-swal-popup"}});
 
       // ❌ 서버 요청 실패 시 UI 롤백 (이전 상태로 복원)
       setIsSubscribed(isUnsubscribing);

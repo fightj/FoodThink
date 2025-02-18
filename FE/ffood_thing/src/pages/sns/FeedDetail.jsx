@@ -5,6 +5,7 @@ import "../../styles/sns/FeedDetail.css"
 import { motion, AnimatePresence } from "framer-motion"
 import Swal from "sweetalert2"
 import RecipeModal from "../../components/sns/RecipeModal"
+import "../../styles/base/global.css"
 
 function FeedDetail() {
   const { id } = useParams()
@@ -118,6 +119,7 @@ function FeedDetail() {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Delete!",
+      customClass: { popup: "custom-swal-popup"}
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -135,6 +137,7 @@ function FeedDetail() {
               title: "삭제!",
               text: "피드가 삭제되었습니다.",
               icon: "success",
+              customClass: { popup: "custom-swal-popup"}
             }).then(() => {
               navigate("/sns") // Redirect to home or another page after deletion
             })
@@ -144,6 +147,7 @@ function FeedDetail() {
               title: "Error!",
               text: "피드 삭제 중 오류가 발생했습니다.",
               icon: "error",
+              customClass: { popup: "custom-swal-popup"}
             })
           }
         } catch (error) {
@@ -152,6 +156,7 @@ function FeedDetail() {
             title: "Error!",
             text: "피드 삭제 중 오류가 발생했습니다.",
             icon: "error",
+            customClass: { popup: "custom-swal-popup"}
           })
         }
       }
@@ -183,6 +188,7 @@ function FeedDetail() {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login")
