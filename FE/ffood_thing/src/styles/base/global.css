@@ -1,5 +1,5 @@
 .base-div {
-  background: #F7B05B;
+  background: #f7b05b;
   min-height: 100vh;
   padding-top: 3vh;
   box-sizing: border-box; /* 패딩 포함 높이 계산 */
@@ -25,7 +25,7 @@
 .back-button {
   align-self: flex-start; /* ✅ 모바일에서도 왼쪽 정렬 유지 */
 }
-.new-write-button{
+.new-write-button {
   background: none;
   border: none;
   align-self: flex-end;
@@ -34,7 +34,7 @@
 @font-face {
   font-family: "MyCustomFont";
   src: url("/fonts/MyCustomFont.ttf") format("truetype"), url("/fonts/MyCustomFont-rounded.ttf") format("truetype");
-  font-weight: normal;
+  font-weight: 100;
   font-style: normal;
 }
 
@@ -52,28 +52,28 @@
   font-style: normal;
 }
 @font-face {
-  font-family: 'HakgyoansimDunggeunmisoTTF-B';
-  src: url('/fonts/Hakgyoansim Dunggeunmiso TTF B.ttf') format('truetype');
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+  src: url("/fonts/Hakgyoansim Dunggeunmiso TTF B.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Ownglyph_ParkDaHyun';
-  src: url('/fonts/온글잎 박다현체.ttf') format('truetype');
+  font-family: "Ownglyph_ParkDaHyun";
+  src: url("/fonts/온글잎 박다현체.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'insungit Cutelively jisu Regular';
-  src: url('/fonts/insungit Cutelively jisu Regular.ttf') format('truetype');
+  font-family: "insungit Cutelively jisu Regular";
+  src: url("/fonts/insungit Cutelively jisu Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: 'NPSfont_regularr';
-  src: url('/fonts/NPSfont_regular.ttf') format('truetype');
+  font-family: "NPSfont_regularr";
+  src: url("/fonts/NPSfont_regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -84,14 +84,14 @@
   font-style: normal;
 }
 @font-face {
-  font-family: 'Cafe24Syongsyong-v2.0';
-  src: url('/fonts/Cafe24Syongsyong-v2.0.ttf') format('truetype');
+  font-family: "Cafe24Syongsyong-v2.0";
+  src: url("/fonts/Cafe24Syongsyong-v2.0.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: 'Dovemayo_gothic';
-  src: url('/fonts/Dovemayo_gothic.ttf') format('truetype');
+  font-family: "Dovemayo_gothic";
+  src: url("/fonts/Dovemayo_gothic.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -138,18 +138,37 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "rider";
+  src: url("/fonts/BMDOHYEON_otf.otf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "kcc";
+  src: url("/fonts/KCC-Ganpan.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
 body {
   font-family: "Pretendard-Regular", sans-serif;
 }
-
-
-
 
 /* SNS피드 작성 및 수정 글자 */
 /* 글자 크기 및 종류 정할 필요가 있어요. (02.14) */
 .context-h5 {
   font-size: 1.4em;
   margin-bottom: 10px;
+}
+
+/* SNS피드 작성 및 수정 참고 레시피  (02.15) */
+.sns-reference-recipe {
+  background-color: #282828 !important;
+  color: white;
+  font-size: 1.1em;
+  padding: 0.5em 1em;
 }
 
 /* SNS피드 작성 및 수정 내용 넣는 부분 글자 조정 */
@@ -160,7 +179,6 @@ body {
 /* SNS피드 참고한 레시피를 찾을 때 "내 북마크 레시피" 모달 제목 */
 /* 글자 조정할 때 사용하라고 여기 일단 둠 */
 .my-bookmark-modal-title {
-
 }
 
 /* SNS피드 작성 및 수정 페이지 타이틀 */
@@ -173,7 +191,7 @@ body {
   .card-div {
     padding: 1rem;
     border-radius: 25px;
-   }
+  }
 
   .context-h5 {
     font-size: 1.2rem;
@@ -192,11 +210,9 @@ body {
     margin: 0;
     margin-top: 1rem;
   }
-  
-  /* 아이콘 가리기? (02.15) */
+
   .sns-write-title-icon {
     display: none;
-    /* width: 10px; */
   }
 }
 
@@ -206,8 +222,8 @@ body {
     width: 80vw;
     font-size: 14px;
   }
-  .card-div {
-    height:85vh;
+   .card-div {
+    /* height:85vh; */
   }
 }
 /*모바일 세로 화면 대응*/
@@ -217,9 +233,10 @@ body {
     font-size: 12px;
   }
 }
+
 /*모바일 가로 화면 대응*/
-@media(max-height:500px){
+@media (max-height: 500px) {
   .card-div {
-    height:65vh;
+    height: 65vh;
   }
 }

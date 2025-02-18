@@ -23,7 +23,13 @@ const DemoCookingPage = () => {
   }
 
   const handlePrevPage = () => {
-    setComponentPage((prevPage) => Math.max(prevPage - 1, 0))
+    if (componentPage === 5) {
+      // `CookingDonePage`에서 `HandPoseComponent`로 돌아가도록 설정
+      setComponentPage(4)
+      setCurrentStep(recipe.processes.length - 1)
+    } else {
+      setComponentPage((prevPage) => Math.max(prevPage - 1, 0))
+    }
   }
 
   const handleSkip = () => {

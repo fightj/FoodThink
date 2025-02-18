@@ -129,6 +129,19 @@
   height: 2.2rem;
 }
 
+.login-btn {
+  display: flex;
+  width: 100%;
+  color: #372800; /* ✅ 글자 색상 */
+  padding-bottom: 0.8rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
 @media screen and (max-width:1000px) {
   .sidebar-container {
     bottom: 1rem;

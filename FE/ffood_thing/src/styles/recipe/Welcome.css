@@ -45,8 +45,9 @@
 
 /* 🔹 Title style */
 .welcome-start-title {
+  font-family: "rider";
   font-size: clamp(3.5rem, 5vw, 4.5rem); /* 화면 크기에 따라 유동적인 크기 */
-  font-weight: bold;
+  font-weight: 100;
   margin-bottom: 10px;
   padding-bottom: 5%;
   width: 90%; /* Increased width to accommodate long text */
@@ -56,6 +57,7 @@
 .ready-for-cooking-button {
   background: #fff;
   color: #d97742;
+  font-family: "MyCustomFont";
   font-size: 1.5rem;
   font-weight: bold;
   padding: 15px 30px;

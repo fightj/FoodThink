@@ -105,7 +105,8 @@ function Sidebar({ isOpen, toggleSidebar }) {
           </>
         ) : (
           <button className="login-btn" onClick={() => { navigate("/login"); toggleSidebar(false); }}>
-            로그인해주세요
+            <img src="./images/씩씩이.png" className="home-icon" />
+            로그인
           </button>
         )}
       </div>
