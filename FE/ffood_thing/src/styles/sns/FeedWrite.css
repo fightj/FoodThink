@@ -166,12 +166,28 @@ form {
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.feed-update-button {
+  padding: 0.7rem 1rem;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #8bc1ff, #66a2e6);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
 }
 
 @media screen and (max-width:500px) {
-  .feed-save-button {
+  .feed-save-button,
+  .feed-update-button {
     padding: 0.5rem 0.7rem;
     font-size: 1rem;
   }

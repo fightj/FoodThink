@@ -321,15 +321,16 @@ function FeedUpdatePage() {
               </div>
             )}
             <div className="button-container">
-              <button type="button" className="btn btn-secondary" onClick={() => setShowBookmarkModal(true)}>
-                내 북마크에서 찾기
+              <button type="button" className="bookmark-find-button" onClick={() => setShowBookmarkModal(true)}>
+              🏷️ 내 북마크에서 찾기
               </button>
             </div>
           </div>
 
           <div className="submit-button">
-            <button type="submit" className="btn btn-primary">
-              수정 완료
+            {/* FeedWrite.css에 있음. */}
+            <button type="submit" className="feed-update-button">
+            ✏️ 수정 완료
             </button>
           </div>
         </form>
