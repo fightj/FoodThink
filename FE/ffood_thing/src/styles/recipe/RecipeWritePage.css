@@ -21,6 +21,7 @@
   border: none;
   display: flex;
   justify-content: left;
+  align-items: center;
 }
 
 /* 📌레시피 등록 제목 (중앙 정렬) */
@@ -29,13 +30,16 @@
   font-weight: bold;
   width: 60%;
   text-align: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 .recipe-write-page-title-blank{
   width:6%;
 }
 /*레시피 등록 제목 캐릭터*/
 .recipe-write-page-title img {
-  width: 15%;
+  width: 12%;
   animation: float 3s ease-in-out infinite;
 }
 

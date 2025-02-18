@@ -6,6 +6,7 @@ import Preference from "./Preference"
 import SubscriberModal from "./SubscriberModal"
 import Swal from "sweetalert2"
 import "../../styles/profile/ProfileHeader.css"
+import "../../styles/base/global.css"
 
 const ProfileHeaderMe = () => {
   const navigate = useNavigate()
@@ -127,7 +128,11 @@ const ProfileHeaderMe = () => {
     // ✅ 사용 불가능한 문자 정규식 (공백 및 특수 문자 제거)
     const invalidChars = /[@%&?\/\\#+=:;*|<>\s]/g
     if (invalidChars.test(newNickname)) {
-      Swal.fire("⚠️ 닉네임 오류", "닉네임에 공백 또는 특수문자를 사용할 수 없습니다.", "error")
+      Swal.fire({title: "⚠️ 닉네임 오류", text: "닉네임에 공백 또는 특수문자를 사용할 수 없습니다.", icon:"error",
+        customClass: {
+          popup: "custom-swal-popup", // 공통 CSS 클래스 적용
+        },
+      })
       return
     }
 
@@ -135,7 +140,11 @@ const ProfileHeaderMe = () => {
     const sanitizedNickname = newNickname.trim()
 
     if (!sanitizedNickname) {
-      Swal.fire("⚠️ 닉네임 오류", "닉네임을 입력해주세요.", "error")
+      Swal.fire({title: "⚠️ 닉네임 오류", text: "닉네임을 입력해주세요.", icon:"error",
+        customClass: {
+          popup: "custom-swal-popup", // 공통 CSS 클래스 적용
+        },
+      })
       return
     }
 
@@ -153,7 +162,10 @@ const ProfileHeaderMe = () => {
         throw new Error("닉네임 변경 실패")
       }
 
-      Swal.fire("닉네임 변경 성공!", `이제부터는 '${newNickname}' 님이라고 불러드릴게요. 😎`, "success").then(() => {
+      Swal.fire({title: "닉네임 변경 성공!", text: `이제부터는 '${newNickname}' 님이라고 불러드릴게요. 😎`, icon: "success",
+        customClass: {
+          popup: "custom-swal-popup", // 공통 CSS 클래스 적용
+        },}).then(() => {
         setIsEditing(false)
         const updatedUser = { ...user, nickname: newNickname }
         setUser(updatedUser)
@@ -166,7 +178,9 @@ const ProfileHeaderMe = () => {
         window.location.reload()
       })
     } catch (error) {
-      Swal.fire("앗!", "고민하는 사이에 다른 유저가 닉네임을 가져갔어요!", "error")
+      Swal.fire({title: "앗!", text: "고민하는 사이에 다른 유저가 닉네임을 가져갔어요!", icon: "error",
+        customClass: { popup: "custom-swal-popup" },
+      })
     }
   }
 
@@ -193,7 +207,11 @@ const ProfileHeaderMe = () => {
   const uploadProfileImage = async () => {
     console.log("selectedImage: " + selectedImage)
     if (!selectedImage) {
-      Swal.fire("엥?", "이미지 업로드를 해주세요!", "warning")
+      Swal.fire({title: "엥?", text: "이미지 업로드를 해주세요!", icon: "warning", 
+        customClass: {
+          popup: "custom-swal-popup", // 공통 CSS 클래스 적용
+        },
+      })
       return
     }
 
@@ -230,9 +248,9 @@ const ProfileHeaderMe = () => {
       setSelectedImage(null)
       
 
-      Swal.fire("성공!", "멋진 사진으로 변신했어요! 📸", "success")
+      Swal.fire({title: "성공!", text: "멋진 사진으로 변신했어요! 📸", icon: "success", customClass: { popup: "custom-swal-popup"}})
     } catch (error) {
-      Swal.fire("실패! 😢", "이미지를 선택해주세요!", "error")
+      Swal.fire({title: "실패! 😢", text: "이미지를 선택해주세요!", icon: "error", customClass: { popup: "custom-swal-popup"}})
     }
   }
 
@@ -255,6 +273,7 @@ const ProfileHeaderMe = () => {
       cancelButtonColor: "#3085d6",
       confirmButtonText: "탈퇴하기",
       cancelButtonText: "취소",
+      customClass: { popup: "custom-swal-popup"},
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -270,13 +289,13 @@ const ProfileHeaderMe = () => {
             throw new Error("회원 탈퇴 실패")
           }
 
-          Swal.fire("회원 탈퇴 완료", "그동안 이용해주셔서 감사합니다.", "success").then(() => {
+          Swal.fire({title: "회원 탈퇴 완료", text: "그동안 이용해주셔서 감사합니다.", icon: "success", customClass: { popup: "custom-swal-popup"}}).then(() => {
             localStorage.clear();
             sessionStorage.clear();
             navigate("/login");
           });
         } catch (error) {
-          Swal.fire("히히 못 도망가.", "", "error")
+          Swal.fire({title: "히히 못 도망가.", text: "", icon: "error", customClass: { popup: "custom-swal-popup"}})
         }
       }
     })
