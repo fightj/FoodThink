@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/sns/FeedCommentSection.css";
 import Swal from "sweetalert2";
+import "../../styles/base/global.css"
 
 const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
   const [newComment, setNewComment] = useState("");
@@ -42,6 +43,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");
@@ -105,6 +107,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");
@@ -160,6 +163,7 @@ const FeedCommentSection = ({ comments, onClose, onAddComment, feedId }) => {
         cancelButtonColor: "#d33",
         confirmButtonText: "네, 이동합니다",
         cancelButtonText: "취소",
+        customClass: { popup: "custom-swal-popup"}
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login");

@@ -245,7 +245,7 @@ public class FeedServiceImpl implements FeedService {
 
     @Override
     public List<FeedCommentResponseDto> readFeedCommentsByFeedId(Long feedId) {
-        List<FeedCommentEntity> feedCommentEntities = feedCommentRepository.findAllByFeedEntity_IdOrderByFeedEntity_writeTime(feedId);
+        List<FeedCommentEntity> feedCommentEntities = feedCommentRepository.findAllByFeedEntity_IdOrderByWriteTimeDesc(feedId);
 
         return feedCommentEntities.stream()
                 .map(FeedCommentResponseDto::fromEntity)
