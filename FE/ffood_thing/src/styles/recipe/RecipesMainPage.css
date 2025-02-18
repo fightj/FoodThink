@@ -10,6 +10,12 @@
   align-self: flex-start; /* ✅ 모바일에서도 왼쪽 정렬 유지 */
 }
 
+.recipe-detail-back-button {
+  align-self: flex-start;
+  background: none;
+  border: none;
+}
+
 
 .category-onoff-button {
   /* background-color: #fdb13f; */
