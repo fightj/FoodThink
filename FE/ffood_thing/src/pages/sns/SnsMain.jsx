@@ -5,8 +5,9 @@ import Swal from "sweetalert2"
 import "../../styles/sns/SnsMain.css"
 import PageSlide from "../../components/base/PageSlide"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import { faChevronUp, faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import "../../styles/base/global.css"
+
 
 function SnsMain() {
   const [query, setQuery] = useState("")
@@ -100,10 +101,11 @@ function SnsMain() {
         <div className="card-div">
           <div className="d-flex justify-content-between align-items-center mt-0">
             <h2></h2>
-            <img src="/images/feed_write_button.png" alt="Feed 작성" className="feed-write-button" onClick={handleWriteClick} />
+            <FontAwesomeIcon icon={faPenToSquare} className="feed-write-button" onClick={handleWriteClick} />
+            {/* <img src="/images/feed_write_button.png" alt="Feed 작성" className="feed-write-button" onClick={handleWriteClick} /> */}
           </div>
           {/* row-cols-1  */}
-          <div className="row row-cols-lg-3 align-items-stretch g-2">
+          <div className="row row-cols-lg-3 align-items-stretch g-2 ">
             {feedData.map((feedItem, index) => {
               const hasMultipleImages = feedItem.imageSize >= 2
             if (index === feedData.length - 1) {
