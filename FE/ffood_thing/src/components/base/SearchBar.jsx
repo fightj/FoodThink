@@ -40,7 +40,7 @@ function SearchBar({ onSearch, initialQuery }) {
           <input
             type="text"
             className="search-input"
-            placeholder="제목이나 재료를 입력해주세요."
+            placeholder="음식명이나 닉네임을 입력해주세요."
             value={query}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}

@@ -100,7 +100,11 @@ const Preference = ({ onClose, userId }) => {
   const saveUserPreferences = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
-      Swal.fire("로그인이 필요합니다.", "", "error");
+      Swal.fire({title: "로그인이 필요합니다.", text: "", icon: "error", 
+        customClass: {
+          popup: "custom-swal-popup", // 공통 CSS 클래스 적용
+        },
+      });
       return;
     }
 

@@ -164,8 +164,8 @@ const RecipesMainPage = () => {
           <button className="category-onoff-button" onClick={() => setIsCategoryListVisible(prev => !prev)}>
             {isCategoryListVisible ? "카테고리 닫기 ⩓" : "카테고리 열기 ⩔"}
           </button>
-          <button href="/recipes/write" className="write-recipe-button5" onClick={() => navigate("/recipes/write")}>
-            <img src="/images/feed_write_button.png" alt="Recipe 작성" style={{ cursor: "pointer", width: "50px", height: "50px" }} />
+          <button href="/recipes/write" className="new-write-button" onClick={() => navigate("/recipes/write")}>
+            <img src="/images/feed_write_button.png" alt="Recipe 작성" className="icon" />
           </button>
         </div>
 
