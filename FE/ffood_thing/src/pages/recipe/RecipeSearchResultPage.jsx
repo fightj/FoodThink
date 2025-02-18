@@ -5,6 +5,7 @@ import SearchBarRecipe from "../../components/base/SearchBarRecipe"
 import "../../styles/recipe/RecipesMainPage.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import "../../styles/base/global.css" // 백버튼
 
 function useQuery() {
   return new URLSearchParams(useLocation().search)

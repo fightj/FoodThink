@@ -7,6 +7,7 @@ import HandPoseComponent from "../../components/handmotion/HandPoseComponent"
 import SearchBar from "../../components/base/SearchBar"
 import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
+import "../../styles/base/global.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
 import "../../styles/base/global.css"
@@ -244,7 +245,7 @@ const RecipeDetailPage = () => {
       {/* <div className="parent-container"> */}
       <div className="card-div">
         <div style={{ width: "90%", margin: "0 auto" }}>
-          <button onClick={() => navigate(-1)} className="back-button1">
+          <button onClick={() => navigate(-1)} className="back-button">
             <img src="/images/previous_button.png" alt="Previous" className="icon" />
           </button>
           <div style={{ display: "flex", gap: "2rem", marginBottom: "100px" }}>
