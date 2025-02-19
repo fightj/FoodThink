@@ -69,10 +69,10 @@ const RecipeDetailPage = () => {
     }
 
     // 로컬 스토리지에서 북마크 상태 불러오기
-    const bookmarkStatus = localStorage.getItem(`bookmark_${id}`)
-    if (bookmarkStatus !== null) {
-      setIsBookmarked(bookmarkStatus === "true") // "true"이면 true, 아니면 false
-    }
+    // const bookmarkStatus = localStorage.getItem(`bookmark_${id}`)
+    // if (bookmarkStatus !== null) {
+    //   setIsBookmarked(bookmarkStatus === "true") // "true"이면 true, 아니면 false
+    // }
 
     fetchRecipe()
   }, [id, navigate, user])
@@ -102,7 +102,6 @@ const RecipeDetailPage = () => {
     setActiveTab(tab)
   }
 
-  // 북마크 상태가 변경될 때 로컬 스토리지 업데이트
   const handleBookmarkClick = async () => {
     if (!user) {
       Swal.fire({
@@ -155,7 +154,7 @@ const RecipeDetailPage = () => {
 
       const newBookmarkStatus = !isBookmarked
       setIsBookmarked(newBookmarkStatus)
-      localStorage.setItem(`bookmark_${id}`, newBookmarkStatus.toString()) // 로컬 스토리지에 북마크 상태 저장
+      // localStorage.setItem(`bookmark_${id}`, newBookmarkStatus.toString()) // 로컬 스토리지에 북마크 상태 저장
       Swal.fire({
         title: isBookmarked ? "북마크 취소!" : "북마크 완료!",
         text: isBookmarked ? "북마크에서 제거했어요." : "북마크에 추가했어요.",
