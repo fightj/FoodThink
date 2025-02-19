@@ -69,7 +69,44 @@
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
 
+.mode-change-message {
+  display: none;
+  font-family: "PTBandocheB";
+}
+
 /* Responsive adjustments */
 /* ✅ 반응형 디자인 (태블릿 및 모바일 최적화) */
 @media (max-width: 1024px) {
+}
+
+/* 반응형 모바일 세로 */
+@media screen and (max-width:500px) {
+  .welcome-start-title {
+    font-size: 1.7rem;
+  }
+
+  .cooking-image-welcome {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .mode-change-message {
+    display: flex;
+    font-size: 1rem;
+    white-space: nowrap;
+    height: auto;
+    margin: 1rem;
+  }
+}
+
+/* 반응형 모바일 가로 */
+@media screen and (max-height:600px) {
+  .welcome-start-title {
+    padding-bottom: 0;
+  }
+
+  .cooking-image-welcome,
+  .mode-change-message {
+    display: none;
+  }  
 }
