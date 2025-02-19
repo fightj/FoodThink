@@ -40,11 +40,21 @@
 
 /* 🔹 제목 스타일 */
 .start-title {
-  font-size: clamp(3.5rem, 5vw, 4.5rem); /* 화면 크기에 따라 유동적인 크기 */
+  font-size: clamp(3rem, 5vw, 4.5rem); /* 화면 크기에 따라 유동적인 크기 */
   margin-bottom: 10px;
   padding-bottom: 5%;
-  width: 70%;
+  width: 80%;
   font-family: "HakgyoansimDunggeunmisoTTF-B";
+}
+
+
+/* 모바일 화면에서 제목 크기 조정 */
+@media (max-width: 768px) {
+  .start-title {
+    font-size: clamp(2rem, 5vw, 3rem); /* 더 작은 크기로 조정 */
+    width: 90%; /* 모바일에서는 좀 더 넓게 */
+    text-align: center; /* 정렬 조정 */
+  }
 }
 
 /* 🔹 설명 스타일 */
@@ -167,7 +177,7 @@
 
 /* 선택 버튼 */
 .choice-btn {
-  font-size: clamp(1rem, 2.5vw, 1.5rem); /* ✅ 반응형 폰트 크기 */
+  font-size: clamp(1.2rem, 3vw, 1.5rem); /* ✅ 반응형 폰트 크기 */
   background: #7a4f3c;
   color: white;
   border: none;
@@ -175,13 +185,35 @@
   border-radius: 10%;
   font-weight: bold;
   width: auto;
-  height: clamp(50px, 7vh, 80px); /* ✅ 높이 반응형 */
+  height: clamp(3rem, 7vh, 5rem); /* ✅ 높이 반응형 */
   min-width: 20%; /* 버튼 크기 제한 */
   cursor: pointer;
   text-align: center;
   transition: background 0.3s, transform 0.2s;
   animation: fadeInScale 0.5s ease-in-out forwards;
   font-family: 'SOYO Maple Regular';
+}
+
+
+/* 모바일 화면에서 제목 크기 조정 */
+@media (max-width: 768px) {
+  .answer-section {
+    gap: clamp(1.8rem, 1.5vw, 2rem);
+  }
+
+  .choice-btn {
+    font-size: clamp(0.8rem, 1.5vw, 1rem); /* ✅ 최소값을 더 낮춰 폰트 크기를 자동으로 조절 */
+    padding: clamp(8px, 1.5vw, 12px);
+    width: auto;
+    height: 2.2rem; /* ✅ 높이 반응형 */
+    min-width: 18%; /* 버튼 크기 제한 */
+    white-space: nowrap; /* ✅ 줄바꿈 방지 */
+  }
+
+  .answer-card {
+    font-size: clamp(0.8rem, 1.5vw, 1rem); /* ✅ 최소값을 더 낮춰 폰트 크기를 자동으로 조절 */
+    padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
+  }
 }
 
 .choice-btn:active {
@@ -331,24 +363,33 @@
   border: 2px solid #ccc;
   width: 100%; /* ✅ 모바일에서도 적절한 크기 유지 */
   text-align: center;
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column; /* ✅ 닉네임이 위에 오도록 변경 */
+  align-items: center;
+  justify-content: center;
+  font-family: 'Binggrae';
+  overflow-wrap: break-word; /* ✅ 길면 줄바꿈 허용 */
+  word-break: break-word; /* ✅ 단어 단위로 줄바꿈 */
+  /* white-space: nowrap;
   display: flex;
   align-items: center;
   overflow: hidden;
-  text-overflow: ellipsis; /* ✅ 닉네임이 길면 ... 처리 */
-  justify-content: center;
-  font-family: 'Binggrae';
-}
-
-/* 🔹 닉네임 부분만 따로 스타일 적용 */
-.nickname-ellipsis {
-  max-width: clamp(30%, 50%, 70%); /* ✅ 반응형으로 닉네임 길이 조정 */
-  overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
-  display: inline-block;
-}
+  justify-content: center;
+  font-family: 'Binggrae'; */
+} 
 
+
+/* 🔹 닉네임 부분 스타일 */
+.nickname-ellipsis {
+  max-width: 100%; /* ✅ 닉네임이 꽉 차게 */
+  overflow: hidden;
+  display: block; /* ✅ 닉네임이 한 줄을 차지하도록 */
+  text-align: center;
+  white-space: normal; /* ✅ 줄바꿈 허용 */
+  line-height: 1.2em; /* ✅ 줄 간격 조정 */
+  max-height: 2.4em; /* ✅ 최대 두 줄까지만 표시 */
+}
 /* AI 캐릭터 컨테이너 (오른쪽) */
 .ai-character-container {
   display: flex;
