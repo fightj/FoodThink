@@ -14,15 +14,13 @@
   width: 100%;
   height: 100%;
   z-index: 20000;
-  /* padding-left: 2rem; */
-  /* padding: 1rem; */
-  overflow: auto;
-  /* background-color: #ffffff; */
+  overflow: hidden; /* 자식 요소가 넘칠 때 잘리도록 설정 */
   background-image: url("/images/frame.png");
   background-size: 97% 96%; /* 이미지를 페이지 크기에 맞게 조절 */
   background-position: center; /* 이미지를 중앙에 위치 */
   background-repeat: no-repeat;
 }
+
 
 .end-message {
   position: absolute;
@@ -112,6 +110,14 @@
   font-family: "IM_Hyemin-Bold";
 }
 
+/* 높이가 190px 이상일 때 폰트 크기 조정 */
+@media (min-height: 190px) {
+  .steps-h23 {
+    font-size: clamp(1rem, 2vw, 2.5rem); /* 높이가 190px 이상일 때의 글자 크기 */
+  }
+}
+
+
 .process-image-container3 {
   width: 100%;
   height: auto;
@@ -126,6 +132,7 @@
   max-height: 450px;
   height: auto;
   border-radius: 1.5rem;
+  margin-bottom: 2%;
 }
 .timer3 {
   position: absolute;
@@ -315,7 +322,6 @@
   cursor: pointer;
   z-index: 1000;
 }
-
 .timer-button {
   position: absolute;
   bottom: 1rem;
@@ -333,6 +339,32 @@
   cursor: pointer;
   z-index: 1000;
 }
+
+/* 화면 너비가 800px 이하일 때 width와 height 조정 */
+@media (max-width: 800px) {
+  .ingredient-button {
+    width: 60px;
+    height: 60px;
+  }
+  .timer-button {
+    width: 60px;
+    height: 60px;
+  }
+  .timer3 {
+    width: 120px; /* 너비를 80%로 줄이기 */
+    height: 50px; /* 높이를 80%로 줄이기 */
+    font-size: 1.7rem; /* 폰트 크기 조정 */
+  }
+  .timer-button-image {
+    width: 1.5rem; /* 버튼 이미지 크기 조정 */
+    height: 1.5rem; /* 버튼 이미지 크기 조정 */
+    border: none; /* 테두리 제거 */
+  }
+  
+}
+
+
+
 
 .ingredient-container {
   position: absolute;

@@ -590,7 +590,7 @@
     height: 20%;
   }
   .recipe-write-category-container .recipe-write-category-text {
-    font-size: 130%;
+    font-size: 120%;
   }
   .recipe-write-category-two-dropdowns{
     width:100%;
@@ -616,7 +616,7 @@
     height: 20%;
   }
   .recipe-write-cooking-info-container .recipe-write-cooking-info-text {
-    font-size: 130%;
+    font-size: 120%;
   }
   .recipe-write-cooking-info-three-dropdowns{
     width:100%;
@@ -1086,7 +1086,7 @@
   .recipe-write-cancel-btn {
     width: 18%;
     height: 100%;
-    font-size: 120%;
+    font-size: 1rem;
   }
   
 }
@@ -1386,6 +1386,6 @@
    .recipe-write-cancel-btn {
      width: 15%;
      height: 100%;
-     font-size: 120%;
+     font-size: 1rem;
    }
 }

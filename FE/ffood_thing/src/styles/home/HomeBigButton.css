@@ -109,6 +109,9 @@
   .home h4 {
     display: none;
   }
+  .content {
+    max-width: 100%;
+  }
   
   .card .content {
     padding-bottom: 8%;
