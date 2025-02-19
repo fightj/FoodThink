@@ -45,7 +45,7 @@ const RecipeDetailPage = () => {
           console.error("Recipe response data is invalid:", response)
         }
 
-        if (user) {
+        if (isLoggedIn) {
           const bookmarkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}` },
           })
@@ -106,7 +106,9 @@ const RecipeDetailPage = () => {
   }
 
   const handleBookmarkClick = async () => {
-    if (!user) {
+    console.log("로그인 상태",isLoggedIn)
+    if (!isLoggedIn) {
+      console.log("로그인이 안되어있음")
       Swal.fire({
         title: "로그인 필요!",
         text: "북마크를 사용하려면 로그인하세요.",
