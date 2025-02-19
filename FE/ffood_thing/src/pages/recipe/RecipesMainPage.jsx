@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react"
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import "../../styles/recipe/RecipesMainPage.css"
@@ -24,11 +24,39 @@ const RecipesMainPage = () => {
   const observer = useRef()
   const carouselRef1 = useRef(null)
   const carouselRef2 = useRef(null)
+  const [bookmarks, setBookmarks] = useState([])
 
   const categoryList = {
     종류별: ["반찬", "국/탕", "찌개", "디저트", "면/만두", "밥/죽/떡", "김치/젓갈/장류", "양념/소스/쨈", "양식", "샐러드", "차/음료/술", "기타"],
     재료별: ["소고기", "돼지고기", "닭고기", "육류", "채소류", "해물류", "달걀/유제품", "가공식품", "쌀", "밀가루", "건어물류", "버섯류", "과일류", "콩/견과류", "곡류", "기타"],
   }
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      try {
+        const token = localStorage.getItem("accessToken")
+
+        // 1️⃣ 북마크된 레시피 ID 가져오기
+        const response = await fetch("https://i12e107.p.ssafy.io/api/bookmark/read/list", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        })
+
+        if (!response.ok) throw new Error(`서버 응답 오류: ${response.status}`)
+
+        const bookmarkData = await response.json()
+        console.log("📌 북마크된 레시피 ID 목록:", bookmarkData)
+        setBookmarks(bookmarkData)
+      } catch (error) {
+        console.error("❌ 북마크된 레시피 데이터 불러오기 실패:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBookmarks()
+  }, [])
+
+  const isRecipeBookmarked = (recipeId) => bookmarks.some((bookmark) => bookmark.id === recipeId)
 
   useEffect(() => {
     const fetchTop20Recipes = async () => {
@@ -64,6 +92,11 @@ const RecipesMainPage = () => {
   }, [cateType, cateMainIngre, sortType])
 
   const handleDetailClick = (id) => {
+    // 페이지 이동 전에 로컬 스토리지에서 북마크 상태 불러오기
+    const bookmarkStatus = localStorage.getItem(`bookmark_${id}`)
+    if (bookmarkStatus !== null) {
+      // 필요하다면 불러온 북마크 상태로 초기화 작업 수행
+    }
     navigate(`/recipes/${id}`)
   }
 
@@ -152,7 +185,7 @@ const RecipesMainPage = () => {
 
   // 페이지 맨 위로 스크롤하는 함수
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth"})
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   return (
@@ -161,11 +194,11 @@ const RecipesMainPage = () => {
       <SearchBarRecipeMain onSearch={handleSearch} />
       <div className="card-div">
         <div className="recipe-page-header">
-          <button className="category-onoff-button" onClick={() => setIsCategoryListVisible(prev => !prev)}>
+          <button className="category-onoff-button" onClick={() => setIsCategoryListVisible((prev) => !prev)}>
             {isCategoryListVisible ? "카테고리 닫기 ⩓" : "카테고리 열기 ⩔"}
           </button>
           <button href="/recipes/write" className="new-write-button" onClick={() => navigate("/recipes/write")}>
-          <FontAwesomeIcon icon={faPenToSquare} className="recipe-write-button" />
+            <FontAwesomeIcon icon={faPenToSquare} className="recipe-write-button" />
             {/* <img src="/images/feed_write_button.png" alt="Recipe 작성" className="icon" /> */}
           </button>
         </div>
@@ -257,20 +290,19 @@ const RecipesMainPage = () => {
                   <img src={recipe.userImage || "/images/default_profile.png"} alt={`${recipe.nickname} 프로필`} className="main-profile-image" />
                   <div className="main-profile-info">
                     <div className="main-recipe-info-title">{recipe.recipeTitle}</div>
-                      <div className="main-profile-stats">{recipe.nickname}</div>
-                      <div className="main-profile-stats">
-                        👁 {recipe.hits} ·
-                        <img src="/images/do-Bookmark.png" alt="북마크 아이콘" className="main-page-bookmark-icon" />
-                        {recipe.bookMarkCount}
+                    <div className="main-profile-stats">{recipe.nickname}</div>
+                    <div className="main-profile-stats">
+                      👁 {recipe.hits} ·
+                      <img src="/images/do-Bookmark.png" alt="북마크 아이콘" className="main-page-bookmark-icon" />
+                      {recipe.bookMarkCount}
                     </div>
                   </div>
                 </div>
               </div>
             ))}
             <div className="main-recipe-text-container">
-            {loading && <div className="main-recipe-text">로딩 중...</div>}
-            {allRecipes.length === 0 && !loading && <div className="main-recipe-text">레시피가 없습니다.</div>}
-
+              {loading && <div className="main-recipe-text">로딩 중...</div>}
+              {allRecipes.length === 0 && !loading && <div className="main-recipe-text">레시피가 없습니다.</div>}
             </div>
           </div>
         </div>
