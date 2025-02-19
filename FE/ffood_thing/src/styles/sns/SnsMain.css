@@ -100,11 +100,6 @@
   transition: transform 0.3s ease; /* 호버 효과 추가 */
 }
 
-/* 호버 시 확대 효과 */
-.feed-card:hover {
-  transform: scale(1.05);
-}
-
 /* 반응형: 모바일에서도 적절히 표시 */
 @media (max-width: 576px) {
   .feed-card {
