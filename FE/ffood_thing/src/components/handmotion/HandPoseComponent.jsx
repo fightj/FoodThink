@@ -386,10 +386,10 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
           </div>
           <div className="timer-btn-area">
             <button className="timer-modal-btn" onClick={handleSetTimer}>
-              설정
+              ✔️
             </button>
             <button className="timer-modal-btn" onClick={() => setIsTimerModalOpen(false)}>
-              취소
+              ✖️
             </button>
           </div>
         </div>
