@@ -200,7 +200,7 @@
 @media (max-width: 500px) {
   .row {
     display: flex;
-    /* flex-direction: column; */
+    flex-direction: row;
   }
 
   .col-4 {
