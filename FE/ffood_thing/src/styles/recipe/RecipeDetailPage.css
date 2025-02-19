@@ -1,8 +1,8 @@
-.recipe-write-button {
+/* .recipe-write-button {
   font-size: 3rem;
   color: #fb5a9d;
   margin-bottom: 2rem;
-}
+} */
 
 /* 🔹 스크롤 맨 위로 버튼 */
 .recipe-detail-page-scroll-to-top-div {
@@ -132,7 +132,7 @@
 
 /* 🔹 오른쪽 컨테이너 (제목, 북마크, 정보, 조리 시작 버튼) */
 .recipe-detail-header-right {
-  flex: 1;
+  flex: 0 0 50%;
   display: flex;
   flex-direction: column;
   align-items: center;

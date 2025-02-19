@@ -20,6 +20,9 @@ const RecipeDetailPage = () => {
   const [showModal, setShowModal] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
 
+  // ✅ 로그인 여부를 localStorage에서 확인
+  const isLoggedIn = localStorage.getItem("kakaoAuthProcessed") === "true"
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -42,7 +45,7 @@ const RecipeDetailPage = () => {
           console.error("Recipe response data is invalid:", response)
         }
 
-        if (user) {
+        if (isLoggedIn) {
           const bookmarkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}` },
           })
@@ -69,10 +72,10 @@ const RecipeDetailPage = () => {
     }
 
     // 로컬 스토리지에서 북마크 상태 불러오기
-    const bookmarkStatus = localStorage.getItem(`bookmark_${id}`)
-    if (bookmarkStatus !== null) {
-      setIsBookmarked(bookmarkStatus === "true") // "true"이면 true, 아니면 false
-    }
+    // const bookmarkStatus = localStorage.getItem(`bookmark_${id}`)
+    // if (bookmarkStatus !== null) {
+    //   setIsBookmarked(bookmarkStatus === "true") // "true"이면 true, 아니면 false
+    // }
 
     fetchRecipe()
   }, [id, navigate, user])
@@ -102,9 +105,10 @@ const RecipeDetailPage = () => {
     setActiveTab(tab)
   }
 
-  // 북마크 상태가 변경될 때 로컬 스토리지 업데이트
   const handleBookmarkClick = async () => {
-    if (!user) {
+    console.log("로그인 상태",isLoggedIn)
+    if (!isLoggedIn) {
+      console.log("로그인이 안되어있음")
       Swal.fire({
         title: "로그인 필요!",
         text: "북마크를 사용하려면 로그인하세요.",
@@ -155,7 +159,7 @@ const RecipeDetailPage = () => {
 
       const newBookmarkStatus = !isBookmarked
       setIsBookmarked(newBookmarkStatus)
-      localStorage.setItem(`bookmark_${id}`, newBookmarkStatus.toString()) // 로컬 스토리지에 북마크 상태 저장
+      // localStorage.setItem(`bookmark_${id}`, newBookmarkStatus.toString()) // 로컬 스토리지에 북마크 상태 저장
       Swal.fire({
         title: isBookmarked ? "북마크 취소!" : "북마크 완료!",
         text: isBookmarked ? "북마크에서 제거했어요." : "북마크에 추가했어요.",

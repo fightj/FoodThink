@@ -46,7 +46,7 @@
 /* 🔹 Title style */
 .welcome-start-title {
   font-family: "rider";
-  font-size: clamp(3.5rem, 5vw, 4.5rem); /* 화면 크기에 따라 유동적인 크기 */
+  font-size: clamp(3rem, 4vw, 4rem); /* 화면 크기에 따라 유동적인 크기 */
   font-weight: 100;
   margin-bottom: 10px;
   padding-bottom: 5%;
@@ -59,9 +59,9 @@
   background: #fff;
   color: #d97742;
   font-family: "MyCustomFont";
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  padding: 15px 30px;
+  padding: 10px 30px;
   border-radius: 50px;
   border: none;
   cursor: pointer;
@@ -69,7 +69,49 @@
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
 
+.mode-change-message {
+  display: none;
+  font-family: "PTBandocheB";
+}
+
 /* Responsive adjustments */
 /* ✅ 반응형 디자인 (태블릿 및 모바일 최적화) */
 @media (max-width: 1024px) {
+}
+
+/* 반응형 모바일 세로 */
+@media screen and (max-width:500px) {
+  .welcome-start-title {
+    font-size: 1.3rem;
+  }
+
+  .cooking-image-welcome {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .mode-change-message {
+    display: flex;
+    font-size: 1rem;
+    white-space: nowrap;
+    height: auto;
+    margin: 1rem;
+  }
+
+  .ready-for-cooking-button {
+    font-size: 0.8rem;
+    padding: 10px 20px;
+  }
+}
+
+/* 반응형 모바일 가로 */
+@media screen and (max-height:600px) {
+  .welcome-start-title {
+    padding-bottom: 0;
+  }
+
+  .cooking-image-welcome,
+  .mode-change-message {
+    display: none;
+  }  
 }
