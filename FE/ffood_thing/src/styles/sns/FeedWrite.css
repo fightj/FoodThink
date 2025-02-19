@@ -185,6 +185,12 @@ form {
   transition: all 0.3s ease;
 }
 
+@media screen and (max-width:800px) {
+  .sns-write-title-h2 {
+    font-size: 2.3rem;
+  }
+}
+
 @media screen and (max-width:500px) {
   .feed-save-button,
   .feed-update-button {
