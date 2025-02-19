@@ -15,9 +15,9 @@ function LoginPage() {
         <div className="card-div">
           <div className="content-wrapper">
             <h2>Food Think</h2>
-            <div className="image-wrapper">
+            {/* <div className="image-wrapper">
               <img src="/images/꾸덕이.png" alt="Food Think Logo" className="main-image" />
-            </div>
+            </div> */}
             <h3>지금 푸띵이와 요리를 시작하세요!</h3>
 
             <div className="start-now">
