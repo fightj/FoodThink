@@ -11,7 +11,7 @@ const VoiceTutorial = ({ onPrevPage, onNextPage, onSkip }) => {
         <img src="/images/arrow.png" alt="NextButton" />
       </button>
       <button className="voicetuto-skip-button" onClick={onSkip}>
-        🚀스킵하기
+        🚀건너뛰기
       </button>
     </div>
   )
