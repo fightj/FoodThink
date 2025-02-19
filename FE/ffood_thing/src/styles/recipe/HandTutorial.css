@@ -5,7 +5,8 @@
   height: 100vh; /* 전체 화면 높이 */
   background-position: center; /* Center the background image */
   background-image: url("/images/handtutorial.png");
-  background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
+  background-size: cover;
+
   position: relative; /* for absolute positioning of children */
 }
 
