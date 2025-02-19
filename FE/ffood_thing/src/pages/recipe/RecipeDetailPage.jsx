@@ -45,7 +45,7 @@ const RecipeDetailPage = () => {
           console.error("Recipe response data is invalid:", response)
         }
 
-        if (user) {
+        if (isLoggedIn) {
           const bookmarkResponse = await axios.get(`https://i12e107.p.ssafy.io/api/bookmark/read/${id}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}` },
           })
