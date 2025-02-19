@@ -43,7 +43,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: rgb(255, 255, 255);
-  padding: 0.5rem;
+  padding: 0.8rem;
   border-radius: 3rem;
   font-size: 1.8rem;
   background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
@@ -152,8 +152,9 @@
 }
 
 .timer-image3 {
-  width: 90%;
-  height: 90%;
+  width: 85%;
+  height: 85%;
+  border-radius: 15px;
 }
 
 .timer-button-image {
@@ -173,7 +174,7 @@
   display: flex;
   align-items: center;
   justify-items: center;
-  width: 85%;
+  width: 80%;
   max-width: 1200px;
   /* margin: auto; */
 }
@@ -363,15 +364,15 @@
 
 .process-exit-btn {
   position: absolute;
-  top: 3%;
-  right: 3%;
+  top: 4%;
+  right: 3.5%;
   width: 30px;
   height: 30px;
 }
 
 .ingredient-sidebar {
   position: absolute;
-  bottom: 15%;
+  bottom: 17%;
   left: 7%;
   border-radius: 20px;
   background-color: rgb(253 245 232 / 40%);
@@ -418,7 +419,7 @@
   background-color: rgb(253 245 232 / 100%);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 20px;
-  border: solid;
+  /* borer: solid; */
   border-radius: 25px;
   z-index: 10000;
   overflow: hidden;
