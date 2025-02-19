@@ -28,7 +28,7 @@
 .sidebar .home-link {
   display: flex;
   color: #372800;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   padding-top: 0.5rem;
 }
 
@@ -68,7 +68,7 @@
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  margin-right: 0.8rem;
+  /* margin-right: 0.8rem; */
 }
 
 /* ✅ 드롭다운 아이콘 스타일 */
@@ -116,14 +116,14 @@
 
 .home-link {
   display: flex;
-  align-items: center; /* ✅ 세로 중앙 정렬 */
+  align-items: center;
   width: 100%; /* 부모 요소의 전체 너비 사용 */
   text-align: left; /* ✅ 가로 정렬 (왼쪽 정렬) */
   /* font-size: 3rem; */
   font-weight: bold;
   text-decoration: none; /* 링크 밑줄 제거 */
   color: #372800; /* ✅ 글자 색상 */
-  padding-left: 0.8rem;
+  /* padding-left: 0.8rem; */
   font-family: 'PTBandocheB';
 }
 
@@ -132,7 +132,7 @@
 }
 
 .home-icon {
-  margin-right: 0.5rem;
+  margin-left: 0.5rem;
   width: 2.2rem;
   height: 2.2rem;
 }
@@ -141,13 +141,14 @@
   display: flex;
   width: 100%;
   color: #372800; /* ✅ 글자 색상 */
-  padding-bottom: 0.8rem;
+  padding-bottom: 0.5rem;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bold;
   align-items: center;
-  margin-left: 0.5rem;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 @media screen and (max-width:1000px) {
