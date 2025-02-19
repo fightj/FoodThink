@@ -32,7 +32,7 @@
   padding: 0.6rem;
   padding-right: 1rem;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.3rem;
   font-weight: bold;
   background: linear-gradient(135deg, #0d0344, #2d38cc);
   color: white;
@@ -51,4 +51,12 @@
 .voicetuto-skip-button:active {
   background: linear-gradient(135deg, #2d38cc, #0d0344);
   transform: scale(1.05);
+}
+
+@media screen and (max-height:700px) {
+  .voicetuto-skip-button {
+    font-size: 0.7rem;
+    width: 22%;
+    padding: 0.3rem;
+  }
 }
