@@ -174,11 +174,19 @@
   }
 
   .sidebar {
-    max-width: 10rem;
+    max-width: 9rem;
+  }
+
+  .sidebar a {
+    font-size: 0.8rem;
   }
 
   .profile-dropdown.open {
-    left: -20%;
-    max-width: 9rem;
+    left: -25%;
+    max-width: 8rem;
+  }
+
+  .profile-dropdown a {
+    font-size: 0.7rem;
   }
 }
