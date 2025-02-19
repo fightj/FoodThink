@@ -30,6 +30,27 @@
   font-family: "omyu_pretty";
 }
 
+.new-write-button1 {
+  background: none;
+  border: none;
+  align-self: flex-end;
+  padding: 0;
+}
+
+.recipe-write-button1 {
+  font-size: 2.5rem;
+  color: #fb5a9d;
+  margin-bottom: 2rem;
+}
+
+/* 🔹 모바일 반응형: 작은 화면에서 버튼 크기 조정 */
+@media (max-width: 600px) {
+  .recipe-write-button1 {
+    font-size: 2rem;
+  }
+}
+
+
 .write-recipe-button5 {
   background: none;
   border: none;

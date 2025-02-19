@@ -3,6 +3,7 @@
   background-size: 97% 96%; /* 이미지를 페이지 크기에 맞게 조절 */
   background-position: center; /* 이미지를 중앙에 위치 */
   background-repeat: no-repeat;
+  overflow: hidden; /* 자식 요소가 넘칠 때 잘리도록 설정 */
 }
 
 .recipeInfo-container {
@@ -87,6 +88,7 @@ header {
   justify-content: flex-start; /* 상단 정렬 */
   align-items: flex-start;
   padding: 3em 1em 1em 1em; /* 위쪽 패딩 값 조정 */
+  
 }
 
 .recipe-image {
@@ -95,12 +97,16 @@ header {
   border-radius: 20%;
   margin-top: -20px; /* 원하는 위치에 따라 값 조정 */
   margin-right: -10%; /* 원하는 위치에 따라 값 조정 */
+  max-width: 90%; /* 부모 요소의 너비를 초과하지 않도록 설정 */
+  max-height: 95%;
 }
 
 .recipe-ingredients p {
   font-family: "PTBandocheB";
   font-size: 2.5rem;
   font-weight: bold;
+  max-width: 100%;
+  max-height: 90%;
 }
 
 .recipe-ingredients ul {
@@ -116,6 +122,8 @@ header {
 .info-right {
   flex-direction: column;
   overflow: hidden; /* 오른쪽 div 내에서 넘치는 내용 숨김 */
+  max-width: 100%;
+  max-height: 90%;
 }
 
 .recipe-info-text {
