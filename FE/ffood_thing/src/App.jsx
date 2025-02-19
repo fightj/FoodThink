@@ -106,7 +106,7 @@ const MainApp = () => {
     <>
       {/* 사이드바를 토글 버튼으로 변경 */}
       {/* <ToggleButton toggleSidebar={toggleSidebar} /> */}
-      {!shouldHideToggleButton && <ToggleButton toggleSidebar={toggleSidebar} />}<ToggleButton toggleSidebar={toggleSidebar} />
+      {!shouldHideToggleButton && <ToggleButton toggleSidebar={toggleSidebar} />}
       <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
       <AnimatedRoutes userInfo={user} />
     </>
