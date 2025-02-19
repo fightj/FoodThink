@@ -417,6 +417,16 @@
   .ingredient-separator {
     display: none; /* 🔥 모바일에서는 | 제거 */
   }
+
+  .recipe-detail-page-scroll-to-top-div{
+    right: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .recipe-detail-page-top-text{
+    display: none;
+  }
 }
 
 /* 🔹 전체 조리 과정 섹션 */

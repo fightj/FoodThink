@@ -9,7 +9,6 @@
   padding: 0;
 }
 
-/* 피드 상세보기 페이지 뒤로가기 버튼 (02.15) */
 .sns-detail-back-button {
   align-self: flex-start;
   background: none;
@@ -233,10 +232,9 @@
   margin-bottom: 15px;
 }
 
-
 .contents {
   flex: 1;
-  max-width: 55%;
+  width: 55%;
   display: flex;
   flex-direction: column;
   /* justify-content: center; */
@@ -387,8 +385,8 @@ hr {
     aspect-ratio: auto;
   }
 
-  .content {
-    min-width: 100%;
+  .contents {
+    width: 100%;
     margin-top: 2rem;
   }
 

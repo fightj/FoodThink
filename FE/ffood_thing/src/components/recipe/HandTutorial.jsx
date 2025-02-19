@@ -11,7 +11,7 @@ const HandTutorial = ({ onPrevPage, onNextPage, onSkip }) => {
         <img src="/images/arrow.png" alt="NextButton" />
       </button>
       <button className="handtuto-skip-button" onClick={onSkip}>
-        스킵하기
+        🚀스킵하기
       </button>
     </div>
   )
