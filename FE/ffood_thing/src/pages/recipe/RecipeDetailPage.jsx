@@ -21,6 +21,10 @@ const RecipeDetailPage = () => {
   const [showDropdown, setShowDropdown] = useState(false)
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
     const fetchRecipe = async () => {
       try {
         const response = await axios.get(`https://i12e107.p.ssafy.io/api/recipes/read/detail/${id}`, {
@@ -230,8 +234,8 @@ const RecipeDetailPage = () => {
         <div className="recipe-detail-container">
           <div className="recipe-back-edit-delete">
             <button onClick={() => navigate(-1)} className="recipe-detail-back-button">
-                      <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
-                    </button>
+              <FontAwesomeIcon className="chevron-left-back-button" icon={faChevronLeft} size="3x" style={{ color: "#F7B05B" }} />
+            </button>
             {/* <button onClick={() => navigate(-1)} className="back-button">
               <img src="/images/previous_button.png" alt="Previous" className="icon" />
             </button> */}

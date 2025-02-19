@@ -156,7 +156,7 @@ function SnsMain() {
         </div>
         {/* 페이지 맨 위로 올라가는 버튼 */}
         <div className="sns-main-scroll-to-top-div" onClick={scrollToTop}>
-          <FontAwesomeIcon icon={faChevronUp} size="lg" />
+          <FontAwesomeIcon icon={faChevronUp} size="lg" className="sns-main-up-icon"/>
           <span className="sns-main-top-text">TOP</span>
         </div>
       </div>
