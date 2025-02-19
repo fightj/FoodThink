@@ -10,7 +10,8 @@ import { UserContext } from "../../contexts/UserContext"
 import "../../styles/base/global.css" //텍스트 문제
 import "../../styles/sns/FeedDetail.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons"
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+
 
 function FeedUpdatePage() {
   const { id } = useParams()
@@ -275,9 +276,9 @@ function FeedUpdatePage() {
     <div className="base-div">
       <div className="card-div">
         <div className="sns-write-header">
-          <button onClick={handleBack} className="back-button">
-            {/* <img src="/images/previous_button.png" alt="Previous" className="back-button-icon" /> */}
-            <FontAwesomeIcon className="chevron-left-back-button" icon={faChevronLeft} size="3x" style={{ color: "#F7B05B" }} />
+          {/* 뒤로가기 버튼 */}
+          <button onClick={handleBack} className="sns-detail-back-button">
+            <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
           </button>
           <div className="sns-write-title">
             <h2 className="sns-write-title-h2">피드 수정</h2>
@@ -324,15 +325,16 @@ function FeedUpdatePage() {
               </div>
             )}
             <div className="button-container">
-              <button type="button" className="btn btn-secondary" onClick={() => setShowBookmarkModal(true)}>
-                내 북마크에서 찾기
+              <button type="button" className="bookmark-find-button" onClick={() => setShowBookmarkModal(true)}>
+              🏷️ 내 북마크에서 찾기
               </button>
             </div>
           </div>
 
           <div className="submit-button">
-            <button type="submit" className="btn btn-primary">
-              수정 완료
+            {/* FeedWrite.css에 있음. */}
+            <button type="submit" className="feed-update-button">
+            ✏️ 수정 완료
             </button>
           </div>
         </form>

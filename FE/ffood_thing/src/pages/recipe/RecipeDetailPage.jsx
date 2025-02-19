@@ -6,10 +6,8 @@ import Logo from "../../components/base/Logo"
 import Swal from "sweetalert2"
 import "../../styles/recipe/RecipeDetailPage.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import { faChevronUp, faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 import "../../styles/base/global.css"
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons"
-
 
 const RecipeDetailPage = () => {
   const { id } = useParams()
@@ -231,10 +229,12 @@ const RecipeDetailPage = () => {
       <div className="card-div">
         <div className="recipe-detail-container">
           <div className="recipe-back-edit-delete">
-            <button onClick={() => navigate(-1)} className="back-button">
-              {/* <img src="/images/previous_button.png" alt="Previous" className="icon" /> */}
-              <FontAwesomeIcon className="chevron-left-back-button" icon={faChevronLeft} size="3x" style={{ color: "#F7B05B" }} />
-            </button>
+            <button onClick={() => navigate(-1)} className="recipe-detail-back-button">
+                      <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
+                    </button>
+            {/* <button onClick={() => navigate(-1)} className="back-button">
+              <img src="/images/previous_button.png" alt="Previous" className="icon" />
+            </button> */}
             {user && user.nickname === recipe.nickname && (
               <div className="edit-container">
                 <button className="edit-button1" onClick={toggleDropdown}>

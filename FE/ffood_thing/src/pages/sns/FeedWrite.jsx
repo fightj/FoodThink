@@ -310,15 +310,15 @@ function FeedWrite() {
               </div>
             )}
             <div className="button-container">
-              <button type="button" className="btn btn-secondary" onClick={() => setShowBookmarkModal(true)}>
-                내 북마크에서 찾기
+              <button type="button" className="bookmark-find-button" onClick={() => setShowBookmarkModal(true)}>
+              🏷️ 내 북마크에서 찾기
               </button>
             </div>
           </div>
 
           <div className="submit-button">
-            <button type="submit" className="btn btn-primary">
-              작성 완료
+            <button type="submit" className="feed-save-button">
+            ⭐ 저장
             </button>
           </div>
         </form>

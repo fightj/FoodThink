@@ -6,8 +6,10 @@
   margin-bottom: 1rem; /* ✅ 하단 여백 */
 }
 
-.back-button {
-  align-self: flex-start; /* ✅ 모바일에서도 왼쪽 정렬 유지 */
+.recipe-detail-back-button {
+  align-self: flex-start;
+  background: none;
+  border: none;
 }
 
 

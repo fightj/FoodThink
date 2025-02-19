@@ -242,7 +242,7 @@
 
 /* 🔹 조리 시작 버튼 */
 .cook-btn {
-  background-color: #ff7f00;
+  background-color: #ffac38;
   color: white;
   font-size: clamp(1.5rem, 4vw, 3rem) !important;
   padding: clamp(0.7rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem); /* 반응형 패딩 */
@@ -256,6 +256,7 @@
   border-radius: 15px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
   font-family: 'omyu_pretty';
 }
 
