@@ -35,6 +35,7 @@ function FirstLogin() {
 
   const handleFinishPreference = () => {
     navigate("/");
+    window.location.reload();
   };
 
   return (
