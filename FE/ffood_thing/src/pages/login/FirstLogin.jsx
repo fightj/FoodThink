@@ -1,45 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/login/FirstLogin.css";
 import Preference from "../../components/Profile/Preference";
 
 function FirstLogin() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  const [showStartPage, setShowStartPage] = useState(true); // 시작 페이지 표시 여부
   const [showPreference, setShowPreference] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const [gifKey, setGifKey] = useState(Date.now()); // GIF 새로고침 시 초기화
 
-  const nextStep = () => {
-    if (step < 3) {
-      setStep(step + 1);
-    } else {
-      setShowPreference(true); // 마지막 단계에서 선호도 설정 실행
+  useEffect(() => {
+    // 3초 후 자동으로 튜토리얼(GIF) 페이지로 이동
+    const startPageTimer = setTimeout(() => {
+      setShowStartPage(false);
+    }, 2000); // 3초 뒤에 페이지 전환
+
+    return () => clearTimeout(startPageTimer); // 클린업 함수
+  }, []);
+
+  useEffect(() => {
+    if (!showStartPage) {
+      // 시작 페이지가 사라진 후에만 실행
+      setGifKey(Date.now());
+
+      // 10초 후 "나의 선호도" 버튼 표시
+      const timer = setTimeout(() => {
+        setShowButton(true);
+      }, 20000); // 20초 후 버튼 표시
+
+      return () => clearTimeout(timer);
     }
-  };
+  }, [showStartPage]);
 
-  const skipTutorial = () => {
-    setShowPreference(true);
-  };
-
-  // ✅ 선호도 입력 완료 후 홈으로 이동
   const handleFinishPreference = () => {
     navigate("/");
   };
 
   return (
     <div className="first-login-container">
-      {!showPreference ? (
-        <>
-          <div className="tutorial-content">
-            {step === 1 && <img src="/images/끼쟁이.png" alt="튜토리얼 1" />}
-            {step === 2 && <img src="/images/시원이.png" alt="튜토리얼 2" />}
-            {step === 3 && <img src="/images/씩씩이.png" alt="튜토리얼 3" />}
-
-            <div className="button-container">
-              <button onClick={nextStep}>{step < 3 ? "다음" : "완료"}</button>
-              <button onClick={skipTutorial}>건너뛰기</button>
-            </div>
+      {/* ✅ 시작 페이지 (3초 후 자동 전환) */}
+      {showStartPage ? (
+        <div className="start-page">
+        <div className="start-page-header">
+          <h1>푸띵 사용법</h1>
+          <img src="/images/꾸덕이.png" alt="AI 캐릭터" />
+        </div>
+        <p>푸띵을 쉽게 활용하는 방법을 알아보세요!</p>
+      </div>
+      ) : !showPreference ? (
+        <div className="tutorial-content">
+          <img key={gifKey} src="/images/최종3.gif" alt="튜토리얼 GIF" />
+          <div className="button-container">
+            {showButton && (
+              <div className="button-text">내 선호도를 등록하러 가볼까요?
+              &nbsp;
+              <button onClick={() => setShowPreference(true)}>Click!</button>
+              </div>
+            )}
           </div>
-        </>
+        </div>
       ) : (
         <Preference onFinish={handleFinishPreference} />
       )}
