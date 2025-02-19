@@ -65,9 +65,12 @@ function KakaoCallback() {
                     
 
                     console.log("로그인 성공:", { accessToken, email, isNewUser });
-                    //localStorage.removeItem("kakaoAuthProcessed");
-                    navigate("/");
-                    //window.location.reload();
+
+                    if (isNewUser === true) { // 신규사용자일 경우 튜토리얼 페이지로로
+                        navigate("/first-login");
+                    } else { // 기존 사용자일 경우 메인 페이지로
+                        navigate("/");
+                    }
                 } else {
                     console.error("Error: 응답 상태 코드:", response.status);
                     alert("카카오 로그인에 실패했습니다.");
