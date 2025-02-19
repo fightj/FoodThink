@@ -46,17 +46,17 @@ header {
 
 .recipe-info-details h1 {
   font-family: "KCC-Hanbit";
-  font-size: 3.5rem;
-  font-weight: 300;
+  font-size: 2rem;
   margin-top: 0;
-  box-sizing: border-box; /* 패딩을 포함한 전체 너비 계산 */
+  box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap; /* Prevent text from wrapping to the next line */
-  width: 100%; /* Adjust this width if necessary */
+  white-space: nowrap;
+  width: 100%;
   max-width: 20ch; /* Set the maximum width to 15 characters */
   display: inline-block;
   text-align: center;
+  margin-left: 1rem;
 }
 
 .recipe-details {
@@ -103,7 +103,7 @@ header {
 
 .recipe-ingredients p {
   font-family: "PTBandocheB";
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   font-weight: bold;
   max-width: 100%;
   max-height: 90%;
@@ -158,4 +158,39 @@ header {
   -webkit-box-orient: vertical; /* 플렉스 방향을 수직으로 설정 */
   text-overflow: ellipsis; /* 넘치는 텍스트는 ...으로 표시 */
   white-space: normal; /* 줄 바꿈을 허용 */
+}
+
+@media screen and (max-height:500px) {
+  .info-badge-div img {
+    display: none;
+  }
+
+  .recipe-info-details h1 {
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  .recipe-ingredients p {
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .recipe-ingredients ul {
+    font-size: 0.7rem;
+  }
+
+  .recipeInfo-right {
+    padding: 1.5em 0.5em 0.5em 0.5em;
+  }
+
+  .recipe-image {
+    /* margin-top: -20px; */
+    /* margin-right: -10%;  */
+    max-width: 90%;
+    max-height: 95%;
+  }
+
+  .recipeInfo-left {
+    padding-top: 3rem;
+  }
 }
