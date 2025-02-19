@@ -25,7 +25,7 @@ const RecipeInfo = ({ recipe, onNextPage }) => {
           </div>
           <div className="recipeInfo-right info-right" onClick={onNextPage}>
             <div className="recipe-ingredients">
-              <p>재료</p>
+              <p>재료🥕</p>
               <ul className="info-ingredients-list">
                 {recipe.ingredients.map((ingredient, index) => (
                   <li key={index} className="info-ingredient-item">

@@ -375,21 +375,21 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
               <div className="slider">
                 <input type="range" min="0" max="59" value={minutes} onChange={(e) => setMinutes(parseInt(e.target.value) || 0)} className="range-slider vertical-slider" />
               </div>
-              <div className="slider-label">분: {minutes}</div>
+              <div className="slider-label">{minutes} 분</div>
             </div>
             <div className="slider-wrapper">
               <div className="slider">
                 <input type="range" min="0" max="59" value={seconds} onChange={(e) => setSeconds(parseInt(e.target.value) || 0)} className="range-slider vertical-slider" />
               </div>
-              <div className="slider-label">초: {seconds}</div>
+              <div className="slider-label">{seconds} 초</div>
             </div>
           </div>
           <div className="timer-btn-area">
-            <button className="timer-modal-btn" onClick={handleSetTimer}>
-              설정
+            <button className="timer-modal-btn start-btn" onClick={handleSetTimer}>
+            😎 시작
             </button>
-            <button className="timer-modal-btn" onClick={() => setIsTimerModalOpen(false)}>
-              취소
+            <button className="timer-modal-btn end-btn" onClick={() => setIsTimerModalOpen(false)}>
+            😝 닫기
             </button>
           </div>
         </div>

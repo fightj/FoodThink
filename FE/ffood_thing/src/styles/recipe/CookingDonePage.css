@@ -27,6 +27,7 @@
   font-size: 3.5vw;
   color: #000000;
   margin-bottom: 10vh;
+  font-family: 'KCC-Hanbit';
 }
 
 .done-button-container {
@@ -93,7 +94,6 @@
   position: relative;
   cursor: pointer;
 }
-
 .camera-icon {
   width: 10vw;
   height: auto;
@@ -104,7 +104,8 @@
   position: absolute;
   top: 65%;
   color: #000000;
-  font-size: 1.5vw;
+  font-size: 1.8vw;
+  font-family: 'omyu_pretty';
 }
 
 .file-input {
@@ -191,4 +192,7 @@
 
 .overlay-button:active {
   transform: scale(0.9);
+}
+.back-to-recipe-button{
+  font-family: 'PTBandocheB';
 }

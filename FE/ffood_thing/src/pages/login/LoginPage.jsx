@@ -11,14 +11,14 @@ function LoginPage() {
 
   return (
     <div className="base-div">
-      <div className="parent-container">
+      <div className="parent-container"> 
         <div className="card-div">
           <div className="content-wrapper">
             <h2>Food Think</h2>
-            <div className="image-wrapper">
+            {/* <div className="image-wrapper">
               <img src="/images/꾸덕이.png" alt="Food Think Logo" className="main-image" />
-            </div>
-            <h3>지금 Food Think와 요리를 시작하세요!</h3>
+            </div> */}
+            <h3>지금 푸띵이와 요리를 시작하세요!</h3>
 
             <div className="start-now">
               <p>3초만에 시작하기!</p>

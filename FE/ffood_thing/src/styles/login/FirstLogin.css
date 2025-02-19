@@ -1,0 +1,219 @@
+.first-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 1rem; /* 작은 화면에서 양옆 여백 추가 */
+}
+
+/* ✅ 시작 페이지 스타일 (h1 옆에 이미지, 아래 p 정렬) */
+.start-page {
+  display: flex;
+  flex-direction: column; /* 세로 정렬 */
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 3rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 50%;
+  max-width: 800px;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+/* ✅ h1과 이미지 가로 정렬 */
+.start-page-header {
+  display: flex;
+  align-items: center; /* 이미지와 제목을 수직 정렬 */
+  justify-content: center;
+  gap: 15px; /* 제목과 이미지 간격 */
+}
+
+/* ✅ 이미지 크기 조절 */
+.start-page-header img {
+  width: 8rem; /* 이미지 크기 */
+  height: auto;
+}
+
+/* ✅ 제목 스타일 */
+.start-page h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin: 0;
+  font-family: 'LotteMartDream';
+  padding-left: 6rem;
+}
+
+/* ✅ 설명(p) 스타일 - 제목과 이미지 아래에 위치 */
+.start-page p {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  color: #666;
+  font-family: 'SOYO Maple Regular';
+}
+
+/* ✅ 시작 페이지가 사라질 때 효과 */
+.fade-out {
+  animation: fadeOut 1s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ✅ 튜토리얼 컨텐츠 (GIF 페이지) */
+.tutorial-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 150vh;
+  text-align: center;
+}
+
+.tutorial-content img {
+  max-width: 80%;
+  height: auto;
+  border-radius: 10px;
+  border: 3px solid #333;
+  margin-top: 1rem;
+}
+
+/* ✅ 버튼 컨테이너 */
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin: 1rem 4rem 2rem 0;
+}
+
+.button-text {
+  font-size: 2rem;
+}
+
+.button-container button {
+  padding: 0.3rem 1rem;
+  font-size: 2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #ff7f50;
+  color: white;
+  animation: blink 1.5s infinite alternate; /* ✅ 깜빡이는 애니메이션 적용 */
+}
+
+/* ✅ 깜빡이는 애니메이션 */
+@keyframes blink {
+  0% {
+    background-color: #ff7f50; /* 원래 색상 */
+  }
+  50% {
+    background-color: #ffae90; /* 어두운 주황색 */
+  }
+  100% {
+    background-color: #ff7f50; /* 다시 원래 색상 */
+  }
+}
+
+
+
+
+/* ✅ 반응형 스타일 적용 */
+@media (max-width: 800px) {
+
+  .tutorial-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 150vh;
+    text-align: center;
+  }
+
+  .start-page {
+    width: 90%;
+    padding: 2rem;
+  }
+
+  .start-page-header {
+    flex-direction: column;
+  }
+
+  .start-page-header img {
+    width: 50px;
+  }
+
+  .button-container {
+    justify-content: center;
+    margin: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tutorial-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 150vh;
+    text-align: center;
+  }
+
+  .start-page {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .start-page-header img {
+    width: 40px;
+  }
+
+  .start-page h1 {
+    font-size: 2rem;
+  }
+
+  .start-page p {
+    font-size: 1rem;
+  }
+
+  .button-container {
+    justify-content: center;
+    margin: 1rem;
+  }
+
+  .button-text {
+    font-size: 1rem;
+  }
+
+  .button-container button {
+    font-size: 1.2rem;
+    padding: 0.3rem 0.8rem;
+  }
+}

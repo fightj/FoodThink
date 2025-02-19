@@ -41,10 +41,10 @@
 /* 🔹 제목 스타일 */
 .start-title {
   font-size: clamp(3.5rem, 5vw, 4.5rem); /* 화면 크기에 따라 유동적인 크기 */
-  font-weight: bold;
   margin-bottom: 10px;
   padding-bottom: 5%;
   width: 70%;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
 
 /* 🔹 설명 스타일 */
@@ -54,6 +54,7 @@
   opacity: 0.9;
   margin-bottom: 20px;
   width: 80%;
+  font-family: 'PTBandocheB';
 }
 
 /* 🔹 버튼 스타일 */
@@ -68,6 +69,7 @@
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+  font-family: "MyCustomFont";
 }
 
 /* 🔹 버튼 클릭 효과 */
@@ -106,6 +108,7 @@
   width: auto;
   max-width: 90%; /* ✅ 너무 커지지 않도록 제한 */
   margin-top: 2%;
+  font-family: 'Binggrae';
 }
 
 /* ✅ AI 캐릭터 + 대답 컨테이너 */
@@ -126,7 +129,7 @@
 }
 
 .ai-image {
-  width: 70%;
+  width: clamp(20rem, 20vw, 30rem);
   height: auto;
   object-fit: contain;
   animation: float 3s infinite ease-in-out;
@@ -149,7 +152,7 @@
   flex-direction: column;
   align-items: center;
   width: 50%;
-  gap: clamp(30px, 3vw, 50px);
+  gap: clamp(3rem, 3vw, 5rem);
 }
 
 /* 대답 버튼 3개 */
@@ -177,6 +180,8 @@
   cursor: pointer;
   text-align: center;
   transition: background 0.3s, transform 0.2s;
+  animation: fadeInScale 0.5s ease-in-out forwards;
+  font-family: 'SOYO Maple Regular';
 }
 
 .choice-btn:active {
@@ -193,6 +198,7 @@
   background: #fff7e0;
   border-radius: 8px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'PTBandocheB';
 }
 
 /* ✅ 개별 답변 카드 */
@@ -244,6 +250,7 @@
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
   width: 12%;
+  font-family: 'PTBandocheB';
 }
 
 .end-btn {
@@ -256,6 +263,7 @@
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
   width: 12%;
+  font-family: 'PTBandocheB';
 }
 
 /* ✅ 반응형 디자인 (태블릿 및 모바일 최적화) */
@@ -269,6 +277,8 @@
     width: 100%;
   }
 
+
+
   .answer-section {
     width: 100%;
     align-items: center;
@@ -281,6 +291,12 @@
   .skip-btn,
   .end-btn {
     width: 45%;
+  }
+}
+
+@media (max-width: 780px) {
+  .ai-image {
+    width: 180px;
   }
 }
 
@@ -321,6 +337,7 @@
   overflow: hidden;
   text-overflow: ellipsis; /* ✅ 닉네임이 길면 ... 처리 */
   justify-content: center;
+  font-family: 'Binggrae';
 }
 
 /* 🔹 닉네임 부분만 따로 스타일 적용 */
@@ -390,6 +407,7 @@
   font-weight: bold;
   padding: 10px;
   color: #333;
+  font-family: 'LotteMartDream';
 }
 
 /* ✅ 모바일 최적화 */

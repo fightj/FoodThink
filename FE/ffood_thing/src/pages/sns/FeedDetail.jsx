@@ -7,7 +7,7 @@ import Swal from "sweetalert2"
 import RecipeModal from "../../components/sns/RecipeModal" // 모달 컴포넌트 추가
 import "../../styles/base/global.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronLeft} from '@fortawesome/free-solid-svg-icons'
+import { faChevronLeft, faEllipsis } from '@fortawesome/free-solid-svg-icons'
 
 function FeedDetail() {
   const { id } = useParams()
@@ -251,6 +251,7 @@ function FeedDetail() {
             {sessionUserId === currentFeed.userId && (
               <div className="edit-container">
                 <button className="edit-button1" onClick={toggleDropdown}>
+                  {/* <FontAwesomeIcon icon={faEllipsis} className="meatballs-button" /> */}
                   <img src="/images/etc-btn.png" alt="Edit Options1" />
                 </button>
                 {showDropdown && (
@@ -286,7 +287,7 @@ function FeedDetail() {
             )}
 
             {/* 컨텐츠 */}
-            <div className="content">
+            <div className="contents">
               <span className="likes-comments">
                 <img src={isLiked ? "/images/feed_like_do.png" : "/images/feed_like_undo.png"} alt="Like Icon" onClick={handleLikeToggle} style={{ cursor: "pointer" }} />
                 <span>{likesCount}</span>
@@ -305,7 +306,7 @@ function FeedDetail() {
               {isRecipe && (
                   <div className="recipe-image-container">
                     <div className="recipe-tooltip" onClick={() => navigate(`/recipes/${currentFeed.recipeListResponseDto.recipeId}`)}>
-                      <p>참고 레시피</p>
+                      <p>👀 참고 레시피 보러 가기</p>
                     </div>
                   </div>
               )}

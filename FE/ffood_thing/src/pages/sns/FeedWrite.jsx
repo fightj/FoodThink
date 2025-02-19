@@ -266,7 +266,7 @@ function FeedWrite() {
               <FontAwesomeIcon className="chevron-left-back-button"icon={faChevronLeft} size="3x" style={{color: "#F7B05B",}} />
           </button>
           <div className="sns-write-title">
-            <h2 className="sns-write-title-h2">피드 작성</h2>
+            <h2 className="sns-write-title-h2">피드 작성하기</h2>
             <img src="/images/시원이.png" className="sns-write-title-icon" />
           </div>
         </div>
@@ -310,15 +310,15 @@ function FeedWrite() {
               </div>
             )}
             <div className="button-container">
-              <button type="button" className="btn btn-secondary" onClick={() => setShowBookmarkModal(true)}>
-                내 북마크에서 찾기
+              <button type="button" className="bookmark-find-button" onClick={() => setShowBookmarkModal(true)}>
+              🏷️ 내 북마크에서 찾기
               </button>
             </div>
           </div>
 
           <div className="submit-button">
-            <button type="submit" className="btn btn-primary">
-              작성 완료
+            <button type="submit" className="feed-save-button">
+            ⭐ 저장
             </button>
           </div>
         </form>

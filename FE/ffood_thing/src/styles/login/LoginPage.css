@@ -13,28 +13,30 @@
   font-size: clamp(2.5rem, 10vw, 5rem); /* 화면 크기에 따라 글자 크기 조정 */
   margin-bottom: 2rem;
   margin-top: 1.5rem;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
 
-.image-wrapper {
+/* .image-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 1.5rem;
-}
+} */
 
 /* 🔹 메인 이미지 크기 조정 */
-.main-image {
+/* .main-image {
   background-color: #ffffff;
-  width: clamp(240px, 40vw, 400px); /* ✅ 크기 축소 */
+  width: clamp(240px, 40vw, 400px);
   height: clamp(240px, 40vw, 400px);
-}
+} */
 
 .content-wrapper h3 {
   width: 95%;
   font-size: clamp(1.3rem, 3.5vw, 1.8rem); /* ✅ 크기 조절 */
   color: #555;
   margin: 8px 0;
+  font-family: 'KCC-Hanbit';
 }
 
 .start-now {
@@ -52,8 +54,9 @@
 }
 
 .start-now p {
-  font-size: clamp(1rem, 1.5vw, 1.2rem); /* 반응형 글자 크기 */
+  font-size: clamp(1.5rem, 1.5vw, 1.2rem); /* 반응형 글자 크기 */
   margin: 0; /* 여백을 제거하여 중앙에 맞춤 */
+  font-family: 'omyu_pretty';
 }
 
 /* 🔹 소셜 로그인 버튼 컨테이너 */
@@ -84,10 +87,10 @@
     padding: 2rem 1rem;
   }
 
-  .main-image {
-    width: clamp(160px, 30vw, 320px); /* ✅ 모바일에서 과도한 크기 방지 */
+  /* .main-image {
+    width: clamp(160px, 30vw, 320px);
     height: clamp(160px, 30vw, 320px);
-  }
+  } */
 
   .start-now {
     padding: 8px 16px;
@@ -106,10 +109,10 @@
     padding: 1.5rem 0.8rem;
   }
 
-  .main-image {
+  /* .main-image {
     width: 50vw;
     height: 50vw;
-  }
+  } */
 
   .start-now {
     padding: 7px 14px;

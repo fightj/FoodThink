@@ -93,6 +93,7 @@
   font-size: 18px;
   color: #555;
   margin-bottom: 20px; /* ✅ 버튼과 간격 추가 */
+  font-family: 'PTBandocheB';
 }
 
 .write-recipe-button {
@@ -106,6 +107,7 @@
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  font-family: 'LotteMartDream';
 }
 
 .write-recipe-button:hover {
@@ -120,6 +122,8 @@
 .recipe-meta{
   font-size: 0.9rem;
   color: #9c9c9c;
+  font-family: 'SOYO Maple Regular';
+  font-weight: bold;
 }
 
 
@@ -133,6 +137,7 @@
   text-overflow: ellipsis;
   width: 100%;
   max-width: 200px;
+  font-family: 'LotteMartDream';
 }
 
 .mypage-recipe-title1 {
@@ -144,6 +149,7 @@
   text-overflow: ellipsis;
   width: 100%;
   max-width: 200px;
+  font-family: 'LotteMartDream';
 }
 
 @media (max-width: 1024px) {

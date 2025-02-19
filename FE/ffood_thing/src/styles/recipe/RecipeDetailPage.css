@@ -126,6 +126,8 @@
 .recipe-detail-hits {
   font-size: 1rem; /* 폰트 크기 설정 */
   color: black; /* 폰트 색상 설정 */
+  font-family: 'SOYO Maple Regular';
+  font-weight: bold;
 }
 
 /* 🔹 오른쪽 컨테이너 (제목, 북마크, 정보, 조리 시작 버튼) */
@@ -152,10 +154,10 @@
 
 .recipe-detail-title {
   font-size: clamp(1rem, 2.8vw, 2.8rem);
-  font-family: 'ImcreSoojin';
+  font-family: 'KCC-Hanbit';
   flex: 0 0 85%;
   font-size: clamp(1.5rem, 2.8vw, 2.8rem);
-  font-weight: bold;
+  font-weight: 300;
   text-align: center;
 }
 
@@ -240,7 +242,7 @@
 
 /* 🔹 조리 시작 버튼 */
 .cook-btn {
-  background-color: #ff7f00;
+  background-color: #ffac38;
   color: white;
   font-size: clamp(1.5rem, 4vw, 3rem) !important;
   padding: clamp(0.7rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem); /* 반응형 패딩 */
@@ -254,6 +256,7 @@
   border-radius: 15px;
   cursor: pointer;
   transition: background 0.3s ease-in-out;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.15);
   font-family: 'omyu_pretty';
 }
 
@@ -414,6 +417,16 @@
   .ingredient-separator {
     display: none; /* 🔥 모바일에서는 | 제거 */
   }
+
+  .recipe-detail-page-scroll-to-top-div{
+    right: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .recipe-detail-page-top-text{
+    display: none;
+  }
 }
 
 /* 🔹 전체 조리 과정 섹션 */
@@ -450,7 +463,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  font-family: 'KCC-Hanbit';
+  font-family: 'IM_Hyemin-Bold';
 }
 
 /* 🔹 오른쪽 - 조리 과정 이미지 */
