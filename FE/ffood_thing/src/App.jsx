@@ -56,7 +56,7 @@ import ToggleButton from "./components/base/ToggleButton";
 // }
 
 // Function to parse URL parameters
-const getUrlParameter = name => {
+const getUrlParameter = (name) => {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(name);
 };
@@ -83,10 +83,10 @@ const MainApp = () => {
   // const shouldHideNavbar = pagesWithoutNavbar.includes(location.pathname) || hideNavbarPaths.some((path) => new RegExp(path).test(location.pathname))
 
   const toggleSidebar = () => {
-    setIsOpen(prev => !prev);
+    setIsOpen((prev) => !prev);
   };
 
-  const closeSidebar = e => {
+  const closeSidebar = (e) => {
     if (isOpen && !e.target.closest(".sidebar-container") && !e.target.closest(".toggle-button")) {
       setIsOpen(false);
     }
@@ -99,13 +99,12 @@ const MainApp = () => {
     };
   }, [isOpen]);
 
-  // "/recipes/:id/cooking" 경로에서 toggle button을 숨기기 위한 조건
-  const shouldHideToggleButton = location.pathname.includes("/recipes/") && location.pathname.includes("/cooking");
+  // "/recipes/:id/cooking" 또는 "/first-login" 경로에서 toggle button을 숨기기 위한 조건
+  const shouldHideToggleButton = (location.pathname.includes("/recipes/") && location.pathname.includes("/cooking")) || location.pathname === "/first-login";
 
   return (
     <>
       {/* 사이드바를 토글 버튼으로 변경 */}
-      {/* <ToggleButton toggleSidebar={toggleSidebar} /> */}
       {!shouldHideToggleButton && <ToggleButton toggleSidebar={toggleSidebar} />}
       <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} userId={user ? user.userId : null} />
       <AnimatedRoutes userInfo={user} />
