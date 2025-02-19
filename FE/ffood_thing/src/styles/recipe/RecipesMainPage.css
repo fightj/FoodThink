@@ -275,6 +275,33 @@
   /* margin: auto; */
 }
 
+.recipe-main-page-scroll-to-top-div {
+  position: fixed;
+  bottom: 2rem;
+  right: 4.5rem;
+  background-color: #ff7f00;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 4rem;
+  height: 4rem;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease-in-out;
+}
+
+.recipe-main-page-scroll-to-top-btn .recipe-main-page-top-text {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+
 /* 🔹 반응형 미디어 쿼리 */
 @media (max-width: 1024px) { /* 태블릿 */
   .main-recipe-card {
@@ -293,6 +320,16 @@
     width: 90%; /* ✅ 한 줄에 1개 */
     max-width: 320px; /* ✅ 최대 크기 제한 */
     margin: auto;
+  }
+
+  .recipe-main-page-scroll-to-top-div{
+    right: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .recipe-main-page-top-text{
+    display: none;
   }
 }
 
@@ -390,29 +427,4 @@
   font-family: 'PTBandocheB';
 }
 
-.recipe-main-page-scroll-to-top-div {
-  position: fixed;
-  bottom: 2rem;
-  right: 4.5rem;
-  background-color: #ff7f00;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  width: 4rem;
-  height: 4rem;
-  padding: 10px;
-  z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease-in-out;
-}
-
-.recipe-main-page-scroll-to-top-btn .recipe-main-page-top-text {
-  font-size: 12px;
-  margin-top: 5px;
-}
 

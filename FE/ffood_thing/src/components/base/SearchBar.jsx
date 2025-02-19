@@ -8,11 +8,11 @@ function SearchBar({ onSearch, initialQuery }) {
   const navigate = useNavigate();
 
   // query가 변경될 때마다 포커스를 주도록 useEffect 사용
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [query]); // query가 변경될 때마다 실행
+  // useEffect(() => {
+  //   if (inputRef.current) {
+  //     inputRef.current.focus();
+  //   }
+  // }, [query]); // query가 변경될 때마다 실행
 
   const handleInputChange = (event) => {
     setQuery(event.target.value);
