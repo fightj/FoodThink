@@ -185,10 +185,30 @@ form {
   transition: all 0.3s ease;
 }
 
+/* 태블릿 세로 */
+@media screen and (max-width:800px) {
+  .sns-write-title-h2 {
+    font-size: 2.3rem;
+  }
+}
+
+/* 모바일 세로 */
 @media screen and (max-width:500px) {
   .feed-save-button,
   .feed-update-button {
     padding: 0.5rem 0.7rem;
     font-size: 1rem;
+  }
+
+  .sns-write-title-h2 {
+    margin-top: 0;
+    font-size: 1.7rem;
+  }
+}
+
+/* 모바일 가로 */
+@media screen and (max-height:600px) {
+  .sns-write-title-h2 {
+    font-size: 2rem;
   }
 }
