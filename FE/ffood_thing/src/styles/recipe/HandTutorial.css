@@ -5,7 +5,8 @@
   height: 100vh; /* 전체 화면 높이 */
   background-position: center; /* Center the background image */
   background-image: url("/images/handtutorial.png");
-  background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
+  background-size: cover;
+
   position: relative; /* for absolute positioning of children */
 }
 
@@ -30,7 +31,7 @@
   padding: 0.6rem;
   padding-right: 1rem;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.3rem;
   font-weight: bold;
   background: linear-gradient(135deg, #0d0344, #2d38cc);
   color: white;
@@ -49,4 +50,13 @@
 .handtuto-skip-button:active {
   background: linear-gradient(135deg, #2d38cc, #0d0344);
   transform: scale(1.05);
+}
+
+/* 반응형 모바일 가로 */
+@media screen and (max-height:700px) {
+  .handtuto-skip-button {
+    font-size: 0.7rem;
+    width: 22%;
+    padding: 0.3rem;
+  }
 }
