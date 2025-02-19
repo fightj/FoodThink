@@ -144,6 +144,38 @@
   font-family: 'SOYO Maple Regular';
 }
 
+.search-result-title {
+  width: 85%;
+  text-align: right;
+  font-family: 'PTBandocheB';
+}
+
+.sns-main-scroll-to-top-div {
+  position: fixed;
+  bottom: 2rem;
+  right: 4.5rem;
+  background-color: #ff7f00;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 4rem;
+  height: 4rem;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease-in-out;
+}
+
+.sns-main-scroll-to-top-btn .sns-main-top-text {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
 @media (max-width: 800px) {
   .user-info img {
     display: none;
@@ -186,36 +218,15 @@
   .feed-write-button {
     font-size: 1.5rem;
   }
-}
 
-.search-result-title {
-  width: 85%;
-  text-align: right;
-  font-family: 'PTBandocheB';
-}
+  .sns-main-scroll-to-top-div{
+    right: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 
-.sns-main-scroll-to-top-div {
-  position: fixed;
-  bottom: 2rem;
-  right: 4.5rem;
-  background-color: #ff7f00;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  width: 4rem;
-  height: 4rem;
-  padding: 10px;
-  z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease-in-out;
-}
-
-.sns-main-scroll-to-top-btn .recipe-detail-page-top-text {
-  font-size: 12px;
-  margin-top: 5px;
+  .sns-main-top-text{
+    display: none;
+  }
+  
 }
