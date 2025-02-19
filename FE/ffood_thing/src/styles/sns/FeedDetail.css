@@ -233,7 +233,8 @@
   margin-bottom: 15px;
 }
 
-.content {
+
+.contents {
   flex: 1;
   max-width: 55%;
   display: flex;
