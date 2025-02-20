@@ -333,7 +333,7 @@ public class CrawlingService {
     @Transactional
     public void assignRandomUserToRecipes() {
         List<RecipeEntity> allRecipes = crawlingRecipeRepository.findAll(); //모든 레시피 조회
-        List<UserEntity> users = userRepository.findAll();  //사용자 미리 조회
+        List<UserEntity> users = userRepository.findByUserIdBetween(1L, 20L); // 1~20 사이 사용자 조회
 
         if(users.isEmpty()) return;
 

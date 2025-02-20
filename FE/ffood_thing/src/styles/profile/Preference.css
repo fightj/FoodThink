@@ -134,7 +134,7 @@
   display: block;
   margin-top: 20px;
   padding: 12px 24px;
-  background-color: #1c87de;
+  background: linear-gradient(135deg, #8bc1ff, #66a2e6);
   color: white;
   border: none;
   border-radius: 10px;
