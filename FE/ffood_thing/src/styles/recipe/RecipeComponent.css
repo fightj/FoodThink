@@ -263,10 +263,9 @@
   animation: glowing 2s infinite, sizeChange 2s;
 }
 .rec-loading-gif {
-  width: 30%;
-  height: 30%;
+  width: 100%;
+  height: 100%;
 }
-
 .spoken-text {
   position: absolute;
   top: 60%; /* 상단에서부터 60% 아래에 위치 */
