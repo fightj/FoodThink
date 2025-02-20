@@ -28,7 +28,7 @@ const questionsData = [
     options: ["안 매운맛", "보통 매운맛", "아주 매운맛"]
   },
   {
-    question: "조리하는 데 얼마나 시간",
+    question: "조리시간은 어느정도가 적당한가요?",
     options: ["빠른 조리", "느긋한 조리", "적당한 조리"]
   },
   {
@@ -52,6 +52,7 @@ const questionsData = [
     options: ["맛있는 순간", "함께하는 즐거움", "요리하는 과정"]
   },
 ];
+
 
 function AiRecommendPage() {
   const navigate = useNavigate();
