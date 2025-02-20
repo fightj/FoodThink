@@ -177,7 +177,7 @@
 
 /* 선택 버튼 */
 .choice-btn {
-  font-size: clamp(1.2rem, 3vw, 1.5rem); /* ✅ 반응형 폰트 크기 */
+  font-size: clamp(1rem, 3vw, 1.3rem); /* ✅ 반응형 폰트 크기 */
   background: #7a4f3c;
   color: white;
   border: none;
@@ -185,7 +185,8 @@
   border-radius: 10%;
   font-weight: bold;
   width: auto;
-  height: clamp(3rem, 7vh, 5rem); /* ✅ 높이 반응형 */
+  height: clamp(5rem, 7vh, 6rem);
+  /* height: auto; */
   min-width: 20%; /* 버튼 크기 제한 */
   cursor: pointer;
   text-align: center;
