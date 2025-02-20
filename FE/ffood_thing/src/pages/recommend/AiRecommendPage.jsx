@@ -16,58 +16,41 @@ const questionsData = [
     options: ["매운 음식", "단 음식", "짠 음식"]
   },
   {
-    question: "어떤 종류의 음식을 원하시나요?",
-    options: ["국물요리", "밥종류", "면요리"]
-  },
-  {
     question: "요리 난이도는 어느정도 원하시나요?",
     options: ["쉬운 요리", "보통 난이도의 요리", "어려운 요리"]
-  },
-  {
-    question: "어떤 식사를 원하시나요?",
-    options: ["아침식사", "점심식사", "저녁식사"]
   },
   {
     question: "어떤 요리 스타일을 원하시나요?",
     options: ["간단요리", "정통요리", "퓨전요리"]
   },
   {
-    question: "어떤 주재료를 원하시나요?",
-    options: ["닭고기", "돼지고기", "소고기"]
-  },
-  {
-    question: "채소를 많이 포함한 요리를 원하시나요?",
-    options: ["채소가 많이", "채소가 조금", "채소 없이"]
-  },
-  {
-    question: "특정 국가 요리를 원하시나요?",
-    options: ["한식", "양식", "중식"]
-  },
-  {
     question: "어느 정도 매운맛을 원하시나요?",
     options: ["안 매운맛", "보통 매운맛", "아주 매운맛"]
   },
   {
-    question: "시간이 얼마나 걸릴까요?",
-    options: ["10분 이내", "30분 이내", "1시간 이상"]
-  },
-  { question: "어떤 조리 방법을 원하시나요?", options: ["볶음", "튀김", "찜"] },
-  {
-    question: "누구와 함께 식사를 하나요?",
-    options: ["혼자먹어요", "친구와 함께", "가족과 함께"]
+    question: "조리하는 데 얼마나 시간",
+    options: ["빠른 조리", "느긋한 조리", "적당한 조리"]
   },
   {
-    question: "어떤 식감을 원하시나요?",
-    options: ["부드러운", "쫄깃한", "바삭한"]
+    question: "냉장고 안은 어때요?",
+    options: ["재료 적게", "재료 다양함", "재료 개수 상관없음"]
   },
   {
-    question: "기분에 따라 어떤 요리를 드시고 싶나요?",
-    options: ["기운 나는 음식", "가벼운 음식", "든든한 음식"]
+    question: "이번 식사에서 가장 기대하는 건 무엇인가요?",
+    options: ["새로운 경험", "익숙한 맛", "즉흥적인 선택"]
+  },  
+  {
+    question: "오늘은 어떤 기분인가요?",
+    options: ["신나는 기분", "편안한 기분", "특별한 기분"]
   },
   {
-    question: "어떤 국물을 선호하시나요?",
-    options: ["맑은 국물", "걸쭉한 국물", "국물 없이"]
-  }
+    question: "오늘 식사에서 가장 중요한 요소는?",
+    options: ["맛", "영양", "비주얼"]
+  },
+  {
+    question: "음식이 당신에게 주는 가장 큰 기쁨은?",
+    options: ["맛있는 순간", "함께하는 즐거움", "요리하는 과정"]
+  },
 ];
 
 function AiRecommendPage() {
@@ -98,27 +81,26 @@ function AiRecommendPage() {
       revealOptions(currentQuestion.options);
     }
   }, [showOptions, currentQuestion]);
-  
 
   const pickNextQuestion = () => {
     if (availableQuestions.length === 0) return;
-  
+
     const nextIndex = Math.floor(Math.random() * availableQuestions.length);
     const selectedQuestion = availableQuestions[nextIndex];
-  
+
     if (!selectedQuestion || !selectedQuestion.question) return;
-  
+
     // console.log("🔹 선택된 질문:", selectedQuestion.question);
-  
+
     setCurrentQuestion(selectedQuestion);
-    setAvailableQuestions((prev) => prev.filter((_, i) => i !== nextIndex));
+    setAvailableQuestions(prev => prev.filter((_, i) => i !== nextIndex));
     setAiImage(aiImages[Math.floor(Math.random() * aiImages.length)]);
-    
+
     typedQuestionRef.current = ""; // 즉시 초기화
     setTypedQuestion(""); // 화면에서도 초기화
     setShowOptions(false);
     setRevealedOptions([]);
-  
+
     setTimeout(() => {
       if (selectedQuestion?.question) {
         // console.log("✅ 최종 설정된 질문:", selectedQuestion.question);
@@ -126,14 +108,13 @@ function AiRecommendPage() {
       }
     }, 100);
   };
-  
-  
-  const typeQuestion = (question) => {
+
+  const typeQuestion = question => {
     if (!question || typeof question !== "string") return;
-  
+
     typedQuestionRef.current = ""; // 즉시 초기화
     setTypedQuestion(""); // 화면에도 반영
-  
+
     let i = 0;
     const interval = setInterval(() => {
       if (i < question.length) {
@@ -147,13 +128,12 @@ function AiRecommendPage() {
       }
     }, 50);
   };
-  
 
-  const revealOptions = (options) => {
+  const revealOptions = options => {
     setRevealedOptions([]);
     options.forEach((option, index) => {
       setTimeout(() => {
-        setRevealedOptions((prev) => [...prev, option]);
+        setRevealedOptions(prev => [...prev, option]);
       }, index * 300);
     });
   };
@@ -241,12 +221,12 @@ function AiRecommendPage() {
                 <div className="answer-section">
                   {showOptions && (
                     <div className="answer-selection-container">
-                    {revealedOptions.map((option, index) => (
-                      <button key={index} className="choice-btn" onClick={() => handleChoice(option)}>
-                        {option}
-                      </button>
-                    ))}
-                  </div>
+                      {revealedOptions.map((option, index) => (
+                        <button key={index} className="choice-btn" onClick={() => handleChoice(option)}>
+                          {option}
+                        </button>
+                      ))}
+                    </div>
                   )}
                   {/* 선택된 답변 카드 */}
                   {answers.length > 0 && (
