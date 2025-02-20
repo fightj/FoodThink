@@ -95,10 +95,10 @@ public class RecommendController {
     public ResponseEntity<List<RecipeRecommendResponseDTO>> getFinalRecommendation(@RequestHeader("Authorization") String token, @RequestBody UserLikedInputDto userInput) {
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
-
+        log.info("=== 사용자 ID: {}", userId);
         // CBF 기반 1차 필터링 (레시피 10개 선정)
         List<RecipeRecommendDto> recommendations = recipeRecommendService.getRecommendedRecipes(userId, 10);
-        log.info("== CBF 기반 1차 필터링 완료 ==");
+        log.info("=== CBF 기반 1차 필터링 완료 ===");
 
         // 필터링된 10개의 레시피의 코사인 유사도 확인하기
         log.info("===선정된 10개의 레시피 확인하기===");
@@ -111,7 +111,7 @@ public class RecommendController {
 
         // GPT 기반 2차 필터링 (레시피 3개 선정)
         List<Long> recommendedIds = gptService.getRecipeRecommendation(recommendations, userInput);
-        log.info("== GPT 기반 2차 필터링 완료 ==");
+        log.info("=== GPT 기반 2차 필터링 완료 ===");
 
         List<RecipeRecommendResponseDTO> response = recommendedIds.stream()
                 .map(id -> recipeRepository.findById(id))
@@ -123,6 +123,14 @@ public class RecommendController {
                         recipe.getImage()
                 ))
                 .collect(Collectors.toList());
+
+        log.info("=== 최종 추천 레시피 ===");
+        for (RecipeRecommendResponseDTO dto : response) {
+            log.info("Recipe ID: {}, Title: {}, Image: {}",
+                    dto.getRecipeId(),
+                    dto.getRecipeTitle(),
+                    dto.getImage());
+        }
 
         return ResponseEntity.ok(response); // 레시피 ID, 레시피 제목, 레시피 메인 사진
     }
