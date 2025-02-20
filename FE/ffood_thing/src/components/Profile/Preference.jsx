@@ -135,6 +135,7 @@ const Preference = ({ onClose }) => {
       } else {
         console.log("✅ `onClose`가 없어서 기본적으로 `home`으로 이동");
         navigate("/");
+        window.location.reload();
       }
     } catch (error) {
       console.error("❌ 관심사 저장 실패:", error);
@@ -193,7 +194,7 @@ const Preference = ({ onClose }) => {
           </div>
         </div>
 
-        <button className="save-btn" onClick={saveUserPreferences}>저장</button>
+        <button className="save-btn" onClick={saveUserPreferences}>⭐ 저장</button>
       </div>
     </>
   );

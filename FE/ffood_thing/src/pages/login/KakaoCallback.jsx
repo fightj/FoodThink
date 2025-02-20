@@ -69,7 +69,9 @@ function KakaoCallback() {
                     if (isNewUser === true) { // 신규사용자일 경우 튜토리얼 페이지로로
                         navigate("/first-login");
                     } else { // 기존 사용자일 경우 메인 페이지로
+                        
                         navigate("/");
+                        window.location.reload();
                     }
                 } else {
                     console.error("Error: 응답 상태 코드:", response.status);

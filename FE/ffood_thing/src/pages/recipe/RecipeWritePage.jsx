@@ -403,7 +403,7 @@ function RecipeWritePage() {
                       <option value="채소류">채소류</option>
                       <option value="해물류">해물류</option>
                       <option value="달걀/유제품">달걀/유제품</option>
-                      <option value="가공식품">가공식품</option>
+                      {/* <option value="가공식품">가공식품</option> */}
                       <option value="쌀">쌀</option>
                       <option value="밀가루">밀가루</option>
                       <option value="건어물류">건어물류</option>
