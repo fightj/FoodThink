@@ -4,6 +4,7 @@ import com.ssafy.foodthink.foodRecommend.dto.RecipeRecommendDto;
 import com.ssafy.foodthink.foodRecommend.dto.UserLikedInputDto;
 import com.ssafy.foodthink.global.GptService;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -46,8 +47,9 @@ public class FoodRecommendGPTService {
                         + "### 추천 후보 목록 ###\n%s\n\n"
                         + "### 요청 사항 ###\n"
                         + "- 추천 후보 목록 중에서 현재 날씨와 사용자 취향 분석을 반영한 상위 3개 요리 선정\n"
-                        + "- 선정된 상위 3개 요리의 레시피 ID만 리스트 형태로 응답\n"
-                        + "예시 응답 형식: [1234, 5678, 9012]",
+                        + "- 선정된 상위 3개 요리의 레시피가 요청사항을 얼마나 충족하는지 확률 계산\n"
+                        + "- 선정된 상위 3개 요리의 레시피 ID와 확률을 JSON 형태로 응답\n"
+                        + "- 예시 응답 형식: [{\"id\": 1234, \"score\": 0.95}, {\"id\": 5678, \"score\": 0.88}, {\"id\": 9012, \"score\": 0.82}]",
                 weatherInfo,
                 formatUserPreferences(userInput.getAnswers()),
                 recommendations.stream()
@@ -91,13 +93,19 @@ public class FoodRecommendGPTService {
     // GPT 응답에서 레시피 ID를 파싱
     private List<Long> parseRecipeIds(String gptResponse) {
         try {
-            // 대괄호 안의 내용만 추출
-            String idsString = gptResponse.replaceAll(".*\\[(.*?)\\].*", "$1");
-            // 쉼표로 분리, Long으로 변환
-            return Arrays.stream(idsString.split(","))
-                    .map(String::trim)
-                    .map(Long::parseLong)
-                    .collect(Collectors.toList());
+            List<Long> recipeIds = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(gptResponse);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject item = jsonArray.getJSONObject(i);
+                Long id = item.getLong("id");
+                double score = item.getDouble("score");
+
+                recipeIds.add(id);
+                logger.info("===Recipe ID: {}, Probability: {}===", id, score);
+            }
+
+            return recipeIds;
         } catch (Exception e) {
             logger.error("GPT 응답 파싱 중 오류 발생: ", e);
             throw new RuntimeException("레시피 ID 파싱 중 오류가 발생했습니다.", e);
