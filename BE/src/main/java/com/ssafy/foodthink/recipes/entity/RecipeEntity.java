@@ -36,7 +36,7 @@ public class RecipeEntity {
     private Integer level;              //난이도   -> 새로 구성
     private String requiredTime;        //소요시간
     private LocalDateTime writeTime;    //작성시간
-    private Integer hits;               //조회수
+    private Integer hits = 0;               //조회수
     private String recipeUrl;           //레시피 URL
     private String image;               //대표이미지 URL
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
@@ -56,9 +56,9 @@ public class RecipeEntity {
     protected void onCreate() {
         //작성 시간을 현재로 설정
         this.writeTime = LocalDateTime.now();
-        Random random = new Random();
+//        Random random = new Random();
         //hits에 1~300 사이 랜덤 숫자값 설정
-        this.hits = random.nextInt(300) + 1;
+//        this.hits = random.nextInt(300) + 1;
     }
 
     @OneToMany(mappedBy = "recipeEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
