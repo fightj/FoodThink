@@ -17,7 +17,7 @@ public class BatchScheduler {
     private final UserRepository userRepository;
 
     //매일 새벽 4시에 모든 레시피 TF-IDF 계산
-    @Scheduled(cron = "0 0 4 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 30 23 * * *", zone = "Asia/Seoul")
     public void scheduleRecipeTfIdfTask() {
         log.info("레시피 TF-IDF 계산 배치 시작");
         recipeTFIDFService.calculateAndSaveAllTfIdf();
