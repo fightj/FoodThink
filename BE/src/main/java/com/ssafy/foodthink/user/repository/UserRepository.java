@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByNickname(String nickname); // 닉네임 중복 확인하기
 
     List<UserEntity> findAll(); // 모든 사용자 조회(배치 스케줄러 시 사용)
+    List<UserEntity> findByUserIdBetween(Long start, Long end); // userId 1~20 사이 조회
 }
