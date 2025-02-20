@@ -99,6 +99,16 @@ public class RecommendController {
         // CBF 기반 1차 필터링 (레시피 10개 선정)
         List<RecipeRecommendDto> recommendations = recipeRecommendService.getRecommendedRecipes(userId, 10);
         log.info("== CBF 기반 1차 필터링 완료 ==");
+
+        // 필터링된 10개의 레시피의 코사인 유사도 확인하기
+        log.info("===선정된 10개의 레시피 확인하기===");
+        for (RecipeRecommendDto recommendation : recommendations) {
+            log.info("Recipe ID: {}, Title: {}, Similarity: {}",
+                    recommendation.getRecipeId(),
+                    recommendation.getRecipeTitle(),
+                    recommendation.getSimilarity());
+        }
+
         // GPT 기반 2차 필터링 (레시피 3개 선정)
         List<Long> recommendedIds = gptService.getRecipeRecommendation(recommendations, userInput);
         log.info("== GPT 기반 2차 필터링 완료 ==");
