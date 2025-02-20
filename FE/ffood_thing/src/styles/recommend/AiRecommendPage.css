@@ -51,7 +51,7 @@
 /* 모바일 화면에서 제목 크기 조정 */
 @media (max-width: 768px) {
   .start-title {
-    font-size: clamp(2rem, 5vw, 3rem); /* 더 작은 크기로 조정 */
+    font-size: clamp(1.5rem, 5vw, 3rem); /* 더 작은 크기로 조정 */
     width: 90%; /* 모바일에서는 좀 더 넓게 */
     text-align: center; /* 정렬 조정 */
   }
