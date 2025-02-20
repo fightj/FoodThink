@@ -4,7 +4,6 @@ import com.ssafy.foodthink.foodRecommend.dto.RecipeRecommendDto;
 import com.ssafy.foodthink.foodRecommend.dto.UserLikedInputDto;
 import com.ssafy.foodthink.global.GptService;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -47,9 +46,8 @@ public class FoodRecommendGPTService {
                         + "### 추천 후보 목록 ###\n%s\n\n"
                         + "### 요청 사항 ###\n"
                         + "- 추천 후보 목록 중에서 현재 날씨와 사용자 취향 분석을 반영한 상위 3개 요리 선정\n"
-                        + "- 선정된 상위 3개 요리의 레시피가 요청사항을 얼마나 충족하는지 확률 계산\n"
-                        + "- 선정된 상위 3개 요리의 레시피 ID와 확률을 JSON 형태로 응답\n"
-                        + "- 예시 응답 형식: [{\"id\": 1234, \"score\": 0.95}, {\"id\": 5678, \"score\": 0.88}, {\"id\": 9012, \"score\": 0.82}]",
+                        + "- 선정된 상위 3개 요리의 레시피 ID만 리스트 형태로 응답\n"
+                        + "예시 응답 형식: [1234, 5678, 9012]",
                 weatherInfo,
                 formatUserPreferences(userInput.getAnswers()),
                 recommendations.stream()
@@ -92,51 +90,18 @@ public class FoodRecommendGPTService {
 
     // GPT 응답에서 레시피 ID를 파싱
     private List<Long> parseRecipeIds(String gptResponse) {
-        List<Long> recipeIds = new ArrayList<>();
-
-        logger.info("======GPT 응답 내용: {}======", gptResponse);
-
         try {
-            // JSON 배열 형식 처리
-            if (gptResponse.trim().startsWith("[")) {
-                JSONArray jsonArray = new JSONArray(gptResponse);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject item = jsonArray.getJSONObject(i);
-                    Long id = item.getLong("id");
-                    double score = item.getDouble("score");
-                    recipeIds.add(id);
-                    logger.info("===Recipe ID: {}, Probability: {}===", id, score);
-                }
-            }
-            // JSON 객체 형식 처리
-            else if (gptResponse.trim().startsWith("{")) {
-                JSONObject jsonObject = new JSONObject(gptResponse);
-                jsonObject.keys().forEachRemaining(key -> {
-                    if (key.startsWith("id")) {
-                        Long id = jsonObject.getLong(key);
-                        recipeIds.add(id);
-                        logger.info("===Recipe ID: {}===", id);
-                    }
-                });
-            }
-            // 일반 텍스트 형식 처리
-            else {
-                String[] parts = gptResponse.split("\\s+");
-                for (String part : parts) {
-                    try {
-                        Long id = Long.parseLong(part);
-                        recipeIds.add(id);
-                        logger.info("===Recipe ID: {}===", id);
-                    } catch (NumberFormatException e) {
-                        // 숫자가 아닌 부분은 무시
-                    }
-                }
-            }
+            // 대괄호 안의 내용만 추출
+            String idsString = gptResponse.replaceAll(".*\\[(.*?)\\].*", "$1");
+            // 쉼표로 분리, Long으로 변환
+            return Arrays.stream(idsString.split(","))
+                    .map(String::trim)
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             logger.error("GPT 응답 파싱 중 오류 발생: ", e);
-            logger.error("GPT 응답 내용: {}", gptResponse);
+            throw new RuntimeException("레시피 ID 파싱 중 오류가 발생했습니다.", e);
         }
-        return recipeIds;
     }
 
     // 날씨 API 사용하여 날씨 정보 가져옴
