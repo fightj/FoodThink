@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 
 const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }) => {
   const [isRecordingModalVisible, setIsRecordingModalVisible] = useState(false)
+  const [isLoading, setIsLoading] = useState(false) // 로딩 상태 추가
 
   useEffect(() => {
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
@@ -60,21 +61,30 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
 
     const sendAudioToServer = (audioBlob) => {
       const formData = new FormData()
+      console.log("로딩 시작 전:", isLoading)
+      setIsLoading(true) // 요청 시작 전 로딩 상태 설정
+      console.log("로딩 시작 후:", isLoading)
 
       formData.append("file", audioBlob, "음성.wav") // 파일 이름을 지정하여 업로드
       formData.append("recipeId", recipeId) // 현재 레시피 아이디 전송
+
+      const headers = {}
+      if (token) {
+        headers.Authorization = token
+      }
+
       fetch("https://i12e107.p.ssafy.io/api/speech/process", {
         method: "POST",
         body: formData,
-        headers: {
-          Authorization: token,
-        },
+        headers: headers,
       })
         .then((response) => response.json())
         .then((data) => {
           console.log("서버 응답 데이터:", data) // 서버 응답 데이터 콘솔 출력
           onRecognize(data) // 서버 응답 데이터 처리
           displayListeningMessage()
+          setIsLoading(false)
+          console.log("로딩 완료 전:", isLoading)
         })
         .catch((error) => {
           console.error("오류:", error)
@@ -83,7 +93,7 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
 
     const displayListeningMessage = () => {
       console.log("Listening for commands...")
-      setTimeout(displayListeningMessage, 10000) // 5초마다 메시지 출력
+      setTimeout(displayListeningMessage, 10000) // 10초마다 메시지 출력
     }
 
     displayListeningMessage() // 초기 메시지 출력
@@ -93,6 +103,10 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
     }
   }, [recipeId, token, onStopAlarm, onRecognize])
 
+  useEffect(() => {
+    console.log("isLoading 상태 변경:", isLoading)
+  }, [isLoading])
+
   return (
     <div>
       {isRecordingModalVisible && (
@@ -100,6 +114,12 @@ const VoiceRecognitionComponent = ({ onRecognize, onStopAlarm, recipeId, token }
           <img className="recording-gif" src="/images/recording.gif" alt="Recording..." />
         </div>
       )}
+      {isLoading && (
+        <div className="rec-loading">
+          <img className="rec-loading-gif" src="/images/rec-loading.gif" alt="Recording..." />
+        </div>
+      )}{" "}
+      {/* 로딩 상태 표시 */}
     </div>
   )
 }
