@@ -2,7 +2,7 @@
   display: flex;
   width: 100%;
   flex-wrap: wrap;
-  gap: 20px; /* 사진 사이의 간격 */
+  gap: 17px; /* 사진 사이의 간격 */
   justify-content: left;
   padding: 10px;
   padding-top: 30px;
