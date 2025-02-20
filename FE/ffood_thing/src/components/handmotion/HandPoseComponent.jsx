@@ -217,7 +217,7 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
           break
         case "대체재료추천1":
           const alternatives1 = responseData.alternativeIngredients?.join(", ") || "No alternatives"
-          const recommendation1 = ` 대체 제료로 ${alternatives1} 추천합니다!`
+          const recommendation1 = ` 대체 재료로 ${alternatives1} 추천합니다!`
           console.log(recommendation1)
           speakText(recommendation1)
           setSpokenText(recommendation1)
@@ -386,10 +386,10 @@ const HandPoseComponent = ({ recipe, currentStep, onNextStep, onPrevStep, onClos
           </div>
           <div className="timer-btn-area">
             <button className="timer-modal-btn start-btn" onClick={handleSetTimer}>
-            😎 시작
+              😎 시작
             </button>
             <button className="timer-modal-btn end-btn" onClick={() => setIsTimerModalOpen(false)}>
-            😝 닫기
+              😝 닫기
             </button>
           </div>
         </div>
