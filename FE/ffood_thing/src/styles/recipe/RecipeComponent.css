@@ -21,7 +21,6 @@
   background-repeat: no-repeat;
 }
 
-
 .end-message {
   position: absolute;
   top: 77%;
@@ -116,7 +115,6 @@
     font-size: clamp(1rem, 2vw, 2.5rem); /* 높이가 190px 이상일 때의 글자 크기 */
   }
 }
-
 
 .process-image-container3 {
   width: 100%;
@@ -224,7 +222,16 @@
   justify-content: center;
   z-index: 100000; /* 모달을 최상단에 표시 */
 }
+.rec-loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 100000; /* 모달을 최상단에 표시 */
+}
 @keyframes glowing {
   0% {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.8);
@@ -255,7 +262,10 @@
   opacity: 0.5; /* 투명도 설정 (0은 완전 투명, 1은 완전 불투명) */
   animation: glowing 2s infinite, sizeChange 2s;
 }
-
+.rec-loading-gif {
+  width: 100%;
+  height: 100%;
+}
 .spoken-text {
   position: absolute;
   top: 60%; /* 상단에서부터 60% 아래에 위치 */
@@ -360,11 +370,7 @@
     height: 1.5rem; /* 버튼 이미지 크기 조정 */
     border: none; /* 테두리 제거 */
   }
-  
 }
-
-
-
 
 .ingredient-container {
   position: absolute;
@@ -554,7 +560,6 @@
   background: linear-gradient(135deg, #a5c9fb, #3271ca);
 }
 
-
 /* --------------------------- */
 @media (max-height: 380px) {
   .ingredient-button {
@@ -634,7 +639,7 @@
     padding: 10px;
     max-height: 180px; /* 최대 높이 설정 */
   }
-  .ingredient-sidebar li{
+  .ingredient-sidebar li {
     font-size: 0.8rem;
   }
   .timer-modal {
@@ -743,7 +748,7 @@
     padding: 12px;
     max-height: 220px; /* 최대 높이 설정 */
   }
-  .ingredient-sidebar li{
+  .ingredient-sidebar li {
     font-size: 1rem;
   }
   .timer-modal {
