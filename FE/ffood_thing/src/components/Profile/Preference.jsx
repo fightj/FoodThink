@@ -194,7 +194,7 @@ const Preference = ({ onClose }) => {
           </div>
         </div>
 
-        <button className="save-btn" onClick={saveUserPreferences}>저장</button>
+        <button className="save-btn" onClick={saveUserPreferences}>⭐ 저장</button>
       </div>
     </>
   );

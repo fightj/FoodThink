@@ -194,6 +194,12 @@ form {
 
 /* 모바일 세로 */
 @media screen and (max-width:500px) {
+  .button-container {
+    justify-content: center;
+    align-items: center;
+  }
+
+  
   .feed-save-button,
   .feed-update-button {
     padding: 0.5rem 0.7rem;
@@ -202,7 +208,7 @@ form {
 
   .sns-write-title-h2 {
     margin-top: 0;
-    font-size: 1.7rem;
+    font-size: 1.4rem;
   }
 }
 
