@@ -12,6 +12,7 @@ import com.ssafy.foodthink.user.jwt.JWTUtil;
 import com.ssafy.foodthink.user.repository.UserInterestRepository;
 import com.ssafy.foodthink.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
     GPT API 활용 대체재료 추천2
  */
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AlternativeIngredientRecommend2Service {
@@ -34,9 +36,12 @@ public class AlternativeIngredientRecommend2Service {
 
     //대체 재료 추천
     public Map<String, Object> recommendAlternativeIngredients(String token, Long recipeId, String userInput) {
+
+        log.info("로그인 유무 확인 및 기피 재료 조회");
         //로그인 유무 확인 및 기피 재료 조회
         String avoidedIngredients = getDislikedIngredients(token);
 
+        log.info("레시피 ID에 해당하는 RecipeEntity 조회");
         //레시피 ID에 해당하는 RecipeEntity 조회
         RecipeEntity recipeEntity = recipeRepository.findByRecipeId(recipeId);
 //                .orElseThrow(() -> new RuntimeException("Recipe not found"));
@@ -93,10 +98,11 @@ public class AlternativeIngredientRecommend2Service {
 
     // 기피 재료 조회
     private String getDislikedIngredients(String token) {
-        if (token == null) {
+        if (token == null || token.isEmpty()) {
+            log.info("========토큰 없음(대체재료2)========");
             return "없음";  // 로그인하지 않은 경우
         }
-
+        log.info("==================토큰 존재(대체재료2)===============");
         // JWT를 통해 유저 ID 가져오기
         String accessToken = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(accessToken);
