@@ -103,7 +103,7 @@ public class RecommendController {
         // 필터링된 10개의 레시피의 코사인 유사도 확인하기
         log.info("===선정된 10개의 레시피 확인하기===");
         for (RecipeRecommendDto recommendation : recommendations) {
-            log.info("Recipe ID: {}, Title: {}, Similarity: {}",
+            log.info("===Recipe ID: {}, Title: {}, Similarity: {}===",
                     recommendation.getRecipeId(),
                     recommendation.getRecipeTitle(),
                     recommendation.getSimilarity());

@@ -16,7 +16,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
   const sessionUserNickname = user?.nickname || sessionUser?.nickname || "User";
 
   // ✅ 로그인 여부를 localStorage에서 확인
-  const isLoggedIn = localStorage.getItem("kakaoAuthProcessed") === "true";
+  const isLoggedIn = sessionStorage.getItem("kakaoAuthProcessed") === "true";
 
   // 사이드바가 닫힐 때 드롭다운도 함께 닫기
   useEffect(() => {

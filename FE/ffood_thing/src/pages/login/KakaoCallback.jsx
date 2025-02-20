@@ -12,6 +12,9 @@ function KakaoCallback() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const code = urlParams.get("code");
 
+                localStorage.clear();
+                sessionStorage.clear();
+
                 if (!code) {
                     console.error("Error: 인가 코드가 없습니다.");
                     alert("인가 코드가 없습니다. 다시 시도해주세요.");
@@ -20,11 +23,11 @@ function KakaoCallback() {
                 }
 
                 // 중복 요청 방지
-                if (localStorage.getItem("kakaoAuthProcessed")) {
+                if (sessionStorage.getItem("kakaoAuthProcessed")) {
                     console.warn("이미 처리된 인가 코드입니다. 중복 요청 방지.");
                     return;
                 }
-                localStorage.setItem("kakaoAuthProcessed", "true"); // 요청 전에 플래그 설정
+                sessionStorage.setItem("kakaoAuthProcessed", "true"); // 요청 전에 플래그 설정
 
                 console.log("인가코드 전달 중:", code);
 
@@ -76,13 +79,15 @@ function KakaoCallback() {
                 } else {
                     console.error("Error: 응답 상태 코드:", response.status);
                     alert("카카오 로그인에 실패했습니다.");
-                    localStorage.removeItem("kakaoAuthProcessed", "true");
+                    localStorage.clear();
+                    sessionStorage.clear();
                     navigate("/login");
                 }
             } catch (error) {
                 console.error("Error during Kakao login callback:", error.response || error.message);
                 alert("카카오 로그인에 실패했습니다. 다시 시도해주세요.");
-                localStorage.removeItem("kakaoAuthProcessed", "true");
+                localStorage.clear();
+                sessionStorage.clear();
                 navigate("/login");
             }
         };
