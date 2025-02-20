@@ -92,24 +92,51 @@ public class FoodRecommendGPTService {
 
     // GPT 응답에서 레시피 ID를 파싱
     private List<Long> parseRecipeIds(String gptResponse) {
+        List<Long> recipeIds = new ArrayList<>();
+
+        logger.info("======GPT 응답 내용: {}======", gptResponse);
+
         try {
-            List<Long> recipeIds = new ArrayList<>();
-            JSONArray jsonArray = new JSONArray(gptResponse);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject item = jsonArray.getJSONObject(i);
-                Long id = item.getLong("id");
-                double score = item.getDouble("score");
-
-                recipeIds.add(id);
-                logger.info("===Recipe ID: {}, Probability: {}===", id, score);
+            // JSON 배열 형식 처리
+            if (gptResponse.trim().startsWith("[")) {
+                JSONArray jsonArray = new JSONArray(gptResponse);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject item = jsonArray.getJSONObject(i);
+                    Long id = item.getLong("id");
+                    double score = item.getDouble("score");
+                    recipeIds.add(id);
+                    logger.info("===Recipe ID: {}, Probability: {}===", id, score);
+                }
             }
-
-            return recipeIds;
+            // JSON 객체 형식 처리
+            else if (gptResponse.trim().startsWith("{")) {
+                JSONObject jsonObject = new JSONObject(gptResponse);
+                jsonObject.keys().forEachRemaining(key -> {
+                    if (key.startsWith("id")) {
+                        Long id = jsonObject.getLong(key);
+                        recipeIds.add(id);
+                        logger.info("===Recipe ID: {}===", id);
+                    }
+                });
+            }
+            // 일반 텍스트 형식 처리
+            else {
+                String[] parts = gptResponse.split("\\s+");
+                for (String part : parts) {
+                    try {
+                        Long id = Long.parseLong(part);
+                        recipeIds.add(id);
+                        logger.info("===Recipe ID: {}===", id);
+                    } catch (NumberFormatException e) {
+                        // 숫자가 아닌 부분은 무시
+                    }
+                }
+            }
         } catch (Exception e) {
             logger.error("GPT 응답 파싱 중 오류 발생: ", e);
-            throw new RuntimeException("레시피 ID 파싱 중 오류가 발생했습니다.", e);
+            logger.error("GPT 응답 내용: {}", gptResponse);
         }
+        return recipeIds;
     }
 
     // 날씨 API 사용하여 날씨 정보 가져옴
