@@ -21,7 +21,7 @@ const RecipeDetailPage = () => {
   const [showDropdown, setShowDropdown] = useState(false)
 
   // ✅ 로그인 여부를 localStorage에서 확인
-  const isLoggedIn = localStorage.getItem("kakaoAuthProcessed") === "true"
+  const isLoggedIn = sessionStorage.getItem("kakaoAuthProcessed") === "true"
 
   useEffect(() => {
     window.scrollTo(0, 0)
