@@ -81,6 +81,7 @@ public class AuthController {
                         newUser.setSocialId(userInfo.getId());
                         newUser.setSocialType("KAKAO");
                         newUser.setRole("ROLE_USER");
+                        newUser.setSeason("봄");
                         isNewUser = true;
                         return userRepository.save(newUser);
                     });
