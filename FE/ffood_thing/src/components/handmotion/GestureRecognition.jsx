@@ -12,7 +12,7 @@ const GestureRecognition = ({ onChangePage }) => {
   const handleResults = (results) => {
     if (isPageChanging) return // 페이지 이동 중이면 처리하지 않음
 
-    const handLandmarks = results.leftHandLandmarks || results.rightHandLandmarks
+    const handLandmarks = results.leftHandLandmarks || results.rightHandLandmarkscd false
     const currentTime = Date.now()
 
     if (!handLandmarks) {
