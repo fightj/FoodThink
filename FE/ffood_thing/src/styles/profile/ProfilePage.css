@@ -1,0 +1,33 @@
+/* 전체 프로필 페이지 컨테이너 (반응형 적용) */
+.profile-container {
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background-color: #f3e5ab; */
+    width: min(100%, 1200px);
+    margin: auto; /* 중앙 정렬 */
+}
+
+/* 탭 콘텐츠 컨테이너 */
+.tab-content {
+  width: 100%;
+  display: flex;
+  /* justify-content: center; */
+  background: #fff;
+  width: 100%;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+  /* 모달 배경 (어두운 효과) */
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* 반투명 어두운 배경 */
+    z-index: 999; /* 모달보다 낮은 z-index */
+}

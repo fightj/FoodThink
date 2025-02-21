@@ -1,0 +1,124 @@
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 85vh;
+  /* min-height: auto; */
+  padding: 3rem 1.5rem;
+}
+
+.content-wrapper h2 {
+  font-size: clamp(2.5rem, 10vw, 5rem); /* 화면 크기에 따라 글자 크기 조정 */
+  margin-bottom: 2rem;
+  margin-top: 1.5rem;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+}
+
+/* .image-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+} */
+
+/* 🔹 메인 이미지 크기 조정 */
+/* .main-image {
+  background-color: #ffffff;
+  width: clamp(240px, 40vw, 400px);
+  height: clamp(240px, 40vw, 400px);
+} */
+
+.content-wrapper h3 {
+  width: 95%;
+  font-size: clamp(1.3rem, 3.5vw, 1.8rem); /* ✅ 크기 조절 */
+  color: #555;
+  margin: 8px 0;
+  font-family: 'KCC-Hanbit';
+}
+
+.start-now {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 40px;
+  padding: 10px 18px;
+  margin: 2rem 0 0.8rem 0;
+  text-align: center;
+  color: #333;
+  font-size: clamp(0.5rem, 2vw, 0.9rem); /* 반응형 글자 크기 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.start-now p {
+  font-size: clamp(1.5rem, 1.5vw, 1.2rem); /* 반응형 글자 크기 */
+  margin: 0; /* 여백을 제거하여 중앙에 맞춤 */
+  font-family: 'omyu_pretty';
+}
+
+/* 🔹 소셜 로그인 버튼 컨테이너 */
+.social-login-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px; /* ✅ 간격 축소 */
+  margin-bottom: 15px;
+}
+
+.social-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.social-button img {
+  width: clamp(60px, 15vw, 100px); /* 최소 60px, 최대 100px */
+  height: clamp(60px, 15vw, 100px);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* 🔹 갤럭시 탭 가로 & 모바일 세로 조정 */
+@media (max-width: 1024px) {
+  .content-wrapper {
+    padding: 2rem 1rem;
+  }
+
+  /* .main-image {
+    width: clamp(160px, 30vw, 320px);
+    height: clamp(160px, 30vw, 320px);
+  } */
+
+  .start-now {
+    padding: 8px 16px;
+    font-size: clamp(0.6rem, 1.8vw, 0.8rem);
+  }
+
+  .social-button img {
+    width: clamp(45px, 10vw, 70px); /* ✅ 크기 조정 */
+    height: clamp(45px, 10vw, 70px);
+  }
+}
+
+/* 🔹 모바일 세로 (최소 크기 조정) */
+@media (max-width: 480px) {
+  .content-wrapper {
+    padding: 1.5rem 0.8rem;
+  }
+
+  /* .main-image {
+    width: 50vw;
+    height: 50vw;
+  } */
+
+  .start-now {
+    padding: 7px 14px;
+  }
+
+  .social-login-buttons {
+    gap: 5px;
+  }
+}

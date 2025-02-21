@@ -1,0 +1,517 @@
+/* 모달 오버레이 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 모달 카드 */
+.today-recommend-card {
+  position: relative;
+  background: white;
+  padding: 1.5%;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 50%;
+  max-width: 1000px;
+  height: 60%;
+  text-align: center;
+  z-index: 1001;
+  overflow: hidden;
+}
+/*모달 헤더(새로고침 버튼, 제목, 닫기 버튼)*/
+.today-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 15%;
+}
+
+/* 제목 (h2) 중앙 정렬 */
+.today-title {
+  font-family: 'HakgyoansimDunggeunmisoTTF-B';
+  text-align: center;
+  font-size: 220%;
+  color: #fdb13f;
+  transition: opacity 0.4s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height:15%;
+}
+
+/* 📌 새로고침 버튼 */
+.today-refresh-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #ff9800;
+  transition: color 0.2s ease-in-out, transform 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  border-radius: 50%;
+}
+.today-refresh-btn img{
+  width: 48px;
+  height:48px;
+  filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(-20deg) brightness(100%) contrast(100%);
+}
+/* 📌 닫기 버튼 스타일 (우선순위 조정) */
+.today-close-btn {
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.today-close-btn img{
+  width: 48px;
+  height:48px;
+  filter: invert(20%) sepia(100%) saturate(5000%) hue-rotate(-10deg) brightness(100%) contrast(120%);
+}
+
+.today-close-btn:hover {
+  color: black;
+}
+
+/* 캐러셀 컨테이너 */
+.today-carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 65%;
+  position: relative;
+  overflow: hidden;
+}
+.today-recipe-list{
+  display: flex;
+  justify-content: center; 
+  width: 100%; 
+  height: 65%;
+  transition: 'transform 0.3s ease-in-out';
+  align-items: center;
+}
+/*오늘의 메뉴 개별 음식 카드*/
+/* 기본 상태: 모든 카드 */
+.today-recipe-item {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, filter 0.3s ease-in-out;
+  flex: 0 0 auto;
+  opacity: 0.5; /* 흐리게 */
+  cursor: pointer;
+}
+
+/* 중앙 카드 (크기 확대) */
+.today-recipe-item.active {
+  transform: scale(1.3) !important; /* 확대 */
+  opacity: 1; /* 완전 선명 */
+  filter: blur(0); /* 블러 제거 */
+  z-index: 2; /* 위로 올리기 */
+}
+
+/* 음식 이미지 */
+.today-recipe-image {
+  width: 11rem;
+  height: 11rem;
+  object-fit: cover;
+  border-radius: 20%;
+  transition: transform 0.4s ease-in-out;
+}
+
+/* 중앙 레시피 제목 */
+.today-recipe-title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20%;
+  width: 100%;
+  overflow: hidden;
+}
+.today-recipe-title-main {
+  font-family: 'Dovemayo_gothic';
+  font-size: 180%;
+  display: block;
+  transition: opacity 0.4s ease-in-out;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  width:90%;
+  min-width: 0;
+  
+}
+
+.icon-close {
+  color: #fe8686;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2.2rem;
+}
+
+.icon-refresh {
+  color: #8a86fe;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2.2rem;
+}
+
+/* 📌반응형: 태블릿 세로 버전 */
+@media (max-width: 800px) {
+  .today-recommend-card {
+    width: 80%;
+    height: 40%;
+  }
+  .today-header{
+    width:100%;
+    height: 20%;
+  }
+  .today-title {
+    font-size: 230%;
+    width:70%;
+  }
+  .today-refresh-btn {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width:30%;
+  }
+  .today-refresh-btn img{
+    width: 48px;
+  height:48px;
+  }
+  .today-close-btn {
+    width:30%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+  .today-close-btn img {
+    width: 48px;
+    height:48px;
+  }
+  .today-carousel {
+    height: 55%;
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top:2%;
+  }
+  
+  .today-recipe-list {
+    display: flex;
+    justify-content: center; /* 아이템 간 간격 균등 배치 */
+    width: 100%; /* 가로 공간을 꽉 채움 */
+    height: 75%;
+  }
+  .today-recipe-item {
+  }
+  .today-recipe-item.active {
+    transform: scale(1.1);
+  }
+
+  .today-recipe-image {
+    width: 11rem;
+    height: 11rem;
+  }
+  .today-recipe-title-container {
+    height: 20%;
+  }
+  .today-recipe-title-main {
+    width:90%;
+    font-size: 20px;
+    height:70%;
+  }
+  .today-recipe-title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    width: 100%;
+    overflow: hidden;
+  }
+  .today-recipe-title-main {
+    font-size: 180%;
+    display: block;
+    transition: opacity 0.4s ease-in-out;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    width:90%;
+    min-width: 0;
+  }
+}
+
+/* 📌반응형: 모바일 세로 */
+@media (max-width: 500px) {
+  .today-recommend-card {
+    width: 85%;
+    height: 35%;
+  }
+  .today-header{
+    width:100%;
+    height: 20%;
+  }
+  .today-title {
+    font-size: 130%;
+    height: 100%;
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .today-refresh-btn {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width:30%;
+  }
+  .today-refresh-btn img{
+    width: 36px;
+    height:36px;
+  }
+  .today-close-btn {
+    width:30%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+  .today-close-btn img {
+    width: 36px;
+    height:36px;
+  }
+  .today-carousel {
+    height: 60%;
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .today-recipe-list {
+    display: flex;
+    justify-content: center; 
+    width: 100%; 
+    height: 75%;
+  }
+  .today-recipe-item {
+    width:30%;
+  }
+  .today-recipe-item.active {
+    transform: scale(1.2);
+    
+  }
+
+  .today-recipe-image {
+    width: 100%;
+    height: 90%;
+  }
+  .today-recipe-title-container {
+    height: 20%;
+    margin-top:0;
+  }
+  .today-recipe-title-main {
+    width:90%;
+    font-size: 20px;
+    height:70%;
+  }
+}
+/* 📌반응형: 모바일 가로 */
+@media (max-height: 500px) {
+  .today-recommend-card {
+    width: 50%;
+    height: 70%;
+  }
+  .today-header{
+    width:100%;
+    height: 20%;
+  }
+  .today-title {
+    font-size: 130%;
+    height: 100%;
+    width:80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .today-refresh-btn {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width:30%;
+  }
+  .today-refresh-btn img{
+    width: 36px;
+    height:36px;
+  }
+  .today-close-btn {
+    width:30%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+  .today-close-btn img {
+    width: 36px;
+    height:36px;
+  }
+  .today-carousel {
+    height: 60%;
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .today-recipe-list {
+    display: flex;
+    justify-content: center; 
+    width: 100%; 
+    height: 75%;
+  }
+  .today-recipe-item {
+    width:30%;
+  }
+  .today-recipe-item.active {
+    transform: scale(1.2);
+  }
+  .today-recipe-image {
+    width: 100%;
+    height: 90%;
+  }
+  .today-recipe-title-container {
+    height: 20%;
+  }
+  .today-recipe-title-main {
+    width:90%;
+    font-size: 115%;
+    height:70%;
+    margin-top: 5%;
+  }
+  .icon-close,
+  .icon-refresh {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  } 
+}
+
+@media screen and (max-width:500px) {
+  .icon-close,
+  .icon-refresh {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }  
+}
+
+
+/* 🌟아래는 정체불명의 클래스와 연결될지도 모를 것들...🌟 */
+
+/* 📌 새로고침 버튼 */
+.refresh-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #ff9800;
+  transition: color 0.2s ease-in-out, transform 0.3s ease-in-out;
+  
+  /* ✅ 클릭 영역 확장 */
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 50%;
+  z-index: 2; /* ✅ 닫기 버튼과 충돌 방지 */
+}
+.refresh-btn img{
+  width: 50px;
+  height: 50px;
+  filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(-20deg) brightness(100%) contrast(100%);
+}
+.loading-text img {
+  animation: rotate 2s linear infinite;
+}
+
+/* 📌 클릭하면 회전되지만 배경 유지 X */
+.refresh-btn:active {
+  transform: rotate(360deg);
+}
+
+/* 음식 이미지 */
+.recipe-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out;
+}
+
+/* 음식 리스트 */
+.recipe-list {
+  display: flex;
+  justify-content: center; /* 아이템 간 간격 균등 배치 */
+  width: 100%; /* 가로 공간을 꽉 채움 */
+  position: relative;
+  left: 0px;
+}
+
+/* 중앙 카드에만 음식 이름 표시 */
+.recipe-title-main {
+  font-size: 20px;
+  margin-top: 5px;
+  transition: opacity 0.4s ease-in-out;
+  padding-top: 20px;
+}
+
+
+
+.recipe-title-main {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin: 0;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 개별 음식 카드 */
+.recipe-item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+  width: 50px;
+  opacity: 0.8;
+  transform: scale(1);
+  position: relative;
+  z-index: 1;
+}
+

@@ -1,0 +1,889 @@
+@font-face {
+  font-family: "Digital-Font";
+  src: url("/fonts/DS-DIGI.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* HandPoseComponent 스타일 */
+.handpose-container3 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  z-index: 20000;
+  overflow: hidden; /* 자식 요소가 넘칠 때 잘리도록 설정 */
+  background-image: url("/images/frame.png");
+  background-size: 97% 96%; /* 이미지를 페이지 크기에 맞게 조절 */
+  background-position: center; /* 이미지를 중앙에 위치 */
+  background-repeat: no-repeat;
+}
+
+.end-message {
+  position: absolute;
+  top: 77%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(255, 255, 255);
+  background-color: rgba(66, 66, 66, 0.7);
+  padding: 1rem;
+  border-radius: 1rem;
+  font-size: 2rem;
+  z-index: 100000;
+}
+
+.end-cooking-btn {
+  position: absolute;
+  bottom: 1%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(255, 255, 255);
+  padding: 0.8rem;
+  border-radius: 3rem;
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, #fad6a0, #d97742); /* 따뜻한 오렌지 계열 */
+  z-index: 1000;
+  border: none; /* Remove the border */
+  font-family: "omyu_pretty";
+}
+
+.handpose-canvas {
+  display: none;
+}
+
+.process-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 2rem;
+}
+
+.swipe-message {
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background-color: rgba(82, 82, 82, 0.7);
+  border-radius: 1rem;
+  padding: 1rem;
+  font-size: 1.5rem;
+  z-index: 30000;
+}
+
+/* Modal 오버레이 */
+
+.content-image-container {
+  width: 100%;
+  height: 50%;
+}
+.steps3 {
+  margin-top: 1rem;
+}
+
+.process-item3 {
+  display: flex;
+  justify-content: center; /* 부모 요소 내 수평 가운데 정렬 */
+  align-items: center; /* 필요시 수직 가운데 정렬 */
+  width: 100%; /* 부모 요소의 전체 너비 설정 */
+  box-sizing: border-box; /* padding과 border를 포함하도록 설정 */
+  font-size: 1.5rem; /* 글자 크기 설정 */
+  margin-bottom: 1rem;
+}
+
+.steps-h23 {
+  display: flex;
+  justify-content: center; /* 자식 요소 내 수평 가운데 정렬 */
+  align-items: center; /* 필요시 수직 가운데 정렬 */
+  width: 80%; /* 최대 너비를 80%로 설정 */
+  max-width: 80%; /* 최대 너비 설정 */
+  margin-left: 1rem;
+  font-size: clamp(1.5rem, 2.5vw, 3rem); /* 글자 크기 설정 */
+  margin-bottom: 1rem;
+  color: rgb(0, 0, 0);
+  white-space: wrap;
+  box-sizing: border-box; /* padding과 border를 포함하도록 설정 */
+  font-family: "IM_Hyemin-Bold";
+}
+
+/* 높이가 190px 이상일 때 폰트 크기 조정 */
+@media (min-height: 190px) {
+  .steps-h23 {
+    font-size: clamp(1rem, 2vw, 2.5rem); /* 높이가 190px 이상일 때의 글자 크기 */
+  }
+}
+
+.process-image-container3 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+.process-image3 {
+  width: 80%;
+  max-width: 700px;
+  max-height: 450px;
+  height: auto;
+  border-radius: 1.5rem;
+  margin-bottom: 2%;
+}
+.timer3 {
+  position: absolute;
+  bottom: 1rem;
+  right: 2rem;
+  margin: 1rem;
+  border-radius: 1rem;
+  border: solid;
+  color: rgb(31, 31, 31);
+  font-size: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50000;
+  background-color: rgba(180, 177, 168, 0.5);
+
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0;
+  width: auto; /* 자식 요소에 맞춰서 줄어들게 설정 */
+  white-space: nowrap; /* 요소들이 한 줄에 표시되도록 설정 */
+  gap: 10px;
+  font-family: "Digital-Font", sans-serif; /* 디지털 폰트 설정 */
+}
+
+.timer-image3 {
+  width: 85%;
+  height: 85%;
+  border-radius: 15px;
+}
+
+.timer-button-image {
+  width: 3rem; /* 버튼 이미지 크기 조정 */
+  height: 3rem; /* 버튼 이미지 크기 조정 */
+  border: none; /* 테두리 제거 */
+}
+
+/* Custom Styles for Timeline */
+.process-logo-img {
+  width: 100px;
+  height: 100px;
+}
+.timeline-container {
+  margin-top: 1rem;
+  max-height: 90%;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  width: 80%;
+  max-width: 1200px;
+  /* margin: auto; */
+}
+
+/* 반응형 웹 디자인을 위한 미디어 쿼리 */
+
+/* 데스크톱 */
+@media (max-width: 1200px) {
+  .modal-content {
+    width: 70vw;
+    height: 70vh;
+  }
+
+  .timer3 {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .close-button {
+    font-size: 1.5rem;
+  }
+}
+
+.page-image {
+  background-color: white; /* 하얀 박스 배경 */
+  width: 100%; /* 페이지에 꽉 차게 설정 */
+  height: 100%; /* 페이지에 꽉 차게 설정 */
+  border: 1px solid #ccc; /* 선택사항: 하얀 박스에 테두리 추가 */
+}
+
+.recording-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.9));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000; /* 모달을 최상단에 표시 */
+}
+.rec-loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 100000; /* 모달을 최상단에 표시 */
+}
+@keyframes glowing {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 255, 255, 1), 0 0 60px rgba(255, 255, 255, 1);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.8);
+  }
+}
+@keyframes sizeChange {
+  0%,
+  100% {
+    transform: scale(1); /* 원래 크기 */
+  }
+  50% {
+    transform: scale(1.1); /* 크기를 10% 확대 */
+  }
+}
+.recording-gif {
+  display: inline-block;
+  position: absolute;
+  bottom: 3%;
+  width: 12%; /* 원하는 크기로 설정 */
+  height: 20%; /* 원하는 크기로 설정 */
+  border-radius: 50%;
+  opacity: 0.5; /* 투명도 설정 (0은 완전 투명, 1은 완전 불투명) */
+  animation: glowing 2s infinite, sizeChange 2s;
+}
+.rec-loading-gif {
+  width: 100%;
+  height: 100%;
+}
+.spoken-text {
+  position: absolute;
+  top: 60%; /* 상단에서부터 60% 아래에 위치 */
+  left: 50%;
+  transform: translate(-50%, -50%); /* 수평 가운데 정렬 */
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.7); /* 배경색 */
+  color: white; /* 글자색 */
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+  z-index: 10000; /* 높은 z-index 설정 */
+}
+
+/* 태블릿 가로 모드 */
+@media (max-width: 1024px) and (orientation: landscape) {
+  .modal-content {
+    width: 80vw;
+    height: 80vh;
+  }
+
+  .timer3 {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .close-button {
+    font-size: 1.2rem;
+  }
+}
+
+/* 모바일 가로 모드 */
+@media (max-width: 844px) and (orientation: landscape) {
+  .modal-content {
+    width: 95vw;
+    height: 95vh;
+  }
+
+  .timer3 {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .close-button {
+    font-size: 1rem;
+  }
+}
+/* 추가된 스타일 */
+/* 추가된 스타일 */
+.ingredient-button {
+  position: absolute;
+  bottom: 1rem;
+  left: 3rem;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  border-color: #ccc;
+  cursor: pointer;
+  z-index: 1000;
+}
+.timer-button {
+  position: absolute;
+  bottom: 1rem;
+  left: 10rem; /* Adjust left value to provide a gap between buttons */
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  border-color: #ccc;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* 화면 너비가 800px 이하일 때 width와 height 조정 */
+@media (max-width: 800px) {
+  .ingredient-button {
+    width: 60px;
+    height: 60px;
+  }
+  .timer-button {
+    width: 60px;
+    height: 60px;
+  }
+  .timer3 {
+    width: 120px; /* 너비를 80%로 줄이기 */
+    height: 50px; /* 높이를 80%로 줄이기 */
+    font-size: 1.7rem; /* 폰트 크기 조정 */
+  }
+  .timer-button-image {
+    width: 1.5rem; /* 버튼 이미지 크기 조정 */
+    height: 1.5rem; /* 버튼 이미지 크기 조정 */
+    border: none; /* 테두리 제거 */
+  }
+}
+
+.ingredient-container {
+  position: absolute;
+  flex-direction: row; /* Align children horizontally */
+  margin-right: 10px;
+}
+
+.timer-container {
+  display: flex;
+  position: absolute;
+  flex-direction: row; /* Align children horizontally */
+}
+
+.ing-time-container {
+  bottom: 2%;
+  left: 2%;
+  position: absolute;
+  flex-direction: row; /* Align children horizontally */
+}
+
+.ingredient-button img {
+  width: 90%;
+  height: 90%;
+}
+
+.ingredient-button:hover {
+  background-color: #ffffff;
+}
+
+.process-exit-btn {
+  position: absolute;
+  top: 4%;
+  right: 3.5%;
+  width: 30px;
+  height: 30px;
+}
+
+.ingredient-sidebar {
+  position: absolute;
+  bottom: 17%;
+  left: 7%;
+  border-radius: 20px;
+  background-color: rgb(253 245 232 / 40%);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* 균일한 그림자 효과 */
+  padding: 20px;
+  overflow-y: auto; /* 스크롤 가능하도록 설정 */
+  max-height: 400px; /* 최대 높이 설정 */
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out; /* 애니메이션 효과 */
+  transform: translateX(100%); /* 처음에는 화면 밖에 위치 */
+}
+
+.ingredient-sidebar.open {
+  transform: translateX(0); /* 열렸을 때 화면 안으로 들어옴 */
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.ingredient-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ingredient-sidebar li {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-family: "LotteMartDream";
+}
+
+/* 타이머 설정 모달 */
+.timer-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* width: 50%; */
+  /* min-width: 10rem; */
+  height: 50%;
+  max-height: 700px;
+  background-color: rgb(255, 246, 226);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-color: rgb(255, 174, 0);
+  border-style: double;
+  padding: 2rem;
+  border-radius: 5px;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.slider-container {
+  display: flex;
+  /* justify-content: space-around; */
+  justify-content: center;
+  align-items: center;
+  height: 75%;
+  flex-direction: row;
+}
+
+.slider-wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.slider-label {
+  margin-top: 1rem;
+  font-size: 2rem;
+  font-family: "LotteMartDream";
+}
+
+.slider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.range-slider {
+  -webkit-appearance: none;
+  writing-mode: bt-lr; /* Vertical slider */
+  transform: rotate(270deg); /* Rotate the slider to make it vertical */
+  width: 100%;
+  height: 40px;
+  background: rgb(255, 179, 15);
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  border-radius: 30px;
+  /* margin-top: 10px; */
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  background: rgb(255, 77, 0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.range-slider::-moz-range-thumb {
+  width: 40px;
+  height: 40px;
+  background: rgb(255, 77, 0);
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.timer-btn-area {
+  display: flex;
+  /* justify-content: space-between; */
+  justify-content: center;
+  width: 100%;
+  gap: 2rem;
+  margin-bottom: 0;
+}
+
+.timer-modal-btn {
+  display: block;
+  width: 10rem;
+  padding: 10px;
+  font-size: 1.7rem;
+  margin-top: 20px;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: "omyu_pretty";
+}
+
+.start-btn {
+  background: linear-gradient(135deg, #dcffc0, #77ca32);
+}
+
+.end-btn {
+  background: linear-gradient(135deg, #a5c9fb, #3271ca);
+}
+
+/* --------------------------- */
+@media (max-height: 380px) {
+  .ingredient-button {
+    width: 40px;
+    height: 40px;
+  }
+  .timer-button {
+    width: 40px;
+    height: 40px;
+    left: 7rem;
+  }
+  .timer3 {
+    width: 110px; /* 너비를 80%로 줄이기 */
+    height: 50px; /* 높이를 80%로 줄이기 */
+    font-size: 1.7rem; /* 폰트 크기 조정 */
+  }
+  .timer-button-image {
+    width: 1.5rem; /* 버튼 이미지 크기 조정 */
+    height: 1.5rem; /* 버튼 이미지 크기 조정 */
+    border: none; /* 테두리 제거 */
+  }
+  .timeline-container {
+    margin-top: 0.5rem;
+    max-height: 20%;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    width: 80%;
+  }
+  .process-logo-img {
+    width: 50px;
+    height: 50px;
+  }
+  .process-exit-btn {
+    width: 20px;
+    height: 20px;
+  }
+  .steps-h23 {
+    width: 80%; /* 최대 너비를 80%로 설정 */
+    max-width: 70%; /* 최대 너비 설정 */
+    margin-left: 1rem;
+    font-size: clamp(0.5rem, 1.2vw, 1.7rem); /* 글자 크기 설정 */
+    margin-bottom: 0rem;
+  }
+  .process-image-container3 {
+    width: 100%;
+    height: auto;
+  }
+  .process-image3 {
+    width: 30%;
+    max-height: 200px;
+    height: auto;
+    border-radius: 1.5rem;
+    margin-bottom: 2%;
+  }
+  .swipe-message {
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background-color: rgba(82, 82, 82, 0.7);
+    border-radius: 1rem;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    z-index: 30000;
+  }
+  .end-message {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  .end-cooking-btn {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  .ingredient-sidebar {
+    padding: 10px;
+    max-height: 180px; /* 최대 높이 설정 */
+  }
+  .ingredient-sidebar li {
+    font-size: 0.8rem;
+  }
+  .timer-modal {
+    height: 50%;
+    max-height: 200px;
+    padding: 0.8rem;
+  }
+  .timer-modal-btn {
+    width: 5rem;
+    padding: 5px;
+    font-size: 0.8rem;
+    margin-top: 10px;
+  }
+  .slider-container {
+    height: 75%;
+  }
+  .slider-wrapper {
+    width: 50%;
+    height: 3%;
+  }
+  .range-slider {
+    width: 100%;
+    height: 20px;
+  }
+  .slider-label {
+    margin-top: 0.3rem;
+    font-size: 0.7rem;
+  }
+}
+/* ------------------------------------------------- */
+@media (max-height: 420px) {
+  .ingredient-button {
+    width: 50px;
+    height: 50px;
+  }
+  .timer-button {
+    width: 50px;
+    height: 50px;
+    left: 7.5rem;
+  }
+  .timer3 {
+    width: 120px; /* 너비를 줄이기 */
+    height: 60px; /* 높이를 줄이기 */
+    font-size: 2rem; /* 폰트 크기 조정 */
+  }
+  .timer-button-image {
+    width: 2rem; /* 버튼 이미지 크기 조정 */
+    height: 2rem; /* 버튼 이미지 크기 조정 */
+    border: none; /* 테두리 제거 */
+  }
+  .timeline-container {
+    margin-top: 1rem;
+    max-height: 25%;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    width: 85%;
+  }
+  .process-logo-img {
+    width: 60px;
+    height: 60px;
+  }
+  .process-exit-btn {
+    width: 25px;
+    height: 25px;
+  }
+  .steps-h23 {
+    width: 85%; /* 최대 너비를 85%로 설정 */
+    max-width: 75%; /* 최대 너비 설정 */
+    margin-left: 1.5rem;
+    font-size: clamp(0.6rem, 1.8vw, 2.5rem); /* 글자 크기 설정 */
+    margin-bottom: 0.5rem;
+  }
+  .process-image-container3 {
+    width: 100%;
+    height: auto;
+  }
+  .process-image3 {
+    width: 35%;
+    max-height: 200px;
+    height: auto;
+    border-radius: 1.5rem;
+    margin-bottom: 2%;
+  }
+  .swipe-message {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background-color: rgba(82, 82, 82, 0.7);
+    border-radius: 1rem;
+    padding: 0.7rem;
+    font-size: 1rem;
+    z-index: 30000;
+  }
+  .end-message {
+    padding: 0.7rem;
+    font-size: 1rem;
+  }
+  .end-cooking-btn {
+    padding: 0.7rem;
+    font-size: 1rem;
+  }
+  .ingredient-sidebar {
+    padding: 12px;
+    max-height: 220px; /* 최대 높이 설정 */
+  }
+  .ingredient-sidebar li {
+    font-size: 1rem;
+  }
+  .timer-modal {
+    height: 60%;
+    max-height: 250px;
+    padding: 1rem;
+  }
+  .timer-modal-btn {
+    width: 6rem;
+    padding: 6px;
+    font-size: 1rem;
+    margin-top: 12px;
+  }
+  .slider-container {
+    height: 80%;
+  }
+  .slider-wrapper {
+    width: 60%;
+    height: 4%;
+  }
+  .range-slider {
+    width: 100%;
+    height: 25px;
+  }
+  .slider-label {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+  }
+}
+/* ---------------------------------------- */
+@media (max-height: 450px) {
+  .ingredient-button {
+    width: 55px;
+    height: 55px;
+  }
+  .timer-button {
+    width: 55px;
+    height: 55px;
+    left: 7rem;
+  }
+  .timer3 {
+    width: 130px; /* 너비를 줄이기 */
+    height: 65px; /* 높이를 줄이기 */
+    font-size: 2.2rem; /* 폰트 크기 조정 */
+  }
+  .timer-button-image {
+    width: 2.2rem; /* 버튼 이미지 크기 조정 */
+    height: 2.2rem; /* 버튼 이미지 크기 조정 */
+    border: none; /* 테두리 제거 */
+  }
+  .timeline-container {
+    margin-top: 1rem;
+    max-height: 28%;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    width: 87%;
+  }
+  .process-logo-img {
+    width: 65px;
+    height: 65px;
+  }
+  .process-exit-btn {
+    width: 28px;
+    height: 28px;
+  }
+  .steps-h23 {
+    width: 87%; /* 최대 너비를 87%로 설정 */
+    max-width: 77%; /* 최대 너비 설정 */
+    margin-left: 1.5rem;
+    font-size: clamp(0.7rem, 1.7vw, 2.2rem); /* 글자 크기 설정 */
+    margin-bottom: 0.5rem;
+  }
+  .process-image-container3 {
+    width: 100%;
+    height: auto;
+  }
+  .process-image3 {
+    width: 37%;
+    max-height: 200px;
+    height: auto;
+    border-radius: 1.5rem;
+    margin-bottom: 2%;
+  }
+  .swipe-message {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background-color: rgba(82, 82, 82, 0.7);
+    border-radius: 1rem;
+    padding: 0.7rem;
+    font-size: 1rem;
+    z-index: 30000;
+  }
+  .end-message {
+    padding: 0.7rem;
+    font-size: 1rem;
+  }
+  .end-cooking-btn {
+    padding: 0.7rem;
+    font-size: 1rem;
+  }
+  .ingredient-sidebar {
+    padding: 14px;
+    max-height: 230px; /* 최대 높이 설정 */
+  }
+  .ingredient-sidebar li {
+    font-size: 1rem;
+  }
+  .timer-modal {
+    height: 65%;
+    max-height: 260px;
+    padding: 1rem;
+  }
+  .timer-modal-btn {
+    width: 6.5rem;
+    padding: 6px;
+    font-size: 1rem;
+    margin-top: 14px;
+  }
+  .slider-container {
+    height: 85%;
+  }
+  .slider-wrapper {
+    width: 65%;
+    height: 4%;
+  }
+  .range-slider {
+    width: 100%;
+    height: 25px;
+  }
+  .slider-label {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+  }
+}

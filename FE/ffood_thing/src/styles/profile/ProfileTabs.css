@@ -1,0 +1,46 @@
+/* 프로필 탭 컨테이너 */
+.tab-container {
+  display: flex;
+  justify-content: space-around;
+  background: #fff;
+  width: 100%;
+  flex-wrap: nowrap; /* 줄바꿈 방지 */
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+/* 탭 버튼 */
+.tab {
+  flex: 1;
+  min-width: 33%; /* ✅ 버튼 크기 일정하게 유지 */
+  padding: 12px;
+  border: none;
+  background: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.3s ease;
+  border-radius: 10px;
+  font-family: 'omyu_pretty';
+  font-size: 20px;
+}
+
+/* 활성화된 탭 */
+.active-tab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: #2ebf91;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-family: 'omyu_pretty';
+  font-size: 20px;
+}
+
+/* ✅ 타인의 프로필일 경우 레시피 탭만 보이고 너비 100%로 설정 */
+.single-tab {
+  flex: 3; /* ✅ 레시피 탭을 가득 채우도록 조정 */
+  min-width: 100%;
+}

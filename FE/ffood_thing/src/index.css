@@ -1,0 +1,10 @@
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+}
+
+#root {
+  background-color: #f7b05b;
+  min-height: 100vh;
+}

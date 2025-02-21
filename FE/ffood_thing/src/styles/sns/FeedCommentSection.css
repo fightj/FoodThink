@@ -1,0 +1,183 @@
+.comment-div {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.07);
+  background-color: rgba(73, 73, 73, 0.95);
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 35px 35px 0 0;
+  /* z-index: 9999; */
+}
+
+/* 댓글 토글 스크롤 바 숨기기 */
+.comment-div::-webkit-scrollbar {
+  display: none;
+}
+
+/* 각 댓글 하나하나 */
+.comment {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #8c9697;
+}
+
+.profile-image-com {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.comment-author-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.comment-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+/* 댓글 작성자 닉네임 */
+.comment-author-name {
+  color: #ffffff;
+  font-style: bold;
+  font-size: 1.1rem;
+  margin: 0;
+  text-decoration: underline;
+  font-family: 'SOYO Maple Regular';
+}
+
+/* 댓글 내용 */
+.comment-content {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  font-family: 'NanumSquareRound';
+}
+
+.comment-time {
+  font-size: 0.8rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  text-align: right;
+  font-family: 'LotteMartDream';
+}
+
+/* 댓글이 없을 때 */
+.no-comments {
+  color: #ffffff;
+  font-size: 1rem;
+  font-family: 'PTBandocheB';
+}
+
+.comment-input-wrapper {
+  display: flex;
+  width: 100%;
+  margin-top: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 1.2rem;
+  gap: 1rem;
+  font-family: "KCC-Hanbit", sans-serif;
+}
+
+.comment-input {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #282828;
+}
+
+.add-comment-button {
+  padding: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #ffdba8, #ffbe63);
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.add-comment-button:active {
+  background: linear-gradient(135deg, #ffbe63, #ffdba8);
+  transform: scale(1.05);
+}
+
+/* 댓글 수정하기 기능 */
+.update-comment-input {
+  padding: 4px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #282828;
+  margin-bottom: 0.5rem;
+  margin-right: 0.7rem;
+}
+
+.update-comment-button {
+  padding: 0.4rem;
+  padding-right: 0.6rem;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #8bc1ff, #66a2e6);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.update-comment-button:active {
+  background: linear-gradient(135deg, #66a2e6, #8bc1ff);
+  transform: scale(1.05);
+}
+
+.delete-comment-button {
+  padding: 0.4rem;
+  padding-right: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  margin-left: 0.7rem;
+}
+
+.delete-comment-button:active {
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  transform: scale(1.05);
+}
+
+@media (max-width:800px) {
+  .profile-image-com {
+    width: 2rem;
+    height: 2rem;
+  }
+}
