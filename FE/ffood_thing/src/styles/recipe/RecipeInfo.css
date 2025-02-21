@@ -1,0 +1,196 @@
+.card-div-info {
+  background-image: url("/images/frame.png");
+  background-size: 97% 96%; /* 이미지를 페이지 크기에 맞게 조절 */
+  background-position: center; /* 이미지를 중앙에 위치 */
+  background-repeat: no-repeat;
+  overflow: hidden; /* 자식 요소가 넘칠 때 잘리도록 설정 */
+}
+
+.recipeInfo-container {
+  background-size: cover; /* 배경 이미지가 전체 컨테이너를 덮도록 설정 */
+  display: flex;
+  flex-direction: column; /* 상단의 헤더와 좌우 컨텐츠를 분리하기 위해 컬럼 방향으로 정렬 */
+  width: 100%;
+  height: 100vh; /* 전체 화면 높이로 설정 */
+  overflow: hidden; /* 전체 컨테이너에서 넘치는 내용 숨김 */
+}
+
+header {
+  display: flex;
+  flex-wrap: nowrap; /* Prevent wrapping of children */
+  align-items: center; /* Vertical alignment */
+  justify-content: space-between; /* Ensures proper spacing between elements */
+  padding: 1%;
+  text-align: left; /* Ensures child elements have their own text alignment */
+  padding-left: 2em; /* Left padding */
+}
+
+.info-badge-div img {
+  display: flex;
+  align-items: center; /* 이미지가 제목과 수직 중앙에 정렬 */
+  width: 10%;
+  border-radius: 10px;
+  position: absolute;
+  top: 5%;
+  left: 10%;
+}
+
+.recipe-info-details {
+  flex: 1; /* Flexibly grow to use available space */
+  display: flex;
+  justify-content: center; /* Horizontal alignment */
+  align-items: center; /* Vertical alignment */
+  width: 88%;
+  margin-top: 5%;
+}
+
+.recipe-info-details h1 {
+  font-family: "KCC-Hanbit";
+  font-size: 3rem;
+  margin-top: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  max-width: 20ch; /* Set the maximum width to 15 characters */
+  display: inline-block;
+  text-align: center;
+  margin-left: 1rem;
+}
+
+.recipe-details {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.recipe-left-right {
+  display: flex;
+  flex: 1; /* 좌우 영역이 남은 공간을 채우도록 설정 */
+  width: 100%;
+  overflow: hidden; /* 전체 컨테이너에서 넘치는 내용 숨김 */
+}
+
+.recipeInfo-left {
+  flex-basis: 55%;
+  display: flex;
+  flex-direction: column; /* 수직 정렬을 위해 컬럼 방향으로 설정 */
+  justify-content: flex-start; /* 상단 정렬 */
+  align-items: center;
+  font-size: 2em;
+  overflow: hidden; /* div 내에서 넘치는 내용 숨김 */
+  padding-top: 2em; /* 위쪽 패딩 값 조정 */
+}
+
+.recipeInfo-right {
+  flex-basis: 45%;
+  display: flex;
+  justify-content: flex-start; /* 상단 정렬 */
+  align-items: flex-start;
+  padding: 3em 1em 1em 1em; /* 위쪽 패딩 값 조정 */
+  
+}
+
+.recipe-image {
+  width: 70%;
+  height: auto; /* 비율을 유지하며 높이를 조정 */
+  border-radius: 20%;
+  margin-top: -20px; /* 원하는 위치에 따라 값 조정 */
+  margin-right: -10%; /* 원하는 위치에 따라 값 조정 */
+  max-width: 90%; /* 부모 요소의 너비를 초과하지 않도록 설정 */
+  max-height: 95%;
+}
+
+.recipe-ingredients p {
+  font-family: "PTBandocheB";
+  font-size: 2.2rem;
+  font-weight: bold;
+  max-width: 100%;
+  max-height: 90%;
+}
+
+.recipe-ingredients ul {
+  font-family: "PTBandocheB";
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  font-size: 1.3rem;
+  font-weight: 100;
+}
+
+.info-left,
+.info-right {
+  flex-direction: column;
+  overflow: hidden; /* 오른쪽 div 내에서 넘치는 내용 숨김 */
+  max-width: 100%;
+  max-height: 90%;
+}
+
+.recipe-info-text {
+  font-family: "BlackswordFont";
+  font-size: 3.5rem;
+  color: rgb(117, 17, 17);
+  margin-bottom: 0.001em;
+  padding-left: 1em;
+  padding-top: 0.1em;
+  text-align: left;
+}
+
+.hidden-button1 {
+  display: none;
+}
+
+.info-ingredients-list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-ingredient-item {
+  flex: 0 0 50%; /* 각 아이템의 너비를 50%로 설정 */
+  box-sizing: border-box;
+  padding: 5px;
+  overflow: hidden; /* 내용이 넘칠 경우 숨기기 */
+  display: -webkit-box; /* 플렉스박스 형식 설정 */
+  -webkit-line-clamp: 2; /* 최대 2줄까지만 표시 */
+  -webkit-box-orient: vertical; /* 플렉스 방향을 수직으로 설정 */
+  text-overflow: ellipsis; /* 넘치는 텍스트는 ...으로 표시 */
+  white-space: normal; /* 줄 바꿈을 허용 */
+}
+
+@media screen and (max-height:500px) {
+  .info-badge-div img {
+    display: none;
+  }
+
+  .recipe-info-details h1 {
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  .recipe-ingredients p {
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .recipe-ingredients ul {
+    font-size: 0.7rem;
+  }
+
+  .recipeInfo-right {
+    padding: 1.5em 0.5em 0.5em 0.5em;
+  }
+
+  .recipe-image {
+    /* margin-top: -20px; */
+    /* margin-right: -10%;  */
+    max-width: 90%;
+    max-height: 95%;
+  }
+
+  .recipeInfo-left {
+    padding-top: 3rem;
+  }
+}

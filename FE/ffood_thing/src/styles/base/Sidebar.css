@@ -1,0 +1,192 @@
+/* ======== 전체 사이드바 컨테이너 ======== */
+.sidebar-container {
+  position: fixed;
+  bottom: 6rem;
+  left: -101%;
+  margin-bottom: 1rem;
+  width: 12rem;
+  z-index: 900;
+  transition: left 0.4s ease-in-out;
+}
+
+.sidebar-container.show {
+  left: 4rem;
+  z-index: 1001;
+}
+
+/* ======== 기본 사이드바 스타일 ======== */
+.sidebar {
+  position: relative;
+  background-color: rgb(255, 238, 196); 
+  border-radius: 10px;
+  padding: 0.3rem;
+  box-shadow: 0 4px 10px rgba(87, 87, 87, 0.2);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.sidebar .home-link {
+  display: flex;
+  color: #372800;
+  font-size: 1.3rem;
+  padding-top: 0.5rem;
+}
+
+.sidebar .nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: 'PTBandocheB';
+}
+
+.sidebar .nav-list li a {
+  color: #372800;
+  text-decoration: none;
+  padding: 0.5rem;
+  display: block;
+}
+
+/* ======== 프로필 버튼 스타일 ======== */
+.profile-button {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  color: #372800;
+  padding: 0.5rem;
+  padding-top: 0;
+  font-family: 'PTBandocheB';
+}
+.profile-button strong{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  /* margin-right: 0.8rem; */
+}
+
+/* ✅ 드롭다운 아이콘 스타일 */
+.dropdown-arrow {
+  margin-left: auto;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* ✅ 드롭다운 열릴 때 아이콘 회전 (› → v) */
+.dropdown-arrow.open {
+  transform: rotate(180deg); /* 오른쪽에서 아래쪽으로 회전 */
+}
+
+/* ======== 프로필 드롭다운 (사이드바 뒤에서 나오는 효과) ======== */
+.profile-dropdown {
+  position: absolute;
+  top: 0;
+  left: -4%; 
+  width: 12rem;
+  background-color: rgb(255, 238, 196);
+  border-radius: 0 10px 10px 0;
+  padding: 0.3rem;
+  transform: translateX(0);
+  z-index: 800;
+  transition: transform 0.3s ease-in-out, opacity 0.2s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.profile-dropdown.open {
+  transform: translateX(12rem);
+  z-index: 1002; /* 사이드바보다 앞쪽으로 배치 */
+  opacity: 1;
+  visibility: visible;
+  font-family: 'PTBandocheB';
+}
+
+.profile-dropdown a {
+  display: block;
+  color: #372800;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+}
+
+.home-link {
+  display: flex;
+  align-items: center;
+  width: 100%; /* 부모 요소의 전체 너비 사용 */
+  text-align: left; /* ✅ 가로 정렬 (왼쪽 정렬) */
+  /* font-size: 3rem; */
+  font-weight: bold;
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: #372800; /* ✅ 글자 색상 */
+  /* padding-left: 0.8rem; */
+  font-family: 'PTBandocheB';
+}
+
+.profile-dropdown hr {
+  margin: 0.2rem;
+}
+
+.home-icon {
+  margin-left: 0.5rem;
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.login-btn {
+  display: flex;
+  width: 100%;
+  color: #372800; /* ✅ 글자 색상 */
+  padding-bottom: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  font-weight: bold;
+  align-items: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media screen and (max-width:1000px) {
+  .sidebar-container {
+    bottom: 1rem;
+  }
+  .sidebar-container.show {
+    left: 9rem;
+  }
+  .profile-dropdown.open {
+    left: -5%;
+    max-width: 11rem;
+  }
+}
+
+@media screen and (max-width:600px) {
+  .sidebar-container {
+    bottom: 1rem;
+  }
+  
+  .sidebar-container.show {
+    left: 5rem;
+  }
+
+  .sidebar {
+    max-width: 9rem;
+  }
+
+  .sidebar a {
+    font-size: 0.8rem;
+  }
+
+  .profile-dropdown.open {
+    left: -25%;
+    max-width: 8rem;
+  }
+
+  .profile-dropdown a {
+    font-size: 0.7rem;
+  }
+}

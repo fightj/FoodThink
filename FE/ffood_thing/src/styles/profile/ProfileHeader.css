@@ -1,0 +1,381 @@
+/* 📌 기본값 (태블릿/PC) */
+.profile-header {
+  display: flex;
+  /* padding: 30px; */
+  padding: clamp(20px, 5vw, 30px); /* ✅ 반응형 패딩 */
+  background: #ffe6d4; /* 기본 배경 (봄) */
+  color: black;
+  border-radius: 20px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden; /* 🌸 헤더 안에서 이펙트 유지 */
+  transition: background 0.5s ease-in-out;
+}
+
+/* 📌 계절 변경 버튼 컨테이너 */
+.season-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+/* 📌 계절 버튼 스타일 */
+.season-buttons button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.season-buttons button:hover {
+  transform: scale(1.2);
+}
+
+/* 📌 계절별 버튼 색상 */
+.spring-btn { background: #FFB6C1; } /* 벚꽃색 */
+.summer-btn { background: #87CEEB; } /* 여름 하늘색 */
+.autumn-btn { background: #FFA500; } /* 가을 단풍색 */
+.winter-btn { background: #B0D0E6; } /* 겨울 얼음색 */
+
+/* 📌 프로필 컨테이너 */
+.profile-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  z-index: 2;
+}
+
+/* 📌 프로필 아바타 */
+.profile-avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+}
+
+
+/* 📌 프로필 정보 */
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding-left: 50px;
+}
+
+/* 📌 닉네임 */
+.profile-username {
+  font-size: clamp(20px, 4vw, 35px); /* ✅ 크기 자동 조절 */
+  /* color: #fdb13f; */
+  /* background-color: #d2d2d2; */
+  font-family: 'IM_Hyemin-Bold';
+}
+
+/* 📌 구독자, 게시물 */
+.profile-info {
+  display: flex;
+  justify-content: flex-start;
+  gap: 2vw; /* ✅ 화면 크기에 따라 간격 조정 */
+  font-size: clamp(12px, 2vw, 14px);
+  margin: 20px 0;
+  font-family: 'LotteMartDream';
+}
+
+/* 📌 Profile 버튼 */
+.preference-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(12px, 2vw, 15px);
+  padding: clamp(4px, 1vw, 6px) clamp(12px, 3vw, 18px);
+  font-weight: bold;
+  color: white;
+  background-color: #382ca4;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  text-decoration: none;
+  text-align: center;
+  
+  box-shadow: 0 3px 5px rgba(255, 127, 0, 0.3);
+  font-family: 'omyu_pretty';
+  font-size: 18px;
+}
+
+.profile-actions {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+
+.delete-btn {
+  background-color: transparent;
+  color: #d9534f;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: 'omyu_pretty';
+  font-size: 18px;
+  text-decoration: underline; 
+  text-decoration-color: #d9534f;
+  text-underline-offset: 3px;
+}
+
+/* 📌 Profile 버튼 */
+.subscriber-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(12px, 2vw, 15px);
+  padding: clamp(4px, 1vw, 6px) clamp(12px, 3vw, 18px);
+  font-weight: bold;
+  color: white;
+  background-color: #ff1e00;
+  border: 2px solid #ff1e00;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 3px 5px rgba(255, 127, 0, 0.3);
+}
+
+/* ✅ 구독 중 상태 (회색으로 변경) */
+.subscriber-button.subscribed {
+  background-color: #888; /* ⚫ 구독 중: 회색 */
+  border-color: #888;
+  cursor: default; /* 구독 중 상태에서는 클릭 효과 제거 */
+  box-shadow: none;
+}
+
+
+
+/* 📌 반응형 - 모바일에서는 세로 정렬 */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .profile-content {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-details {
+    align-items: center;
+    text-align: center;
+    padding-left: 0;
+    padding-top: 15px;
+  }
+
+  .profile-info {
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .preference-button,
+  .subscriber-button {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+}
+
+
+/* 📌 계절 이펙트 컨테이너 */
+.falling-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 📌 계절별 애니메이션 */
+@keyframes fall {
+  0% { transform: translateY(-10px) translateX(0px) rotate(0deg); opacity: 1; }
+  30% { opacity: 1; }
+  100% { transform: translateY(200px) translateX(50px) rotate(360deg); opacity: 0.7; } /* ✅ 바닥에서 사라짐 */
+}
+
+/* 📌 비는 직선으로 떨어지도록 변경 */
+@keyframes fall-straight {
+  0% { transform: translateY(-10px) translateX(0px); opacity: 1; }
+  100% { transform: translateY(200px) translateX(-100px); opacity: 0; } /* ✅ 바닥에서 사라짐 */
+}
+
+/* 📌 이펙트 요소 (벚꽃, 비, 낙엽, 눈) */
+.falling-effect {
+  position: absolute;
+  font-size: 22px;
+  top: 0;
+  animation: fall linear infinite;
+}
+
+/* 📌 벚꽃잎 */
+.falling-cherry-blossom {
+  color: pink;
+  animation-duration: 5s;
+}
+
+/* 📌 비 */
+.falling-rain {
+  color: blue;
+  animation: fall-straight linear infinite; /* ✅ 비는 직선으로 떨어짐 */
+  animation-duration: 2s;
+}
+
+/* 📌 낙엽 */
+.falling-leaves {
+  color: orange;
+  animation-duration: 4s;
+}
+
+/* 📌 눈 */
+.falling-snow {
+  color: black;
+  animation-duration: 6s;
+  text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
+}
+
+
+/* 📌 닉네임 수정 버튼 */
+.edit-icon {
+  margin-left: 8px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s ease-in-out;
+}
+
+.edit-icon:hover {
+  color: #ff7f00;
+}
+
+/* 📌 닉네임 수정 모달 오버레이 */
+.nickname-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 📌 닉네임 수정 모달 */
+.nickname-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 320px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.nickname-modal h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+/* 📌 닉네임 입력 필드 */
+.nickname-modal input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+/* 📌 에러 메시지 */
+.nickname-error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* 📌 닉네임 수정 모달 버튼 그룹 */
+.nickname-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* 📌 닉네임 수정 버튼 */
+.nickname-btn-save {
+  background: #ff7f00;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease-in-out;
+}
+
+.nickname-btn-save:hover {
+  background: #e66b00;
+}
+
+/* 📌 닉네임 취소 버튼 */
+.nickname-btn-cancel {
+  background: #ccc;
+  color: black;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease-in-out;
+}
+
+.nickname-btn-cancel:hover {
+  background: #bbb;
+}
+
+.profile-avatar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px; /* 요소 간 간격 */
+}
+
+@media (max-width: 500px) {
+  .profile-avatar-container {
+    margin-top: 50px;
+    flex-direction: column; /* 세로 정렬 */
+  }
+  .edit-icon {
+    margin-left: 0px;
+    margin-top: 0px;
+  }
+
+}

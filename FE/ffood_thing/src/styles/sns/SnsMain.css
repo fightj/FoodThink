@@ -1,0 +1,232 @@
+/* 피드 작성하기 버튼 : SnsMain.jsx */
+.feed-write-button {
+  font-size: 3rem;
+  color: #fb5a9d;
+  margin-bottom: 2rem;
+}
+
+.feature-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+}
+
+.icon-square {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+}
+
+.text-shadow-1 {
+  text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
+}
+.text-shadow-2 {
+  text-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+}
+.text-shadow-3 {
+  text-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+}
+
+.card-cover {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.feature-icon-small {
+  width: 3rem;
+  height: 3rem;
+}
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.b-example-divider {
+  width: 100%;
+  height: 3rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: solid rgba(0, 0, 0, 0.15);
+  border-width: 1px 0;
+  box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1), inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
+}
+
+.b-example-vr {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 100vh;
+}
+
+.bi {
+  vertical-align: -0.125em;
+  fill: currentColor;
+}
+
+.nav-scroller {
+  position: relative;
+  z-index: 2;
+  height: 2.75rem;
+  overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  padding-bottom: 1rem;
+  margin-top: -1px;
+  overflow-x: auto;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bd-mode-toggle {
+  z-index: 1500;
+}
+
+.bd-mode-toggle .dropdown-menu .active .bi {
+  display: block !important;
+}
+
+/* 부모 요소를 정사각형으로 조정 */
+.feed-card {
+  aspect-ratio: 1 / 1; /* 정사각형 비율 유지 */
+  background-size: cover; /* 이미지가 영역을 꽉 채움 */
+  background-position: center; /* 이미지 가운데 정렬 */
+  border-radius: 8px; /* 카드의 모서리 둥글게 */
+  transition: transform 0.3s ease; /* 호버 효과 추가 */
+}
+
+/* 반응형: 모바일에서도 적절히 표시 */
+@media (max-width: 576px) {
+  .feed-card {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+.image-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10; /* 이미지 위에 표시되도록 */
+}
+
+.image-icon img {
+  width: 30px;  /* 아이콘 크기 줄이기 */
+  height: 30px; /* 아이콘 크기 줄이기 */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  /* background-color: rgba(0, 0, 0, 0.5); 배경색 추가로 가독성 향상 */
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.profile-image-main {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* 글자 편집 여기 (02.16) */
+.user-info span {
+  font-weight: bold;
+  color: black;
+  font-family: 'SOYO Maple Regular';
+}
+
+.search-result-title {
+  width: 85%;
+  text-align: right;
+  font-family: 'PTBandocheB';
+}
+
+.sns-main-scroll-to-top-div {
+  position: fixed;
+  bottom: 2rem;
+  right: 4.5rem;
+  background-color: #ff7f00;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 4rem;
+  height: 4rem;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease-in-out;
+}
+
+.sns-main-scroll-to-top-btn .sns-main-top-text {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+@media (max-width: 800px) {
+  .user-info img {
+    display: none;
+  }
+
+  .user-info span {
+    display: none;
+  }
+
+  .feed-write-button {
+    width: 2rem;
+    margin-bottom: 15px;
+  }
+
+  .image-icon img {
+    /* width: 1.2rem; */
+    /* height: 1.2rem; */
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .col-4 {
+    width: 100%;
+  }
+
+  .user-info img {
+    display: block;
+  }
+
+  .user-info span {
+    display: block;
+  }
+
+  .feed-write-button {
+    font-size: 1.5rem;
+  }
+
+  .sns-main-scroll-to-top-div{
+    right: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .sns-main-top-text{
+    display: none;
+  }
+  
+}

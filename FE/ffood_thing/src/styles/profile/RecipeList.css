@@ -1,0 +1,173 @@
+/* 레시피 컨테이너 */
+.recipe-container {
+  padding-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* 레시피 그리드 */
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /*기본 설정*/
+  gap: 30px;
+  width: 100%;
+  /* max-width: 1000px; */
+  margin: 0 auto; /* 가운데 정렬 */
+  place-items: center;
+}
+
+/* 태블릿에서 카드 크기 조절 */
+@media (max-width: 1024px) {
+  .recipe-grid {
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      /* gap: 15px; */
+  }
+}
+
+/* 레시피 카드 */
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+/* 레시피 카드 */
+.mypage-recipe-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: space-between;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recipe-card:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 이미지 스타일 */
+.recipe-image {
+  width: 100%;
+  min-width: 200px;
+  height: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+
+/* 이미지 스타일 */
+.mypage-recipe-image {
+  width: 100%;
+  min-width: 230px;
+  height:230px;
+  /* min-height: 230px;
+  height: 100%; */
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.no-recipes-wrapper {
+  display: flex;
+  flex-direction: column; /* 세로 정렬 */
+  align-items: center; /* 중앙 정렬 */
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.no-recipes-text {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 20px; /* ✅ 버튼과 간격 추가 */
+  font-family: 'PTBandocheB';
+}
+
+.write-recipe-button {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  border: none;
+  border-radius: 25px; /* ✅ 둥근 버튼 */
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  font-family: 'LotteMartDream';
+}
+
+.write-recipe-button:hover {
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  transform: scale(1.05); /* ✅ 호버 시 살짝 커짐 */
+}
+
+.write-recipe-button:active {
+  transform: scale(0.95);
+}
+
+.recipe-meta{
+  font-size: 0.9rem;
+  color: #9c9c9c;
+  font-family: 'SOYO Maple Regular';
+  font-weight: bold;
+}
+
+
+/* 제목 스타일 */
+.recipe-title1 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 200px;
+  font-family: 'LotteMartDream';
+}
+
+.mypage-recipe-title1 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  max-width: 200px;
+  font-family: 'LotteMartDream';
+}
+
+@media (max-width: 1024px) {
+  .mypage-recipe-image{
+    min-width: 100px;
+    min-height: 100px;
+  }
+}
+
+
+/* 모바일에서 제목 크기 줄이기 */
+@media (max-width: 480px) {
+  .recipe-title1 {
+      font-size: 12px;
+  }
+  .mypage-recipe-image {
+    max-height: 200px;
+
+  }
+}

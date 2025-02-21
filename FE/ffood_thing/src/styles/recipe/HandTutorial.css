@@ -1,0 +1,62 @@
+.hand-tutorial-container {
+  display: flex;
+  flex-direction: column; /* 상단의 헤더와 좌우 컨텐츠를 분리하기 위해 컬럼 방향으로 정렬 */
+  width: 100%;
+  height: 100vh; /* 전체 화면 높이 */
+  background-position: center; /* Center the background image */
+  background-image: url("/images/handtutorial.png");
+  background-size: cover;
+
+  position: relative; /* for absolute positioning of children */
+}
+
+.arrow-button {
+  background: none;
+  border: none;
+  position: absolute;
+  top: 50%; /* Vertical center */
+  transform: translateY(-50%); /* Adjust for exact center */
+}
+
+.prev-arrow {
+  left: 10px; /* Adjust as necessary */
+}
+
+.next-arrow {
+  right: 10px; /* Adjust as necessary */
+}
+
+.handtuto-skip-button {
+  float: right;
+  padding: 0.6rem;
+  padding-right: 1rem;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #0d0344, #2d38cc);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 10;
+  width: 15%;
+  position: absolute;
+  bottom: 18%;
+  right: 3.5%;
+}
+
+.handtuto-skip-button:active {
+  background: linear-gradient(135deg, #2d38cc, #0d0344);
+  transform: scale(1.05);
+}
+
+/* 반응형 모바일 가로 */
+@media screen and (max-height:700px) {
+  .handtuto-skip-button {
+    font-size: 0.7rem;
+    width: 22%;
+    padding: 0.3rem;
+  }
+}

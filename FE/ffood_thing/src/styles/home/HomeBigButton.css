@@ -1,0 +1,224 @@
+/* 컨테이너 스타일 */
+.home-container {
+  max-width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Grid 레이아웃 */
+.custom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 두 개의 열 */
+  grid-template-rows: auto; /* 행 높이를 자동으로 조정 */
+  grid-template-areas:
+    "card1 card2"
+    "card1 card3"
+    "card4 card3"; /* 모든 카드 위치 고정 */
+  /* grid-gap: 20px; */
+}
+
+/* 기본 카드 스타일 */
+.card {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.05); */
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* 카드 내용 스타일 */
+.card .content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 6%;
+  padding-left: 4%;
+  color: white;
+  text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0);
+  /* border-radius: inherit; */
+  overflow: hidden; /* 카드 내용의 경계 밖으로 나가는 내용을 숨김 */
+}
+.content {
+  flex: 1;
+  max-width: 70%;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  margin-top: 2rem;
+}
+
+/* 각 카드의 위치와 크기 설정 */
+.card-recipe {
+  grid-area: card1;
+  height: 25vh;
+  margin-bottom:25px;
+  
+}
+
+.card-todayRecommend {
+  grid-area: card2;
+  height: 40vh;
+  margin-bottom:25px;
+}
+
+.card-aiRecommend {
+  grid-area: card3;
+  height: 40vh;
+}
+
+.card-sns {
+  grid-area: card4;
+  height: 25vh;
+  align-self: end; /* 카드 4번을 하단에 배치 */
+}
+
+/* Link 스타일 */
+.card-link {
+  display: block;
+  text-decoration: none;
+}
+.home h1 {
+  font-family: "HakgyoansimDunggeunmisoTTF-B", sans-serif;
+  font-size: 3rem;
+  color:rgb(255, 255, 255);
+  -webkit-text-stroke: 3px rgb(86, 39, 10);
+}
+
+.home h4 {
+  font-family: "NPSfont_regular", sans-serif;
+  font-size: 1.3rem;
+  color:rgb(255, 255, 255);
+  font-weight: bold;
+}
+
+/* 📌반응형: 태블릿 세로 버전 */
+@media (max-width: 800px){
+  .home h1 {
+    font-size: 2.6rem;
+  }
+  
+  .home h4 {
+    display: none;
+  }
+  .content {
+    max-width: 100%;
+  }
+  
+  .card .content {
+    padding-bottom: 8%;
+    padding-left: 4%;
+    
+  }
+  /* 각 카드의 위치와 크기 설정 */
+  .card-recipe {
+    grid-area: card1;
+    height: 35vh;
+    margin-bottom:25px;
+  }
+
+  .card-todayRecommend {
+    grid-area: card2;
+    height: 45vh;
+    margin-bottom:25px;
+  }
+
+  .card-aiRecommend {
+    grid-area: card3;
+    height: 40vh;
+  }
+
+  .card-sns {
+    grid-area: card4;
+    height: 30vh;
+    align-self: end; /* 카드 4번을 하단에 배치 */
+  }
+}
+
+@media (max-width: 500px) {
+  .home h1 {
+    font-size: 2rem;
+  }
+
+  .home h4 {
+    display: none;
+  }
+
+  .row {
+    height: auto; /* 높이를 자동으로 설정하여 카드들이 세로로 쌓이게 합니다. */
+    gap: 3%; /* 카드 간 간격 */
+    display: flex; /* 세로로 배치되게 flex 설정 */
+    flex-direction: column; /* 세로 방향으로 배치 */
+  }
+
+  .col {
+    height: auto; /* 각 카드 높이를 자동으로 설정 */
+    width: 100%; /* 카드의 가로폭을 100%로 설정 */
+  }
+
+  .card .content.home {
+    padding: 1%;
+    margin: 1%;
+  }
+
+  /* 각 카드의 위치와 크기 설정 */
+  .card-recipe,
+  .card-todayRecommend,
+  .card-aiRecommend,
+  .card-sns {
+    height: 19vh;
+    margin-bottom: 4%; /* 카드 간 간격 */
+    width: 100%; /* 카드의 가로폭을 100%로 설정 */
+  }
+
+  .card-sns {
+    align-self: flex-start; /* 카드의 위치를 상단으로 설정 */
+  }
+}
+
+
+/* 📌반응형: 모바일 가로 */
+@media (max-height: 500px) {
+  .home h1 {
+    font-size: 2rem;
+  }
+  .home h4 {
+    display: none;
+  }
+  .card .content.home {
+    padding: 1%;
+    margin:1%;
+  }
+  /* 각 카드의 위치와 크기 설정 */
+  .card-recipe {
+    grid-area: card1;
+    height: 25vh;
+    margin-bottom:20px;
+  }
+
+  .card-todayRecommend {
+    grid-area: card2;
+    height: 30vh;
+    margin-bottom:20px;
+  }
+
+  .card-aiRecommend {
+    grid-area: card3;
+    height: 30vh;
+  }
+
+  .card-sns {
+    grid-area: card4;
+    height: 25vh;
+    align-self: end;
+  }
+  
+}
