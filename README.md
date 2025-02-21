@@ -18,7 +18,7 @@
 
 - BackEnd : Spring Boot / JPA / Spring Security (JWT) / Spring GPT API / TTS / OpenAI Whisper / Dialogflow
 
-- FrontEnd : React / React Native / MediaPipe
+- FrontEnd : React / PWA / MediaPipe
 
 - 협업 및 기타 툴 : Jira / Git Lab / Notion / Postman / ERD Cloud
 
